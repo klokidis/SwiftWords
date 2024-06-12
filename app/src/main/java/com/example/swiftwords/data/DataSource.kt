@@ -26,7 +26,7 @@ class DataSource {
             true
         ),
         BarItem(
-            R.string.home,
+            R.string.profile,
             Icons.Filled.Build,
             Icons.Outlined.Build ,
             false

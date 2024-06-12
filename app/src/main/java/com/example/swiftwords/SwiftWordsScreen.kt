@@ -23,52 +23,25 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.swiftwords.ui.ViewModel
 
 enum class SwiftWordsScreen(@StringRes var title: Int) {
-    Start(title = R.string.app_name),
     Levels(title = R.string.home),
-    Modes(title = R.string.modes)
+    Modes(title = R.string.modes),
+    Profile(title = R.string.profile)
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun BottomAppBar() {
-    var selectedItemIndex by rememberSaveable {
-        mutableIntStateOf(0)
-    }
-    NavigationBar {
-        DataSource().barItems.forEachIndexed { index, item ->
-            NavigationBarItem(
-                selected = selectedItemIndex == index,
-                onClick = {
-                    selectedItemIndex = index
-                },
-                label = {
-                    Text(text = stringResource(item.title))
-                },
-                icon = {
-                    BadgedBox(badge = {//this is for red notification
-                        if (item.hasNews) {
-                            Badge()
-                        }
-                    }) {
-                        Icon(
-                            imageVector = if (index == selectedItemIndex) {
-                                item.imageSelected
-                            } else {
-                                item.imageUnSelected
-                            },
-                            contentDescription = stringResource(id = item.title)
-                        )
-                    }
-                }
-            )
-        }
-    }
+fun BottomAppBar(
+    currentScreen: SwiftWordsScreen,
+    navigateUp: () -> Boolean,
+    canNavigateBack: Boolean
+) {
+
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SwiftWordsApp(
     viewModel: ViewModel = ViewModel(),
@@ -76,22 +49,63 @@ fun SwiftWordsApp(
 ) {
     val backStackEntry by navController.currentBackStackEntryAsState()
     val currentScreen = SwiftWordsScreen.valueOf(
-        backStackEntry?.destination?.route ?: SwiftWordsScreen.Start.name
+        backStackEntry?.destination?.route ?: SwiftWordsScreen.Levels.name
     )
 
-    Scaffold(bottomBar = { BottomAppBar() }) { it
+    Scaffold(bottomBar = {
+        var selectedItemIndex by rememberSaveable {
+            mutableIntStateOf(0)
+        }
+        NavigationBar {
+            DataSource().barItems.forEachIndexed { index, item ->
+                NavigationBarItem(
+                    selected = selectedItemIndex == index,
+                    onClick = {
+                        selectedItemIndex = index
+                        when (index) {
+                            0 -> navController.navigate(SwiftWordsScreen.Levels.name)
+                            1 -> navController.navigate(SwiftWordsScreen.Modes.name)
+                            2 -> navController.navigate(SwiftWordsScreen.Profile.name)
+                        }
+                    },
+                    label = {
+                        Text(text = stringResource(item.title))
+                    },
+                    icon = {
+                        BadgedBox(badge = {//this is for red notification
+                            if (item.hasNews) {
+                                Badge()
+                            }
+                        }) {
+                            Icon(
+                                imageVector = if (index == selectedItemIndex) {
+                                    item.imageSelected
+                                } else {
+                                    item.imageUnSelected
+                                },
+                                contentDescription = stringResource(id = item.title)
+                            )
+                        }
+                    }
+                )
+            }
+        }
+    }) { it
         val uiState by viewModel.uiState.collectAsState()
 
 
         NavHost(
             navController = navController,
-            startDestination = SwiftWordsScreen.Start.name,
+            startDestination = SwiftWordsScreen.Levels.name,
         ) {
-            composable(route = SwiftWordsScreen.Start.name) {
+            composable(route = SwiftWordsScreen.Levels.name) {
                 LevelMap(1)
             }
             composable(route = SwiftWordsScreen.Modes.name) {
                 LevelMap(10)
+            }
+            composable(route = SwiftWordsScreen.Profile.name) {
+                LevelMap(100)
             }
         }
     }
