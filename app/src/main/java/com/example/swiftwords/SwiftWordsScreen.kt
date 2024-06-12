@@ -16,8 +16,10 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.res.stringResource
 import com.example.swiftwords.data.DataSource
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
+import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -52,51 +54,53 @@ fun SwiftWordsApp(
         backStackEntry?.destination?.route ?: SwiftWordsScreen.Levels.name
     )
 
-    Scaffold(bottomBar = {
-        var selectedItemIndex by rememberSaveable {
-            mutableIntStateOf(0)
-        }
-        NavigationBar {
-            DataSource().barItems.forEachIndexed { index, item ->
-                NavigationBarItem(
-                    selected = selectedItemIndex == index,
-                    onClick = {
-                        selectedItemIndex = index
-                        when (index) {
-                            0 -> navController.navigate(SwiftWordsScreen.Levels.name)
-                            1 -> navController.navigate(SwiftWordsScreen.Modes.name)
-                            2 -> navController.navigate(SwiftWordsScreen.Profile.name)
-                        }
-                    },
-                    label = {
-                        Text(text = stringResource(item.title))
-                    },
-                    icon = {
-                        BadgedBox(badge = {//this is for red notification
-                            if (item.hasNews) {
-                                Badge()
-                            }
-                        }) {
-                            Icon(
-                                imageVector = if (index == selectedItemIndex) {
-                                    item.imageSelected
-                                } else {
-                                    item.imageUnSelected
-                                },
-                                contentDescription = stringResource(id = item.title)
-                            )
-                        }
-                    }
-                )
+    Scaffold(
+        bottomBar = {
+            var selectedItemIndex by rememberSaveable {
+                mutableIntStateOf(0)
             }
-        }
-    }) { it
+            NavigationBar{
+                DataSource().barItems.forEachIndexed { index, item ->
+                    NavigationBarItem(
+                        selected = selectedItemIndex == index,
+                        onClick = {
+                            selectedItemIndex = index
+                            when (index) {
+                                0 -> navController.navigate(SwiftWordsScreen.Levels.name)
+                                1 -> navController.navigate(SwiftWordsScreen.Modes.name)
+                                2 -> navController.navigate(SwiftWordsScreen.Profile.name)
+                            }
+                        },
+                        label = {
+                            Text(text = stringResource(item.title))
+                        },
+                        icon = {
+                            BadgedBox(badge = {//this is for red notification
+                                if (item.hasNews) {
+                                    Badge()
+                                }
+                            }) {
+                                Icon(
+                                    imageVector = if (index == selectedItemIndex) {
+                                        item.imageSelected
+                                    } else {
+                                        item.imageUnSelected
+                                    },
+                                    contentDescription = stringResource(id = item.title)
+                                )
+                            }
+                        }
+                    )
+                }
+            }
+        }) { it ->
         val uiState by viewModel.uiState.collectAsState()
 
 
         NavHost(
             navController = navController,
             startDestination = SwiftWordsScreen.Levels.name,
+            modifier = Modifier.padding(it)
         ) {
             composable(route = SwiftWordsScreen.Levels.name) {
                 LevelMap(1)
@@ -113,7 +117,7 @@ fun SwiftWordsApp(
 
 @Composable
 fun LevelMap(level: Int) {
-    Box{
+    Box {
         Text(text = level.toString())
     }
 }
