@@ -1,4 +1,5 @@
 <resources>
     <string name="app_name">Swift Words</string>
     <string name="home">Home</string>
+    <string name="modes">Modes</string>
 </resources>

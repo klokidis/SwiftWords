@@ -17,11 +17,11 @@ class DataSource {
             R.string.home,
             Icons.Filled.Home,
             Icons.Outlined.Home,
-            true
+            false
         ),
         BarItem(
-            R.string.home,
-            Icons.Filled.Home,
+            R.string.modes,
+            Icons.Filled.PlayArrow,
             Icons.Outlined.PlayArrow,
             true
         ),
@@ -29,7 +29,7 @@ class DataSource {
             R.string.home,
             Icons.Filled.Build,
             Icons.Outlined.Build ,
-            true
+            false
         ),
     )
 }
