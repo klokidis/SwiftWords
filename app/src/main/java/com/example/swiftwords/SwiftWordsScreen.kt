@@ -35,16 +35,6 @@ enum class SwiftWordsScreen(@StringRes var title: Int) {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun BottomAppBar(
-    currentScreen: SwiftWordsScreen,
-    navigateUp: () -> Boolean,
-    canNavigateBack: Boolean
-) {
-
-}
-
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
 fun SwiftWordsApp(
     viewModel: ViewModel = ViewModel(),
     navController: NavHostController = rememberNavController()
