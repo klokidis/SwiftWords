@@ -64,12 +64,14 @@ fun SwiftWordsApp(
                     NavigationBarItem(
                         selected = selectedItemIndex == index,
                         onClick = {
-                            selectedItemIndex = index
-                            when (index) {
-                                0 -> navController.navigate(SwiftWordsScreen.Levels.name)
-                                1 -> navController.navigate(SwiftWordsScreen.Modes.name)
-                                2 -> navController.navigate(SwiftWordsScreen.Profile.name)
+                            if(selectedItemIndex != index) {
+                                when (index) {
+                                    0 -> navController.navigate(SwiftWordsScreen.Levels.name)
+                                    1 -> navController.navigate(SwiftWordsScreen.Modes.name)
+                                    2 -> navController.navigate(SwiftWordsScreen.Profile.name)
+                                }
                             }
+                            selectedItemIndex = index
                         },
                         label = {
                             Text(text = stringResource(item.title))
