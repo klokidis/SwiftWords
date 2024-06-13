@@ -20,6 +20,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
+import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -43,27 +44,34 @@ fun SwiftWordsApp(
     val currentScreen = SwiftWordsScreen.valueOf(
         backStackEntry?.destination?.route ?: SwiftWordsScreen.Levels.name
     )
+    var selectedItemIndex by rememberSaveable {
+        mutableIntStateOf(0)
+    }
 
     Scaffold(
         bottomBar = {
-            var selectedItemIndex by rememberSaveable {
-                mutableIntStateOf(0)
-            }
             NavigationBar{
                 DataSource().barItems.forEachIndexed { index, item ->
                     NavigationBarItem(
-                        selected = selectedItemIndex == index,
                         onClick = {
                             if(selectedItemIndex != index) {
-                                navController.popBackStack()
-                                when (index) {
-                                    0 -> navController.navigate(SwiftWordsScreen.Levels.name)// maybe replace this with just fun
-                                    1 -> navController.navigate(SwiftWordsScreen.Modes.name)
-                                    2 -> navController.navigate(SwiftWordsScreen.Profile.name)
+                                when(index){
+                                    0 -> navController.navigate(SwiftWordsScreen.Levels.name){
+                                        popUpTo(navController.graph.findStartDestination().id)
+                                        launchSingleTop = true
+                                    }
+                                    1 -> navController.navigate(SwiftWordsScreen.Modes.name){
+                                        popUpTo(navController.graph.findStartDestination().id)
+                                        launchSingleTop = true
+                                    }
+                                    2 -> navController.navigate(SwiftWordsScreen.Profile.name){
+                                        popUpTo(navController.graph.findStartDestination().id)
+                                        launchSingleTop = true
+                                    }
                                 }
                             }
-                            selectedItemIndex = index
                         },
+                        selected = selectedItemIndex == index,
                         label = {
                             Text(text = stringResource(item.title))
                         },
@@ -89,7 +97,6 @@ fun SwiftWordsApp(
         }) { it ->
         val uiState by viewModel.uiState.collectAsState()
 
-
         NavHost(
             navController = navController,
             startDestination = SwiftWordsScreen.Levels.name,
@@ -97,14 +104,18 @@ fun SwiftWordsApp(
         ) {
             composable(route = SwiftWordsScreen.Levels.name) {
                 LevelMap(1)
+                selectedItemIndex = 0
             }
             composable(route = SwiftWordsScreen.Modes.name) {
                 LevelMap(10)
+                selectedItemIndex = 1
             }
             composable(route = SwiftWordsScreen.Profile.name) {
                 LevelMap(100)
+                selectedItemIndex = 2
             }
         }
+
     }
 }
 
@@ -114,3 +125,6 @@ fun LevelMap(level: Int) {
         Text(text = level.toString())
     }
 }
+/*
+
+ */
