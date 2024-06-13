@@ -37,10 +37,9 @@ class DataSource {
     fun loadModes(): List<Modes> {
         return listOf(
             Modes(R.string.app_name, R.drawable.done),
-            Modes(R.string.app_name, R.drawable.sage),
-            Modes(R.string.app_name, R.drawable.sage),
-            Modes(R.string.app_name, R.drawable.sage),
-            Modes(R.string.app_name, R.drawable.sage),
+            Modes(R.string.app_name, R.drawable.done),
+            Modes(R.string.app_name, R.drawable.done),
+            Modes(R.string.app_name, R.drawable.done),
         )
     }
 }

@@ -21,6 +21,7 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shadow
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
@@ -31,12 +32,16 @@ import com.example.swiftwords.ui.theme.SwiftWordsTheme
 @Composable
 fun LevelScreen(){
     val scrollState = rememberScrollState()
+
     val animatedColor by animateColorAsState(
         MaterialTheme.colorScheme.background,
         label = "color"
     )
+
     var rightPadding = 0.dp
     var leftPadding = 0.dp
+    val paddingChange = dimensionResource(id = R.dimen.levels)
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -51,18 +56,26 @@ fun LevelScreen(){
 
         for (i in 0..10) {
             when (i) {
-                in 1..3 -> rightPadding += 40.dp
-                in 4..6 -> {
-                    leftPadding += 40.dp
-                    rightPadding -= 40.dp
+                in 1..2 -> rightPadding += paddingChange
+                in 3..4 -> {
+                    leftPadding += paddingChange
+                    rightPadding -= paddingChange
                 }
-                in 7..9 -> {
-                    leftPadding -= 40.dp
-                    rightPadding += 40.dp
+                in 5..6 -> {
+                    leftPadding -= paddingChange
+                    rightPadding += paddingChange
+                }
+                in 7..8 -> {
+                    leftPadding += paddingChange
+                    rightPadding -= paddingChange
+                }
+                in 8..9 -> {
+                    leftPadding -= paddingChange
+                    rightPadding += paddingChange
                 }
                 10 -> {
-                    leftPadding += 40.dp
-                    rightPadding -= 40.dp
+                    leftPadding -= paddingChange
+                    rightPadding += paddingChange
                 }
             }
 
