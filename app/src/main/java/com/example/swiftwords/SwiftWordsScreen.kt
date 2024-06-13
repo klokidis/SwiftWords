@@ -107,7 +107,7 @@ fun SwiftWordsApp(
             modifier = Modifier.padding(it)
         ) {
             composable(route = SwiftWordsScreen.Levels.name) {
-                ChooseCharacter()
+                LevelScreen()
                 selectedItemIndex = 0
             }
             composable(route = SwiftWordsScreen.Modes.name) {
@@ -115,7 +115,7 @@ fun SwiftWordsApp(
                 selectedItemIndex = 1
             }
             composable(route = SwiftWordsScreen.Profile.name) {
-                LevelMap(100)
+                ChooseCharacter()
                 selectedItemIndex = 2
             }
         }

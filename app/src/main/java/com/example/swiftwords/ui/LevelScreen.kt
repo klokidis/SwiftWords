@@ -5,12 +5,9 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.MaterialTheme
@@ -24,7 +21,6 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shadow
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
@@ -39,7 +35,6 @@ fun LevelScreen(){
         MaterialTheme.colorScheme.background,
         label = "color"
     )
-    var levelCount = 0
     var rightPadding = 0.dp
     var leftPadding = 0.dp
     Column(
@@ -77,13 +72,13 @@ fun LevelScreen(){
                 else -> R.drawable.locked
             }
 
-            Level(i, image, levelCount, rightPadding, leftPadding)
+            Level(i, image, rightPadding, leftPadding)
         }
     }
 }
 
 @Composable
-fun Level(number : Int, image : Int, levelCount: Int, rightPadding: Dp, leftPadding: Dp){
+fun Level(number : Int, image : Int, rightPadding: Dp, leftPadding: Dp){
     Box(
         modifier = Modifier
             .padding(
