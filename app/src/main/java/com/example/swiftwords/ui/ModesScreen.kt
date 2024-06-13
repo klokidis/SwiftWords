@@ -1,6 +1,7 @@
 package com.example.swiftwords.ui
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -11,7 +12,9 @@ import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -35,14 +38,18 @@ import com.example.swiftwords.ui.theme.SwiftWordsTheme
 
 @Composable
 fun ModesScreen(){
-    Column {
+    val scrollState = rememberScrollState()
+    Column(
+        modifier = Modifier
+            .verticalScroll(scrollState)
+    ){
         FourModesScreen()
         DailyCard({ })
     }
 }
 
 @Composable
-fun FourModesScreen(){
+fun FourModesScreen() {
     LazyVerticalGrid(
         columns = GridCells.Fixed(2), //Cards per row
         modifier = Modifier
@@ -51,6 +58,7 @@ fun FourModesScreen(){
                 end = 10.dp,
                 top = 10.dp
             )
+            .height(420.dp)
             .wrapContentSize()
     ) {
         items(DataSource().loadModes()) { thisMode ->
@@ -61,7 +69,6 @@ fun FourModesScreen(){
             )
         }
     }
-
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
