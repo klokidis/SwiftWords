@@ -20,6 +20,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
@@ -29,6 +30,7 @@ import androidx.navigation.compose.rememberNavController
 import com.example.swiftwords.ui.ChooseCharacter
 import com.example.swiftwords.ui.LevelScreen
 import com.example.swiftwords.ui.ViewModel
+import com.example.swiftwords.ui.theme.SwiftWordsTheme
 
 enum class SwiftWordsScreen(@StringRes var title: Int) {
     Levels(title = R.string.home),
@@ -127,6 +129,11 @@ fun LevelMap(level: Int) {
         Text(text = level.toString())
     }
 }
-/*
 
- */
+@Preview(showBackground = true)
+@Composable
+fun EverythingPreview() {
+    SwiftWordsTheme {
+        SwiftWordsApp()
+    }
+}
