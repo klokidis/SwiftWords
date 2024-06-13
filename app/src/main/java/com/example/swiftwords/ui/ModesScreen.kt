@@ -1,5 +1,8 @@
 package com.example.swiftwords.ui
 
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -12,11 +15,14 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.res.dimensionResource
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.swiftwords.R
@@ -32,7 +38,7 @@ fun ModesScreen(){
             .fillMaxSize()
     ) {
         items(DataSource().loadModes()) { thisMode ->
-            CharacterCard(
+            ModeCard(
                 {  },
 
             )
@@ -52,17 +58,25 @@ fun ModeCard(onButtonCard: () -> Unit, modifier: Modifier = Modifier) {
         ),
         modifier = modifier
             .clip(MaterialTheme.shapes.medium)
-            .height(150.dp)
+            .height(210.dp)
             .fillMaxWidth()
             .padding(
-                top = 30.dp,
+                top = 22.dp,
                 start = 10.dp,
                 end = 10.dp,
+                bottom = 7.dp
             )
             .shadow(elevation = 2.dp, shape = RoundedCornerShape(16.dp)),
-
         onClick = onButtonCard,
     ) {
+        Column(
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally,
+            modifier = Modifier.fillMaxSize()
+        ) {
+            Image(painter = painterResource(R.drawable.done), contentDescription = null)
+            Text(text = "Fast Game")
+        }
     }
 }
 

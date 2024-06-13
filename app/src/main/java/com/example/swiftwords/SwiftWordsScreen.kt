@@ -29,6 +29,7 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.swiftwords.ui.ChooseCharacter
 import com.example.swiftwords.ui.LevelScreen
+import com.example.swiftwords.ui.ModesScreen
 import com.example.swiftwords.ui.ViewModel
 import com.example.swiftwords.ui.theme.SwiftWordsTheme
 
@@ -111,7 +112,7 @@ fun SwiftWordsApp(
                 selectedItemIndex = 0
             }
             composable(route = SwiftWordsScreen.Modes.name) {
-                LevelScreen()
+                ModesScreen()
                 selectedItemIndex = 1
             }
             composable(route = SwiftWordsScreen.Profile.name) {
