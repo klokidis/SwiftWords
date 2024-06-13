@@ -55,8 +55,9 @@ fun SwiftWordsApp(
                         selected = selectedItemIndex == index,
                         onClick = {
                             if(selectedItemIndex != index) {
+                                navController.popBackStack()
                                 when (index) {
-                                    0 -> navController.navigate(SwiftWordsScreen.Levels.name)
+                                    0 -> navController.navigate(SwiftWordsScreen.Levels.name)// maybe replace this with just fun
                                     1 -> navController.navigate(SwiftWordsScreen.Modes.name)
                                     2 -> navController.navigate(SwiftWordsScreen.Profile.name)
                                 }
