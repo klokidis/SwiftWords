@@ -15,7 +15,6 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.res.stringResource
 import com.example.swiftwords.data.DataSource
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -121,13 +120,6 @@ fun SwiftWordsApp(
             }
         }
 
-    }
-}
-
-@Composable
-fun LevelMap(level: Int) {
-    Box {
-        Text(text = level.toString())
     }
 }
 
