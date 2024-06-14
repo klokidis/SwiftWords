@@ -29,6 +29,7 @@ import androidx.navigation.compose.rememberNavController
 import com.example.swiftwords.ui.ChooseCharacter
 import com.example.swiftwords.ui.LevelScreen
 import com.example.swiftwords.ui.ModesScreen
+import com.example.swiftwords.ui.ProfileScreen
 import com.example.swiftwords.ui.ViewModel
 import com.example.swiftwords.ui.theme.SwiftWordsTheme
 
@@ -115,7 +116,7 @@ fun SwiftWordsApp(
                 selectedItemIndex = 1
             }
             composable(route = SwiftWordsScreen.Profile.name) {
-                ChooseCharacter()
+                ProfileScreen()
                 selectedItemIndex = 2
             }
         }
