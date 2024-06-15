@@ -3,6 +3,7 @@ package com.example.swiftwords.ui
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -36,12 +37,15 @@ import com.example.swiftwords.ui.theme.SwiftWordsTheme
 
 
 @Composable
-fun ModesScreen(){
+fun ModesScreen() {
     val scrollState = rememberScrollState()
     Column(
         modifier = Modifier
             .verticalScroll(scrollState)
-    ){
+            .fillMaxSize(),
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
         FourModesScreen()
         DailyCard({ })
     }
@@ -62,10 +66,11 @@ fun FourModesScreen() {
     ) {
         items(DataSource().loadModes()) { thisMode ->
             ModeCard(
-                {  },
+                { },
                 thisMode.imageResourceId,
                 thisMode.stringResourceId
             )
+
         }
     }
 }
@@ -108,18 +113,20 @@ fun ModeCard(
         ) {
             Image(
                 painter = painterResource(image),
-                contentDescription = null
+                contentDescription = null,
+                modifier = Modifier.height(110.dp)
             )
             Text(text = stringResource(name))
         }
     }
+
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DailyCard(
     onButtonCard: () -> Unit,
-){
+) {
     Card(
         colors = CardDefaults.cardColors(
             containerColor = MaterialTheme.colorScheme.inverseOnSurface,
@@ -142,7 +149,7 @@ fun DailyCard(
                 shape = RoundedCornerShape(16.dp)
             ),
         onClick = { },
-    ){
+    ) {
         Column(
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally,
