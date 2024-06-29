@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -93,6 +94,7 @@ fun ModeCard(
         ),
         modifier = modifier
             .padding(10.dp)
+            .height(230.dp)
             .shadow(
                 elevation = 2.dp,
                 shape = RoundedCornerShape(16.dp)
