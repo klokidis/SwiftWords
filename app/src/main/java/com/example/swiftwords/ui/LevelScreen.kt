@@ -38,9 +38,6 @@ fun LevelScreen(){
         label = "color"
     )
 
-    var rightPadding = 0.dp
-    var leftPadding = 0.dp
-    val paddingChange = dimensionResource(id = R.dimen.levels)
 
     Column(
         modifier = Modifier
@@ -52,34 +49,33 @@ fun LevelScreen(){
         verticalArrangement = Arrangement.Top,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        var image: Int
+        val paddingChange = 35.dp // Adjust this value as needed
+        var leftPadding = 0.dp
+        var rightPadding = 0.dp
 
-        for (i in 0..10) {
-            when (i) {
-                in 1..2 -> rightPadding += paddingChange
-                in 3..4 -> {
+        for (i in 0..1000) {
+            when (i % 9) {
+                0 -> {
+                    leftPadding = 0.dp
+                    rightPadding = 0.dp
+                }
+                1, 2 -> {
+                    rightPadding += paddingChange
+                }
+                3, 4 -> {
                     leftPadding += paddingChange
                     rightPadding -= paddingChange
                 }
-                in 5..6 -> {
+                5, 6 -> {
                     leftPadding -= paddingChange
                     rightPadding += paddingChange
                 }
-                in 7..8 -> {
+                7, 8 -> {
                     leftPadding += paddingChange
                     rightPadding -= paddingChange
-                }
-                in 8..9 -> {
-                    leftPadding -= paddingChange
-                    rightPadding += paddingChange
-                }
-                10 -> {
-                    leftPadding -= paddingChange
-                    rightPadding += paddingChange
                 }
             }
-
-            image = when (i) {
+        val image = when (i) {
                 0 -> R.drawable.done
                 1 -> R.drawable.current
                 else -> R.drawable.locked
@@ -91,7 +87,7 @@ fun LevelScreen(){
 }
 
 @Composable
-fun Level(number : Int, image : Int, rightPadding: Dp, leftPadding: Dp){
+fun Level(number: Int, image: Int, rightPadding: Dp, leftPadding: Dp){
     Box(
         modifier = Modifier
             .padding(
