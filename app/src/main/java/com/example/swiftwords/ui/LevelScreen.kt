@@ -21,7 +21,6 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shadow
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
@@ -30,7 +29,7 @@ import com.example.swiftwords.R
 import com.example.swiftwords.ui.theme.SwiftWordsTheme
 
 @Composable
-fun LevelScreen(){
+fun LevelScreen() {
     val scrollState = rememberScrollState()
 
     val animatedColor by animateColorAsState(
@@ -49,33 +48,38 @@ fun LevelScreen(){
         verticalArrangement = Arrangement.Top,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        val paddingChange = 35.dp // Adjust this value as needed
+        val paddingChange = 50.dp // Adjust this value as needed
         var leftPadding = 0.dp
         var rightPadding = 0.dp
+        var step = 0
 
         for (i in 0..1000) {
-            when (i % 9) {
-                0 -> {
-                    leftPadding = 0.dp
-                    rightPadding = 0.dp
+            if (i != 0){
+                when (step) {
+                    in 0..2 -> {
+                        leftPadding += paddingChange
+                        if (rightPadding != 0.dp) {
+                            rightPadding -= paddingChange
+                        }
+                    }
+
+                    3 -> {
+                        step = -4
+                    }
+
+                    in -4..-1 -> {
+                        rightPadding += paddingChange
+                        if (leftPadding != 0.dp) {
+                            leftPadding -= paddingChange
+                        }
+                    }
+
                 }
-                1, 2 -> {
-                    rightPadding += paddingChange
-                }
-                3, 4 -> {
-                    leftPadding += paddingChange
-                    rightPadding -= paddingChange
-                }
-                5, 6 -> {
-                    leftPadding -= paddingChange
-                    rightPadding += paddingChange
-                }
-                7, 8 -> {
-                    leftPadding += paddingChange
-                    rightPadding -= paddingChange
-                }
+                step += 1
+
             }
-        val image = when (i) {
+
+            val image = when (i) {
                 0 -> R.drawable.done
                 1 -> R.drawable.current
                 else -> R.drawable.locked
@@ -87,7 +91,7 @@ fun LevelScreen(){
 }
 
 @Composable
-fun Level(number: Int, image: Int, rightPadding: Dp, leftPadding: Dp){
+fun Level(number: Int, image: Int, rightPadding: Dp, leftPadding: Dp) {
     Box(
         modifier = Modifier
             .padding(
@@ -96,11 +100,11 @@ fun Level(number: Int, image: Int, rightPadding: Dp, leftPadding: Dp){
                 top = 50.dp
             ),
         contentAlignment = Alignment.Center
-    ){
+    ) {
         Image(
             painter = painterResource(image),
             contentDescription = null, //no need
-            modifier =  Modifier
+            modifier = Modifier
                 .size(130.dp),
             contentScale = ContentScale.Crop
         )
