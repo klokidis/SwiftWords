@@ -5,7 +5,6 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
@@ -36,13 +35,7 @@ import com.example.swiftwords.ui.theme.SwiftWordsTheme
 @Composable
 fun ChooseCharacter(){
     val scrollState = rememberScrollState()
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .verticalScroll(scrollState),
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.Start
-    ){
+    Column{
         Spacer(modifier = Modifier.padding(20.dp))
         Text(
             text = "CHOOSE",
@@ -53,6 +46,14 @@ fun ChooseCharacter(){
             text = "YOUR CHARACTER",
             modifier = Modifier.padding(start = 10.dp)
         )
+    }
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .verticalScroll(scrollState),
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.Start
+    ){
         Spacer(modifier = Modifier.weight(1f))
         CompleteCard(R.drawable.omen)
         Spacer(modifier = Modifier.padding(20.dp))
