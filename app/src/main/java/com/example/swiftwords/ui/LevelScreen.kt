@@ -53,7 +53,7 @@ fun LevelScreen() {
         var rightPadding = 0.dp
         var step = 0
 
-        for (i in 0..1000) {
+        for (i in 0..50) {
             if (i != 0){
                 when (step) {
                     in 0..2 -> {

@@ -92,7 +92,7 @@ fun ModeCard(
         ),
         modifier = modifier
             .padding(10.dp)
-            .height(230.dp)
+            .height(180.dp)
             .shadow(
                 elevation = 2.dp,
                 shape = RoundedCornerShape(16.dp)
