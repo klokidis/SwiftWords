@@ -62,18 +62,15 @@ fun LevelScreen() {
                             rightPadding -= paddingChange
                         }
                     }
-
                     3 -> {
                         step = -4
                     }
-
                     in -4..-1 -> {
                         rightPadding += paddingChange
                         if (leftPadding != 0.dp) {
                             leftPadding -= paddingChange
                         }
                     }
-
                 }
                 step += 1
 
