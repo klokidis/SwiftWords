@@ -48,7 +48,7 @@ fun LevelScreen() {
         verticalArrangement = Arrangement.Top,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        val paddingChange = 50.dp // Adjust this value as needed
+        val paddingChange = 50.dp
         var leftPadding = 0.dp
         var rightPadding = 0.dp
         var step = 0
