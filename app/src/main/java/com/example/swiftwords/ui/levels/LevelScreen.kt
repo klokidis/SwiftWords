@@ -1,6 +1,5 @@
 package com.example.swiftwords.ui.levels
 
-import androidx.compose.animation.animateColorAsState
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -13,10 +12,8 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shadow
@@ -32,19 +29,10 @@ import com.example.swiftwords.ui.theme.SwiftWordsTheme
 fun LevelScreen() {
     val scrollState = rememberScrollState()
 
-    val animatedColor by animateColorAsState(
-        MaterialTheme.colorScheme.background,
-        label = "color"
-    )
-
-
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .verticalScroll(scrollState)
-            .drawBehind {
-                drawRect(animatedColor)
-            },
+            .verticalScroll(scrollState),
         verticalArrangement = Arrangement.Top,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {

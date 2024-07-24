@@ -62,7 +62,6 @@ fun ProfileScreen() {
         Spacer(modifier = Modifier.padding(20.dp))
         Scores()
     }
-    CharacterChat()
 }
 
 @Composable

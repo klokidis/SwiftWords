@@ -17,7 +17,6 @@ import androidx.compose.ui.res.stringResource
 import com.example.swiftwords.data.DataSource
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavGraph.Companion.findStartDestination
@@ -29,7 +28,6 @@ import androidx.navigation.compose.rememberNavController
 import com.example.swiftwords.ui.levels.LevelScreen
 import com.example.swiftwords.ui.modes.ModesScreen
 import com.example.swiftwords.ui.profile.ProfileScreen
-import com.example.swiftwords.ui.levels.ViewModel
 import com.example.swiftwords.ui.theme.SwiftWordsTheme
 
 enum class SwiftWordsScreen(@StringRes var title: Int) {
@@ -41,7 +39,6 @@ enum class SwiftWordsScreen(@StringRes var title: Int) {
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SwiftWordsApp(
-    viewModel: ViewModel = ViewModel(),
     navController: NavHostController = rememberNavController()
 ) {
     val backStackEntry by navController.currentBackStackEntryAsState()
