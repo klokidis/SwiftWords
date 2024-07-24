@@ -1,4 +1,4 @@
-package com.example.swiftwords.ui
+package com.example.swiftwords.ui.levels
 
 import androidx.lifecycle.ViewModel
 import kotlinx.coroutines.flow.MutableStateFlow

@@ -1,4 +1,4 @@
-package com.example.swiftwords.ui
+package com.example.swiftwords.ui.levels
 
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.foundation.Image

@@ -1,4 +1,4 @@
-package com.example.swiftwords.ui
+package com.example.swiftwords.ui.levels
 
 data class UiState(
     val example: Int = 0,

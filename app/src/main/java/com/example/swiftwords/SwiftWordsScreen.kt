@@ -26,11 +26,10 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import com.example.swiftwords.ui.ChooseCharacter
-import com.example.swiftwords.ui.LevelScreen
-import com.example.swiftwords.ui.ModesScreen
-import com.example.swiftwords.ui.ProfileScreen
-import com.example.swiftwords.ui.ViewModel
+import com.example.swiftwords.ui.levels.LevelScreen
+import com.example.swiftwords.ui.modes.ModesScreen
+import com.example.swiftwords.ui.profile.ProfileScreen
+import com.example.swiftwords.ui.levels.ViewModel
 import com.example.swiftwords.ui.theme.SwiftWordsTheme
 
 enum class SwiftWordsScreen(@StringRes var title: Int) {
@@ -100,8 +99,6 @@ fun SwiftWordsApp(
                 }
             }
         }) { it ->
-        val uiState by viewModel.uiState.collectAsState()
-
         NavHost(
             navController = navController,
             startDestination = SwiftWordsScreen.Levels.name,

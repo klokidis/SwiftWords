@@ -1,4 +1,4 @@
-package com.example.swiftwords.ui
+package com.example.swiftwords.ui.choose
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
