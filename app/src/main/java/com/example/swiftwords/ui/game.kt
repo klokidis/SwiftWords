@@ -1,6 +1,5 @@
 package com.example.swiftwords.ui
 
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -15,9 +14,8 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ElevatedButton
+import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
@@ -115,20 +113,15 @@ fun RowOfLetters(letter1: String, letter2: String, letter3: String) {
 
 @Composable
 fun LetterBox(letter: String) {
-    Card(
+    ElevatedCard(
         modifier = Modifier
             .padding(5.dp)
             .size(60.dp)
-            .shadow(2.dp, shape = RoundedCornerShape(15.dp))
+            .shadow(
+                9.dp,
+                shape = RoundedCornerShape(15.dp),
+                spotColor = Color.Blue)
             .clip(MaterialTheme.shapes.medium)
-            .clickable {
-            },
-        colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.inverseOnSurface,
-        ),
-        elevation = CardDefaults.cardElevation(
-            defaultElevation = 5.dp,
-        )
     ) {
         Box(
             modifier = Modifier.fillMaxSize(),
