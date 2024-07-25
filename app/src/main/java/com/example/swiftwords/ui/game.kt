@@ -32,8 +32,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.swiftwords.ui.theme.SwiftWordsTheme
@@ -43,9 +41,10 @@ fun Game(listOfLetters: List<String>) {
     Column(
         modifier = Modifier
             .fillMaxSize(),
-        verticalArrangement = Arrangement.Center,
+        verticalArrangement = Arrangement.Top,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
+        Spacer(modifier = Modifier.padding(20.dp))
         Column(
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
@@ -54,7 +53,7 @@ fun Game(listOfLetters: List<String>) {
             RowOfLetters(listOfLetters[3], listOfLetters[4], listOfLetters[5])
             RowOfLetters(listOfLetters[6], listOfLetters[7], listOfLetters[8])
         }
-        Spacer(modifier = Modifier.padding(20.dp))
+        Spacer(modifier = Modifier.padding(30.dp))
         Row(
             modifier = Modifier.fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically,
@@ -119,7 +118,7 @@ fun LetterBox(letter: String) {
     Card(
         modifier = Modifier
             .padding(5.dp)
-            .size(50.dp)
+            .size(60.dp)
             .shadow(2.dp, shape = RoundedCornerShape(15.dp))
             .clip(MaterialTheme.shapes.medium)
             .clickable {
