@@ -30,9 +30,19 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.StrokeCap
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.example.swiftwords.ui.theme.SwiftWordsTheme
+import androidx.compose.foundation.Canvas
+import androidx.compose.runtime.*
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.layout.onSizeChanged
+import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.IntSize
+import kotlinx.coroutines.delay
 
 @Composable
 fun Game(listOfLetters: List<String>) {
@@ -42,7 +52,9 @@ fun Game(listOfLetters: List<String>) {
         verticalArrangement = Arrangement.Top,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Spacer(modifier = Modifier.padding(20.dp))
+        Spacer(modifier = Modifier.padding(15.dp))
+        Timer(10,Color.DarkGray,Color.Green,Color.Gray)
+        Spacer(modifier = Modifier.padding(15.dp))
         Column(
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
@@ -59,7 +71,7 @@ fun Game(listOfLetters: List<String>) {
         ) {
             CustomTextField()
             ElevatedButton(
-                onClick = {  },
+                onClick = { },
                 contentPadding = PaddingValues(0.dp),
                 modifier = Modifier
                     .padding(start = 10.dp, top = 5.dp)
@@ -71,7 +83,6 @@ fun Game(listOfLetters: List<String>) {
                     maxLines = 1,
                 )
             }
-
         }
 
     }
@@ -120,7 +131,8 @@ fun LetterBox(letter: String) {
             .shadow(
                 9.dp,
                 shape = RoundedCornerShape(15.dp),
-                spotColor = Color.Blue)
+                spotColor = Color.Blue
+            )
             .clip(MaterialTheme.shapes.medium)
     ) {
         Box(
@@ -131,6 +143,91 @@ fun LetterBox(letter: String) {
         }
     }
 }
+
+@Composable
+fun Timer(
+    // total time of the timer
+    totalTime: Long,
+
+    // circular handle color
+    handleColor: Color,
+
+    // color of inactive bar / progress bar
+    inactiveBarColor: Color,
+
+    // color of active bar
+    activeBarColor: Color,
+    modifier: Modifier = Modifier,
+
+    // set initial value to 1
+    initialValue: Float = 1f,
+    strokeWidth: Dp = 5.dp
+) {
+    // create variable for
+    // size of the composable
+    var size by remember {
+        mutableStateOf(IntSize.Zero)
+    }
+    // create variable for value
+    var value by remember {
+        mutableStateOf(initialValue)
+    }
+    // create variable for current time
+    var currentTime by remember {
+        mutableStateOf(totalTime)
+    }
+    // create variable for isTimerRunning
+    var isTimerRunning by remember {
+        mutableStateOf(false)
+    }
+    LaunchedEffect(key1 = currentTime, key2 = isTimerRunning) {
+        if (currentTime > 0 && isTimerRunning) {
+            delay(100L)
+            currentTime -= 100L
+            value = currentTime / totalTime.toFloat()
+        }
+    }
+    Box(
+        modifier = modifier
+            .fillMaxWidth()
+            .onSizeChanged {
+                size = it
+            }
+    ) {
+        // draw the timer
+        Canvas(modifier = modifier) {
+            val center = Offset(size.width / 2f, size.height / 2f)
+            val lineLength = size.width / 1.2f
+
+            // Draw the inactive line
+            drawLine(
+                color = inactiveBarColor,
+                start = Offset(center.x - lineLength / 2, center.y),
+                end = Offset(center.x + lineLength / 2, center.y),
+                strokeWidth = strokeWidth.toPx(),
+                cap = StrokeCap.Round
+            )
+
+            // Draw the active line based on the current value
+            drawLine(
+                color = activeBarColor,
+                start = Offset(center.x - lineLength / 2, center.y),
+                end = Offset(center.x - lineLength / 2 + lineLength * value, center.y),
+                strokeWidth = strokeWidth.toPx(),
+                cap = StrokeCap.Round
+            )
+
+            // Draw the pointer/cap at the end of the active line
+            drawCircle(
+                color = handleColor,
+                radius = (strokeWidth * 1.5f).toPx(),
+                center = Offset(center.x - lineLength / 2 + lineLength * value, center.y)
+            )
+        }
+
+    }
+}
+
 
 @Preview(showBackground = true)
 @Composable
