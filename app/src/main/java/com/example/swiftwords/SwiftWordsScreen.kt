@@ -120,7 +120,7 @@ fun SwiftWordsApp(
                 selectedItemIndex = 2
             }
             composable(route = SwiftWordsScreen.Game.name) {
-                Game(listOfLetters = listOf("A", "B", "C", "D", "E", "F", "G", "H", "O"))
+                Game(listOfLetters = listOf("A", "B", "C", "D", "E", "F", "G", "H", "O"), navigateUp = {navController.navigateUp()})
             }
         }
 

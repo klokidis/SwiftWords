@@ -35,18 +35,25 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.swiftwords.ui.theme.SwiftWordsTheme
 import androidx.compose.foundation.Canvas
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.runtime.*
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.layout.onSizeChanged
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.IntSize
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.swiftwords.ui.AppViewModelProvider
+import com.example.swiftwords.R
 
 @Composable
 fun Game(
     listOfLetters: List<String>,
-    viewModel: GameViewModel = viewModel(factory = AppViewModelProvider.Factory)
+    viewModel: GameViewModel = viewModel(factory = AppViewModelProvider.Factory),
+    navigateUp: () -> Unit
 ) {
     val gameUiState by viewModel.uiState.collectAsState()
 
@@ -56,15 +63,11 @@ fun Game(
         verticalArrangement = Arrangement.Top,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Spacer(modifier = Modifier.padding(15.dp))
+        Spacer(modifier = Modifier.padding(5.dp))
 
-        Timer(
-            gameUiState.value,
-            Color.DarkGray,
-            Color.Green,
-        )
+        TimerBar(gameUiState.value, navigateUp, gameUiState.currentTime)
 
-        Spacer(modifier = Modifier.padding(15.dp))
+        Spacer(modifier = Modifier.padding(10.dp))
 
         Column(
             verticalArrangement = Arrangement.Center,
@@ -174,7 +177,7 @@ fun Timer(
     }
     Box(
         modifier = modifier
-            .fillMaxWidth()
+            .fillMaxWidth(0.9f)
             .onSizeChanged {
                 size = it
             }
@@ -205,11 +208,39 @@ fun Timer(
     }
 }
 
+@Composable
+fun TimerBar(value: Float, navigateUp: () -> Unit, currentTime: Long) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth(),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.Center
+    ) {
+        IconButton(
+            onClick = navigateUp,
+            modifier = Modifier.size(27.dp)
+        ) {
+            Icon(
+                imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                contentDescription = stringResource(R.string.exit),
+                modifier = Modifier.size(27.dp)
+            )
+        }
+        Timer(
+            value,
+            Color.DarkGray,
+            Color(0xFF76ffcf)
+        )
+        Text(
+            text = currentTime.toString().take(if (currentTime < 10000L) 1 else 2)
+        )//make fixed size
+    }
+}
 
 @Preview(showBackground = true)
 @Composable
 fun GamePreview() {
     SwiftWordsTheme {
-        Game(listOf("A", "B", "C", "D", "E", "F", "G", "H", "O"))
+        Game(listOf("A", "B", "C", "D", "E", "F", "G", "H", "O"), navigateUp = {})
     }
 }
