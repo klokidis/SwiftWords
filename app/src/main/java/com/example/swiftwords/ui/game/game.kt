@@ -1,4 +1,4 @@
-package com.example.swiftwords.ui
+package com.example.swiftwords.ui.game
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -40,10 +40,16 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.IntSize
-import kotlinx.coroutines.delay
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.swiftwords.ui.AppViewModelProvider
 
 @Composable
-fun Game(listOfLetters: List<String>) {
+fun Game(
+    listOfLetters: List<String>,
+    viewModel: GameViewModel = viewModel(factory = AppViewModelProvider.Factory)
+) {
+    val gameUiState by viewModel.uiState.collectAsState()
+
     Column(
         modifier = Modifier
             .fillMaxSize(),
@@ -51,8 +57,15 @@ fun Game(listOfLetters: List<String>) {
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Spacer(modifier = Modifier.padding(15.dp))
-        Timer(10,Color.DarkGray,Color.Green,Color.Gray)
+
+        Timer(
+            gameUiState.value,
+            Color.DarkGray,
+            Color.Green,
+        )
+
         Spacer(modifier = Modifier.padding(15.dp))
+
         Column(
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
@@ -61,7 +74,9 @@ fun Game(listOfLetters: List<String>) {
             RowOfLetters(listOfLetters[3], listOfLetters[4], listOfLetters[5])
             RowOfLetters(listOfLetters[6], listOfLetters[7], listOfLetters[8])
         }
+
         Spacer(modifier = Modifier.padding(30.dp))
+
         Row(
             modifier = Modifier
                 .fillMaxWidth()
@@ -69,7 +84,9 @@ fun Game(listOfLetters: List<String>) {
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.Center
         ) {
+
             CustomTextField()
+
             ElevatedButton(
                 onClick = { },
                 contentPadding = PaddingValues(0.dp),
@@ -146,46 +163,14 @@ fun LetterBox(letter: String) {
 
 @Composable
 fun Timer(
-    // total time of the timer
-    totalTime: Long,
-
-    // circular handle color
-    handleColor: Color,
-
-    // color of inactive bar / progress bar
+    value: Float,
     inactiveBarColor: Color,
-
-    // color of active bar
     activeBarColor: Color,
     modifier: Modifier = Modifier,
-
-    // set initial value to 1
-    initialValue: Float = 1f,
-    strokeWidth: Dp = 5.dp
+    strokeWidth: Dp = 10.dp
 ) {
-    // create variable for
-    // size of the composable
     var size by remember {
         mutableStateOf(IntSize.Zero)
-    }
-    // create variable for value
-    var value by remember {
-        mutableStateOf(initialValue)
-    }
-    // create variable for current time
-    var currentTime by remember {
-        mutableStateOf(totalTime)
-    }
-    // create variable for isTimerRunning
-    var isTimerRunning by remember {
-        mutableStateOf(false)
-    }
-    LaunchedEffect(key1 = currentTime, key2 = isTimerRunning) {
-        if (currentTime > 0 && isTimerRunning) {
-            delay(100L)
-            currentTime -= 100L
-            value = currentTime / totalTime.toFloat()
-        }
     }
     Box(
         modifier = modifier
@@ -216,15 +201,7 @@ fun Timer(
                 strokeWidth = strokeWidth.toPx(),
                 cap = StrokeCap.Round
             )
-
-            // Draw the pointer/cap at the end of the active line
-            drawCircle(
-                color = handleColor,
-                radius = (strokeWidth * 1.5f).toPx(),
-                center = Offset(center.x - lineLength / 2 + lineLength * value, center.y)
-            )
         }
-
     }
 }
 

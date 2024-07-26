@@ -1,6 +1,5 @@
 package com.example.swiftwords
 
-import androidx.annotation.StringRes
 import androidx.compose.material3.Badge
 import androidx.compose.material3.BadgedBox
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -25,17 +24,17 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import com.example.swiftwords.ui.Game
+import com.example.swiftwords.ui.game.Game
 import com.example.swiftwords.ui.levels.LevelScreen
 import com.example.swiftwords.ui.modes.ModesScreen
 import com.example.swiftwords.ui.profile.ProfileScreen
 import com.example.swiftwords.ui.theme.SwiftWordsTheme
 
-enum class SwiftWordsScreen(@StringRes var title: Int) {
-    Levels(title = R.string.home),
-    Modes(title = R.string.modes),
-    Profile(title = R.string.profile),
-    Game(title = R.string.game)
+enum class SwiftWordsScreen {
+    Levels,
+    Modes,
+    Profile,
+    Game
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
