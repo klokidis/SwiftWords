@@ -25,6 +25,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import com.example.swiftwords.ui.Game
 import com.example.swiftwords.ui.levels.LevelScreen
 import com.example.swiftwords.ui.modes.ModesScreen
 import com.example.swiftwords.ui.profile.ProfileScreen
@@ -33,7 +34,8 @@ import com.example.swiftwords.ui.theme.SwiftWordsTheme
 enum class SwiftWordsScreen(@StringRes var title: Int) {
     Levels(title = R.string.home),
     Modes(title = R.string.modes),
-    Profile(title = R.string.profile)
+    Profile(title = R.string.profile),
+    Game(title = R.string.game)
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -50,49 +52,54 @@ fun SwiftWordsApp(
     }
 
     Scaffold(
+
         bottomBar = {
-            NavigationBar{
-                DataSource().barItems.forEachIndexed { index, item ->
-                    NavigationBarItem(
-                        onClick = {
-                            if(selectedItemIndex != index) {
-                                when(index){
-                                    0 -> navController.navigate(SwiftWordsScreen.Levels.name){
-                                        popUpTo(navController.graph.findStartDestination().id)
-                                        launchSingleTop = true
-                                    }
-                                    1 -> navController.navigate(SwiftWordsScreen.Modes.name){
-                                        popUpTo(navController.graph.findStartDestination().id)
-                                        launchSingleTop = true
-                                    }
-                                    2 -> navController.navigate(SwiftWordsScreen.Profile.name){
-                                        popUpTo(navController.graph.findStartDestination().id)
-                                        launchSingleTop = true
+            if (currentScreen != SwiftWordsScreen.Game) {
+                NavigationBar {
+                    DataSource().barItems.forEachIndexed { index, item ->
+                        NavigationBarItem(
+                            onClick = {
+                                if (selectedItemIndex != index) {
+                                    when (index) {
+                                        0 -> navController.navigate(SwiftWordsScreen.Levels.name) {
+                                            popUpTo(navController.graph.findStartDestination().id)
+                                            launchSingleTop = true
+                                        }
+
+                                        1 -> navController.navigate(SwiftWordsScreen.Modes.name) {
+                                            popUpTo(navController.graph.findStartDestination().id)
+                                            launchSingleTop = true
+                                        }
+
+                                        2 -> navController.navigate(SwiftWordsScreen.Profile.name) {
+                                            popUpTo(navController.graph.findStartDestination().id)
+                                            launchSingleTop = true
+                                        }
                                     }
                                 }
-                            }
-                        },
-                        selected = selectedItemIndex == index,
-                        label = {
-                            Text(text = stringResource(item.title))
-                        },
-                        icon = {
-                            BadgedBox(badge = {//this is for red notification
-                                if (item.hasNews) {
-                                    Badge()
+                            },
+                            selected = selectedItemIndex == index,
+                            label = {
+                                Text(text = stringResource(item.title))
+                            },
+                            icon = {
+                                BadgedBox(badge = {//this is for red notification
+                                    if (item.hasNews) {
+                                        Badge()
+                                    }
+                                }) {
+                                    Icon(
+                                        imageVector = if (index == selectedItemIndex) {
+                                            item.imageSelected
+                                        } else {
+                                            item.imageUnSelected
+                                        },
+                                        contentDescription = stringResource(id = item.title)
+                                    )
                                 }
-                            }) {
-                                Icon(
-                                    imageVector = if (index == selectedItemIndex) {
-                                        item.imageSelected
-                                    } else {
-                                        item.imageUnSelected
-                                    },
-                                    contentDescription = stringResource(id = item.title)
-                                )
                             }
-                        }
-                    )
+                        )
+                    }
                 }
             }
         }) { it ->
@@ -102,7 +109,7 @@ fun SwiftWordsApp(
             modifier = Modifier.padding(it)
         ) {
             composable(route = SwiftWordsScreen.Levels.name) {
-                LevelScreen()
+                LevelScreen { navController.navigate(SwiftWordsScreen.Game.name) }
                 selectedItemIndex = 0
             }
             composable(route = SwiftWordsScreen.Modes.name) {
@@ -112,6 +119,9 @@ fun SwiftWordsApp(
             composable(route = SwiftWordsScreen.Profile.name) {
                 ProfileScreen()
                 selectedItemIndex = 2
+            }
+            composable(route = SwiftWordsScreen.Game.name) {
+                Game(listOfLetters = listOf("A", "B", "C", "D", "E", "F", "G", "H", "O"))
             }
         }
 

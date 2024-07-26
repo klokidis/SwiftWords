@@ -1,6 +1,7 @@
 package com.example.swiftwords.ui.levels
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -23,10 +24,11 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.example.swiftwords.R
+import com.example.swiftwords.SwiftWordsScreen
 import com.example.swiftwords.ui.theme.SwiftWordsTheme
 
 @Composable
-fun LevelScreen() {
+fun LevelScreen(navigateToLevel: () -> Unit) {
     val scrollState = rememberScrollState()
 
     Column(
@@ -70,13 +72,13 @@ fun LevelScreen() {
                 else -> R.drawable.locked
             }
 
-            Level(i, image, rightPadding, leftPadding)
+            Level(navigateToLevel,i, image, rightPadding, leftPadding)
         }
     }
 }
 
 @Composable
-fun Level(number: Int, image: Int, rightPadding: Dp, leftPadding: Dp) {
+fun Level(navigateToLevel: () -> Unit,number: Int, image: Int, rightPadding: Dp, leftPadding: Dp) {
     Box(
         modifier = Modifier
             .padding(
@@ -90,7 +92,10 @@ fun Level(number: Int, image: Int, rightPadding: Dp, leftPadding: Dp) {
             painter = painterResource(image),
             contentDescription = null, //no need
             modifier = Modifier
-                .size(130.dp),
+                .size(130.dp)
+                .clickable {
+                    navigateToLevel.invoke()
+                },
             contentScale = ContentScale.Crop
         )
         Text(
@@ -107,11 +112,4 @@ fun Level(number: Int, image: Int, rightPadding: Dp, leftPadding: Dp) {
     }
 }
 
-@Preview(showBackground = true)
-@Composable
-fun LevelPreview() {
-    SwiftWordsTheme {
-        LevelScreen()
-    }
-}
 

@@ -31,10 +31,8 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.StrokeCap
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import com.example.swiftwords.ui.theme.SwiftWordsTheme
 import androidx.compose.foundation.Canvas
 import androidx.compose.runtime.*
@@ -65,7 +63,9 @@ fun Game(listOfLetters: List<String>) {
         }
         Spacer(modifier = Modifier.padding(30.dp))
         Row(
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(start = 10.dp, end = 5.dp),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.Center
         ) {
@@ -93,9 +93,9 @@ fun Game(listOfLetters: List<String>) {
 fun CustomTextField() {
     var textState by remember { mutableStateOf("") }
     OutlinedTextField(
-        modifier = Modifier
-            .padding(start = 10.dp),
         value = textState,
+        modifier = Modifier
+            .width(230.dp),
         onValueChange = { textState = it },
         label = { Text("") },
         colors = OutlinedTextFieldDefaults.colors(
