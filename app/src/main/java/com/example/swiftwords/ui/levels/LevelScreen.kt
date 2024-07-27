@@ -1,10 +1,14 @@
 package com.example.swiftwords.ui.levels
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
@@ -18,77 +22,96 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
+import com.example.swiftwords.R
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.swiftwords.ui.theme.SwiftWordsTheme
 
 @Composable
 fun LevelScreen(navigateToLevel: () -> Unit) {
+
     val scrollState = rememberScrollState()
 
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .verticalScroll(scrollState),
-        verticalArrangement = Arrangement.Top,
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        val paddingChange = 50.dp
-        var leftPadding = 0.dp
-        var rightPadding = 0.dp
-        var step = 0
+    Box {
 
-        for (i in 0..50) {
-            if (i != 0){
-                when (step) {
-                    in 0..2 -> {
-                        leftPadding += paddingChange
-                        if (rightPadding != 0.dp) {
-                            rightPadding -= paddingChange
+        TopBar()
+
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .verticalScroll(scrollState),
+            verticalArrangement = Arrangement.Top,
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+
+            val paddingChange = 50.dp
+            var leftPadding = 0.dp
+            var rightPadding = 0.dp
+            var step = 0
+
+            for (i in 0..50) {
+                if (i != 0) {
+                    when (step) {
+                        in 0..2 -> {
+                            leftPadding += paddingChange
+                            if (rightPadding != 0.dp) {
+                                rightPadding -= paddingChange
+                            }
+                        }
+
+                        3 -> {
+                            step = -4
+                        }
+
+                        in -4..-1 -> {
+                            rightPadding += paddingChange
+                            if (leftPadding != 0.dp) {
+                                leftPadding -= paddingChange
+                            }
                         }
                     }
-                    3 -> {
-                        step = -4
+                    step += 1
+
+                }
+
+                val modifierLevel = when (i) {
+                    0 -> {
+                        Modifier
+                            .clip(RoundedCornerShape(50))
+                            .background(Color.Yellow)
                     }
-                    in -4..-1 -> {
-                        rightPadding += paddingChange
-                        if (leftPadding != 0.dp) {
-                            leftPadding -= paddingChange
-                        }
+
+                    1 -> {
+                        Modifier
+                            .clip(RoundedCornerShape(50))
+                            .background(Color.Green)
+                    }
+
+                    else -> {
+                        Modifier
+                            .clip(RoundedCornerShape(50))
+                            .background(Color.Gray)
                     }
                 }
-                step += 1
 
+                LevelCard(navigateToLevel, i, modifierLevel, rightPadding, leftPadding)
             }
-
-            val modifierLevel = when (i) {
-                0 -> {
-                    Modifier
-                        .clip(RoundedCornerShape(50))
-                        .background(Color.Yellow)
-                }
-                1 -> {
-                    Modifier
-                        .clip(RoundedCornerShape(50))
-                        .background(Color.Green)
-                }
-                else -> {
-                    Modifier
-                        .clip(RoundedCornerShape(50))
-                        .background(Color.Gray)
-                }
-            }
-
-            LevelCard(navigateToLevel,i, modifierLevel, rightPadding, leftPadding)
         }
     }
 }
 
 @Composable
-fun LevelCard(navigateToLevel: () -> Unit,number: Int, modifier: Modifier, rightPadding: Dp, leftPadding: Dp){
+fun LevelCard(
+    navigateToLevel: () -> Unit,
+    number: Int,
+    modifier: Modifier,
+    rightPadding: Dp,
+    leftPadding: Dp
+) {
     Box(
         modifier = Modifier
             .padding(
@@ -118,6 +141,18 @@ fun LevelCard(navigateToLevel: () -> Unit,number: Int, modifier: Modifier, right
                 )
             }
         }
+    }
+}
+
+@Composable
+fun TopBar() {
+    Row(
+        modifier = Modifier
+            .background(Color.Transparent)
+            .height(50.dp)
+            .fillMaxWidth()
+    ) {
+        Image(painter = painterResource(id = R.drawable.done), contentDescription = null)
     }
 }
 
@@ -161,7 +196,16 @@ fun Level(navigateToLevel: () -> Unit,number: Int, image: Int, rightPadding: Dp,
 @Composable
 fun CardPreview() {
     SwiftWordsTheme {
-        LevelCard({},1,Modifier,19.dp,19.dp)
+        LevelCard({}, 1, Modifier, 19.dp, 19.dp)
     }
 }
+
+@Preview(showBackground = true)
+@Composable
+fun LevelPreview() {
+    SwiftWordsTheme {
+        LevelScreen({})
+    }
+}
+
 
