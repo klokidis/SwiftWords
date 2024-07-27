@@ -1,7 +1,6 @@
 package com.example.swiftwords.ui.levels
 
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.clickable
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -9,20 +8,22 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.Card
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.Shadow
-import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import com.example.swiftwords.R
+import androidx.compose.ui.unit.sp
+import com.example.swiftwords.ui.theme.SwiftWordsTheme
 
 @Composable
 fun LevelScreen(navigateToLevel: () -> Unit) {
@@ -63,17 +64,64 @@ fun LevelScreen(navigateToLevel: () -> Unit) {
 
             }
 
-            val image = when (i) {
-                0 -> R.drawable.done
-                1 -> R.drawable.current
-                else -> R.drawable.locked
+            val modifierLevel = when (i) {
+                0 -> {
+                    Modifier
+                        .clip(RoundedCornerShape(50))
+                        .background(Color.Yellow)
+                }
+                1 -> {
+                    Modifier
+                        .clip(RoundedCornerShape(50))
+                        .background(Color.Green)
+                }
+                else -> {
+                    Modifier
+                        .clip(RoundedCornerShape(50))
+                        .background(Color.Gray)
+                }
             }
 
-            Level(navigateToLevel,i, image, rightPadding, leftPadding)
+            LevelCard(navigateToLevel,i, modifierLevel, rightPadding, leftPadding)
         }
     }
 }
 
+@Composable
+fun LevelCard(navigateToLevel: () -> Unit,number: Int, modifier: Modifier, rightPadding: Dp, leftPadding: Dp){
+    Box(
+        modifier = Modifier
+            .padding(
+                start = leftPadding,
+                end = rightPadding,
+                top = 50.dp
+            ),
+        contentAlignment = Alignment.Center
+    ) {
+        Card(
+            modifier = modifier
+                .size(90.dp),
+            onClick = navigateToLevel,
+            shape = RoundedCornerShape(50),
+        ) {
+            Box(
+                contentAlignment = Alignment.Center,
+                modifier = modifier.fillMaxSize(),
+            ) {
+                Text(
+                    text = number.toString(),
+                    style = MaterialTheme.typography.bodyLarge.copy(
+                        color = Color.White
+                    ),
+                    fontSize = 24.sp,
+                    textAlign = TextAlign.Center
+                )
+            }
+        }
+    }
+}
+
+/*
 @Composable
 fun Level(navigateToLevel: () -> Unit,number: Int, image: Int, rightPadding: Dp, leftPadding: Dp) {
     Box(
@@ -108,5 +156,12 @@ fun Level(navigateToLevel: () -> Unit,number: Int, image: Int, rightPadding: Dp,
         )
     }
 }
-
+*/
+@Preview(showBackground = true)
+@Composable
+fun CardPreview() {
+    SwiftWordsTheme {
+        LevelCard({},1,Modifier,19.dp,19.dp)
+    }
+}
 
