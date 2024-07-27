@@ -4,4 +4,6 @@
     <string name="modes">Modes</string>
     <string name="profile">Profile</string>
     <string name="game">Game</string>
+    <string name="exit">exit game</string>
+    <string name="textfield">textfield for answers</string>
 </resources>

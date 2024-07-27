@@ -79,7 +79,6 @@ fun Game(
         }
 
         Spacer(modifier = Modifier.padding(30.dp))
-
         Row(
             modifier = Modifier
                 .fillMaxWidth()
@@ -115,7 +114,7 @@ fun CustomTextField() {
     OutlinedTextField(
         value = textState,
         modifier = Modifier
-            .width(230.dp),
+            .width(250.dp),
         onValueChange = { textState = it },
         label = { Text("") },
         colors = OutlinedTextFieldDefaults.colors(
@@ -232,8 +231,13 @@ fun TimerBar(value: Float, navigateUp: () -> Unit, currentTime: Long) {
             Color(0xFF76ffcf)
         )
         Text(
-            text = currentTime.toString().take(if (currentTime < 10000L) 1 else 2)
-        )//make fixed size
+            text = if(currentTime > 1000L){
+                currentTime.toString().take(if (currentTime < 10000L) 1 else 2)
+            } else {
+                "0." + currentTime.toString().take(1)
+            },
+            modifier = Modifier.width(25.dp),
+        )
     }
 }
 
