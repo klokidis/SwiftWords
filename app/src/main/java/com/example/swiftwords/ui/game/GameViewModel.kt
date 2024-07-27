@@ -20,7 +20,7 @@ class GameViewModel : ViewModel() {
 
     private fun runClock() {
         viewModelScope.launch {
-            delay(1000L)
+            delay(1300L)
             while (uiState.value.isTimerRunning) {
                 if (uiState.value.currentTime > 0L && uiState.value.isTimerRunning) {
                     delay(10L)

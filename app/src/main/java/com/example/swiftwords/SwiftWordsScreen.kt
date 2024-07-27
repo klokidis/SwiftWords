@@ -43,6 +43,7 @@ fun SwiftWordsApp(
     navController: NavHostController = rememberNavController()
 ) {
     val backStackEntry by navController.currentBackStackEntryAsState()
+
     val currentScreen = SwiftWordsScreen.valueOf(
         backStackEntry?.destination?.route ?: SwiftWordsScreen.Levels.name
     )
@@ -51,7 +52,6 @@ fun SwiftWordsApp(
     }
 
     Scaffold(
-
         bottomBar = {
             if (currentScreen != SwiftWordsScreen.Game) {
                 NavigationBar {

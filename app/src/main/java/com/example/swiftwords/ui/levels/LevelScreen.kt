@@ -15,13 +15,16 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -36,10 +39,8 @@ fun LevelScreen(navigateToLevel: () -> Unit) {
 
     val scrollState = rememberScrollState()
 
-    Box {
-
+    Box{
         TopBar()
-
         Column(
             modifier = Modifier
                 .fillMaxSize()
@@ -97,7 +98,6 @@ fun LevelScreen(navigateToLevel: () -> Unit) {
                             .background(Color.Gray)
                     }
                 }
-
                 LevelCard(navigateToLevel, i, modifierLevel, rightPadding, leftPadding)
             }
         }
@@ -153,6 +153,26 @@ fun TopBar() {
             .fillMaxWidth()
     ) {
         Image(painter = painterResource(id = R.drawable.done), contentDescription = null)
+    }
+}
+
+@Composable
+fun BottomLevel(onClick: ()->Unit) {
+    Card(
+        modifier = Modifier
+            .padding(10.dp)
+            .height(50.dp)
+            .fillMaxWidth(0.8f)
+            .shadow(
+                elevation = 2.dp,
+                shape = RoundedCornerShape(16.dp)
+            ),
+        elevation = CardDefaults.cardElevation(
+            defaultElevation = dimensionResource(id = R.dimen.elevation),
+        ),
+        onClick = onClick
+    ) {
+
     }
 }
 
