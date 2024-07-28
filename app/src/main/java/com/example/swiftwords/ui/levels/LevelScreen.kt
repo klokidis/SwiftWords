@@ -26,9 +26,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -118,8 +116,7 @@ fun LevelScreen(
                 .fillMaxSize(),
             contentAlignment = Alignment.BottomCenter
         ) {
-            BottomLevel {
-            }
+            BottomLevel(navigateToLevel,levelUiState.currentLevel.toString())
         }
     }
 }
@@ -198,22 +195,24 @@ fun TopBar() {
 
 
 @Composable
-fun BottomLevel(onClick: () -> Unit) {
+fun BottomLevel(onClick: () -> Unit,level: String) {
     Card(
         modifier = Modifier
-            .padding(10.dp)
+            .padding(15.dp)
             .height(50.dp)
-            .fillMaxWidth(0.8f)
-            .shadow(
-                elevation = 2.dp,
-                shape = RoundedCornerShape(16.dp)
-            ),
+            .fillMaxWidth(0.7f)
+            ,
         elevation = CardDefaults.cardElevation(
-            defaultElevation = dimensionResource(id = R.dimen.elevation),
+            defaultElevation = 4.dp,
         ),
         onClick = onClick
     ) {
-
+        Box(
+            modifier = Modifier.fillMaxSize(),
+            contentAlignment = Alignment.Center
+        ) {
+            Text(text = level)
+        }
     }
 }
 
