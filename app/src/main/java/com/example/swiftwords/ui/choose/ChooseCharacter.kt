@@ -90,7 +90,7 @@ fun CompleteCard(
         }
     }
 }
-@OptIn(ExperimentalMaterial3Api::class)
+
 @Composable
 fun CharacterCard(onButtonCard: () -> Unit){
     Card(

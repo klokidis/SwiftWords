@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -16,7 +17,10 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.Divider
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -46,8 +50,7 @@ fun LevelScreen(
 
     val scrollState = rememberScrollState()
 
-    Box{
-        TopBar()
+    Box {
         Column(
             modifier = Modifier
                 .fillMaxSize()
@@ -61,7 +64,7 @@ fun LevelScreen(
             var rightPadding = 0.dp
             var step = 0
 
-            for (i in levelUiState.currentLevel-25 ..levelUiState.currentLevel + 25) {
+            for (i in levelUiState.currentLevel - 25..levelUiState.currentLevel + 25) {
                 if (i > 0) {
                     when (step) {
                         in 0..2 -> {
@@ -105,6 +108,7 @@ fun LevelScreen(
                 }
             }
         }
+        TopBar()
     }
 }
 
@@ -150,18 +154,46 @@ fun LevelCard(
 
 @Composable
 fun TopBar() {
-    Row(
+    Surface(
         modifier = Modifier
-            .background(Color.Transparent)
-            .height(50.dp)
             .fillMaxWidth()
+            .height(50.dp),
+        color = MaterialTheme.colorScheme.background,
+        shadowElevation = 4.dp
     ) {
-        Image(painter = painterResource(id = R.drawable.done), contentDescription = null)
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+        ) {
+            Row(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(horizontal = 16.dp)
+            ) {
+                Image(painter = painterResource(id = R.drawable.done), contentDescription = null)
+                Text(text = "theme", modifier = Modifier.padding(start = 8.dp))
+                Spacer(modifier = Modifier.weight(1f))
+                Image(painter = painterResource(id = R.drawable.done), contentDescription = null)
+                Text(text = "10", modifier = Modifier.padding(start = 8.dp))
+                Spacer(modifier = Modifier.weight(1f))
+                Image(painter = painterResource(id = R.drawable.done), contentDescription = null)
+                Text(text = "5", modifier = Modifier.padding(start = 8.dp))
+            }
+            HorizontalDivider(
+                modifier = Modifier
+                    .align(Alignment.BottomCenter)
+                    .fillMaxWidth()
+                    .height(1.dp),
+                color = Color.LightGray
+            )
+        }
     }
 }
 
+
+
 @Composable
-fun BottomLevel(onClick: ()->Unit) {
+fun BottomLevel(onClick: () -> Unit) {
     Card(
         modifier = Modifier
             .padding(10.dp)
