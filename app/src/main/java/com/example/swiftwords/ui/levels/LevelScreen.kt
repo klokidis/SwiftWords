@@ -17,8 +17,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.Divider
-import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -50,20 +48,25 @@ fun LevelScreen(
 
     val scrollState = rememberScrollState()
 
-    Box {
+
+    val paddingChange = 50.dp
+    var leftPadding = 0.dp
+    var rightPadding = 0.dp
+    var step = 0
+
+    Box(
+        modifier = Modifier
+            .fillMaxSize(),
+        contentAlignment = Alignment.TopStart
+    ) {
         Column(
             modifier = Modifier
                 .fillMaxSize()
+                .padding(top = 20.dp)
                 .verticalScroll(scrollState),
             verticalArrangement = Arrangement.Top,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-
-            val paddingChange = 50.dp
-            var leftPadding = 0.dp
-            var rightPadding = 0.dp
-            var step = 0
-
             for (i in levelUiState.currentLevel - 25..levelUiState.currentLevel + 25) {
                 if (i > 0) {
                     when (step) {
@@ -108,7 +111,16 @@ fun LevelScreen(
                 }
             }
         }
+
         TopBar()
+        Box( // text on top of image to bottom start
+            modifier = Modifier
+                .fillMaxSize(),
+            contentAlignment = Alignment.BottomCenter
+        ) {
+            BottomLevel {
+            }
+        }
     }
 }
 
@@ -159,7 +171,7 @@ fun TopBar() {
             .fillMaxWidth()
             .height(50.dp),
         color = MaterialTheme.colorScheme.background,
-        shadowElevation = 4.dp
+        shadowElevation = 3.dp
     ) {
         Box(
             modifier = Modifier
@@ -179,17 +191,10 @@ fun TopBar() {
                 Image(painter = painterResource(id = R.drawable.done), contentDescription = null)
                 Text(text = "5", modifier = Modifier.padding(start = 8.dp))
             }
-            HorizontalDivider(
-                modifier = Modifier
-                    .align(Alignment.BottomCenter)
-                    .fillMaxWidth()
-                    .height(1.dp),
-                color = Color.LightGray
-            )
+
         }
     }
 }
-
 
 
 @Composable
@@ -260,6 +265,9 @@ fun CardPreview() {
 @Composable
 fun LevelPreview() {
     SwiftWordsTheme {
+        LevelScreen(
+            androidx.lifecycle.viewmodel.compose.viewModel(factory = AppViewModelProvider.Factory),
+            {})
     }
 }
 
