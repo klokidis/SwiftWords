@@ -27,7 +27,7 @@ class GameViewModel : ViewModel() {
                     _uiState.update { currentState ->
                         currentState.copy(
                             currentTime = uiState.value.currentTime - 10L,
-                            value = (uiState.value.currentTime - 100L) / uiState.value.totalTime.toFloat()
+                            value = (uiState.value.currentTime - 10L) / uiState.value.totalTime.toFloat()
                         )
                     }
                 }else{

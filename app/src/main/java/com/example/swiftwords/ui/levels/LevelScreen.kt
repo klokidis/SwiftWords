@@ -19,6 +19,8 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -32,10 +34,15 @@ import androidx.compose.ui.unit.Dp
 import com.example.swiftwords.R
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.swiftwords.ui.AppViewModelProvider
 import com.example.swiftwords.ui.theme.SwiftWordsTheme
 
 @Composable
-fun LevelScreen(navigateToLevel: () -> Unit) {
+fun LevelScreen(
+    viewModel: LevelViewModel = androidx.lifecycle.viewmodel.compose.viewModel(factory = AppViewModelProvider.Factory),
+    navigateToLevel: () -> Unit,
+) {
+    val levelUiState by viewModel.uiState.collectAsState()
 
     val scrollState = rememberScrollState()
 
@@ -54,8 +61,8 @@ fun LevelScreen(navigateToLevel: () -> Unit) {
             var rightPadding = 0.dp
             var step = 0
 
-            for (i in 0..50) {
-                if (i != 0) {
+            for (i in levelUiState.currentLevel-25 ..levelUiState.currentLevel + 25) {
+                if (i > 0) {
                     when (step) {
                         in 0..2 -> {
                             leftPadding += paddingChange
@@ -78,27 +85,24 @@ fun LevelScreen(navigateToLevel: () -> Unit) {
                     step += 1
 
                 }
-
-                val modifierLevel = when (i) {
-                    0 -> {
+                if (i > 0) {
+                    val modifierLevel = if (i < levelUiState.currentLevel) {
                         Modifier
                             .clip(RoundedCornerShape(50))
                             .background(Color.Yellow)
+                    } else {
+                        if (i == levelUiState.currentLevel) {
+                            Modifier
+                                .clip(RoundedCornerShape(50))
+                                .background(Color.Green)
+                        } else {
+                            Modifier
+                                .clip(RoundedCornerShape(50))
+                                .background(Color.Gray)
+                        }
                     }
-
-                    1 -> {
-                        Modifier
-                            .clip(RoundedCornerShape(50))
-                            .background(Color.Green)
-                    }
-
-                    else -> {
-                        Modifier
-                            .clip(RoundedCornerShape(50))
-                            .background(Color.Gray)
-                    }
+                    LevelCard(navigateToLevel, i, modifierLevel, rightPadding, leftPadding)
                 }
-                LevelCard(navigateToLevel, i, modifierLevel, rightPadding, leftPadding)
             }
         }
     }
@@ -224,7 +228,6 @@ fun CardPreview() {
 @Composable
 fun LevelPreview() {
     SwiftWordsTheme {
-        LevelScreen({})
     }
 }
 
