@@ -15,6 +15,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.res.stringResource
 import com.example.swiftwords.data.DataSource
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
@@ -40,6 +41,7 @@ enum class SwiftWordsScreen {
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SwiftWordsApp(
+    windowSize: WindowWidthSizeClass,
     navController: NavHostController = rememberNavController()
 ) {
     val backStackEntry by navController.currentBackStackEntryAsState()
@@ -131,6 +133,20 @@ fun SwiftWordsApp(
 @Composable
 fun EverythingPreview() {
     SwiftWordsTheme {
-        SwiftWordsApp()
+        SwiftWordsApp(windowSize = WindowWidthSizeClass.Medium)
+    }
+}
+@Preview(showBackground = true)
+@Composable
+fun EverythingPreview2() {
+    SwiftWordsTheme {
+        SwiftWordsApp(windowSize = WindowWidthSizeClass.Expanded)
+    }
+}
+@Preview(showBackground = true)
+@Composable
+fun EverythingPreview3() {
+    SwiftWordsTheme {
+        SwiftWordsApp(windowSize = WindowWidthSizeClass.Compact)
     }
 }
