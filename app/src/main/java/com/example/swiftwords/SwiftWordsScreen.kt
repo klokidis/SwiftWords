@@ -27,7 +27,6 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.swiftwords.ui.AppViewModelProvider
 import com.example.swiftwords.ui.game.Game
-import com.example.swiftwords.ui.game.GameViewModel
 import com.example.swiftwords.ui.levels.LevelScreen
 import com.example.swiftwords.ui.modes.ModesScreen
 import com.example.swiftwords.ui.profile.ProfileScreen

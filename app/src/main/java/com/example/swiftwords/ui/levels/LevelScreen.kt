@@ -46,7 +46,6 @@ fun LevelScreen(
 
     val scrollState = rememberScrollState()
 
-
     val paddingChange = 50.dp
     var leftPadding = 0.dp
     var rightPadding = 0.dp
