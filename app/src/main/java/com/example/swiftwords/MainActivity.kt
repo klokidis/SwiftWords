@@ -28,10 +28,10 @@ class MainActivity : ComponentActivity() {
     }
 }
 
-    @Preview(showBackground = true)
-    @Composable
-    fun GreetingPreview() {
-        SwiftWordsTheme {
-            SwiftWordsApp()
-        }
+@Preview(showBackground = true)
+@Composable
+fun GreetingPreview() {
+    SwiftWordsTheme {
+        SwiftWordsApp()
     }
+}

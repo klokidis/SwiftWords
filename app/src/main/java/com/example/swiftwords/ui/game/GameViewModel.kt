@@ -1,5 +1,6 @@
 package com.example.swiftwords.ui.game
 
+import androidx.compose.ui.unit.IntSize
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.delay
@@ -8,6 +9,14 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+
+data class GameUiState (
+    var totalTime: Long = 30000L,
+    var size: IntSize = IntSize.Zero,
+    var value: Float = 1f,
+    var currentTime: Long = 30000L,
+    var isTimerRunning: Boolean = true
+)
 
 class GameViewModel : ViewModel() {
 

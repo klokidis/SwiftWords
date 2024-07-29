@@ -105,7 +105,7 @@ fun CharacterChat() {
         ) {
             Image(
                 painter = painterResource(
-                    id = R.drawable.omen
+                    id = R.drawable.done
                 ),
                 modifier = Modifier
                     .size(400.dp),

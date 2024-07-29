@@ -17,7 +17,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -55,9 +54,9 @@ fun ChooseCharacter(){
         horizontalAlignment = Alignment.Start
     ){
         Spacer(modifier = Modifier.weight(1f))
-        CompleteCard(R.drawable.omen)
+        CompleteCard(R.drawable.current)
         Spacer(modifier = Modifier.padding(20.dp))
-        CompleteCard(R.drawable.sage)
+        CompleteCard(R.drawable.done)
         Spacer(modifier = Modifier.weight(1f))
     }
 }
