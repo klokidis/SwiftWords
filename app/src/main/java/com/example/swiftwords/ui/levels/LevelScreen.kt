@@ -65,7 +65,7 @@ fun LevelScreen(
             verticalArrangement = Arrangement.Top,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            for (i in levelUiState.currentLevel - 5..levelUiState.currentLevel + 5) {
+            for (i in levelUiState.currentLevel - 25..levelUiState.currentLevel + 25) {
                 if (i > 0) {
                     when (step) {
                         in 0..2 -> {

@@ -15,15 +15,19 @@ import androidx.compose.ui.res.stringResource
 import com.example.swiftwords.data.DataSource
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import com.example.swiftwords.ui.AppViewModelProvider
 import com.example.swiftwords.ui.game.Game
+import com.example.swiftwords.ui.game.GameViewModel
 import com.example.swiftwords.ui.levels.LevelScreen
 import com.example.swiftwords.ui.modes.ModesScreen
 import com.example.swiftwords.ui.profile.ProfileScreen
@@ -38,10 +42,11 @@ enum class SwiftWordsScreen {
 
 @Composable
 fun SwiftWordsApp(
+    viewModel: MainViewModel = viewModel(factory = AppViewModelProvider.Factory),
     navController: NavHostController = rememberNavController()
 ) {
     val backStackEntry by navController.currentBackStackEntryAsState()
-
+    val mainUiState by viewModel.uiState.collectAsState()
     val currentScreen = SwiftWordsScreen.valueOf(
         backStackEntry?.destination?.route ?: SwiftWordsScreen.Levels.name
     )
@@ -118,7 +123,7 @@ fun SwiftWordsApp(
                 selectedItemIndex = 2
             }
             composable(route = SwiftWordsScreen.Game.name) {
-                Game(listOfLetters = listOf("A", "B", "C", "D", "E", "F", "G", "H", "O"), navigateUp = {navController.navigateUp()})
+                Game(listOfLetters = mainUiState.listOfLettersForLevel, navigateUp = {navController.navigateUp()})
             }
         }
 

@@ -51,7 +51,7 @@ import com.example.swiftwords.R
 
 @Composable
 fun Game(
-    listOfLetters: List<String>,
+    listOfLetters: List<Char>,
     viewModel: GameViewModel = viewModel(factory = AppViewModelProvider.Factory),
     navigateUp: () -> Unit
 ) {
@@ -130,7 +130,7 @@ fun CustomTextField() {
 
 
 @Composable
-fun RowOfLetters(letter1: String, letter2: String, letter3: String) {
+fun RowOfLetters(letter1: Char, letter2: Char, letter3: Char) {
     Row(
         modifier = Modifier
             .wrapContentSize()
@@ -142,7 +142,7 @@ fun RowOfLetters(letter1: String, letter2: String, letter3: String) {
 }
 
 @Composable
-fun LetterBox(letter: String) {
+fun LetterBox(letter: Char) {
     ElevatedCard(
         modifier = Modifier
             .padding(5.dp)
@@ -158,7 +158,7 @@ fun LetterBox(letter: String) {
             modifier = Modifier.fillMaxSize(),
             contentAlignment = Alignment.Center,
         ) {
-            Text(text = letter)
+            Text(text = letter.toString())
         }
     }
 }
@@ -245,6 +245,6 @@ fun TimerBar(value: Float, navigateUp: () -> Unit, currentTime: Long) {
 @Composable
 fun GamePreview() {
     SwiftWordsTheme {
-        Game(listOf("A", "B", "C", "D", "E", "F", "G", "H", "O"), navigateUp = {})
+        Game(listOf('A', 'F', 'E', 'D', 'E', 'F', 'G', 'H', 'O'), navigateUp = {})
     }
 }
