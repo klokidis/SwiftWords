@@ -64,7 +64,8 @@ fun LevelScreen(
             verticalArrangement = Arrangement.Top,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            for (i in levelUiState.currentLevel - 25..levelUiState.currentLevel + 25) {
+            val currentLevel = levelUiState.currentLevel
+            for (i in currentLevel - 5..currentLevel + 25) {
                 if (i > 0) {
                     when (step) {
                         in 0..2 -> {
@@ -87,14 +88,12 @@ fun LevelScreen(
                     }
                     step += 1
 
-                }
-                if (i > 0) {
-                    val modifierLevel = if (i < levelUiState.currentLevel) {
+                    val modifierLevel = if (i < currentLevel) {
                         Modifier
                             .clip(RoundedCornerShape(50))
                             .background(Color.Yellow)
                     } else {
-                        if (i == levelUiState.currentLevel) {
+                        if (i == currentLevel) {
                             Modifier
                                 .clip(RoundedCornerShape(50))
                                 .background(Color.Green)
@@ -104,7 +103,7 @@ fun LevelScreen(
                                 .background(Color.Gray)
                         }
                     }
-                    LevelCard(navigateToLevel, i, modifierLevel, rightPadding, leftPadding)
+                    LevelCard( i, modifierLevel, rightPadding, leftPadding)
                 }
             }
         }
@@ -115,14 +114,13 @@ fun LevelScreen(
                 .fillMaxSize(),
             contentAlignment = Alignment.BottomCenter
         ) {
-            BottomLevel(navigateToLevel,levelUiState.currentLevel.toString())
+            BottomLevel(navigateToLevel, levelUiState.currentLevel.toString())
         }
     }
 }
 
 @Composable
 fun LevelCard(
-    navigateToLevel: () -> Unit,
     number: Int,
     modifier: Modifier,
     rightPadding: Dp,
@@ -140,7 +138,6 @@ fun LevelCard(
         Card(
             modifier = modifier
                 .size(90.dp),
-            onClick = navigateToLevel,
             shape = RoundedCornerShape(50),
         ) {
             Box(
@@ -194,13 +191,12 @@ fun TopBar() {
 
 
 @Composable
-fun BottomLevel(onClick: () -> Unit,level: String) {
+fun BottomLevel(onClick: () -> Unit, level: String) {
     Card(
         modifier = Modifier
             .padding(15.dp)
             .height(50.dp)
-            .fillMaxWidth(0.7f)
-            ,
+            .fillMaxWidth(0.7f),
         elevation = CardDefaults.cardElevation(
             defaultElevation = 4.dp,
         ),
@@ -219,7 +215,7 @@ fun BottomLevel(onClick: () -> Unit,level: String) {
 @Composable
 fun CardPreview() {
     SwiftWordsTheme {
-        LevelCard({}, 1, Modifier, 19.dp, 19.dp)
+        LevelCard( 1, Modifier, 19.dp, 19.dp)
     }
 }
 

@@ -51,7 +51,7 @@ import com.example.swiftwords.R
 
 @Composable
 fun Game(
-    listOfLetters: List<Char>,
+    listOfLetters: Array<Char>,
     viewModel: GameViewModel = viewModel(factory = AppViewModelProvider.Factory),
     navigateUp: () -> Unit
 ) {
@@ -245,6 +245,6 @@ fun TimerBar(value: Float, navigateUp: () -> Unit, currentTime: Long) {
 @Composable
 fun GamePreview() {
     SwiftWordsTheme {
-        Game(listOf('A', 'F', 'E', 'D', 'E', 'F', 'G', 'H', 'O'), navigateUp = {})
+        Game(arrayOf('A', 'F', 'E', 'D', 'E', 'F', 'G', 'H', 'O'), navigateUp = {})
     }
 }

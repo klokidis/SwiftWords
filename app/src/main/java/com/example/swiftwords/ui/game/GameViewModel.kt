@@ -10,7 +10,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
-data class GameUiState (
+data class GameUiState(
     var totalTime: Long = 30000L,
     var size: IntSize = IntSize.Zero,
     var value: Float = 1f,
@@ -24,30 +24,29 @@ class GameViewModel : ViewModel() {
     val uiState: StateFlow<GameUiState> = _uiState.asStateFlow()
 
     init {
-        runClock()
+        viewModelScope.launch {
+            runClock()
+        }
     }
 
-    private fun runClock() {
-        viewModelScope.launch {
-            delay(1300L)
-            while (uiState.value.isTimerRunning) {
-                if (uiState.value.currentTime > 0L && uiState.value.isTimerRunning) {
-                    delay(10L)
-                    _uiState.update { currentState ->
-                        currentState.copy(
-                            currentTime = uiState.value.currentTime - 10L,
-                            value = (uiState.value.currentTime - 10L) / uiState.value.totalTime.toFloat()
-                        )
-                    }
-                }else{
-                    _uiState.update { currentState ->
-                        currentState.copy(
-                            isTimerRunning = false
-                        )
-                    }
+    private suspend fun runClock() {
+        delay(1300L)
+        while (uiState.value.isTimerRunning) {
+            if (uiState.value.currentTime > 0L && uiState.value.isTimerRunning) {
+                delay(50L)
+                _uiState.update { currentState ->
+                    currentState.copy(
+                        currentTime = uiState.value.currentTime - 50L,
+                        value = (uiState.value.currentTime) / uiState.value.totalTime.toFloat()
+                    )
+                }
+            } else {
+                _uiState.update { currentState ->
+                    currentState.copy(
+                        isTimerRunning = false
+                    )
                 }
             }
         }
     }
-
 }

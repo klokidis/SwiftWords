@@ -103,7 +103,7 @@ fun SwiftWordsApp(
                     }
                 }
             }
-        }) { it ->
+        }) {
         NavHost(
             navController = navController,
             startDestination = SwiftWordsScreen.Levels.name,

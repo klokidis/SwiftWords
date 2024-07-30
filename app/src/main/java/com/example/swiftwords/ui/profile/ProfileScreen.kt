@@ -41,7 +41,6 @@ import kotlinx.coroutines.launch
 
 @Composable
 fun ProfileScreen() {
-
     val scrollState = rememberScrollState()
     Column(
         modifier = Modifier
