@@ -262,4 +262,3 @@ fun TimerBar(value: Float, navigateUp: () -> Unit, currentTime: Long) {
         )
     }
 }
-

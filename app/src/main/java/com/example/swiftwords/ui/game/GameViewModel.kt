@@ -14,10 +14,10 @@ import kotlinx.coroutines.withContext
 import java.util.Locale
 
 data class GameUiState(
-    var totalTime: Long = 30000L,
+    var totalTime: Long = 40000L,
     var size: IntSize = IntSize.Zero,
     var value: Float = 1f,
-    var currentTime: Long = 30000L,
+    var currentTime: Long = 40000L,
     var isTimerRunning: Boolean = true
 )
 

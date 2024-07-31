@@ -138,10 +138,10 @@ fun SwiftWordsApp(
                 selectedItemIndex = 2
             }
             composable(route = SwiftWordsScreen.Game.name) {
-                wordListState.value?.let { it1 ->
+                wordListState.value?.let { wordList ->
                     Game(
                         listOfLetters = mainUiState.listOfLettersForLevel,
-                        wordList = it1,
+                        wordList = wordList,
                         navigateUp = {navController.navigateUp()})
                 }
             }
