@@ -1,5 +1,6 @@
 package com.example.swiftwords
 
+import android.content.Context
 import androidx.compose.material3.Badge
 import androidx.compose.material3.BadgedBox
 import androidx.compose.material3.Icon
@@ -15,9 +16,12 @@ import androidx.compose.ui.res.stringResource
 import com.example.swiftwords.data.DataSource
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
@@ -30,7 +34,7 @@ import com.example.swiftwords.ui.game.Game
 import com.example.swiftwords.ui.levels.LevelScreen
 import com.example.swiftwords.ui.modes.ModesScreen
 import com.example.swiftwords.ui.profile.ProfileScreen
-import com.example.swiftwords.ui.theme.SwiftWordsTheme
+import kotlinx.coroutines.launch
 
 enum class SwiftWordsScreen {
     Levels,
@@ -41,6 +45,7 @@ enum class SwiftWordsScreen {
 
 @Composable
 fun SwiftWordsApp(
+    context: Context,
     viewModel: MainViewModel = viewModel(factory = AppViewModelProvider.Factory),
     navController: NavHostController = rememberNavController()
 ) {
@@ -51,6 +56,17 @@ fun SwiftWordsApp(
     )
     var selectedItemIndex by rememberSaveable {
         mutableIntStateOf(0)
+    }
+
+    val wordListState = remember { mutableStateOf<List<String>?>(null) }
+    val coroutineScope = rememberCoroutineScope()
+
+    // Launch a coroutine to load the word list
+    LaunchedEffect(context) {
+        coroutineScope.launch {
+            val words = viewModel.loadWordsFromAssets(context)
+            wordListState.value = words
+        }
     }
 
     Scaffold(
@@ -122,16 +138,14 @@ fun SwiftWordsApp(
                 selectedItemIndex = 2
             }
             composable(route = SwiftWordsScreen.Game.name) {
-                Game(listOfLetters = mainUiState.listOfLettersForLevel, navigateUp = {navController.navigateUp()})
+                wordListState.value?.let { it1 ->
+                    Game(
+                        listOfLetters = mainUiState.listOfLettersForLevel,
+                        wordList = it1,
+                        navigateUp = {navController.navigateUp()})
+                }
             }
         }
     }
 }
 
-@Preview(showBackground = true)
-@Composable
-fun EverythingPreview() {
-    SwiftWordsTheme {
-        SwiftWordsApp()
-    }
-}

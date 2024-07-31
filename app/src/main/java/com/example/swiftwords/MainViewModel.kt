@@ -1,12 +1,15 @@
 package com.example.swiftwords
 
+import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 data class MainUiState(
     var listOfLettersForLevel: Array<Char> = arrayOf(),
@@ -18,6 +21,7 @@ class MainViewModel : ViewModel() {
     private val _uiState = MutableStateFlow(MainUiState())
     val uiState: StateFlow<MainUiState> = _uiState.asStateFlow()
 
+
     init {
         viewModelScope.launch {
             _uiState.update { currentState ->
@@ -27,6 +31,21 @@ class MainViewModel : ViewModel() {
             }
         }
     }
+
+    suspend fun loadWordsFromAssets(context: Context): List<String> {
+        return withContext(Dispatchers.IO) {
+            val words = mutableListOf<String>()
+            context.assets.open("engwords").bufferedReader().useLines { lines ->
+                lines.forEach { words.add(it.trim()) }
+            }
+            words
+        }
+    }
+
+    fun isWordValid(word: String, words: List<String>): Boolean {
+        return words.contains(word)
+    }
+
 
     private fun generateRandomLetters(): Array<Char> {
         val vowels = mutableListOf('A', 'E', 'I', 'O', 'U')
