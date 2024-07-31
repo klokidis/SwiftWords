@@ -33,6 +33,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.unit.dp
 import androidx.compose.foundation.Canvas
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.Icon
@@ -42,6 +44,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.IntSize
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -63,6 +66,16 @@ fun Game(
     var isCorrect by remember { mutableStateOf<Boolean?>(null) }
     var isLoading by remember { mutableStateOf(false) }
 
+    // Function to check the answer and update the UI state
+    val checkAnswer: () -> Unit = remember {
+        {
+            isLoading = true
+            coroutineScope.launch {
+                isCorrect = viewModel.checkAnswer(textState, wordList, listOfLetters)
+                isLoading = false
+            }
+        }
+    }
 
     Column(
         modifier = Modifier
@@ -102,18 +115,14 @@ fun Game(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.Center
         ) {
-
-            CustomTextField(textState) { newText -> textState = newText }
+            CustomTextField(
+                textState,
+                { newText -> textState = newText },
+                checkAnswer
+            )
 
             ElevatedButton(
-                onClick = {
-                    // Perform check asynchronously using coroutineScope
-                    isLoading = true
-                    coroutineScope.launch {
-                        isCorrect = viewModel.checkAnswer(textState,wordList,listOfLetters)
-                        isLoading = false
-                    }
-                },
+                onClick = checkAnswer,
                 contentPadding = PaddingValues(0.dp),
                 modifier = Modifier
                     .padding(start = 10.dp, top = 5.dp)
@@ -132,9 +141,14 @@ fun Game(
 }
 
 @Composable
-fun CustomTextField(textState: String, onValueChange: (String) -> Unit) {
+fun CustomTextField(textState: String, onValueChange: (String) -> Unit, onDone: () -> Unit) {
     OutlinedTextField(
         value = textState,
+        singleLine = true,
+        keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
+        keyboardActions = KeyboardActions(
+            onDone = { onDone() }
+        ),
         modifier = Modifier
             .width(250.dp),
         onValueChange = onValueChange,
@@ -148,7 +162,6 @@ fun CustomTextField(textState: String, onValueChange: (String) -> Unit) {
         shape = RoundedCornerShape(20.dp)
     )
 }
-
 
 
 @Composable
@@ -253,7 +266,7 @@ fun TimerBar(value: Float, navigateUp: () -> Unit, currentTime: Long) {
             Color(0xFF76ffcf)
         )
         Text(
-            text = if(currentTime > 1000L){
+            text = if (currentTime > 1000L) {
                 currentTime.toString().take(if (currentTime < 10000L) 1 else 2)
             } else {
                 "0." + currentTime.toString().take(1)
