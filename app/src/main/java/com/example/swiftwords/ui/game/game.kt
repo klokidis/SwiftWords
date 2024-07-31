@@ -31,15 +31,14 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.StrokeCap
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.example.swiftwords.ui.theme.SwiftWordsTheme
 import androidx.compose.foundation.Canvas
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.res.stringResource
@@ -48,15 +47,22 @@ import androidx.compose.ui.unit.IntSize
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.swiftwords.ui.AppViewModelProvider
 import com.example.swiftwords.R
+import kotlinx.coroutines.launch
 
 @Composable
 fun Game(
     listOfLetters: Array<Char>,
-    wordList: List<String>,
+    wordList: Set<String>,
     viewModel: GameViewModel = viewModel(factory = AppViewModelProvider.Factory),
     navigateUp: () -> Unit
 ) {
     val gameUiState by viewModel.uiState.collectAsState()
+
+    val coroutineScope = rememberCoroutineScope()
+    var textState by remember { mutableStateOf("") }
+    var isCorrect by remember { mutableStateOf<Boolean?>(null) }
+    var isLoading by remember { mutableStateOf(false) }
+
 
     Column(
         modifier = Modifier
@@ -79,7 +85,16 @@ fun Game(
             RowOfLetters(listOfLetters[6], listOfLetters[7], listOfLetters[8])
         }
 
-        Spacer(modifier = Modifier.padding(30.dp))
+        Spacer(modifier = Modifier.padding(10.dp))
+        Text(
+            text = when {
+                isLoading -> "Loading..."
+                isCorrect == true -> "Correct answer!"
+                isCorrect == false -> "Incorrect answer."
+                else -> "Please enter an answer."
+            },
+            style = MaterialTheme.typography.bodyLarge // Optional: Customize text style
+        )
         Row(
             modifier = Modifier
                 .fillMaxWidth()
@@ -88,10 +103,17 @@ fun Game(
             horizontalArrangement = Arrangement.Center
         ) {
 
-            CustomTextField()
+            CustomTextField(textState) { newText -> textState = newText }
 
             ElevatedButton(
-                onClick = { },
+                onClick = {
+                    // Perform check asynchronously using coroutineScope
+                    isLoading = true
+                    coroutineScope.launch {
+                        isCorrect = viewModel.checkAnswer(textState,wordList,listOfLetters)
+                        isLoading = false
+                    }
+                },
                 contentPadding = PaddingValues(0.dp),
                 modifier = Modifier
                     .padding(start = 10.dp, top = 5.dp)
@@ -110,24 +132,23 @@ fun Game(
 }
 
 @Composable
-fun CustomTextField() {
-    var textState by remember { mutableStateOf("") }
+fun CustomTextField(textState: String, onValueChange: (String) -> Unit) {
     OutlinedTextField(
         value = textState,
         modifier = Modifier
             .width(250.dp),
-        onValueChange = { textState = it },
+        onValueChange = onValueChange,
         label = { Text("") },
         colors = OutlinedTextFieldDefaults.colors(
             focusedContainerColor = MaterialTheme.colorScheme.inverseOnSurface,
             unfocusedContainerColor = MaterialTheme.colorScheme.inverseOnSurface,
             focusedBorderColor = Color.Transparent,
             unfocusedBorderColor = Color.Transparent,
-
-            ),
+        ),
         shape = RoundedCornerShape(20.dp)
     )
 }
+
 
 
 @Composable
@@ -242,10 +263,3 @@ fun TimerBar(value: Float, navigateUp: () -> Unit, currentTime: Long) {
     }
 }
 
-@Preview(showBackground = true)
-@Composable
-fun GamePreview() {
-    SwiftWordsTheme {
-        Game(arrayOf('A', 'F', 'E', 'D', 'E', 'F', 'G', 'H', 'O'), listOf("",""), navigateUp = {})
-    }
-}

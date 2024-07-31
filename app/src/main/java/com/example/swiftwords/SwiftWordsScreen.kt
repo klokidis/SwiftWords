@@ -58,7 +58,7 @@ fun SwiftWordsApp(
         mutableIntStateOf(0)
     }
 
-    val wordListState = remember { mutableStateOf<List<String>?>(null) }
+    val wordListState = remember { mutableStateOf<Set<String>?>(null) }
     val coroutineScope = rememberCoroutineScope()
 
     // Launch a coroutine to load the word list

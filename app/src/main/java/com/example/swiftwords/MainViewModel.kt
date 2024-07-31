@@ -32,20 +32,15 @@ class MainViewModel : ViewModel() {
         }
     }
 
-    suspend fun loadWordsFromAssets(context: Context): List<String> {
+    suspend fun loadWordsFromAssets(context: Context): Set<String> {
         return withContext(Dispatchers.IO) {
-            val words = mutableListOf<String>()
+            val words = mutableSetOf<String>()
             context.assets.open("engwords").bufferedReader().useLines { lines ->
                 lines.forEach { words.add(it.trim()) }
             }
             words
         }
     }
-
-    fun isWordValid(word: String, words: List<String>): Boolean {
-        return words.contains(word)
-    }
-
 
     private fun generateRandomLetters(): Array<Char> {
         val vowels = mutableListOf('A', 'E', 'I', 'O', 'U')
