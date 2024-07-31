@@ -125,7 +125,6 @@ fun SwiftWordsApp(
                 Game(listOfLetters = mainUiState.listOfLettersForLevel, navigateUp = {navController.navigateUp()})
             }
         }
-
     }
 }
 

@@ -43,17 +43,10 @@ fun LevelScreen(
     navigateToLevel: () -> Unit,
 ) {
     val levelUiState by viewModel.uiState.collectAsState()
-
     val scrollState = rememberScrollState()
 
-    val paddingChange = 50.dp
-    var leftPadding = 0.dp
-    var rightPadding = 0.dp
-    var step = 0
-
     Box(
-        modifier = Modifier
-            .fillMaxSize(),
+        modifier = Modifier.fillMaxSize(),
         contentAlignment = Alignment.TopStart
     ) {
         Column(
@@ -64,60 +57,83 @@ fun LevelScreen(
             verticalArrangement = Arrangement.Top,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            val currentLevel = levelUiState.currentLevel
-            for (i in currentLevel - 5..currentLevel + 25) {
-                if (i > 0) {
-                    when (step) {
-                        in 0..2 -> {
-                            leftPadding += paddingChange
-                            if (rightPadding != 0.dp) {
-                                rightPadding -= paddingChange
-                            }
-                        }
-
-                        3 -> {
-                            step = -4
-                        }
-
-                        in -4..-1 -> {
-                            rightPadding += paddingChange
-                            if (leftPadding != 0.dp) {
-                                leftPadding -= paddingChange
-                            }
-                        }
-                    }
-                    step += 1
-
-                    val modifierLevel = if (i < currentLevel) {
-                        Modifier
-                            .clip(RoundedCornerShape(50))
-                            .background(Color.Yellow)
-                    } else {
-                        if (i == currentLevel) {
-                            Modifier
-                                .clip(RoundedCornerShape(50))
-                                .background(Color.Green)
-                        } else {
-                            Modifier
-                                .clip(RoundedCornerShape(50))
-                                .background(Color.Gray)
-                        }
-                    }
-                    LevelCard( i, modifierLevel, rightPadding, leftPadding)
-                }
-            }
+            LevelList(currentLevel = levelUiState.currentLevel)
         }
 
         TopBar()
-        Box( // text on top of image to bottom start
-            modifier = Modifier
-                .fillMaxSize(),
+
+        Box(
+            modifier = Modifier.fillMaxSize(),
             contentAlignment = Alignment.BottomCenter
         ) {
             BottomLevel(navigateToLevel, levelUiState.currentLevel.toString())
         }
     }
 }
+
+@Composable
+fun LevelList(currentLevel: Int) {
+    val paddingValues = calculatePaddingValues(currentLevel)
+
+    for ((index, i) in (currentLevel - 5..currentLevel + 25).withIndex()) {
+        if (i > 0) {
+            val (leftPadding, rightPadding) = paddingValues.getOrNull(index) ?: continue
+
+            val modifierLevel = when {
+                i < currentLevel -> {
+                    Modifier
+                        .clip(RoundedCornerShape(50))
+                        .background(Color.Yellow)
+                }
+                i == currentLevel -> {
+                    Modifier
+                        .clip(RoundedCornerShape(50))
+                        .background(Color.Green)
+                }
+                else -> {
+                    Modifier
+                        .clip(RoundedCornerShape(50))
+                        .background(Color.Gray)
+                }
+            }
+            LevelCard(i, modifierLevel, rightPadding, leftPadding)
+        }
+    }
+}
+
+fun calculatePaddingValues(currentLevel: Int): List<Pair<Dp, Dp>> {
+    val paddingChange = 50.dp
+    var leftPadding = 0.dp
+    var rightPadding = 0.dp
+    var step = 0
+    val paddingValues = mutableListOf<Pair<Dp, Dp>>()
+
+    for (i in currentLevel - 5..currentLevel + 25) {
+        if (i > 0) {
+            when (step) {
+                in 0..2 -> {
+                    leftPadding += paddingChange
+                    if (rightPadding != 0.dp) {
+                        rightPadding -= paddingChange
+                    }
+                }
+                3 -> {
+                    step = -4
+                }
+                in -4..-1 -> {
+                    rightPadding += paddingChange
+                    if (leftPadding != 0.dp) {
+                        leftPadding -= paddingChange
+                    }
+                }
+            }
+            step += 1
+            paddingValues.add(leftPadding to rightPadding)
+        }
+    }
+    return paddingValues
+}
+
 
 @Composable
 fun LevelCard(
