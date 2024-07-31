@@ -67,7 +67,7 @@ fun Game(
     var isLoading by remember { mutableStateOf(false) }
 
     // Function to check the answer and update the UI state
-    val checkAnswer: () -> Unit = remember {
+    val checkAnswer: () -> Unit = remember { // remember so it doesn't composition
         {
             isLoading = true
             coroutineScope.launch {

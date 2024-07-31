@@ -34,13 +34,17 @@ class GameViewModel : ViewModel() {
 
     suspend fun checkAnswer(answer: String, wordList: Set<String>, charArray: Array<Char>): Boolean {
         return withContext(Dispatchers.Default) {
-            // Convert charArray to a set of lowercase characters for efficient lookup
-            val charSet = charArray.map { it.lowercaseChar() }.toSet()
-            val trimmedAnswer = answer.trim().lowercase(Locale.ROOT)
-            val isInWordList = wordList.contains(trimmedAnswer)
-            val canBeConstructed = trimmedAnswer.all { it in charSet }
+            if(answer.length > 1) {
+                // Convert charArray to a set of lowercase characters for efficient lookup
+                val charSet = charArray.map { it.lowercaseChar() }.toSet()
+                val trimmedAnswer = answer.trim().lowercase(Locale.ROOT)
+                val isInWordList = wordList.contains(trimmedAnswer)
+                val canBeConstructed = trimmedAnswer.all { it in charSet }
 
-            isInWordList && canBeConstructed
+                isInWordList && canBeConstructed
+            }else{
+                false
+            }
         }
     }
 

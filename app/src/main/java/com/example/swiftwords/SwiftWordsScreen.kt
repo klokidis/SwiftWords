@@ -60,14 +60,18 @@ fun SwiftWordsApp(
 
     val wordListState = remember { mutableStateOf<Set<String>?>(null) }
     val coroutineScope = rememberCoroutineScope()
+    val coroutineLaunched = remember { mutableStateOf(false) }
 
-    // Launch a coroutine to load the word list
-    LaunchedEffect(context) {
-        coroutineScope.launch {
-            val words = viewModel.loadWordsFromAssets(context)
-            wordListState.value = words
+    LaunchedEffect(Unit) { // coroutineLaunched ensures it only launches once
+        if (!coroutineLaunched.value) {
+            coroutineLaunched.value = true
+            coroutineScope.launch {
+                val words = viewModel.loadWordsFromAssets(context)
+                wordListState.value = words
+            }
         }
     }
+
 
     Scaffold(
         bottomBar = {
