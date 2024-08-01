@@ -18,7 +18,8 @@ data class GameUiState(
     var size: IntSize = IntSize.Zero,
     var value: Float = 1f,
     var currentTime: Long = 40000L,
-    var isTimerRunning: Boolean = true
+    var isTimerRunning: Boolean = true,
+    var score: Int = 0
 )
 
 class GameViewModel : ViewModel() {
@@ -30,28 +31,53 @@ class GameViewModel : ViewModel() {
         viewModelScope.launch {
             runClock()
         }
+        setScoreToZero()
     }
 
-    suspend fun checkAnswer(answer: String, wordList: Set<String>, charArray: Array<Char>): Boolean {
+    suspend fun checkAnswer(
+        answer: String,
+        wordList: Set<String>,
+        charArray: Array<Char>
+    ): Boolean {
         return withContext(Dispatchers.Default) {
-            if(answer.length > 1) {
+            if (answer.length > 1) {
                 // Convert charArray to a set of lowercase characters for efficient lookup
                 val charSet = charArray.map { it.lowercaseChar() }.toSet()
                 val trimmedAnswer = answer.trim().lowercase(Locale.ROOT)
                 val isInWordList = wordList.contains(trimmedAnswer)
                 val canBeConstructed = trimmedAnswer.all { it in charSet }
 
+                if (isInWordList && canBeConstructed) {
+                    increaseScore()
+                }
+
                 isInWordList && canBeConstructed
-            }else{
+            } else {
                 false
             }
         }
     }
 
-    fun stopClock(){
+    fun stopClock() {
         _uiState.update { currentState ->
             currentState.copy(
                 isTimerRunning = false
+            )
+        }
+    }
+
+    private fun setScoreToZero() {
+        _uiState.update { currentState ->
+            currentState.copy(
+                score = 0
+            )
+        }
+    }
+
+    private fun increaseScore() {
+        _uiState.update { currentState ->
+            currentState.copy(
+                score = uiState.value.score + 1
             )
         }
     }

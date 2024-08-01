@@ -63,7 +63,7 @@ fun SwiftWordsApp(
     val coroutineLaunched = rememberSaveable { mutableStateOf(false) }
 
     LaunchedEffect(Unit) { // coroutineLaunched ensures it only launches once
-        if (!coroutineLaunched.value) {
+        if (!coroutineLaunched.value) { // its fast enough so it doesn't need .await()
             coroutineLaunched.value = true
             coroutineScope.launch {
                 Log.d("time", "Start")

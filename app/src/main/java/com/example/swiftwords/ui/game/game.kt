@@ -41,6 +41,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.res.stringResource
@@ -62,9 +63,9 @@ fun Game(
     val gameUiState by viewModel.uiState.collectAsState()
 
     val coroutineScope = rememberCoroutineScope()
-    var textState by remember { mutableStateOf("") }
-    var isCorrect by remember { mutableStateOf<Boolean?>(null) }
-    var isLoading by remember { mutableStateOf(false) }
+    var textState by rememberSaveable { mutableStateOf("") }
+    var isCorrect by rememberSaveable { mutableStateOf<Boolean?>(null) }
+    var isLoading by rememberSaveable { mutableStateOf(false) }
 
     // Function to check the answer and update the UI state
     val checkAnswer: () -> Unit = remember { // remember so it doesn't composition
@@ -73,6 +74,7 @@ fun Game(
             coroutineScope.launch {
                 isCorrect = viewModel.checkAnswer(textState, wordList, listOfLetters)
                 isLoading = false
+                textState = ""  // Reset textState after isCorrect is updated
             }
         }
     }
@@ -99,15 +101,21 @@ fun Game(
         }
 
         Spacer(modifier = Modifier.padding(10.dp))
-        Text(
-            text = when {
-                isLoading -> "Loading..."
-                isCorrect == true -> "Correct answer!"
-                isCorrect == false -> "Incorrect answer."
-                else -> "Please enter an answer."
-            },
-            style = MaterialTheme.typography.bodyLarge // Optional: Customize text style
-        )
+        Row{
+            Text(
+                text = when {
+                    isLoading -> "Loading..."
+                    isCorrect == true -> "Correct answer!"
+                    isCorrect == false -> "Incorrect answer."
+                    else -> "Please enter an answer."
+                },
+                style = MaterialTheme.typography.bodyLarge // Optional: Customize text style
+            )
+            Text(
+                text = "score: ${gameUiState.score}",
+                style = MaterialTheme.typography.bodyLarge // Optional: Customize text style
+            )
+        }
         Row(
             modifier = Modifier
                 .fillMaxWidth()
