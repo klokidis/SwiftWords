@@ -43,7 +43,7 @@ class MainViewModel : ViewModel() {
     }
 
     private fun generateRandomLetters(): Array<Char> {
-        val vowels = mutableListOf('A', 'E', 'I', 'O', 'U')
+        val vowels = mutableListOf('A', 'E', 'I', 'O')
         val consonants = ('A'..'Z').filter { it !in vowels }.toMutableList()
 
         val randomVowels = mutableListOf<Char>()

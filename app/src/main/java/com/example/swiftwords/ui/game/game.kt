@@ -111,6 +111,7 @@ fun Game(
                 },
                 style = MaterialTheme.typography.bodyLarge // Optional: Customize text style
             )
+            Spacer(modifier = Modifier.padding(5.dp))
             Text(
                 text = "score: ${gameUiState.score}",
                 style = MaterialTheme.typography.bodyLarge // Optional: Customize text style
