@@ -1,6 +1,7 @@
 package com.example.swiftwords
 
 import android.content.Context
+import android.util.Log
 import androidx.compose.material3.Badge
 import androidx.compose.material3.BadgedBox
 import androidx.compose.material3.Icon
@@ -19,7 +20,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -58,14 +58,15 @@ fun SwiftWordsApp(
         mutableIntStateOf(0)
     }
 
-    val wordListState = remember { mutableStateOf<Set<String>?>(null) }
+    val wordListState = rememberSaveable { mutableStateOf<Set<String>?>(null) }
     val coroutineScope = rememberCoroutineScope()
-    val coroutineLaunched = remember { mutableStateOf(false) }
+    val coroutineLaunched = rememberSaveable { mutableStateOf(false) }
 
     LaunchedEffect(Unit) { // coroutineLaunched ensures it only launches once
         if (!coroutineLaunched.value) {
             coroutineLaunched.value = true
             coroutineScope.launch {
+                Log.d("time", "Start")
                 val words = viewModel.loadWordsFromAssets(context)
                 wordListState.value = words
             }

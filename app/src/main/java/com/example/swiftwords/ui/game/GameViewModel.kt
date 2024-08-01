@@ -48,6 +48,14 @@ class GameViewModel : ViewModel() {
         }
     }
 
+    fun stopClock(){
+        _uiState.update { currentState ->
+            currentState.copy(
+                isTimerRunning = false
+            )
+        }
+    }
+
 
     private suspend fun runClock() {
         delay(1300L)
