@@ -62,26 +62,35 @@ fun SwiftWordsApp(
     val coroutineScope = rememberCoroutineScope()
     val coroutineLaunched = rememberSaveable { mutableStateOf(false) }
 
-    LaunchedEffect(Unit) {
+    LaunchedEffect(Unit) {//make a value and pass it to game so it has a loading screen
         if (!coroutineLaunched.value) {
             coroutineLaunched.value = true
+
+            // Use a single coroutineScope.launch to handle async tasks
             coroutineScope.launch {
-                val lettersForLevel = mainUiState.listOfLettersForLevel.map { it.lowercaseChar() }.toSet()
+                // Convert letters for the level to a set of lowercase characters once
+                val lettersForLevel = mainUiState.listOfLettersForLevel
+                    .map { it.lowercaseChar() }
+                    .toSet()
 
-                val words = async {
-                    viewModel.loadWordsFromAssets(context)
-                }.await()
+                // Load words asynchronously
+                val wordsDeferred = async { viewModel.loadWordsFromAssets(context) }
 
-                val filteredWords = words.filter { word ->
-                    word.lowercase().all { char ->
-                        char in lettersForLevel
+                // Await the result and filter words
+                val filteredWords = wordsDeferred.await()
+                    .map { it.lowercase() }
+                    .filter { word ->
+                        // Check if all characters of the word are in the set of letters
+                        word.all { it in lettersForLevel }
                     }
-                }.toSet()
+                    .toSet()
 
+                // Update the state with filtered words
                 wordListState.value = filteredWords
             }
         }
     }
+
 
 
     Scaffold(
