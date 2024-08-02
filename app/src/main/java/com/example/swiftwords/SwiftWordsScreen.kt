@@ -62,7 +62,8 @@ fun SwiftWordsApp(
     val coroutineScope = rememberCoroutineScope()
     val coroutineLaunched = rememberSaveable { mutableStateOf(false) }
 
-    LaunchedEffect(Unit) {//make a value and pass it to game so it has a loading screen
+    //this is not in viewmodel bc it needs context
+    LaunchedEffect(Unit) { //make a value and pass it to game so it has a loading screen
         if (!coroutineLaunched.value) {
             coroutineLaunched.value = true
 
@@ -90,8 +91,6 @@ fun SwiftWordsApp(
             }
         }
     }
-
-
 
     Scaffold(
         bottomBar = {
@@ -166,7 +165,8 @@ fun SwiftWordsApp(
                     Game(
                         listOfLetters = mainUiState.listOfLettersForLevel,
                         wordList = wordList,
-                        navigateUp = {navController.navigateUp()})
+                        navigateUp = {navController.navigateUp()}
+                    )
                 }
             }
         }

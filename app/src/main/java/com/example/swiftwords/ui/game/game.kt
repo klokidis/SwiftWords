@@ -33,6 +33,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.unit.dp
 import androidx.compose.foundation.Canvas
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
@@ -44,6 +46,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.layout.onSizeChanged
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.Dp
@@ -78,82 +81,88 @@ fun Game(
             }
         }
     }
-
-    Column(
-        modifier = Modifier
-            .fillMaxSize(),
-        verticalArrangement = Arrangement.Top,
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        Spacer(modifier = Modifier.padding(5.dp))
-
-        TimerBar(gameUiState.value, navigateUp, gameUiState.currentTime)
-
-        Spacer(modifier = Modifier.padding(10.dp))
-
+    Box{
         Column(
-            verticalArrangement = Arrangement.Center,
+            modifier = Modifier
+                .fillMaxSize(),
+            verticalArrangement = Arrangement.Top,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            RowOfLetters(listOfLetters[0], listOfLetters[1], listOfLetters[2])
-            RowOfLetters(listOfLetters[3], listOfLetters[4], listOfLetters[5])
-            RowOfLetters(listOfLetters[6], listOfLetters[7], listOfLetters[8])
-        }
-
-        Spacer(modifier = Modifier.padding(10.dp))
-        Row{
-            Text(
-                text = when {
-                    isLoading -> "Loading..."
-                    isCorrect == true -> "Correct answer!"
-                    isCorrect == false -> "Incorrect answer."
-                    else -> "Please enter an answer."
-                },
-                style = MaterialTheme.typography.bodyLarge // Optional: Customize text style
-            )
             Spacer(modifier = Modifier.padding(5.dp))
-            Text(
-                text = "score: ${gameUiState.score}",
-                style = MaterialTheme.typography.bodyLarge // Optional: Customize text style
-            )
-        }
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(start = 10.dp, end = 5.dp),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.Center
-        ) {
-            CustomTextField(
-                textState,
-                { newText -> textState = newText },
-                checkAnswer
-            )
 
-            ElevatedButton(
-                onClick = checkAnswer,
-                contentPadding = PaddingValues(0.dp),
-                modifier = Modifier
-                    .padding(start = 10.dp, top = 5.dp)
-                    .width(70.dp)
-                    .height(50.dp)
+            TimerBar(gameUiState.value, navigateUp, gameUiState.currentTime)
+
+            Spacer(modifier = Modifier.padding(10.dp))
+
+            Column(
+                verticalArrangement = Arrangement.Center,
+                horizontalAlignment = Alignment.CenterHorizontally
             ) {
+                RowOfLetters(listOfLetters[0], listOfLetters[1], listOfLetters[2])
+                RowOfLetters(listOfLetters[3], listOfLetters[4], listOfLetters[5])
+                RowOfLetters(listOfLetters[6], listOfLetters[7], listOfLetters[8])
+            }
+
+            Spacer(modifier = Modifier.padding(10.dp))
+            Row {
                 Text(
-                    text = "check",
-                    maxLines = 1,
+                    text = when {
+                        isLoading -> "Loading..."
+                        isCorrect == true -> "Correct answer!"
+                        isCorrect == false -> "Incorrect answer."
+                        else -> "Please enter an answer."
+                    },
+                    style = MaterialTheme.typography.bodyLarge // Optional: Customize text style
+                )
+                Spacer(modifier = Modifier.padding(5.dp))
+                Text(
+                    text = "score: ${gameUiState.score}",
+                    style = MaterialTheme.typography.bodyLarge // Optional: Customize text style
                 )
             }
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(start = 10.dp, end = 5.dp),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.Center
+            ) {
+                CustomTextField(
+                    textState,
+                    { newText -> textState = newText },
+                    checkAnswer,
+                    gameUiState.isTimerRunning,
+                )
+
+                ElevatedButton(
+                    onClick = checkAnswer,
+                    contentPadding = PaddingValues(0.dp),
+                    enabled = gameUiState.isTimerRunning,
+                    modifier = Modifier
+                        .padding(start = 10.dp, top = 5.dp)
+                        .width(70.dp)
+                        .height(50.dp)
+                ) {
+                    Text(
+                        text = "check",
+                        maxLines = 1,
+                    )
+                }
+            }
+
         }
-
+        if(!gameUiState.isTimerRunning){
+            DisplayResults()
+        }
     }
-
 }
 
 @Composable
-fun CustomTextField(textState: String, onValueChange: (String) -> Unit, onDone: () -> Unit) {
+fun CustomTextField(textState: String, onValueChange: (String) -> Unit, onDone: () -> Unit,isTimerRunning: Boolean) {
     OutlinedTextField(
         value = textState,
         singleLine = true,
+        enabled = isTimerRunning,
         keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
         keyboardActions = KeyboardActions(
             onDone = { onDone() }
@@ -282,5 +291,19 @@ fun TimerBar(value: Float, navigateUp: () -> Unit, currentTime: Long) {
             },
             modifier = Modifier.width(25.dp),
         )
+    }
+}
+
+@Composable
+fun DisplayResults(){
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(Color.Black.copy(alpha = 0.4f)),
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        Image(painter = painterResource(id = R.drawable.current), contentDescription = null)
+        Text(text = "GAME ENDED")
     }
 }
