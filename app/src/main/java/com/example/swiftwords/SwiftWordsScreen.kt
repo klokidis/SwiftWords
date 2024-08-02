@@ -1,7 +1,6 @@
 package com.example.swiftwords
 
 import android.content.Context
-import android.util.Log
 import androidx.compose.material3.Badge
 import androidx.compose.material3.BadgedBox
 import androidx.compose.material3.Icon
@@ -34,6 +33,7 @@ import com.example.swiftwords.ui.game.Game
 import com.example.swiftwords.ui.levels.LevelScreen
 import com.example.swiftwords.ui.modes.ModesScreen
 import com.example.swiftwords.ui.profile.ProfileScreen
+import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 
 enum class SwiftWordsScreen {
@@ -62,13 +62,23 @@ fun SwiftWordsApp(
     val coroutineScope = rememberCoroutineScope()
     val coroutineLaunched = rememberSaveable { mutableStateOf(false) }
 
-    LaunchedEffect(Unit) { // coroutineLaunched ensures it only launches once
-        if (!coroutineLaunched.value) { // its fast enough so it doesn't need .await()
+    LaunchedEffect(Unit) {
+        if (!coroutineLaunched.value) {
             coroutineLaunched.value = true
             coroutineScope.launch {
-                Log.d("time", "Start")
-                val words = viewModel.loadWordsFromAssets(context)
-                wordListState.value = words
+                val lettersForLevel = mainUiState.listOfLettersForLevel.map { it.lowercaseChar() }.toSet()
+
+                val words = async {
+                    viewModel.loadWordsFromAssets(context)
+                }.await()
+
+                val filteredWords = words.filter { word ->
+                    word.lowercase().all { char ->
+                        char in lettersForLevel
+                    }
+                }.toSet()
+
+                wordListState.value = filteredWords
             }
         }
     }
