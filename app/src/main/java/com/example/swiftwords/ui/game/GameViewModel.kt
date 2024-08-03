@@ -15,12 +15,12 @@ import kotlinx.coroutines.withContext
 import java.util.Locale
 
 data class GameUiState(
-    var totalTime: Long = 40000L,
-    var size: IntSize = IntSize.Zero,
-    var value: Float = 1f,
-    var currentTime: Long = 40000L,
-    var isTimerRunning: Boolean = true,
-    var score: Int = 0
+    val totalTime: Long = 40000L,
+    val size: IntSize = IntSize.Zero,
+    val value: Float = 1f,
+    val currentTime: Long = 40000L,
+    val isTimerRunning: Boolean = true,
+    val score: Int = 0
 )
 
 class GameViewModel(time: () -> Long) : ViewModel() {
@@ -30,7 +30,7 @@ class GameViewModel(time: () -> Long) : ViewModel() {
 
     init {
         viewModelScope.launch {
-            changeTime(time())
+            updateTime(time())
             runClock()
         }
         setScoreToZero()
@@ -60,11 +60,12 @@ class GameViewModel(time: () -> Long) : ViewModel() {
         }
     }
 
-    private fun changeTime(newTime: Long) {
+    private fun updateTime(newTime: Long) {
         _uiState.update { currentState ->
             currentState.copy(
                 totalTime = newTime,
-                currentTime = newTime
+                currentTime = newTime,
+                value = newTime / newTime.toFloat()
             )
         }
     }
@@ -80,12 +81,12 @@ class GameViewModel(time: () -> Long) : ViewModel() {
     private fun increaseScore() {
         _uiState.update { currentState ->
             currentState.copy(
-                score = uiState.value.score + 1
+                score = currentState.score + 1
             )
         }
     }
 
-    fun stopClock() {
+    private fun stopClock() {
         _uiState.update { currentState ->
             currentState.copy(
                 isTimerRunning = false
@@ -101,16 +102,12 @@ class GameViewModel(time: () -> Long) : ViewModel() {
                     delay(50L)
                     _uiState.update { currentState ->
                         currentState.copy(
-                            currentTime = uiState.value.currentTime - 50L,
-                            value = (uiState.value.currentTime) / uiState.value.totalTime.toFloat()
+                            currentTime = currentState.currentTime - 50L,
+                            value = (currentState.currentTime) / currentState.totalTime.toFloat()
                         )
                     }
                 } else {
-                    _uiState.update { currentState ->
-                        currentState.copy(
-                            isTimerRunning = false
-                        )
-                    }
+                    stopClock()
                 }
             }
         }
