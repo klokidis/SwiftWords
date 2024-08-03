@@ -14,7 +14,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -33,7 +32,9 @@ import com.example.swiftwords.ui.theme.SwiftWordsTheme
 
 
 @Composable
-fun ModesScreen() {
+fun ModesScreen(
+    navigateFastGame: () -> Unit
+) {
     val scrollState = rememberScrollState()
     Box(
         modifier = Modifier
@@ -48,8 +49,8 @@ fun ModesScreen() {
             Row {
                 ModeCard(
                     imageRes = R.drawable.done,
-                    textRes = R.string.app_name,
-                    onClick = { },
+                    textRes = R.string.fast,
+                    onClick = { navigateFastGame() },
                     modifier = Modifier.weight(1f)
                 )
                 ModeCard(
@@ -78,7 +79,6 @@ fun ModesScreen() {
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ModeCard(
     imageRes: Int,
@@ -119,7 +119,6 @@ fun ModeCard(
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DailyCard(
     onButtonCard: () -> Unit,
@@ -170,6 +169,7 @@ fun DailyCard(
 @Composable
 fun ModesPreview() {
     SwiftWordsTheme {
-        ModesScreen()
+        ModesScreen {
+        }
     }
 }

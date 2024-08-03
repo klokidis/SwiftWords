@@ -2,6 +2,7 @@ package com.example.swiftwords.ui.game
 
 import androidx.compose.ui.unit.IntSize
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
@@ -22,13 +23,14 @@ data class GameUiState(
     var score: Int = 0
 )
 
-class GameViewModel : ViewModel() {
+class GameViewModel(time: Long) : ViewModel() {
 
     private val _uiState = MutableStateFlow(GameUiState())
     val uiState: StateFlow<GameUiState> = _uiState.asStateFlow()
 
     init {
         viewModelScope.launch {
+            changeTime(time)
             runClock()
         }
         setScoreToZero()
@@ -58,10 +60,11 @@ class GameViewModel : ViewModel() {
         }
     }
 
-    fun stopClock() {
+    private fun changeTime(newTime: Long) {
         _uiState.update { currentState ->
             currentState.copy(
-                isTimerRunning = false
+                totalTime = newTime,
+                currentTime = newTime
             )
         }
     }
@@ -102,5 +105,15 @@ class GameViewModel : ViewModel() {
                 }
             }
         }
+    }
+}
+
+class GameViewModelFactory(private val newTime: Long) : ViewModelProvider.Factory {
+    override fun <T : ViewModel> create(modelClass: Class<T>): T {
+        if (modelClass.isAssignableFrom(GameViewModel::class.java)) {
+            @Suppress("UNCHECKED_CAST")
+            return GameViewModel(newTime) as T
+        }
+        throw IllegalArgumentException("Unknown ViewModel class")
     }
 }

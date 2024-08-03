@@ -52,15 +52,15 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.IntSize
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.example.swiftwords.ui.AppViewModelProvider
 import com.example.swiftwords.R
 import kotlinx.coroutines.launch
 
 @Composable
 fun Game(
+    newTime: Long,
     listOfLetters: Array<Char>,
     wordList: Set<String>,
-    viewModel: GameViewModel = viewModel(factory = AppViewModelProvider.Factory),
+    viewModel: GameViewModel = viewModel(factory = GameViewModelFactory(newTime)),
     navigateUp: () -> Unit
 ) {
     val gameUiState by viewModel.uiState.collectAsState()

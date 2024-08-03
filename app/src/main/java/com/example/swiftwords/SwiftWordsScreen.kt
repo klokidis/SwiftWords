@@ -149,11 +149,18 @@ fun SwiftWordsApp(
             modifier = Modifier.padding(it)
         ) {
             composable(route = SwiftWordsScreen.Levels.name) {
-                LevelScreen { navController.navigate(SwiftWordsScreen.Game.name) }
+                LevelScreen {
+                    viewModel.changeTime(40000L)
+                    navController.navigate(SwiftWordsScreen.Game.name) }
                 selectedItemIndex = 0
             }
             composable(route = SwiftWordsScreen.Modes.name) {
-                ModesScreen()
+                ModesScreen(
+                    navigateFastGame = {
+                        viewModel.changeTime(20000L)
+                        navController.navigate(SwiftWordsScreen.Game.name)
+                    }
+                )
                 selectedItemIndex = 1
             }
             composable(route = SwiftWordsScreen.Profile.name) {
@@ -163,6 +170,7 @@ fun SwiftWordsApp(
             composable(route = SwiftWordsScreen.Game.name) {
                 wordListState.value?.let { wordList ->
                     Game(
+                        mainUiState.gameTime,
                         listOfLetters = mainUiState.listOfLettersForLevel,
                         wordList = wordList,
                         navigateUp = {navController.navigateUp()}

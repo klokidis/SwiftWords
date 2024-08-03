@@ -6,4 +6,5 @@
     <string name="game">Game</string>
     <string name="exit">exit game</string>
     <string name="textfield">textfield for answers</string>
+    <string name="fast">Fast Game</string>
 </resources>
