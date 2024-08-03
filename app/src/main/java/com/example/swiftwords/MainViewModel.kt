@@ -28,13 +28,13 @@ class MainViewModel : ViewModel() {
         viewModelScope.launch {
             _uiState.update { currentState ->
                 currentState.copy(
-                    listOfLettersForLevel = generateRandomLetters()
+                    listOfLettersForLevel = generateNewRandomLetters()
                 )
             }
         }
     }
 
-    suspend fun getListFromFile(context: Context): Set<String> {
+    suspend fun getSetFromFile(context: Context): Set<String> {
         return withContext(Dispatchers.IO) {
             // Convert letters for the level to a set of lowercase characters once
             val lettersForLevel = uiState.value.listOfLettersForLevel
@@ -60,7 +60,7 @@ class MainViewModel : ViewModel() {
     }
 
 
-    suspend fun loadWordsFromAssets(context: Context): Set<String> {
+    private suspend fun loadWordsFromAssets(context: Context): Set<String> {
         return withContext(Dispatchers.IO) {
             val words = mutableSetOf<String>()
             context.assets.open("engwords").bufferedReader().useLines { lines ->
@@ -77,35 +77,37 @@ class MainViewModel : ViewModel() {
             )
         }
     }
-}
 
-private fun generateRandomLetters(): Array<Char> {
-    val vowels = mutableListOf('A', 'E', 'I', 'O')
-    val consonants = ('A'..'Z').filter { it !in vowels }.toMutableList()
+    private fun generateNewRandomLetters(): Array<Char> {
+        val vowels = mutableListOf('A', 'E', 'I', 'O')
+        val consonants = ('A'..'Z').filter { it !in vowels }.toMutableList()
 
-    val randomVowels = mutableListOf<Char>()
-    repeat(3) {
-        val randomVowel = vowels.random()
-        randomVowels.add(randomVowel)
-        vowels.remove(randomVowel)
+        val randomVowels = mutableListOf<Char>()
+        repeat(3) {
+            val randomVowel = vowels.random()
+            randomVowels.add(randomVowel)
+            vowels.remove(randomVowel)
+        }
+
+        val randomConsonants = mutableListOf<Char>()
+        repeat(3) {
+            val randomConsonant = consonants.random()
+            randomConsonants.add(randomConsonant)
+            consonants.remove(randomConsonant)
+        }
+
+        val remainingLetters = (vowels + consonants).toMutableList()
+        val randomOthers = mutableListOf<Char>()
+        repeat(3) {
+            val randomOther = remainingLetters.random()
+            randomOthers.add(randomOther)
+            remainingLetters.remove(randomOther)
+        }
+
+        val combinedList = randomVowels + randomConsonants + randomOthers
+        return combinedList.shuffled().toTypedArray()
     }
 
-    val randomConsonants = mutableListOf<Char>()
-    repeat(3) {
-        val randomConsonant = consonants.random()
-        randomConsonants.add(randomConsonant)
-        consonants.remove(randomConsonant)
-    }
 
-    val remainingLetters = (vowels + consonants).toMutableList()
-    val randomOthers = mutableListOf<Char>()
-    repeat(3) {
-        val randomOther = remainingLetters.random()
-        randomOthers.add(randomOther)
-        remainingLetters.remove(randomOther)
-    }
-
-    val combinedList = randomVowels + randomConsonants + randomOthers
-    return combinedList.shuffled().toTypedArray()
 }
 

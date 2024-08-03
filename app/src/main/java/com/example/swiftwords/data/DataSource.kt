@@ -9,7 +9,6 @@ import androidx.compose.material.icons.outlined.Home
 import androidx.compose.material.icons.outlined.PlayArrow
 import com.example.swiftwords.R
 import com.example.swiftwords.model.BarItem
-import com.example.swiftwords.model.Modes
 
 class DataSource {
 
@@ -34,12 +33,4 @@ class DataSource {
         ),
     )
 
-    fun loadModes(): List<Modes> {
-        return listOf(
-            Modes(R.string.app_name, R.drawable.done),
-            Modes(R.string.app_name, R.drawable.done),
-            Modes(R.string.app_name, R.drawable.done),
-            Modes(R.string.app_name, R.drawable.done),
-        )
-    }
 }

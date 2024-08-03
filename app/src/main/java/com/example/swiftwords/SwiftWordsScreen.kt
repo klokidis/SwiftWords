@@ -70,7 +70,7 @@ fun SwiftWordsApp(
         if (!coroutineLaunched.value) {
             coroutineScope.launch {
                 try {
-                    val wordList = viewModel.getListFromFile(context)
+                    val wordList = viewModel.getSetFromFile(context)
                     wordListState.value = wordList
                     coroutineLaunched.value = true
                 } catch (e: Exception) {
