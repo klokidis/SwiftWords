@@ -33,7 +33,6 @@ import com.example.swiftwords.ui.game.Game
 import com.example.swiftwords.ui.levels.LevelScreen
 import com.example.swiftwords.ui.modes.ModesScreen
 import com.example.swiftwords.ui.profile.ProfileScreen
-import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 
 enum class SwiftWordsScreen {
@@ -62,32 +61,18 @@ fun SwiftWordsApp(
     val coroutineScope = rememberCoroutineScope()
     val coroutineLaunched = rememberSaveable { mutableStateOf(false) }
 
-    //this is not in viewmodel bc it needs context
-    LaunchedEffect(Unit) { //make a value and pass it to game so it has a loading screen
+
+    LaunchedEffect(Unit) {
         if (!coroutineLaunched.value) {
-            coroutineLaunched.value = true
-
-            // Use a single coroutineScope.launch to handle async tasks
             coroutineScope.launch {
-                // Convert letters for the level to a set of lowercase characters once
-                val lettersForLevel = mainUiState.listOfLettersForLevel
-                    .map { it.lowercaseChar() }
-                    .toSet()
-
-                // Load words asynchronously
-                val wordsDeferred = async { viewModel.loadWordsFromAssets(context) }
-
-                // Await the result and filter words
-                val filteredWords = wordsDeferred.await()
-                    .map { it.lowercase() }
-                    .filter { word ->
-                        // Check if all characters of the word are in the set of letters
-                        word.all { it in lettersForLevel }
-                    }
-                    .toSet()
-
-                // Update the state with filtered words
-                wordListState.value = filteredWords
+                try {
+                    val wordList = viewModel.getListFromFile(context)
+                    wordListState.value = wordList
+                    coroutineLaunched.value = true
+                } catch (e: Exception) {
+                    // Handle the exception appropriately, update UI to show an error message
+                    e.printStackTrace()
+                }
             }
         }
     }
@@ -173,8 +158,11 @@ fun SwiftWordsApp(
                         mainUiState.gameTime,
                         listOfLetters = mainUiState.listOfLettersForLevel,
                         wordList = wordList,
-                        navigateUp = {navController.navigateUp()}
+                        navigateUp = { navController.navigateUp() }
                     )
+                } ?: run {
+                    // Show a loading screen or some placeholder while the words are being loaded
+                    Text("Loading...")
                 }
             }
         }

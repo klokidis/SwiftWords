@@ -4,6 +4,7 @@ import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -32,6 +33,32 @@ class MainViewModel : ViewModel() {
             }
         }
     }
+
+    suspend fun getListFromFile(context: Context): Set<String> {
+        return withContext(Dispatchers.IO) {
+            // Convert letters for the level to a set of lowercase characters once
+            val lettersForLevel = uiState.value.listOfLettersForLevel
+                .map { it.lowercaseChar() }
+                .toSet()
+
+            // Load words asynchronously
+            val wordsDeferred = async { loadWordsFromAssets(context) }
+
+            // Await the result and filter words
+            val filteredWords = wordsDeferred.await()
+                .map { it.lowercase() }
+                .filter { word ->
+                    // Check if all characters of the word are in the set of letters
+                    word.all { it in lettersForLevel }
+                }
+                .toSet()
+
+            // Update the state with filtered words
+            filteredWords
+
+        }
+    }
+
 
     suspend fun loadWordsFromAssets(context: Context): Set<String> {
         return withContext(Dispatchers.IO) {
