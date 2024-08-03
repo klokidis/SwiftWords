@@ -35,8 +35,10 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.Icon
@@ -69,6 +71,7 @@ fun Game(
     var textState by rememberSaveable { mutableStateOf("") }
     var isCorrect by rememberSaveable { mutableStateOf<Boolean?>(null) }
     var isLoading by rememberSaveable { mutableStateOf(false) }
+    val scroll = rememberScrollState()
 
     // Function to check the answer and update the UI state
     val checkAnswer: () -> Unit = remember { // remember so it doesn't composition
@@ -81,10 +84,13 @@ fun Game(
             }
         }
     }
-    Box{
+    Box(
+        modifier = Modifier.fillMaxSize()
+    ){
         Column(
             modifier = Modifier
-                .fillMaxSize(),
+                .fillMaxSize()
+                .verticalScroll(scroll),
             verticalArrangement = Arrangement.Top,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
