@@ -90,7 +90,11 @@ fun Game(
         ) {
             Spacer(modifier = Modifier.padding(5.dp))
 
-            TimerBar({ gameUiState.value }, navigateUp, { gameUiState.currentTime })
+            TimerBar(
+                value = { gameUiState.value },
+                navigateUp = navigateUp,
+                currentTime = { gameUiState.currentTime }
+            )
 
             Spacer(modifier = Modifier.padding(10.dp))
 
