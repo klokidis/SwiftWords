@@ -149,6 +149,10 @@ fun SwiftWordsApp(
                     navigateFastGame = {
                         viewModel.changeTime(20000L)
                         navController.navigate(SwiftWordsScreen.Game.name)
+                    },
+                    navigateLongGame = {
+                        viewModel.changeTime(130000000L)
+                        navController.navigate(SwiftWordsScreen.Game.name)
                     }
                 )
                 selectedItemIndex = 1

@@ -85,23 +85,32 @@ class GameViewModel(time: Long) : ViewModel() {
         }
     }
 
+    fun stopClock() {
+        _uiState.update { currentState ->
+            currentState.copy(
+                isTimerRunning = false
+            )
+        }
+    }
 
     private suspend fun runClock() {
-        delay(1300L)
-        while (uiState.value.isTimerRunning) {
-            if (uiState.value.currentTime > 0L && uiState.value.isTimerRunning) {
-                delay(50L)
-                _uiState.update { currentState ->
-                    currentState.copy(
-                        currentTime = uiState.value.currentTime - 50L,
-                        value = (uiState.value.currentTime) / uiState.value.totalTime.toFloat()
-                    )
-                }
-            } else {
-                _uiState.update { currentState ->
-                    currentState.copy(
-                        isTimerRunning = false
-                    )
+        if (uiState.value.currentTime != 130000000L) {
+            delay(1300L)
+            while (uiState.value.isTimerRunning) {
+                if (uiState.value.currentTime > 0L && uiState.value.isTimerRunning) {
+                    delay(50L)
+                    _uiState.update { currentState ->
+                        currentState.copy(
+                            currentTime = uiState.value.currentTime - 50L,
+                            value = (uiState.value.currentTime) / uiState.value.totalTime.toFloat()
+                        )
+                    }
+                } else {
+                    _uiState.update { currentState ->
+                        currentState.copy(
+                            isTimerRunning = false
+                        )
+                    }
                 }
             }
         }

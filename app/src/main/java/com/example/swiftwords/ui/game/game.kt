@@ -107,7 +107,7 @@ fun Game(
             Row {
                 Text(
                     text = when {
-                        isLoading -> "Loading..."
+                        isLoading -> "Loading........"
                         isCorrect == true -> "Correct answer!"
                         isCorrect == false -> "Incorrect answer."
                         else -> "Please enter an answer."
@@ -283,14 +283,16 @@ fun TimerBar(value: Float, navigateUp: () -> Unit, currentTime: Long) {
             Color.DarkGray,
             Color(0xFF76ffcf)
         )
-        Text(
-            text = if (currentTime > 1000L) {
-                currentTime.toString().take(if (currentTime < 10000L) 1 else 2)
-            } else {
-                "0." + currentTime.toString().take(1)
-            },
-            modifier = Modifier.width(25.dp),
-        )
+        if (currentTime != 130000000L) {
+            Text(
+                text = if (currentTime > 1000L) {
+                    currentTime.toString().take(if (currentTime < 10000L) 1 else 2)
+                } else {
+                    "0." + currentTime.toString().take(1)
+                },
+                modifier = Modifier.width(25.dp),
+            )
+        }
     }
 }
 

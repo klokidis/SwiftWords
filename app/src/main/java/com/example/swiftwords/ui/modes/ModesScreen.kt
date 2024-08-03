@@ -25,15 +25,14 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.swiftwords.R
-import com.example.swiftwords.ui.theme.SwiftWordsTheme
 
 
 @Composable
 fun ModesScreen(
-    navigateFastGame: () -> Unit
+    navigateFastGame: () -> Unit,
+    navigateLongGame: () -> Unit
 ) {
     val scrollState = rememberScrollState()
     Box(
@@ -55,8 +54,8 @@ fun ModesScreen(
                 )
                 ModeCard(
                     imageRes = R.drawable.done,
-                    textRes = R.string.app_name,
-                    onClick = { },
+                    textRes = R.string.unlimited,
+                    onClick = { navigateLongGame() },
                     modifier = Modifier.weight(1f)
                 )
             }
@@ -160,16 +159,6 @@ fun DailyCard(
                     .height(110.dp)
             )
             Text(text = stringResource(R.string.app_name))
-        }
-    }
-}
-
-
-@Preview(showBackground = true)
-@Composable
-fun ModesPreview() {
-    SwiftWordsTheme {
-        ModesScreen {
         }
     }
 }
