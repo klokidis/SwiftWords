@@ -138,9 +138,10 @@ fun SwiftWordsApp(
             modifier = Modifier.padding(it)
         ) {
             composable(route = SwiftWordsScreen.Levels.name) {
-                LevelScreen {
+                LevelScreen(level =  mainUiState.currentLevel) {
                     viewModel.changeTime(40000L)
-                    navController.navigate(SwiftWordsScreen.Game.name) }
+                    navController.navigate(SwiftWordsScreen.Game.name)
+                }
                 selectedItemIndex = 0
             }
             composable(route = SwiftWordsScreen.Modes.name) {
@@ -153,7 +154,7 @@ fun SwiftWordsApp(
                 selectedItemIndex = 1
             }
             composable(route = SwiftWordsScreen.Profile.name) {
-                ProfileScreen()
+                ProfileScreen(mainUiState.currentLevel)
                 selectedItemIndex = 2
             }
             composable(route = SwiftWordsScreen.Game.name) {

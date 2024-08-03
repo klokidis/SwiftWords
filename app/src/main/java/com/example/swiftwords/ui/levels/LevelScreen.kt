@@ -34,12 +34,14 @@ import androidx.compose.ui.unit.Dp
 import com.example.swiftwords.R
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.swiftwords.ui.AppViewModelProvider
 import com.example.swiftwords.ui.theme.SwiftWordsTheme
 
 @Composable
 fun LevelScreen(
-    viewModel: LevelViewModel = androidx.lifecycle.viewmodel.compose.viewModel(factory = AppViewModelProvider.Factory),
+    viewModel: LevelViewModel = viewModel(factory = AppViewModelProvider.Factory),
+    level : Int,
     navigateToLevel: () -> Unit,
 ) {
     val levelUiState by viewModel.uiState.collectAsState()
@@ -57,7 +59,7 @@ fun LevelScreen(
             verticalArrangement = Arrangement.Top,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            LevelList(currentLevel = levelUiState.currentLevel)
+            LevelList(currentLevel = level)
         }
 
         TopBar()
@@ -66,7 +68,7 @@ fun LevelScreen(
             modifier = Modifier.fillMaxSize(),
             contentAlignment = Alignment.BottomCenter
         ) {
-            BottomLevel(navigateToLevel, levelUiState.currentLevel.toString())
+            BottomLevel(navigateToLevel, level.toString())
         }
     }
 }
@@ -234,15 +236,3 @@ fun CardPreview() {
         LevelCard( 1, Modifier, 19.dp, 19.dp)
     }
 }
-
-@Preview(showBackground = true)
-@Composable
-fun LevelPreview() {
-    SwiftWordsTheme {
-        LevelScreen(
-            androidx.lifecycle.viewmodel.compose.viewModel(factory = AppViewModelProvider.Factory),
-            {})
-    }
-}
-
-

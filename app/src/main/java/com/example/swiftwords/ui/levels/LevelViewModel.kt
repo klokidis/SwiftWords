@@ -6,7 +6,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 
 data class UiState(
-    val currentLevel: Int = 10//example
+    val example : Int = 0
 )
 
 
