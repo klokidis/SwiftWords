@@ -164,7 +164,7 @@ fun SwiftWordsApp(
             composable(route = SwiftWordsScreen.Game.name) {
                 wordListState.value?.let { wordList ->
                     Game(
-                        mainUiState.gameTime,
+                        { mainUiState.gameTime },
                         listOfLetters = mainUiState.listOfLettersForLevel,
                         wordList = wordList,
                         navigateUp = { navController.navigateUp() }

@@ -23,14 +23,14 @@ data class GameUiState(
     var score: Int = 0
 )
 
-class GameViewModel(time: Long) : ViewModel() {
+class GameViewModel(time: () -> Long) : ViewModel() {
 
     private val _uiState = MutableStateFlow(GameUiState())
     val uiState: StateFlow<GameUiState> = _uiState.asStateFlow()
 
     init {
         viewModelScope.launch {
-            changeTime(time)
+            changeTime(time())
             runClock()
         }
         setScoreToZero()
@@ -117,7 +117,7 @@ class GameViewModel(time: Long) : ViewModel() {
     }
 }
 
-class GameViewModelFactory(private val newTime: Long) : ViewModelProvider.Factory {
+class GameViewModelFactory(private val newTime: () -> Long) : ViewModelProvider.Factory {
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(GameViewModel::class.java)) {
             @Suppress("UNCHECKED_CAST")

@@ -57,7 +57,7 @@ import kotlinx.coroutines.launch
 
 @Composable
 fun Game(
-    newTime: Long,
+    newTime: () -> Long,
     listOfLetters: Array<Char>,
     wordList: Set<String>,
     viewModel: GameViewModel = viewModel(factory = GameViewModelFactory(newTime)),
@@ -90,7 +90,7 @@ fun Game(
         ) {
             Spacer(modifier = Modifier.padding(5.dp))
 
-            TimerBar(gameUiState.value, navigateUp, gameUiState.currentTime)
+            TimerBar({ gameUiState.value }, navigateUp, { gameUiState.currentTime })
 
             Spacer(modifier = Modifier.padding(10.dp))
 
@@ -218,7 +218,7 @@ fun LetterBox(letter: Char) {
 
 @Composable
 fun Timer(
-    value: Float,
+    value: () -> Float,
     inactiveBarColor: Color,
     activeBarColor: Color,
     modifier: Modifier = Modifier,
@@ -236,8 +236,10 @@ fun Timer(
     ) {
         // draw the timer
         Canvas(modifier = modifier) {
-            val center = Offset(size.width / 2f, size.height / 2f)
-            val lineLength = size.width / 1.2f
+            val sizePx = size
+            val center = Offset(sizePx.width / 2f, sizePx.height / 2f)
+            val lineLength = sizePx.width / 1.2f
+            val currentValue = value()
 
             // Draw the inactive line
             drawLine(
@@ -252,7 +254,7 @@ fun Timer(
             drawLine(
                 color = activeBarColor,
                 start = Offset(center.x - lineLength / 2, center.y),
-                end = Offset(center.x - lineLength / 2 + lineLength * value, center.y),
+                end = Offset(center.x - lineLength / 2 + lineLength * currentValue, center.y),
                 strokeWidth = strokeWidth.toPx(),
                 cap = StrokeCap.Round
             )
@@ -261,7 +263,7 @@ fun Timer(
 }
 
 @Composable
-fun TimerBar(value: Float, navigateUp: () -> Unit, currentTime: Long) {
+fun TimerBar(value: () -> Float, navigateUp: () -> Unit, currentTime: () -> Long) {
     Row(
         modifier = Modifier
             .fillMaxWidth(),
@@ -283,12 +285,12 @@ fun TimerBar(value: Float, navigateUp: () -> Unit, currentTime: Long) {
             Color.DarkGray,
             Color(0xFF76ffcf)
         )
-        if (currentTime != 130000000L) {
+        if (currentTime() != 130000000L) {
             Text(
-                text = if (currentTime > 1000L) {
-                    currentTime.toString().take(if (currentTime < 10000L) 1 else 2)
+                text = if (currentTime() > 1000L) {
+                    currentTime().toString().take(if (currentTime() < 10000L) 1 else 2)
                 } else {
-                    "0." + currentTime.toString().take(1)
+                    "0." + currentTime().toString().take(1)
                 },
                 modifier = Modifier.width(25.dp),
             )
