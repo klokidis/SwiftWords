@@ -98,12 +98,23 @@ fun Game(
         ) {
             Spacer(modifier = Modifier.padding(5.dp))
 
-            TimerBar(
-                value = { gameUiState.value },
-                navigateUp = navigateUp,
-                currentTime = { gameUiState.currentTime }
-            )
+            Row {
 
+                IconButton(
+                    onClick = navigateUp,
+                    modifier = Modifier.size(27.dp)
+                ) {
+                    Icon(
+                        imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                        contentDescription = stringResource(R.string.exit),
+                        modifier = Modifier.size(27.dp)
+                    )
+                }
+                TimerBar(
+                    value = { gameUiState.value },
+                    currentTime = { gameUiState.currentTime }
+                )
+            }
             Spacer(modifier = Modifier.padding(10.dp))
 
             Column(
@@ -276,23 +287,13 @@ fun Timer(
 }
 
 @Composable
-fun TimerBar(value: () -> Float, navigateUp: () -> Unit, currentTime: () -> Long) {
+fun TimerBar(value: () -> Float, currentTime: () -> Long) {
     Row(
         modifier = Modifier
             .fillMaxWidth(),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.Center
     ) {
-        IconButton(
-            onClick = navigateUp,
-            modifier = Modifier.size(27.dp)
-        ) {
-            Icon(
-                imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                contentDescription = stringResource(R.string.exit),
-                modifier = Modifier.size(27.dp)
-            )
-        }
         Timer(
             value,
             Color.DarkGray,
