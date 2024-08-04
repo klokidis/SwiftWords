@@ -98,8 +98,12 @@ fun Game(
         ) {
             Spacer(modifier = Modifier.padding(5.dp))
 
-            Row {
-
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.Center
+            ) {
                 IconButton(
                     onClick = navigateUp,
                     modifier = Modifier.size(27.dp)
@@ -110,10 +114,12 @@ fun Game(
                         modifier = Modifier.size(27.dp)
                     )
                 }
-                TimerBar(
-                    value = { gameUiState.value },
-                    currentTime = { gameUiState.currentTime }
+                Timer(
+                    { gameUiState.value },
+                    Color.DarkGray,
+                    Color(0xFF76ffcf)
                 )
+                TimerText { gameUiState.currentTime }
             }
             Spacer(modifier = Modifier.padding(10.dp))
 
@@ -219,6 +225,30 @@ fun RowOfLetters(letter1: Char, letter2: Char, letter3: Char) {
 }
 
 @Composable
+fun TimerText(currentTime: () -> Long) {
+    val formattedTime by remember(currentTime) {
+        derivedStateOf {
+            val time = currentTime()
+            if (time != 130000000L) {
+                if (time > 1000L) {
+                    time.toString().take(if (time < 10000L) 1 else 2)
+                } else {
+                    "0." + time.toString().take(1)
+                }
+            } else {
+                "" // or some default text if needed
+            }
+        }
+    }
+
+    Text(
+        text = formattedTime,
+        modifier = Modifier.width(25.dp)
+    )
+}
+
+
+@Composable
 fun LetterBox(letter: Char) {
     ElevatedCard(
         modifier = Modifier
@@ -281,32 +311,6 @@ fun Timer(
                 end = Offset(center.x - lineLength / 2 + lineLength * currentValue, center.y),
                 strokeWidth = strokeWidth.toPx(),
                 cap = StrokeCap.Round
-            )
-        }
-    }
-}
-
-@Composable
-fun TimerBar(value: () -> Float, currentTime: () -> Long) {
-    Row(
-        modifier = Modifier
-            .fillMaxWidth(),
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.Center
-    ) {
-        Timer(
-            value,
-            Color.DarkGray,
-            Color(0xFF76ffcf)
-        )
-        if (currentTime() != 130000000L) {
-            Text(
-                text = if (currentTime() > 1000L) {
-                    currentTime().toString().take(if (currentTime() < 10000L) 1 else 2)
-                } else {
-                    "0." + currentTime().toString().take(1)
-                },
-                modifier = Modifier.width(25.dp),
             )
         }
     }
