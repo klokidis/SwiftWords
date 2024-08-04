@@ -11,7 +11,6 @@ import com.example.swiftwords.R
 import com.example.swiftwords.model.BarItem
 
 class DataSource {
-
     val barItems = listOf(
         BarItem(
             R.string.home,

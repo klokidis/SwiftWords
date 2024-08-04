@@ -108,7 +108,5 @@ class MainViewModel : ViewModel() {
         val combinedList = randomVowels + randomConsonants + randomOthers
         return combinedList.shuffled().toTypedArray()
     }
-
-
 }
 

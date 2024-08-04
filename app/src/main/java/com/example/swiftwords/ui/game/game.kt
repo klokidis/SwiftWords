@@ -160,26 +160,30 @@ fun Game(
                     { isTimerRunning },
                 )
 
-                ElevatedButton(
-                    onClick = checkAnswer,
-                    contentPadding = PaddingValues(0.dp),
-                    enabled = isTimerRunning,
-                    modifier = Modifier
-                        .padding(start = 10.dp, top = 5.dp)
-                        .width(70.dp)
-                        .height(50.dp)
-                ) {
-                    Text(
-                        text = "check",
-                        maxLines = 1,
-                    )
-                }
+                CustomButton(checkAnswer) { isTimerRunning }
             }
 
         }
         if(!isTimerRunning){
             DisplayResults()
         }
+    }
+}
+@Composable
+fun CustomButton(checkAnswer:() -> Unit,isTimerRunning : () -> Boolean){
+    ElevatedButton(
+        onClick = checkAnswer,
+        contentPadding = PaddingValues(0.dp),
+        enabled = isTimerRunning() ,
+        modifier = Modifier
+            .padding(start = 10.dp, top = 5.dp)
+            .width(70.dp)
+            .height(50.dp)
+    ) {
+        Text(
+            text = "check",
+            maxLines = 1,
+        )
     }
 }
 
