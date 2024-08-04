@@ -144,7 +144,7 @@ fun Game(
                     style = MaterialTheme.typography.bodyLarge // Optional: Customize text style
                 )
                 Spacer(modifier = Modifier.padding(5.dp))
-
+                TextScore{gameUiState.score}
             }
             Row(
                 modifier = Modifier
@@ -244,6 +244,22 @@ fun TimerText(currentTime: () -> Long) {
     Text(
         text = formattedTime,
         modifier = Modifier.width(25.dp)
+    )
+}
+
+@Composable
+fun TextScore(score: () -> Int) {
+    // Remember the score value to avoid unnecessary recompositions
+    val scoreValue by remember{
+        derivedStateOf {
+            score().toString()
+        }
+    }
+
+    // Only recomposes if scoreValue changes
+    Text(
+        text = "score: $scoreValue",
+        style = MaterialTheme.typography.bodyLarge // Optional: Customize text style
     )
 }
 
