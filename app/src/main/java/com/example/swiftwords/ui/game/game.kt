@@ -190,7 +190,8 @@ fun CustomButton(checkAnswer:() -> Unit,isTimerRunning : () -> Boolean){
 @Composable
 fun CustomTextField(
     textState: String,
-    onValueChange: (String) -> Unit, onDone: () -> Unit,
+    onValueChange: (String) -> Unit,
+    onDone: () -> Unit,
     isTimerRunning: () -> Boolean
 ) {
     OutlinedTextField(

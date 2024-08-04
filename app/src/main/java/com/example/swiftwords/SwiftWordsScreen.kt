@@ -20,6 +20,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -57,17 +58,21 @@ fun SwiftWordsApp(
     val currentScreen = SwiftWordsScreen.valueOf(
         backStackEntry?.destination?.route ?: SwiftWordsScreen.Levels.name
     )
-    var selectedItemIndex by rememberSaveable { mutableStateOf(0) }
+    var selectedItemIndex by rememberSaveable { mutableIntStateOf(0) }
 
-    // Update selectedItemIndex based on the current route
     LaunchedEffect(currentScreen) {
-        selectedItemIndex = when (currentScreen) {
+        val newIndex = when (currentScreen) {
             SwiftWordsScreen.Levels -> 0
             SwiftWordsScreen.Modes -> 1
             SwiftWordsScreen.Profile -> 2
-            else -> selectedItemIndex
+            else -> 0 // Default value
+        }
+
+        if (selectedItemIndex != newIndex) {
+            selectedItemIndex = newIndex
         }
     }
+
 
     val wordListState = rememberSaveable { mutableStateOf<Set<String>?>(null) }
     val coroutineScope = rememberCoroutineScope()
