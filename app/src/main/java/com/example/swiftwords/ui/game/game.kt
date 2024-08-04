@@ -44,6 +44,7 @@ import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.geometry.Offset
@@ -66,6 +67,7 @@ fun Game(
     navigateUp: () -> Unit
 ) {
     val gameUiState by viewModel.uiState.collectAsState()
+    val isTimerRunning by remember { derivedStateOf { gameUiState.isTimerRunning } }
 
     val coroutineScope = rememberCoroutineScope()
     var textState by rememberSaveable { mutableStateOf("") }
@@ -125,10 +127,7 @@ fun Game(
                     style = MaterialTheme.typography.bodyLarge // Optional: Customize text style
                 )
                 Spacer(modifier = Modifier.padding(5.dp))
-                Text(
-                    text = "score: ${gameUiState.score}",
-                    style = MaterialTheme.typography.bodyLarge // Optional: Customize text style
-                )
+
             }
             Row(
                 modifier = Modifier
@@ -141,13 +140,13 @@ fun Game(
                     textState,
                     { newText -> textState = newText },
                     checkAnswer,
-                    gameUiState.isTimerRunning,
+                    { isTimerRunning },
                 )
 
                 ElevatedButton(
                     onClick = checkAnswer,
                     contentPadding = PaddingValues(0.dp),
-                    enabled = gameUiState.isTimerRunning,
+                    enabled = isTimerRunning,
                     modifier = Modifier
                         .padding(start = 10.dp, top = 5.dp)
                         .width(70.dp)
@@ -161,18 +160,22 @@ fun Game(
             }
 
         }
-        if(!gameUiState.isTimerRunning){
+        if(!isTimerRunning){
             DisplayResults()
         }
     }
 }
 
 @Composable
-fun CustomTextField(textState: String, onValueChange: (String) -> Unit, onDone: () -> Unit,isTimerRunning: Boolean) {
+fun CustomTextField(
+    textState: String,
+    onValueChange: (String) -> Unit, onDone: () -> Unit,
+    isTimerRunning: () -> Boolean
+) {
     OutlinedTextField(
         value = textState,
         singleLine = true,
-        enabled = isTimerRunning,
+        enabled = isTimerRunning(),
         keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
         keyboardActions = KeyboardActions(
             onDone = { onDone() }
