@@ -37,15 +37,15 @@ class GameViewModel(time: () -> Long) : ViewModel() {
     }
 
     suspend fun checkAnswer(
-        answer: String,
+        answer:() -> String,
         wordList: Set<String>,
         charArray: Array<Char>
     ): Boolean {
         return withContext(Dispatchers.Default) {
-            if (answer.length > 1) {
+            if (answer().length > 1) {
                 // Convert charArray to a set of lowercase characters for efficient lookup
                 val charSet = charArray.map { it.lowercaseChar() }.toSet()
-                val trimmedAnswer = answer.trim().lowercase(Locale.ROOT)
+                val trimmedAnswer = answer().trim().lowercase(Locale.ROOT)
                 val isInWordList = wordList.contains(trimmedAnswer)
                 val canBeConstructed = trimmedAnswer.all { it in charSet }
 

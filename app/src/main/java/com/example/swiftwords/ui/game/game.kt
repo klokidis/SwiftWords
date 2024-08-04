@@ -80,7 +80,7 @@ fun Game(
         {
             isLoading = true
             coroutineScope.launch {
-                isCorrect = viewModel.checkAnswer(textState, wordList, listOfLetters)
+                isCorrect = viewModel.checkAnswer({ textState }, wordList, listOfLetters)
                 isLoading = false
                 textState = ""  // Reset textState after isCorrect is updated
             }
@@ -154,7 +154,7 @@ fun Game(
                 horizontalArrangement = Arrangement.Center
             ) {
                 CustomTextField(
-                    textState,
+                    { textState },
                     { newText -> textState = newText },
                     checkAnswer,
                     { isTimerRunning },
@@ -189,13 +189,13 @@ fun CustomButton(checkAnswer:() -> Unit,isTimerRunning : () -> Boolean){
 
 @Composable
 fun CustomTextField(
-    textState: String,
+    textState: () -> String,
     onValueChange: (String) -> Unit,
     onDone: () -> Unit,
     isTimerRunning: () -> Boolean
 ) {
     OutlinedTextField(
-        value = textState,
+        value = textState(),
         singleLine = true,
         enabled = isTimerRunning(),
         keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
