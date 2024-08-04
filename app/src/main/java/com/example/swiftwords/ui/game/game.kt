@@ -114,6 +114,7 @@ fun Game(
                         modifier = Modifier.size(27.dp)
                     )
                 }
+                // most values pass as () -> type to fix the unnecessary recomposition of the ui
                 Timer(
                     { gameUiState.value },
                     Color.DarkGray,
