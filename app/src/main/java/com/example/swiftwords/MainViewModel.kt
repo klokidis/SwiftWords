@@ -16,7 +16,7 @@ data class MainUiState(
     var listOfLettersForLevel: Array<Char> = arrayOf(),
     var listOfLettersForMode: Array<Char> = arrayOf(),
     val gameTime: Long = 40000L,
-    val currentLevel : Int = 10
+    val currentLevel : Int = 11
 )
 
 class MainViewModel : ViewModel() {

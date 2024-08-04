@@ -41,7 +41,7 @@ import com.example.swiftwords.ui.theme.SwiftWordsTheme
 @Composable
 fun LevelScreen(
     viewModel: LevelViewModel = viewModel(factory = AppViewModelProvider.Factory),
-    level : Int,
+    level: Int,
     navigateToLevel: () -> Unit,
 ) {
     val levelUiState by viewModel.uiState.collectAsState()
@@ -77,7 +77,7 @@ fun LevelScreen(
 fun LevelList(currentLevel: Int) {
     val paddingValues = calculatePaddingValues(currentLevel)
 
-    for ((index, i) in (currentLevel - 5..currentLevel + 25).withIndex()) {
+    for ((index, i) in (currentLevel - 3..currentLevel + 13).withIndex()) {
         if (i > 0) {
             val (leftPadding, rightPadding) = paddingValues.getOrNull(index) ?: continue
 
@@ -87,11 +87,13 @@ fun LevelList(currentLevel: Int) {
                         .clip(RoundedCornerShape(50))
                         .background(Color.Yellow)
                 }
+
                 i == currentLevel -> {
                     Modifier
                         .clip(RoundedCornerShape(50))
                         .background(Color.Green)
                 }
+
                 else -> {
                     Modifier
                         .clip(RoundedCornerShape(50))
@@ -110,7 +112,7 @@ fun calculatePaddingValues(currentLevel: Int): List<Pair<Dp, Dp>> {
     var step = 0
     val paddingValues = mutableListOf<Pair<Dp, Dp>>()
 
-    for (i in currentLevel - 5..currentLevel + 25) {
+    for (i in currentLevel - 3  ..currentLevel + 13) {
         if (i > 0) {
             when (step) {
                 in 0..2 -> {
@@ -119,9 +121,11 @@ fun calculatePaddingValues(currentLevel: Int): List<Pair<Dp, Dp>> {
                         rightPadding -= paddingChange
                     }
                 }
+
                 3 -> {
                     step = -4
                 }
+
                 in -4..-1 -> {
                     rightPadding += paddingChange
                     if (leftPadding != 0.dp) {
@@ -155,7 +159,7 @@ fun LevelCard(
     ) {
         Card(
             modifier = modifier
-                .size(90.dp),
+                .size(100.dp),
             shape = RoundedCornerShape(50),
         ) {
             Box(
@@ -184,25 +188,21 @@ fun TopBar() {
         color = MaterialTheme.colorScheme.background,
         shadowElevation = 3.dp
     ) {
-        Box(
+        Row(
             modifier = Modifier
                 .fillMaxSize()
+                .padding(horizontal = 16.dp),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.Center
         ) {
-            Row(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(horizontal = 16.dp)
-            ) {
-                Image(painter = painterResource(id = R.drawable.done), contentDescription = null)
-                Text(text = "theme", modifier = Modifier.padding(start = 8.dp))
-                Spacer(modifier = Modifier.weight(1f))
-                Image(painter = painterResource(id = R.drawable.done), contentDescription = null)
-                Text(text = "10", modifier = Modifier.padding(start = 8.dp))
-                Spacer(modifier = Modifier.weight(1f))
-                Image(painter = painterResource(id = R.drawable.done), contentDescription = null)
-                Text(text = "5", modifier = Modifier.padding(start = 8.dp))
-            }
-
+            Image(painter = painterResource(id = R.drawable.done), contentDescription = null)
+            Text(text = "theme", modifier = Modifier.padding(start = 8.dp))
+            Spacer(modifier = Modifier.weight(1f))
+            Image(painter = painterResource(id = R.drawable.done), contentDescription = null)
+            Text(text = "10", modifier = Modifier.padding(start = 8.dp))
+            Spacer(modifier = Modifier.weight(1f))
+            Image(painter = painterResource(id = R.drawable.done), contentDescription = null)
+            Text(text = "5", modifier = Modifier.padding(start = 8.dp))
         }
     }
 }
@@ -233,6 +233,6 @@ fun BottomLevel(onClick: () -> Unit, level: String) {
 @Composable
 fun CardPreview() {
     SwiftWordsTheme {
-        LevelCard( 1, Modifier, 19.dp, 19.dp)
+        LevelCard(1, Modifier, 19.dp, 19.dp)
     }
 }
