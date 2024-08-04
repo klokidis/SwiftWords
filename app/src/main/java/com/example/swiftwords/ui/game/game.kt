@@ -226,6 +226,7 @@ fun RowOfLetters(letter1: Char, letter2: Char, letter3: Char) {
 
 @Composable
 fun TimerText(currentTime: () -> Long) {
+    // Remember the score value to avoid unnecessary recompositions
     val formattedTime by remember(currentTime) {
         derivedStateOf {
             val time = currentTime()
@@ -236,7 +237,7 @@ fun TimerText(currentTime: () -> Long) {
                     "0." + time.toString().take(1)
                 }
             } else {
-                "" // or some default text if needed
+                ""
             }
         }
     }

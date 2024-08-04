@@ -22,6 +22,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -57,14 +58,11 @@ fun SwiftWordsApp(
     val currentScreen = SwiftWordsScreen.valueOf(
         backStackEntry?.destination?.route ?: SwiftWordsScreen.Levels.name
     )
-    var selectedItemIndex by rememberSaveable {
-        mutableIntStateOf(0)
-    }
+    var selectedItemIndex by rememberSaveable { mutableIntStateOf(0) }
 
     val wordListState = rememberSaveable { mutableStateOf<Set<String>?>(null) }
     val coroutineScope = rememberCoroutineScope()
     val coroutineLaunched = rememberSaveable { mutableStateOf(false) }
-
 
     LaunchedEffect(Unit) {
         if (!coroutineLaunched.value) {
@@ -84,8 +82,9 @@ fun SwiftWordsApp(
     Scaffold(
         bottomBar = {
             if (currentScreen != SwiftWordsScreen.Game) {
+                val barItems = remember { DataSource().barItems }
                 NavigationBar {
-                    DataSource().barItems.forEachIndexed { index, item ->
+                    barItems.forEachIndexed { index, item ->
                         NavigationBarItem(
                             onClick = {
                                 if (selectedItemIndex != index) {
@@ -94,35 +93,29 @@ fun SwiftWordsApp(
                                             popUpTo(navController.graph.findStartDestination().id)
                                             launchSingleTop = true
                                         }
-
                                         1 -> navController.navigate(SwiftWordsScreen.Modes.name) {
                                             popUpTo(navController.graph.findStartDestination().id)
                                             launchSingleTop = true
                                         }
-
                                         2 -> navController.navigate(SwiftWordsScreen.Profile.name) {
                                             popUpTo(navController.graph.findStartDestination().id)
                                             launchSingleTop = true
                                         }
                                     }
+                                    selectedItemIndex = index
                                 }
                             },
                             selected = selectedItemIndex == index,
-                            label = {
-                                Text(text = stringResource(item.title))
-                            },
+                            label = { Text(text = stringResource(item.title)) },
                             icon = {
-                                BadgedBox(badge = {//this is for red notification
+                                BadgedBox(badge = {
+                                    //this is for red notification
                                     if (item.hasNews) {
                                         Badge()
                                     }
                                 }) {
                                     Icon(
-                                        imageVector = if (index == selectedItemIndex) {
-                                            item.imageSelected
-                                        } else {
-                                            item.imageUnSelected
-                                        },
+                                        imageVector = if (index == selectedItemIndex) item.imageSelected else item.imageUnSelected,
                                         contentDescription = stringResource(id = item.title)
                                     )
                                 }
@@ -131,18 +124,18 @@ fun SwiftWordsApp(
                     }
                 }
             }
-        }) {
+        }
+    ) { paddingValues ->
         NavHost(
             navController = navController,
             startDestination = SwiftWordsScreen.Levels.name,
-            modifier = Modifier.padding(it)
+            modifier = Modifier.padding(paddingValues)
         ) {
             composable(route = SwiftWordsScreen.Levels.name) {
-                LevelScreen(level =  mainUiState.currentLevel) {
+                LevelScreen(level = mainUiState.currentLevel) {
                     viewModel.changeTime(40000L)
                     navController.navigate(SwiftWordsScreen.Game.name)
                 }
-                selectedItemIndex = 0
             }
             composable(route = SwiftWordsScreen.Modes.name) {
                 ModesScreen(
@@ -155,11 +148,9 @@ fun SwiftWordsApp(
                         navController.navigate(SwiftWordsScreen.Game.name)
                     }
                 )
-                selectedItemIndex = 1
             }
             composable(route = SwiftWordsScreen.Profile.name) {
                 ProfileScreen(mainUiState.currentLevel)
-                selectedItemIndex = 2
             }
             composable(route = SwiftWordsScreen.Game.name) {
                 wordListState.value?.let { wordList ->
