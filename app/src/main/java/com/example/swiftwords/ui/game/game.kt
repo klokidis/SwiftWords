@@ -41,8 +41,10 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.rememberCoroutineScope
@@ -57,6 +59,7 @@ import androidx.compose.ui.unit.IntSize
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.swiftwords.R
 import kotlinx.coroutines.launch
+import kotlin.reflect.KSuspendFunction1
 
 @Composable
 fun Game(
@@ -160,16 +163,16 @@ fun Game(
                     checkAnswer,
                     { isTimerRunning },
                 )
-
                 CustomButton(checkAnswer) { isTimerRunning }
             }
 
         }
         if(!isTimerRunning){
-            DisplayResults()
+            DisplayResults(gameUiState.score, viewModel::restartGame ,newTime)
         }
     }
 }
+
 @Composable
 fun CustomButton(checkAnswer:() -> Unit,isTimerRunning : () -> Boolean){
     ElevatedButton(
@@ -340,7 +343,8 @@ fun Timer(
 }
 
 @Composable
-fun DisplayResults(){
+fun DisplayResults(score: Int, restart: KSuspendFunction1<Long, Unit>, time: () -> Long) {
+    val coroutineScope = rememberCoroutineScope()
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -348,7 +352,28 @@ fun DisplayResults(){
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Image(painter = painterResource(id = R.drawable.current), contentDescription = null)
-        Text(text = "GAME ENDED")
+        Image(
+            painter = painterResource(id = R.drawable.current),
+            modifier = Modifier.size(150.dp),
+            contentDescription = null)
+        if(score>10){
+            Text(text = "Congrats you passed with score: $score")
+        }else{
+            Text(text = "you failed :( with score: $score")
+        }
+        Row {
+            TextButton(
+                onClick = {
+                    coroutineScope.launch {
+                        restart(time())
+                    }
+                }
+            ) {
+                Text("Text Button")
+            }
+            Button(onClick = { /*TODO*/ }) {
+                Text(text = "Next Level")
+            }
+        }
     }
 }

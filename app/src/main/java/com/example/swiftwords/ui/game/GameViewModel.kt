@@ -63,12 +63,22 @@ class GameViewModel(time: () -> Long) : ViewModel() {
     private fun updateTime(newTime: Long) {
         _uiState.update { currentState ->
             currentState.copy(
+                isTimerRunning = true,
                 totalTime = newTime,
                 currentTime = newTime,
                 value = newTime / newTime.toFloat()
             )
         }
     }
+
+    suspend fun restartGame(newTime: Long) {
+        viewModelScope.launch {
+            updateTime(newTime)
+            runClock()
+        }
+        setScoreToZero()
+    }
+
 
     private fun setScoreToZero() {
         _uiState.update { currentState ->
