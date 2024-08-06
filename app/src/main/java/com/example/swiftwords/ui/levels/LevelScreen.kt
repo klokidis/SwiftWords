@@ -40,11 +40,11 @@ import com.example.swiftwords.ui.theme.SwiftWordsTheme
 
 @Composable
 fun LevelScreen(
-    viewModel: LevelViewModel = viewModel(factory = AppViewModelProvider.Factory),
+    levelViewModel: LevelViewModel = viewModel(factory = AppViewModelProvider.Factory),
     level: Int,
     navigateToLevel: () -> Unit,
 ) {
-    val levelUiState by viewModel.uiState.collectAsState()
+    val levelUiState by levelViewModel.uiState.collectAsState()
     val scrollState = rememberScrollState()
 
     Box(
@@ -59,7 +59,7 @@ fun LevelScreen(
             verticalArrangement = Arrangement.Top,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            LevelList(currentLevel = level)
+            LevelList(currentLevel = level,levelViewModel.calculatePaddingValues(level))
         }
 
         TopBar()
@@ -74,12 +74,11 @@ fun LevelScreen(
 }
 
 @Composable
-fun LevelList(currentLevel: Int) {
-    val paddingValues = calculatePaddingValues(currentLevel)
+fun LevelList(currentLevel: Int, calculatePaddingValues: List<Pair<Dp, Dp>>) {
 
     for ((index, i) in (currentLevel - 3..currentLevel + 13).withIndex()) {
         if (i > 0) {
-            val (leftPadding, rightPadding) = paddingValues.getOrNull(index) ?: continue
+            val (leftPadding, rightPadding) = calculatePaddingValues.getOrNull(index) ?: continue
 
             val modifierLevel = when {
                 i < currentLevel -> {
@@ -104,42 +103,6 @@ fun LevelList(currentLevel: Int) {
         }
     }
 }
-
-fun calculatePaddingValues(currentLevel: Int): List<Pair<Dp, Dp>> {
-    val paddingChange = 50.dp
-    var leftPadding = 0.dp
-    var rightPadding = 0.dp
-    var step = 0
-    val paddingValues = mutableListOf<Pair<Dp, Dp>>()
-
-    for (i in currentLevel - 3  ..currentLevel + 13) {
-        if (i > 0) {
-            when (step) {
-                in 0..2 -> {
-                    leftPadding += paddingChange
-                    if (rightPadding != 0.dp) {
-                        rightPadding -= paddingChange
-                    }
-                }
-
-                3 -> {
-                    step = -4
-                }
-
-                in -4..-1 -> {
-                    rightPadding += paddingChange
-                    if (leftPadding != 0.dp) {
-                        leftPadding -= paddingChange
-                    }
-                }
-            }
-            step += 1
-            paddingValues.add(leftPadding to rightPadding)
-        }
-    }
-    return paddingValues
-}
-
 
 @Composable
 fun LevelCard(
