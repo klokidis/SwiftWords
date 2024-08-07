@@ -170,7 +170,7 @@ fun SwiftWordsApp(
                 wordListState.value?.let { wordList ->
                     Game(
                         { mainUiState.gameTime },
-                        listOfLetters = mainUiState.listOfLettersForLevel,
+                        listOfLetters = mainUiState.listOfLettersForLevel,//maybe make it flow
                         wordList = wordList,
                         navigateUp = { navController.navigateUp() }
                     )
