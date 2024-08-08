@@ -52,7 +52,6 @@ enum class SwiftWordsScreen {
 fun SwiftWordsApp(
     context: Context,
     viewModel: MainViewModel = viewModel(factory = AppViewModelProvider.Factory),
-    viewModel2: DataViewmodel = viewModel(factory = AppViewModelProvider.Factory),
     navController: NavHostController = rememberNavController()
 ) {
     val backStackEntry by navController.currentBackStackEntryAsState()
