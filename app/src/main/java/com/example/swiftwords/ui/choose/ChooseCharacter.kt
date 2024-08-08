@@ -29,6 +29,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.swiftwords.R
+
 import com.example.swiftwords.ui.theme.SwiftWordsTheme
 
 @Composable
@@ -38,11 +39,14 @@ fun ChooseCharacter(){
         Spacer(modifier = Modifier.padding(20.dp))
         Text(
             text = "CHOOSE",
-            modifier = Modifier.padding(start = 10.dp)
+            style = MaterialTheme.typography.bodyLarge,
+            modifier = Modifier
+                .padding(start = 10.dp)
         )
         Spacer(modifier = Modifier.padding(3.dp))
         Text(
             text = "YOUR CHARACTER",
+            style = MaterialTheme.typography.bodyLarge,
             modifier = Modifier.padding(start = 10.dp)
         )
     }
@@ -54,9 +58,9 @@ fun ChooseCharacter(){
         horizontalAlignment = Alignment.Start
     ){
         Spacer(modifier = Modifier.weight(1f))
-        CompleteCard(R.drawable.current)
+        CompleteCard(R.drawable.sage)
         Spacer(modifier = Modifier.padding(20.dp))
-        CompleteCard(R.drawable.done)
+        CompleteCard(R.drawable.gekko)
         Spacer(modifier = Modifier.weight(1f))
     }
 }
@@ -123,7 +127,7 @@ fun CharacterCard(onButtonCard: () -> Unit){
                         start = 10.dp,
                         end = 120.dp
                     ),
-                style = MaterialTheme.typography.titleLarge,
+                style = MaterialTheme.typography.bodyMedium,
             )
             Text(
                 text = "dsads",//LocalContext.current.getString(artist.stringResourceId),
@@ -132,7 +136,7 @@ fun CharacterCard(onButtonCard: () -> Unit){
                         start = 10.dp,
                         end = 120.dp
                     ),
-                style = MaterialTheme.typography.titleLarge,
+                style = MaterialTheme.typography.bodyMedium,
             )
         }
     }
