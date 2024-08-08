@@ -1,7 +1,6 @@
 package com.example.swiftwords.ui.levels
 
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -11,9 +10,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -25,15 +22,12 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import com.example.swiftwords.R
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.swiftwords.ui.AppViewModelProvider
 import com.example.swiftwords.ui.theme.SwiftWordsTheme
@@ -59,7 +53,7 @@ fun LevelScreen(
             verticalArrangement = Arrangement.Top,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            LevelList(currentLevel = level,levelViewModel.calculatePaddingValues(level))
+            LevelList(currentLevel = level, levelViewModel.calculatePaddingValues(level),navigateToLevel)
         }
 
         TopBar()
@@ -74,32 +68,12 @@ fun LevelScreen(
 }
 
 @Composable
-fun LevelList(currentLevel: Int, calculatePaddingValues: List<Pair<Dp, Dp>>) {
-
+fun LevelList(currentLevel: Int, calculatePaddingValues: List<Pair<Dp, Dp>>,onClick: () -> Unit) {
     for ((index, i) in (currentLevel - 3..currentLevel + 13).withIndex()) {
         if (i > 0) {
             val (leftPadding, rightPadding) = calculatePaddingValues.getOrNull(index) ?: continue
 
-            val modifierLevel = when {
-                i < currentLevel -> {
-                    Modifier
-                        .clip(RoundedCornerShape(50))
-                        .background(Color.Yellow)
-                }
-
-                i == currentLevel -> {
-                    Modifier
-                        .clip(RoundedCornerShape(50))
-                        .background(Color.Green)
-                }
-
-                else -> {
-                    Modifier
-                        .clip(RoundedCornerShape(50))
-                        .background(Color.Gray)
-                }
-            }
-            LevelCard(i, modifierLevel, rightPadding, leftPadding)
+            LevelCard(i, rightPadding, leftPadding, i, currentLevel,onClick)
         }
     }
 }
@@ -107,9 +81,11 @@ fun LevelList(currentLevel: Int, calculatePaddingValues: List<Pair<Dp, Dp>>) {
 @Composable
 fun LevelCard(
     number: Int,
-    modifier: Modifier,
     rightPadding: Dp,
-    leftPadding: Dp
+    leftPadding: Dp,
+    thisLevel: Int,
+    currentLevel: Int,
+    onClick: () -> Unit
 ) {
     Box(
         modifier = Modifier
@@ -120,22 +96,30 @@ fun LevelCard(
             ),
         contentAlignment = Alignment.Center
     ) {
-        Card(
-            modifier = modifier
-                .size(100.dp),
-            shape = RoundedCornerShape(50),
-        ) {
-            Box(
-                contentAlignment = Alignment.Center,
-                modifier = modifier.fillMaxSize(),
-            ) {
-                Text(
+        when {
+            thisLevel < currentLevel -> {
+                Levels(
+                    modifier = Modifier,
                     text = number.toString(),
-                    style = MaterialTheme.typography.bodyLarge.copy(
-                        color = Color.White
-                    ),
-                    fontSize = 24.sp,
-                    textAlign = TextAlign.Center
+                    color = Color.Yellow,
+                    shadowColor = Color.DarkGray
+                )
+            }
+
+            thisLevel == currentLevel -> {
+                CurrentLevel(
+                    modifier = Modifier,
+                    text = number.toString(),
+                    onClick = onClick
+                )
+            }
+
+            else -> {
+                Levels(
+                    modifier = Modifier,
+                    text = number.toString(),
+                    color = Color.Gray,
+                    shadowColor = Color.Black
                 )
             }
         }
@@ -196,6 +180,6 @@ fun BottomLevel(onClick: () -> Unit, level: String) {
 @Composable
 fun CardPreview() {
     SwiftWordsTheme {
-        LevelCard(1, Modifier, 19.dp, 19.dp)
+        LevelCard(1, 19.dp, 19.dp, 1, 11,{})
     }
 }

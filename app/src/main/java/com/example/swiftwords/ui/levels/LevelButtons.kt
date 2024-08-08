@@ -61,8 +61,8 @@ fun CurrentLevel(
         Box(
             modifier = Modifier
                 .constrainAs(back) {
-                    width =  Dimension.fillToConstraints
-                    height =  Dimension.fillToConstraints
+                    width = Dimension.fillToConstraints
+                    height = Dimension.fillToConstraints
 
                     start.linkTo(button.start)
                     end.linkTo(button.end)
@@ -100,6 +100,7 @@ fun CurrentLevel(
 
                         MotionEvent.ACTION_UP -> {
                             animatedY = 0.dp
+                            onClick()
                         }
 
                         MotionEvent.ACTION_MOVE -> {
@@ -131,7 +132,6 @@ fun Levels(
     color: Color = Gray,
     textColor: Color = Color.White,
     shadowColor: Color = Color(0xFF4e9a00),
-    onClick: () -> Unit
 ) {
     ConstraintLayout(
         modifier = modifier
@@ -164,7 +164,7 @@ fun Levels(
         )
 
         Button(
-            onClick = onClick,
+            onClick = { },
             modifier = Modifier
                 .constrainAs(button) {
                     width = Dimension.value(80.dp)
@@ -219,6 +219,6 @@ private fun PreviewDuolingoButton() {
             text = "Preview"
         ) {}
         Levels(modifier = Modifier,
-            text = "Preview"){}
+            text = "Preview")
     }
 }
