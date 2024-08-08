@@ -33,6 +33,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import com.example.swiftwords.data.DataViewmodel
 import com.example.swiftwords.ui.AppViewModelProvider
 import com.example.swiftwords.ui.game.Game
 import com.example.swiftwords.ui.levels.LevelScreen
@@ -51,6 +52,7 @@ enum class SwiftWordsScreen {
 fun SwiftWordsApp(
     context: Context,
     viewModel: MainViewModel = viewModel(factory = AppViewModelProvider.Factory),
+    viewModel2: DataViewmodel = viewModel(factory = AppViewModelProvider.Factory),
     navController: NavHostController = rememberNavController()
 ) {
     val backStackEntry by navController.currentBackStackEntryAsState()

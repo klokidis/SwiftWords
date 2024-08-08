@@ -2,4 +2,5 @@
 <resources>
     <dimen name="levels">50dp</dimen>
     <dimen name="elevation">5dp</dimen>
+    <dimen name="artist_box">200dp</dimen>
 </resources>
