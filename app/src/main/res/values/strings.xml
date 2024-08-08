@@ -8,4 +8,8 @@
     <string name="textfield">textfield for answers</string>
     <string name="fast">Fast Game</string>
     <string name="unlimited">unlimited time</string>
+    <string name="choose">Choose</string>
+    <string name="choose2">Your Character</string>
+    <string name="girlName">example</string>
+    <string name="boyName">example</string>
 </resources>

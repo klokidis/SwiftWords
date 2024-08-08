@@ -11,6 +11,9 @@ import com.example.swiftwords.R
 val Bebasneuregular = FontFamily(
     Font(R.font.bebasneuregular),
 )
+val Radiocanadabigregular = FontFamily(
+    Font(R.font.radiocanadabigregular),
+)
 // Set of Material typography styles to start with
 val Typography = Typography(
     bodyLarge = TextStyle(
@@ -21,7 +24,7 @@ val Typography = Typography(
         letterSpacing = 0.5.sp
     ),
     bodyMedium = TextStyle(
-        fontFamily = Bebasneuregular,
+        fontFamily = Radiocanadabigregular,
         fontWeight = FontWeight.Normal,
         fontSize = 25.sp,
         lineHeight = 24.sp,

@@ -26,6 +26,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.swiftwords.R
@@ -38,14 +39,14 @@ fun ChooseCharacter(){
     Column{
         Spacer(modifier = Modifier.padding(20.dp))
         Text(
-            text = "CHOOSE",
+            text = stringResource(id = R.string.choose),
             style = MaterialTheme.typography.bodyLarge,
             modifier = Modifier
                 .padding(start = 10.dp)
         )
         Spacer(modifier = Modifier.padding(3.dp))
         Text(
-            text = "YOUR CHARACTER",
+            text = stringResource(id = R.string.choose2),
             style = MaterialTheme.typography.bodyLarge,
             modifier = Modifier.padding(start = 10.dp)
         )
@@ -58,22 +59,24 @@ fun ChooseCharacter(){
         horizontalAlignment = Alignment.Start
     ){
         Spacer(modifier = Modifier.weight(1f))
-        CompleteCard(R.drawable.sage)
+        CompleteCard(R.drawable.sage, stringResource(id = R.string.girlName))
         Spacer(modifier = Modifier.padding(20.dp))
-        CompleteCard(R.drawable.gekko)
+        CompleteCard(R.drawable.gekko, stringResource(id = R.string.boyName))
         Spacer(modifier = Modifier.weight(1f))
     }
 }
 
 @Composable
 fun CompleteCard(
-    imageResourceId: Int
+    imageResourceId: Int,
+    name: String
 ){
     Box(
         modifier = Modifier.height(200.dp)//dimensionResource(id = R.dimen.artist_box)
     ) {
         CharacterCard(
             {  },
+            name
         )
         Box(
             modifier = Modifier
@@ -95,7 +98,7 @@ fun CompleteCard(
 }
 
 @Composable
-fun CharacterCard(onButtonCard: () -> Unit){
+fun CharacterCard(onButtonCard: () -> Unit,name : String){
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -121,16 +124,7 @@ fun CharacterCard(onButtonCard: () -> Unit){
                 .padding(top = 20.dp, start = 10.dp)
         ) {
             Text(
-                text = "dsads",//LocalContext.current.getString(artist.stringResourceId),
-                modifier = Modifier
-                    .padding(
-                        start = 10.dp,
-                        end = 120.dp
-                    ),
-                style = MaterialTheme.typography.bodyMedium,
-            )
-            Text(
-                text = "dsads",//LocalContext.current.getString(artist.stringResourceId),
+                text = name,
                 modifier = Modifier
                     .padding(
                         start = 10.dp,
