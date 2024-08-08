@@ -15,4 +15,5 @@ data class User(
     val dailyDate: String,
     val lives: Int,
     val lifeDate: String
+    // add current level array of char
 )

@@ -1,11 +1,9 @@
-package com.example.swiftwords
+package com.example.swiftwords.data
 
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
-import com.example.swiftwords.data.User
-import com.example.swiftwords.data.UserRepository
 
 data class UserUiState(
     val userDetails: UserDetails = UserDetails(),

@@ -92,7 +92,7 @@ private val LightColorScheme = lightColorScheme(
 fun SwiftWordsTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
     dynamicColor: Boolean = false,
-    content: @Composable () -> Unit //ADD A VIRABLE THAT CHOOSES THE THEME
+    content: @Composable () -> Unit
 ) {
     val colorScheme = when {
         dynamicColor && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S -> {

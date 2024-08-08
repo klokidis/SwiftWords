@@ -158,7 +158,7 @@ fun SwiftWordsApp(
                         navController.navigate(SwiftWordsScreen.Game.name)
                     },
                     navigateLongGame = {
-                        viewModel.changeTime(130000000L)
+                        viewModel.changeTime(130000000L) //130000000L means no time
                         navController.navigate(SwiftWordsScreen.Game.name)
                     }
                 )
