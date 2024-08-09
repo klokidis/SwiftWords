@@ -17,7 +17,7 @@ data class MainUiState(
     val currentLevel: Int = 11
 )
 
-class AppMainViewModel : ViewModel() {
+class SwiftWordsMainViewModel : ViewModel() {
 
     private val _uiState = MutableStateFlow(MainUiState())
     val uiState: StateFlow<MainUiState> = _uiState.asStateFlow()

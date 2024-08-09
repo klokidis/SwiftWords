@@ -15,7 +15,7 @@ object AppViewModelProvider {
             LevelViewModel()
         }
         initializer {
-            AppMainViewModel()
+            SwiftWordsMainViewModel()
         }
         initializer {
             DataViewmodel(inventoryApplication().container.userRepository)

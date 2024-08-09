@@ -49,7 +49,7 @@ enum class SwiftWordsScreen {
 @Composable
 fun SwiftWordsApp(
     context: Context,
-    viewModel: AppMainViewModel = viewModel(factory = AppViewModelProvider.Factory),
+    viewModel: SwiftWordsMainViewModel = viewModel(factory = AppViewModelProvider.Factory),
     navController: NavHostController = rememberNavController()
 ) {
     val backStackEntry by navController.currentBackStackEntryAsState()
