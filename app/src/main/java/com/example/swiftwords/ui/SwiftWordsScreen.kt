@@ -1,4 +1,4 @@
-package com.example.swiftwords
+package com.example.swiftwords.ui
 
 import android.content.Context
 import androidx.compose.foundation.layout.Arrangement
@@ -33,8 +33,6 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import com.example.swiftwords.data.DataViewmodel
-import com.example.swiftwords.ui.AppViewModelProvider
 import com.example.swiftwords.ui.game.Game
 import com.example.swiftwords.ui.levels.LevelScreen
 import com.example.swiftwords.ui.modes.ModesScreen
@@ -51,11 +49,12 @@ enum class SwiftWordsScreen {
 @Composable
 fun SwiftWordsApp(
     context: Context,
-    viewModel: MainViewModel = viewModel(factory = AppViewModelProvider.Factory),
+    viewModel: AppMainViewModel = viewModel(factory = AppViewModelProvider.Factory),
     navController: NavHostController = rememberNavController()
 ) {
     val backStackEntry by navController.currentBackStackEntryAsState()
     val mainUiState by viewModel.uiState.collectAsState()
+    val dataUiState = viewModel.dataUiState.collectAsState()
     val currentScreen = SwiftWordsScreen.valueOf(
         backStackEntry?.destination?.route ?: SwiftWordsScreen.Levels.name
     )
