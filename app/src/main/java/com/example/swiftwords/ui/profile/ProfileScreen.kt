@@ -20,7 +20,12 @@ import com.example.swiftwords.R
 import com.example.swiftwords.ui.theme.SwiftWordsTheme
 
 @Composable
-fun ProfileScreen(currentLevel: Int) {
+fun ProfileScreen(
+    currentLevel: Int,
+    streak: Int,
+    highScore: Int,
+    name: String
+) {
     val scrollState = rememberScrollState()
     Column(
         modifier = Modifier
@@ -36,15 +41,15 @@ fun ProfileScreen(currentLevel: Int) {
         )
         Spacer(modifier = Modifier.padding(7.dp))
         Text(
-            text = "Name"
+            text = name
         )
         Spacer(modifier = Modifier.padding(20.dp))
-        Scores(currentLevel)
+        Scores(currentLevel, highScore, streak)
     }
 }
 
 @Composable
-fun Scores(currentLevel: Int) {
+fun Scores(currentLevel: Int, highScore: Int, streak: Int) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -57,16 +62,13 @@ fun Scores(currentLevel: Int) {
         )
         Spacer(modifier = Modifier.padding(5.dp))
         Text(
-            text = "High Score"
+            text = "High Score:  $highScore"
         )
         Spacer(modifier = Modifier.padding(5.dp))
         Text(
-            text = "daily streak"
+            text = "daily streak:  $streak"
         )
         Spacer(modifier = Modifier.padding(5.dp))
-        Text(
-            text = "Name"
-        )
     }
 }
 /*
@@ -152,6 +154,6 @@ private suspend fun animateText(text: String, callback: (String) -> Unit) {
 @Composable
 fun ProfilePreview() {
     SwiftWordsTheme {
-        ProfileScreen(20)
+        ProfileScreen(20, 1, 2,"")
     }
 }

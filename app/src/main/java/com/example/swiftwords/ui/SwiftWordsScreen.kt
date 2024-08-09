@@ -168,7 +168,14 @@ fun SwiftWordsApp(
                 )
             }
             composable(route = SwiftWordsScreen.Profile.name) {
-                ProfileScreen(mainUiState.currentLevel)
+                dataUiState.userDetails?.let { data ->
+                    ProfileScreen(
+                        data.currentLevel,
+                        data.streak,
+                        data.highScore,
+                        data.nickname
+                    )
+                }
             }
             composable(route = SwiftWordsScreen.Game.name) {
                 wordListState.value?.let { wordList ->
