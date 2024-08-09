@@ -11,8 +11,8 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.withContext
 
 data class MainUiState(
-    var listOfLettersForLevel: Array<Char> = arrayOf(),
-    var listOfLettersForMode: Array<Char> = arrayOf(),
+    var setOfLettersForLevel: Set<Char> = setOf(),
+    var setOfLettersForMode: Set<Char> = setOf(),
     val gameTime: Long = 40000L,
     val currentLevel: Int = 11
 )
@@ -25,7 +25,7 @@ class SwiftWordsMainViewModel : ViewModel() {
     init {
         _uiState.update { currentState ->
             currentState.copy(
-                listOfLettersForLevel = generateNewRandomLetters()
+                setOfLettersForLevel = generateNewRandomLetters()
             )
         }
     }
@@ -33,7 +33,7 @@ class SwiftWordsMainViewModel : ViewModel() {
     suspend fun getSetFromFile(context: Context): Set<String> {
         return withContext(Dispatchers.IO) {
             // Convert letters for the level to a set of lowercase characters once
-            val lettersForLevel = uiState.value.listOfLettersForLevel
+            val lettersForLevel = uiState.value.setOfLettersForLevel
                 .map { it.lowercaseChar() }
                 .toSet()
 
@@ -74,7 +74,7 @@ class SwiftWordsMainViewModel : ViewModel() {
         }
     }
 
-    private fun generateNewRandomLetters(): Array<Char> {
+    private fun generateNewRandomLetters(): Set<Char> {
         val vowels = mutableListOf('A', 'E', 'I', 'O')
         val consonants = ('A'..'Z').filter { it !in vowels }.toMutableList()
 
@@ -101,7 +101,7 @@ class SwiftWordsMainViewModel : ViewModel() {
         }
 
         val combinedList = randomVowels + randomConsonants + randomOthers
-        return combinedList.shuffled().toTypedArray()
+        return combinedList.shuffled().toSet()
     }
 }
 

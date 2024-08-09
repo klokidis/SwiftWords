@@ -36,6 +36,8 @@ import com.example.swiftwords.ui.theme.SwiftWordsTheme
 fun LevelScreen(
     levelViewModel: LevelViewModel = viewModel(factory = AppViewModelProvider.Factory),
     level: Int,
+    livesLeft: Int,
+    streak: Int,
     navigateToLevel: () -> Unit,
 ) {
     val levelUiState by levelViewModel.uiState.collectAsState()
@@ -56,7 +58,7 @@ fun LevelScreen(
             LevelList(currentLevel = level, levelViewModel.calculatePaddingValues(level),navigateToLevel)
         }
 
-        TopBar()
+        TopBar(livesLeft, streak)
 
         Box(
             modifier = Modifier.fillMaxSize(),
@@ -127,7 +129,7 @@ fun LevelCard(
 }
 
 @Composable
-fun TopBar() {
+fun TopBar(livesLeft: Int, streak: Int) {
     Surface(
         modifier = Modifier
             .fillMaxWidth()
@@ -143,13 +145,13 @@ fun TopBar() {
             horizontalArrangement = Arrangement.Center
         ) {
             Image(painter = painterResource(id = R.drawable.done), contentDescription = null)
-            Text(text = "theme", modifier = Modifier.padding(start = 8.dp))
+            Text(text = "?", modifier = Modifier.padding(start = 8.dp))
             Spacer(modifier = Modifier.weight(1f))
-            Image(painter = painterResource(id = R.drawable.done), contentDescription = null)
-            Text(text = "10", modifier = Modifier.padding(start = 8.dp))
+            Image(painter = painterResource(id = R.drawable.done), contentDescription = "streak")
+            Text(text = streak.toString(), modifier = Modifier.padding(start = 8.dp))
             Spacer(modifier = Modifier.weight(1f))
-            Image(painter = painterResource(id = R.drawable.done), contentDescription = null)
-            Text(text = "5", modifier = Modifier.padding(start = 8.dp))
+            Image(painter = painterResource(id = R.drawable.done), contentDescription = "lives left")
+            Text(text = livesLeft.toString(), modifier = Modifier.padding(start = 8.dp))
         }
     }
 }

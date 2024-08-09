@@ -20,7 +20,8 @@ data class GameUiState(
     val value: Float = 1f,
     val currentTime: Long = 40000L,
     val isTimerRunning: Boolean = true,
-    val score: Int = 0
+    val score: Int = 0,
+    val alreadyAnswered: Set<String> = setOf()
 )
 
 class GameViewModel(time: () -> Long) : ViewModel() {
@@ -39,7 +40,7 @@ class GameViewModel(time: () -> Long) : ViewModel() {
     suspend fun checkAnswer(
         answer:() -> String,
         wordList: Set<String>,
-        charArray: Array<Char>
+        charArray: Set<Char>
     ): Boolean {
         return withContext(Dispatchers.Default) {
             if (answer().length > 1) {
@@ -48,12 +49,13 @@ class GameViewModel(time: () -> Long) : ViewModel() {
                 val trimmedAnswer = answer().trim().lowercase(Locale.ROOT)
                 val isInWordList = wordList.contains(trimmedAnswer)
                 val canBeConstructed = trimmedAnswer.all { it in charSet }
-
-                if (isInWordList && canBeConstructed) {
+                val newWord = !uiState.value.alreadyAnswered.contains(answer())
+                if (isInWordList && canBeConstructed && newWord) {
                     increaseScore()
+                    addWord(answer())
                 }
 
-                isInWordList && canBeConstructed
+                isInWordList && canBeConstructed && newWord
             } else {
                 false
             }
@@ -71,6 +73,14 @@ class GameViewModel(time: () -> Long) : ViewModel() {
         }
     }
 
+    private fun addWord(newWord: String) {
+        _uiState.update { currentState ->
+            currentState.copy(
+                alreadyAnswered = currentState.alreadyAnswered.plus(newWord)
+            )
+        }
+    }
+
     suspend fun restartGame(newTime: Long) {
         viewModelScope.launch {
             updateTime(newTime)
@@ -83,7 +93,8 @@ class GameViewModel(time: () -> Long) : ViewModel() {
     private fun setScoreToZero() {
         _uiState.update { currentState ->
             currentState.copy(
-                score = 0
+                score = 0,
+                alreadyAnswered = setOf()
             )
         }
     }
