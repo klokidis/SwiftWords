@@ -33,11 +33,11 @@ fun Loading(
                 Text("Loading...")
             }
         }
-        dataUiState.userDetails == null -> {
+        dataUiState.userDetails?.id == 1 -> {
             ChooseCharacter()
         }
         else -> {
-            SwiftWordsApp(context)
+            SwiftWordsApp(context,dataUiState)
         }
     }
 }

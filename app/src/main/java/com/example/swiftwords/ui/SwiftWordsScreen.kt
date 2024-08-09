@@ -50,20 +50,19 @@ enum class SwiftWordsScreen {
 @Composable
 fun SwiftWordsApp(
     context: Context,
+    dataUiState: ItemDetailsUiState,
     viewModel: SwiftWordsMainViewModel = viewModel(factory = AppViewModelProvider.Factory),
-    viewModel2: GetDataViewModel = viewModel(factory = AppViewModelProvider.Factory),
     navController: NavHostController = rememberNavController()
 ) {
     val backStackEntry by navController.currentBackStackEntryAsState()
     val mainUiState by viewModel.uiState.collectAsState()
-    val mainUiState2 by viewModel2.getDataUiState.collectAsState()
     val currentScreen = SwiftWordsScreen.valueOf(
         backStackEntry?.destination?.route ?: SwiftWordsScreen.Levels.name
     )
     var selectedItemIndex by rememberSaveable { mutableIntStateOf(0) }
 
     LaunchedEffect(currentScreen) {
-        Log.d("klok", mainUiState2.userDetails.toString())
+        Log.d("klok", dataUiState.userDetails.toString())
         val newIndex = when (currentScreen) {
             SwiftWordsScreen.Levels -> 0
             SwiftWordsScreen.Modes -> 1
@@ -149,9 +148,11 @@ fun SwiftWordsApp(
             modifier = Modifier.padding(paddingValues)
         ) {
             composable(route = SwiftWordsScreen.Levels.name) {
-                LevelScreen(level = mainUiState.currentLevel) {
-                    viewModel.changeTime(40000L)
-                    navController.navigate(SwiftWordsScreen.Game.name)
+                dataUiState.userDetails?.let { data ->
+                    LevelScreen(level = data.currentLevel, livesLeft = data.lives, streak = data.streak) {
+                        viewModel.changeTime(40000L)
+                        navController.navigate(SwiftWordsScreen.Game.name)
+                    }
                 }
             }
             composable(route = SwiftWordsScreen.Modes.name) {
@@ -173,7 +174,7 @@ fun SwiftWordsApp(
                 wordListState.value?.let { wordList ->
                     Game(
                         { mainUiState.gameTime },
-                        listOfLetters = mainUiState.listOfLettersForLevel,//maybe make it flow
+                        setOfLetters = mainUiState.setOfLettersForLevel,//maybe make it flow
                         wordList = wordList,
                         navigateUp = { navController.navigateUp() }
                     )

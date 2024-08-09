@@ -52,19 +52,21 @@ fun ChooseCharacter(viewmodel: DataViewmodel = viewModel(factory = AppViewModelP
         Spacer(modifier = Modifier.padding(20.dp))
         Text(
             text = stringResource(id = R.string.choose),
-            style = MaterialTheme.typography.bodyLarge,
+            style = MaterialTheme.typography.titleLarge,
             modifier = Modifier
                 .padding(start = 10.dp)
         )
         Spacer(modifier = Modifier.padding(3.dp))
         Text(
             text = stringResource(id = R.string.choose2),
-            style = MaterialTheme.typography.bodyLarge,
+            style = MaterialTheme.typography.titleLarge,
             modifier = Modifier.padding(start = 10.dp)
         )
-
-        Spacer(modifier = Modifier.padding(40.dp))
-
+        Spacer(modifier = Modifier.padding(35.dp))
+        CompleteCard(R.drawable.sage,"sage",false)
+        Spacer(modifier = Modifier.padding(15.dp))
+        CompleteCard(R.drawable.gekko,"gekko",false)
+        Spacer(modifier = Modifier.weight(1f))
     }
 }
 

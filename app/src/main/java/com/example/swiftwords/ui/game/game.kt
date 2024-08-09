@@ -41,7 +41,8 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material3.Button
+
+import androidx.compose.material3.Card
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.TextButton
@@ -54,17 +55,19 @@ import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.IntSize
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.swiftwords.R
+import com.example.swiftwords.ui.theme.SwiftWordsTheme
 import kotlinx.coroutines.launch
 import kotlin.reflect.KSuspendFunction1
 
 @Composable
 fun Game(
     newTime: () -> Long,
-    listOfLetters: Array<Char>,
+    setOfLetters: Set<Char>,
     wordList: Set<String>,
     viewModel: GameViewModel = viewModel(factory = GameViewModelFactory(newTime)),
     navigateUp: () -> Unit
@@ -83,7 +86,7 @@ fun Game(
         {
             isLoading = true
             coroutineScope.launch {
-                isCorrect = viewModel.checkAnswer({ textState }, wordList, listOfLetters)
+                isCorrect = viewModel.checkAnswer({ textState }, wordList, setOfLetters)
                 isLoading = false
                 textState = ""  // Reset textState after isCorrect is updated
             }
@@ -130,10 +133,14 @@ fun Game(
             Column(
                 verticalArrangement = Arrangement.Center,
                 horizontalAlignment = Alignment.CenterHorizontally
-            ) {
+            ){
+                val listOfLetters = setOfLetters.toList()
+
                 RowOfLetters(listOfLetters[0], listOfLetters[1], listOfLetters[2])
                 RowOfLetters(listOfLetters[3], listOfLetters[4], listOfLetters[5])
                 RowOfLetters(listOfLetters[6], listOfLetters[7], listOfLetters[8])
+
+
             }
 
             Spacer(modifier = Modifier.padding(10.dp))
@@ -345,35 +352,68 @@ fun Timer(
 @Composable
 fun DisplayResults(score: Int, restart: KSuspendFunction1<Long, Unit>, time: () -> Long) {
     val coroutineScope = rememberCoroutineScope()
-    Column(
+    Box(
         modifier = Modifier
             .fillMaxSize()
             .background(Color.Black.copy(alpha = 0.4f)),
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Image(
-            painter = painterResource(id = R.drawable.current),
-            modifier = Modifier.size(150.dp),
-            contentDescription = null)
-        if(score>10){
-            Text(text = "Congrats you passed with score: $score")
-        }else{
-            Text(text = "you failed :( with score: $score")
-        }
-        Row {
-            TextButton(
-                onClick = {
-                    coroutineScope.launch {
-                        restart(time())
+        Card(
+            modifier = Modifier
+                .align(Alignment.Center),
+        ) {
+            Column(
+                modifier = Modifier
+                    .padding(10.dp),
+                verticalArrangement = Arrangement.Center,
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Image(
+                    painter = painterResource(id = R.drawable.sage),
+                    modifier = Modifier.size(200.dp),
+                    contentDescription = null
+                )
+                if (score > 10) {
+                    Text(
+                        "Congrats you passed with score: $score",
+                        style = MaterialTheme.typography.titleMedium
+                    )
+                } else {
+                    Text(
+                        "you failed :( with score: $score",
+                        style = MaterialTheme.typography.titleMedium
+                    )
+                }
+                Row(
+                    horizontalArrangement = Arrangement.Center,
+                ) {
+                    TextButton(
+                        onClick = {
+                            coroutineScope.launch {
+                                restart(time())
+                            }
+                        },
+                    ) {
+                        Text("Try Again (-1 life)")
+                    }
+                    TextButton(
+                        onClick = {
+                            coroutineScope.launch {
+                                restart(time())
+                            }
+                        }
+                    ) {
+                        Text("Next Level")
                     }
                 }
-            ) {
-                Text("Text Button")
-            }
-            Button(onClick = { /*TODO*/ }) {
-                Text(text = "Next Level")
             }
         }
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun Preview(viewModel: GameViewModel = viewModel(factory = GameViewModelFactory({ 50L }))) {
+    SwiftWordsTheme {
+        DisplayResults(5,viewModel::restartGame, { 50L })
     }
 }
