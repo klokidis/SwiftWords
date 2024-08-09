@@ -15,10 +15,13 @@ object AppViewModelProvider {
             LevelViewModel()
         }
         initializer {
-            AppMainViewModel(inventoryApplication().container.userRepository)
+            AppMainViewModel()
         }
         initializer {
             DataViewmodel(inventoryApplication().container.userRepository)
+        }
+        initializer {
+            GetDataViewModel(inventoryApplication().container.userRepository)
         }
     }
 }

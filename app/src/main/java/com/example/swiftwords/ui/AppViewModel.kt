@@ -2,20 +2,11 @@ package com.example.swiftwords.ui
 
 import android.content.Context
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
-import com.example.swiftwords.data.User
-import com.example.swiftwords.data.UserDetails
-import com.example.swiftwords.data.UserRepository
-import com.example.swiftwords.data.UserUiState
-import com.example.swiftwords.data.toUserDetails
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.withContext
 
@@ -26,26 +17,10 @@ data class MainUiState(
     val currentLevel: Int = 11
 )
 
-data class ItemDetailsUiState(
-    val userDetails: UserDetails = UserDetails()
-)
-
-class AppMainViewModel(private val userRepository: UserRepository) : ViewModel() {
+class AppMainViewModel : ViewModel() {
 
     private val _uiState = MutableStateFlow(MainUiState())
     val uiState: StateFlow<MainUiState> = _uiState.asStateFlow()
-
-    val dataUiState: StateFlow<ItemDetailsUiState> =
-        userRepository.getUserStream().map { ItemDetailsUiState(userDetails = it.toUserDetails()) }
-            .stateIn(
-                scope = viewModelScope,
-                started = SharingStarted.WhileSubscribed(TIMEOUT_MILLIS),
-                initialValue = ItemDetailsUiState()
-            )
-
-    companion object {
-        private const val TIMEOUT_MILLIS = 5_000L
-    }
 
     init {
         _uiState.update { currentState ->
