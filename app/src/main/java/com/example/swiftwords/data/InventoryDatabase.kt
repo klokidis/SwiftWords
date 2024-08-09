@@ -18,6 +18,7 @@ abstract class InventoryDatabase: RoomDatabase() {
             return Instance ?: synchronized(this) {
                 Room.databaseBuilder(context, InventoryDatabase::class.java, "user_database")
                     .fallbackToDestructiveMigration()
+                    .createFromAsset("database/user_database.db")
                     .build()
                     .also { Instance = it }
             }

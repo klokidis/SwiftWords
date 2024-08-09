@@ -12,20 +12,27 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 
 data class ItemDetailsUiState(
-    val userDetails: UserDetails = UserDetails()
+    val userDetails: UserDetails? = null,
+    val isLoading: Boolean = true
 )
 
-class GetDataViewModel(private val userRepository: UserRepository) : ViewModel() {
+class GetDataViewModel(userRepository: UserRepository) : ViewModel() {
 
     val getDataUiState: StateFlow<ItemDetailsUiState> =
         userRepository.getUserStream()
-            .filterNotNull()
-            .map { ItemDetailsUiState(userDetails = it.toUserDetails()) }
+            .map { user ->
+                if (user == null) {
+                    ItemDetailsUiState(isLoading = true)
+                } else {
+                    ItemDetailsUiState(userDetails = user.toUserDetails(), isLoading = false)
+                }
+            }
             .stateIn(
                 scope = viewModelScope,
                 started = SharingStarted.WhileSubscribed(TIMEOUT_MILLIS),
-                initialValue = ItemDetailsUiState()
+                initialValue = ItemDetailsUiState(isLoading = true)
             )
+
 
     companion object {
         private const val TIMEOUT_MILLIS = 5_000L

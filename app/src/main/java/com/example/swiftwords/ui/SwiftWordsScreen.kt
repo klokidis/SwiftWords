@@ -1,6 +1,7 @@
 package com.example.swiftwords.ui
 
 import android.content.Context
+import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -50,16 +51,19 @@ enum class SwiftWordsScreen {
 fun SwiftWordsApp(
     context: Context,
     viewModel: SwiftWordsMainViewModel = viewModel(factory = AppViewModelProvider.Factory),
+    viewModel2: GetDataViewModel = viewModel(factory = AppViewModelProvider.Factory),
     navController: NavHostController = rememberNavController()
 ) {
     val backStackEntry by navController.currentBackStackEntryAsState()
     val mainUiState by viewModel.uiState.collectAsState()
+    val mainUiState2 by viewModel2.getDataUiState.collectAsState()
     val currentScreen = SwiftWordsScreen.valueOf(
         backStackEntry?.destination?.route ?: SwiftWordsScreen.Levels.name
     )
     var selectedItemIndex by rememberSaveable { mutableIntStateOf(0) }
 
     LaunchedEffect(currentScreen) {
+        Log.d("klok", mainUiState2.userDetails.toString())
         val newIndex = when (currentScreen) {
             SwiftWordsScreen.Levels -> 0
             SwiftWordsScreen.Modes -> 1
