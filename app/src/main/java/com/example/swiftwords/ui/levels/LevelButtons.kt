@@ -109,6 +109,10 @@ fun CurrentLevel(
 
                             if (isOutside) animatedY = 0.dp
                         }
+
+                        MotionEvent.ACTION_CANCEL -> {
+                            animatedY = 0.dp
+                        }
                     }
                     true
                 },
@@ -196,6 +200,11 @@ fun Levels(
 
                             if (isOutside) animatedY = 0.dp
                         }
+
+                        MotionEvent.ACTION_CANCEL -> {
+                            animatedY = 0.dp
+                        }
+
                     }
                     true
                 },
