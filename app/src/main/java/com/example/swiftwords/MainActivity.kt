@@ -10,6 +10,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import com.example.swiftwords.ui.SwiftWordsApp
+import com.example.swiftwords.ui.loading.Loading
 import com.example.swiftwords.ui.theme.SwiftWordsTheme
 
 class MainActivity : ComponentActivity() {
@@ -22,7 +23,7 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    SwiftWordsApp(this)
+                    Loading(this)
                 }
             }
         }
