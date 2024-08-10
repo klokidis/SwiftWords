@@ -79,8 +79,8 @@ fun CurrentLevel(
             onClick = onClick,
             modifier = Modifier
                 .constrainAs(button) {
-                    width = Dimension.value(80.dp)
-                    height = Dimension.value(80.dp)
+                    width = Dimension.value(90.dp)
+                    height = Dimension.value(90.dp)
                     top.linkTo(parent.top)
 
                     translationY = animTranslationY
@@ -171,8 +171,8 @@ fun Levels(
             onClick = { },
             modifier = Modifier
                 .constrainAs(button) {
-                    width = Dimension.value(80.dp)
-                    height = Dimension.value(80.dp)
+                    width = Dimension.value(90.dp)
+                    height = Dimension.value(90.dp)
                     top.linkTo(parent.top)
 
                     translationY = animTranslationY

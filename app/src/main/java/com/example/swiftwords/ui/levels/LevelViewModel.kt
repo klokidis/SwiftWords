@@ -24,7 +24,7 @@ class LevelViewModel: ViewModel()  {
         var step = 0
         val paddingValues = mutableListOf<Pair<Dp, Dp>>()
 
-        for (i in currentLevel - 3  ..currentLevel + 13) {
+        for (i in currentLevel - 3  ..currentLevel + 50) {
             if (i > 0) {
                 when (step) {
                     in 0..2 -> {

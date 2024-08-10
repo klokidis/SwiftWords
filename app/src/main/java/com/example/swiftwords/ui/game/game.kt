@@ -1,5 +1,7 @@
 package com.example.swiftwords.ui.game
 
+import androidx.compose.animation.animateColorAsState
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -46,6 +48,7 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.TextButton
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.rememberCoroutineScope
@@ -79,6 +82,7 @@ fun Game(
     var textState by rememberSaveable { mutableStateOf("") }
     var isCorrect by rememberSaveable { mutableStateOf<Boolean?>(null) }
     var isLoading by rememberSaveable { mutableStateOf(false) }
+    var lastMessage by rememberSaveable { mutableStateOf("Please enter an answer.") }
     val scroll = rememberScrollState()
 
     // Function to check the answer and update the UI state
@@ -133,26 +137,35 @@ fun Game(
             Column(
                 verticalArrangement = Arrangement.Center,
                 horizontalAlignment = Alignment.CenterHorizontally
-            ){
+            ) {
                 val listOfLetters = setOfLetters.toList()
 
-                RowOfLetters(listOfLetters[0], listOfLetters[1], listOfLetters[2])
-                RowOfLetters(listOfLetters[3], listOfLetters[4], listOfLetters[5])
-                RowOfLetters(listOfLetters[6], listOfLetters[7], listOfLetters[8])
-
-
+                RowOfLetters(listOfLetters[0], listOfLetters[1], listOfLetters[2], isCorrect)
+                RowOfLetters(listOfLetters[3], listOfLetters[4], listOfLetters[5], isCorrect)
+                RowOfLetters(listOfLetters[6], listOfLetters[7], listOfLetters[8], isCorrect)
             }
 
             Spacer(modifier = Modifier.padding(10.dp))
-            Row {
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.Center
+            ) {
                 Text(
                     text = when {
-                        isLoading -> "Loading........"
-                        isCorrect == true -> "Correct answer!"
-                        isCorrect == false -> "Incorrect answer."
-                        else -> "Please enter an answer."
-                    },
-                    style = MaterialTheme.typography.bodyLarge // Optional: Customize text style
+                        isLoading -> lastMessage // Keep the same message while loading
+                        isCorrect == true -> {
+                            lastMessage = "Correct answer!"
+                            lastMessage
+                        }
+                        isCorrect == false -> {
+                            lastMessage = "Incorrect answer."
+                            lastMessage
+                        }
+                        else -> {
+                            lastMessage = "Please enter an answer."
+                            lastMessage
+                        }
+                    }
                 )
                 Spacer(modifier = Modifier.padding(5.dp))
                 TextScore{gameUiState.score}
@@ -175,7 +188,7 @@ fun Game(
 
         }
         if(!isTimerRunning){
-            DisplayResults(gameUiState.score, viewModel::restartGame ,newTime)
+            DisplayResults(gameUiState.score, viewModel::restartGame ,newTime,navigateUp)
         }
     }
 }
@@ -229,16 +242,16 @@ fun CustomTextField(
 
 
 @Composable
-fun RowOfLetters(letter1: Char, letter2: Char, letter3: Char) {
+fun RowOfLetters(letter1: Char, letter2: Char, letter3: Char, isCorrect: Boolean?) {
     Row(
-        modifier = Modifier
-            .wrapContentSize()
+        modifier = Modifier.wrapContentSize()
     ) {
-        LetterBox(letter1)
-        LetterBox(letter2)
-        LetterBox(letter3)
+        LetterBox(letter1, isCorrect)
+        LetterBox(letter2, isCorrect)
+        LetterBox(letter3, isCorrect)
     }
 }
+
 
 @Composable
 fun TimerText(currentTime: () -> Long) {
@@ -280,17 +293,32 @@ fun TextScore(score: () -> Int) {
     )
 }
 
-
 @Composable
-fun LetterBox(letter: Char) {
+fun LetterBox(letter: Char, isCorrect: Boolean?) {
+    var shadowColor by remember { mutableStateOf(Color.Blue) }
+
+    // Update the shadow color based on correctness and revert it after 0.5 seconds
+    LaunchedEffect(isCorrect) {
+        if (isCorrect != null) {
+            shadowColor = if (isCorrect) Color(0xFF00c536) else Color(0xFFe80000)
+        }
+    }
+
+    // Smoothly animate the color change
+    val animatedColor by animateColorAsState(
+        targetValue = shadowColor,
+        animationSpec = tween(durationMillis = 250),
+        label = ""
+    )
+
     ElevatedCard(
         modifier = Modifier
             .padding(5.dp)
             .size(60.dp)
             .shadow(
-                9.dp,
+                15.dp,
                 shape = RoundedCornerShape(15.dp),
-                spotColor = Color.Blue
+                spotColor = animatedColor // Use the animated color
             )
             .clip(MaterialTheme.shapes.medium)
     ) {
@@ -350,7 +378,12 @@ fun Timer(
 }
 
 @Composable
-fun DisplayResults(score: Int, restart: KSuspendFunction1<Long, Unit>, time: () -> Long) {
+fun DisplayResults(
+    score: Int,
+    restart: KSuspendFunction1<Long, Unit>,
+    time: () -> Long,
+    navigateUp: () -> Unit
+) {
     val coroutineScope = rememberCoroutineScope()
     Box(
         modifier = Modifier
@@ -369,12 +402,12 @@ fun DisplayResults(score: Int, restart: KSuspendFunction1<Long, Unit>, time: () 
             ) {
                 Image(
                     painter = painterResource(id = R.drawable.sage),
-                    modifier = Modifier.size(200.dp),
+                    modifier = Modifier.size(220.dp),
                     contentDescription = null
                 )
-                if (score > 10) {
+                if (score >= 10) {
                     Text(
-                        "Congrats you passed with score: $score",
+                        "Congrats!! you passed with score: $score",
                         style = MaterialTheme.typography.titleMedium
                     )
                 } else {
@@ -385,7 +418,13 @@ fun DisplayResults(score: Int, restart: KSuspendFunction1<Long, Unit>, time: () 
                 }
                 Row(
                     horizontalArrangement = Arrangement.Center,
+                    verticalAlignment = Alignment.CenterVertically
                 ) {
+                    TextButton(
+                        onClick = navigateUp,
+                    ) {
+                        Text("Exit")
+                    }
                     TextButton(
                         onClick = {
                             coroutineScope.launch {
@@ -400,7 +439,8 @@ fun DisplayResults(score: Int, restart: KSuspendFunction1<Long, Unit>, time: () 
                             coroutineScope.launch {
                                 restart(time())
                             }
-                        }
+                        },
+                        enabled = score >= 10
                     ) {
                         Text("Next Level")
                     }
@@ -414,6 +454,6 @@ fun DisplayResults(score: Int, restart: KSuspendFunction1<Long, Unit>, time: () 
 @Composable
 fun Preview(viewModel: GameViewModel = viewModel(factory = GameViewModelFactory({ 50L }))) {
     SwiftWordsTheme {
-        DisplayResults(5,viewModel::restartGame, { 50L })
+        DisplayResults(5, viewModel::restartGame, { 50L }, {})
     }
 }

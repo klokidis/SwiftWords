@@ -71,7 +71,7 @@ fun LevelScreen(
 
 @Composable
 fun LevelList(currentLevel: Int, calculatePaddingValues: List<Pair<Dp, Dp>>,onClick: () -> Unit) {
-    for ((index, i) in (currentLevel - 3..currentLevel + 13).withIndex()) {
+    for ((index, i) in (currentLevel - 3..currentLevel + 50).withIndex()) {
         if (i > 0) {
             val (leftPadding, rightPadding) = calculatePaddingValues.getOrNull(index) ?: continue
 

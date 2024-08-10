@@ -18,7 +18,7 @@ data class UserDetails(
     val highScore: Int = 1,
     val dailyDate: String = "",
     val lives: Int = 5,
-    val lifeDate: String = ""
+    val lifeDate: String = ""//add set of char level
 )
 
 fun UserDetails.toItem(): User = User(
