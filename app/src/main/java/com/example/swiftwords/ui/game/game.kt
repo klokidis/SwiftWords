@@ -300,18 +300,24 @@ fun TextScore(score: () -> Int) {
 fun LetterBox(
     letter: Char,
     isCorrect: () -> Boolean?,
-    isDarkTheme: Boolean = isSystemInDarkTheme()
+    isDarkTheme: Boolean = isSystemInDarkTheme(),
+    darkCorrect : Color = Color(0xFF078b2c),
+    darkIncorrect : Color =  Color(0xFFcb2020),
+    lightCorrect : Color = Color(0xFF00c555),
+    lightIncorrect : Color = Color(0xFFe80000),
+    shadowLightDp: Dp = 9.dp,
+    shadowDarktDp: Dp = 25.dp,
 ) {
     // Compute shadowDp based on the theme
-    val shadowDp = if (isDarkTheme) 25.dp else 9.dp
+    val shadowDp = if (isDarkTheme) shadowDarktDp else shadowLightDp
 
     // Determine shadowColor based on correctness and theme
     val shadowColor = remember(isCorrect(), isDarkTheme) {
         when {
-            isCorrect() == true && isDarkTheme -> Color(0xFF078b2c) // Dark theme correct color
-            isCorrect() == true && !isDarkTheme -> Color(0xFF00c555) // Light theme correct color
-            isCorrect() == false && isDarkTheme -> Color(0xFFcb2020) // Dark theme incorrect color
-            isCorrect() == false && !isDarkTheme -> Color(0xFFe80000) // Light theme incorrect color
+            isCorrect() == true && isDarkTheme -> darkCorrect// Dark theme correct color
+            isCorrect() == true && !isDarkTheme -> lightCorrect // Light theme correct color
+            isCorrect() == false && isDarkTheme -> darkIncorrect// Dark theme incorrect color
+            isCorrect() == false && !isDarkTheme ->  lightIncorrect// Light theme incorrect color
             else -> Color.Blue // Default color if isCorrect is null
         }
     }
