@@ -37,6 +37,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
@@ -98,7 +99,7 @@ fun Game(
     }
     Box(
         modifier = Modifier.fillMaxSize()
-    ){
+    ) {
         Column(
             modifier = Modifier
                 .fillMaxSize()
@@ -140,9 +141,9 @@ fun Game(
             ) {
                 val listOfLetters = setOfLetters.toList()
 
-                RowOfLetters(listOfLetters[0], listOfLetters[1], listOfLetters[2], isCorrect)
-                RowOfLetters(listOfLetters[3], listOfLetters[4], listOfLetters[5], isCorrect)
-                RowOfLetters(listOfLetters[6], listOfLetters[7], listOfLetters[8], isCorrect)
+                RowOfLetters(listOfLetters[0], listOfLetters[1], listOfLetters[2]) { isCorrect }
+                RowOfLetters(listOfLetters[3], listOfLetters[4], listOfLetters[5]) { isCorrect }
+                RowOfLetters(listOfLetters[6], listOfLetters[7], listOfLetters[8]) { isCorrect }
             }
 
             Spacer(modifier = Modifier.padding(10.dp))
@@ -157,10 +158,12 @@ fun Game(
                             lastMessage = "Correct answer!"
                             lastMessage
                         }
+
                         isCorrect == false -> {
                             lastMessage = "Incorrect answer."
                             lastMessage
                         }
+
                         else -> {
                             lastMessage = "Please enter an answer."
                             lastMessage
@@ -168,7 +171,7 @@ fun Game(
                     }
                 )
                 Spacer(modifier = Modifier.padding(5.dp))
-                TextScore{gameUiState.score}
+                TextScore { gameUiState.score }
             }
             Row(
                 modifier = Modifier
@@ -187,18 +190,18 @@ fun Game(
             }
 
         }
-        if(!isTimerRunning){
-            DisplayResults(gameUiState.score, viewModel::restartGame ,newTime,navigateUp)
+        if (!isTimerRunning) {
+            DisplayResults(gameUiState.score, viewModel::restartGame, newTime, navigateUp)
         }
     }
 }
 
 @Composable
-fun CustomButton(checkAnswer:() -> Unit,isTimerRunning : () -> Boolean){
+fun CustomButton(checkAnswer: () -> Unit, isTimerRunning: () -> Boolean) {
     ElevatedButton(
         onClick = checkAnswer,
         contentPadding = PaddingValues(0.dp),
-        enabled = isTimerRunning() ,
+        enabled = isTimerRunning(),
         modifier = Modifier
             .padding(start = 10.dp, top = 5.dp)
             .width(70.dp)
@@ -242,7 +245,7 @@ fun CustomTextField(
 
 
 @Composable
-fun RowOfLetters(letter1: Char, letter2: Char, letter3: Char, isCorrect: Boolean?) {
+fun RowOfLetters(letter1: Char, letter2: Char, letter3: Char, isCorrect:() -> Boolean?) {
     Row(
         modifier = Modifier.wrapContentSize()
     ) {
@@ -280,7 +283,7 @@ fun TimerText(currentTime: () -> Long) {
 @Composable
 fun TextScore(score: () -> Int) {
     // Remember the score value to avoid unnecessary recompositions
-    val scoreValue by remember{
+    val scoreValue by remember {
         derivedStateOf {
             score().toString()
         }
@@ -294,13 +297,18 @@ fun TextScore(score: () -> Int) {
 }
 
 @Composable
-fun LetterBox(letter: Char, isCorrect: Boolean?) {
-    var shadowColor by remember { mutableStateOf(Color.Blue) }
+fun LetterBox(letter: Char, isCorrect: () -> Boolean?, isDarkTheme: Boolean = isSystemInDarkTheme()) {
+    // Compute shadowDp based on the theme
+    val shadowDp = if (isDarkTheme) 15.dp else 9.dp
 
-    // Update the shadow color based on correctness and revert it after 0.5 seconds
-    LaunchedEffect(isCorrect) {
-        if (isCorrect != null) {
-            shadowColor = if (isCorrect) Color(0xFF00c536) else Color(0xFFe80000)
+    // Determine shadowColor based on correctness and theme
+    val shadowColor = remember(isCorrect(), isDarkTheme) {
+        when {
+            isCorrect() == true && isDarkTheme -> Color(0xFF0ffb51) // Dark theme correct color
+            isCorrect() == true && !isDarkTheme -> Color(0xFF00c555) // Light theme correct color
+            isCorrect() == false && isDarkTheme -> Color(0xFFff5050) // Dark theme incorrect color
+            isCorrect() == false && !isDarkTheme -> Color(0xFFe80000) // Light theme incorrect color
+            else -> Color.Blue // Default color if isCorrect is null
         }
     }
 
@@ -316,14 +324,16 @@ fun LetterBox(letter: Char, isCorrect: Boolean?) {
             .padding(5.dp)
             .size(60.dp)
             .shadow(
-                15.dp,
+                shadowDp, // Use the calculated shadow dp value
                 shape = RoundedCornerShape(15.dp),
                 spotColor = animatedColor // Use the animated color
             )
             .clip(MaterialTheme.shapes.medium)
     ) {
         Box(
-            modifier = Modifier.fillMaxSize(),
+            modifier = Modifier
+                .fillMaxSize()
+                .background(MaterialTheme.colorScheme.onPrimary),
             contentAlignment = Alignment.Center,
         ) {
             Text(text = letter.toString())
