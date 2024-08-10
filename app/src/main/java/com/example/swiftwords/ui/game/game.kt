@@ -306,7 +306,7 @@ fun LetterBox(
     lightCorrect : Color = Color(0xFF00c555),
     lightIncorrect : Color = Color(0xFFe80000),
     shadowLightDp: Dp = 9.dp,
-    shadowDarktDp: Dp = 25.dp,
+    shadowDarktDp: Dp = 15.dp,
 ) {
     // Compute shadowDp based on the theme
     val shadowDp = if (isDarkTheme) shadowDarktDp else shadowLightDp

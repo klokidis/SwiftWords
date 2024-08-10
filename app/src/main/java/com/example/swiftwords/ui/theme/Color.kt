@@ -33,7 +33,7 @@ val inversePrimaryLight = Color(0xFFAAC7FF)
 
 
 val primaryDark = Color(0xFFAAC7FF)
-val onPrimaryDark = Color(0xFF062040)
+val onPrimaryDark = Color(0xFF092a53)
 val primaryContainerDark = Color(0xFF284777)
 val onPrimaryContainerDark = Color(0xFFD6E3FF)
 val secondaryDark = Color(0xFF1d2432)
