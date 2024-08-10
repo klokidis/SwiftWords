@@ -44,12 +44,11 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
-
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.TextButton
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.rememberCoroutineScope
@@ -200,6 +199,9 @@ fun Game(
 fun CustomButton(checkAnswer: () -> Unit, isTimerRunning: () -> Boolean) {
     ElevatedButton(
         onClick = checkAnswer,
+        colors = ButtonDefaults.elevatedButtonColors(
+            containerColor = MaterialTheme.colorScheme.secondary
+        ),
         contentPadding = PaddingValues(0.dp),
         enabled = isTimerRunning(),
         modifier = Modifier
@@ -234,8 +236,8 @@ fun CustomTextField(
         onValueChange = onValueChange,
         label = { Text("") },
         colors = OutlinedTextFieldDefaults.colors(
-            focusedContainerColor = MaterialTheme.colorScheme.inverseOnSurface,
-            unfocusedContainerColor = MaterialTheme.colorScheme.inverseOnSurface,
+            focusedContainerColor = MaterialTheme.colorScheme.secondary,
+            unfocusedContainerColor = MaterialTheme.colorScheme.secondary,
             focusedBorderColor = Color.Transparent,
             unfocusedBorderColor = Color.Transparent,
         ),
@@ -299,14 +301,14 @@ fun TextScore(score: () -> Int) {
 @Composable
 fun LetterBox(letter: Char, isCorrect: () -> Boolean?, isDarkTheme: Boolean = isSystemInDarkTheme()) {
     // Compute shadowDp based on the theme
-    val shadowDp = if (isDarkTheme) 15.dp else 9.dp
+    val shadowDp = if (isDarkTheme) 25.dp else 9.dp
 
     // Determine shadowColor based on correctness and theme
     val shadowColor = remember(isCorrect(), isDarkTheme) {
         when {
-            isCorrect() == true && isDarkTheme -> Color(0xFF0ffb51) // Dark theme correct color
+            isCorrect() == true && isDarkTheme -> Color(0xFF078b2c) // Dark theme correct color
             isCorrect() == true && !isDarkTheme -> Color(0xFF00c555) // Light theme correct color
-            isCorrect() == false && isDarkTheme -> Color(0xFFff5050) // Dark theme incorrect color
+            isCorrect() == false && isDarkTheme -> Color(0xFFcb2020) // Dark theme incorrect color
             isCorrect() == false && !isDarkTheme -> Color(0xFFe80000) // Light theme incorrect color
             else -> Color.Blue // Default color if isCorrect is null
         }
@@ -347,11 +349,13 @@ fun Timer(
     inactiveBarColor: Color,
     activeBarColor: Color,
     modifier: Modifier = Modifier,
-    strokeWidth: Dp = 10.dp
+    strokeWidth: Dp = 10.dp,
+    isDarkTheme: Boolean = isSystemInDarkTheme()
 ) {
     var size by remember {
         mutableStateOf(IntSize.Zero)
     }
+    val color = if(!isDarkTheme) activeBarColor else Color(0xFF082952)
     Box(
         modifier = modifier
             .fillMaxWidth(0.9f)
@@ -377,7 +381,7 @@ fun Timer(
 
             // Draw the active line based on the current value
             drawLine(
-                color = activeBarColor,
+                color = color,
                 start = Offset(center.x - lineLength / 2, center.y),
                 end = Offset(center.x - lineLength / 2 + lineLength * currentValue, center.y),
                 strokeWidth = strokeWidth.toPx(),
@@ -465,5 +469,12 @@ fun DisplayResults(
 fun Preview(viewModel: GameViewModel = viewModel(factory = GameViewModelFactory({ 50L }))) {
     SwiftWordsTheme {
         DisplayResults(5, viewModel::restartGame, { 50L }, {})
+    }
+}
+@Preview(showBackground = true)
+@Composable
+fun Preview2() {
+    SwiftWordsTheme {
+        LetterBox('a', { true },true)
     }
 }
