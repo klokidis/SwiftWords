@@ -127,8 +127,6 @@ fun Game(
                 // most values pass as () -> type to fix the unnecessary recomposition of the ui
                 Timer(
                     { gameUiState.value },
-                    Color.DarkGray,
-                    Color(0xFF76ffcf)
                 )
                 TimerText { gameUiState.currentTime }
             }
@@ -247,7 +245,7 @@ fun CustomTextField(
 
 
 @Composable
-fun RowOfLetters(letter1: Char, letter2: Char, letter3: Char, isCorrect:() -> Boolean?) {
+fun RowOfLetters(letter1: Char, letter2: Char, letter3: Char, isCorrect: () -> Boolean?) {
     Row(
         modifier = Modifier.wrapContentSize()
     ) {
@@ -299,7 +297,11 @@ fun TextScore(score: () -> Int) {
 }
 
 @Composable
-fun LetterBox(letter: Char, isCorrect: () -> Boolean?, isDarkTheme: Boolean = isSystemInDarkTheme()) {
+fun LetterBox(
+    letter: Char,
+    isCorrect: () -> Boolean?,
+    isDarkTheme: Boolean = isSystemInDarkTheme()
+) {
     // Compute shadowDp based on the theme
     val shadowDp = if (isDarkTheme) 25.dp else 9.dp
 
@@ -346,16 +348,18 @@ fun LetterBox(letter: Char, isCorrect: () -> Boolean?, isDarkTheme: Boolean = is
 @Composable
 fun Timer(
     value: () -> Float,
-    inactiveBarColor: Color,
-    activeBarColor: Color,
     modifier: Modifier = Modifier,
+    inactiveBarColor: Color = Color.DarkGray,
+    activeBarColorLight: Color = Color(0xFF76ffcf),
+    activeBarColorDark: Color = Color(0xFF082952),
     strokeWidth: Dp = 10.dp,
     isDarkTheme: Boolean = isSystemInDarkTheme()
 ) {
     var size by remember {
         mutableStateOf(IntSize.Zero)
     }
-    val color = if(!isDarkTheme) activeBarColor else Color(0xFF082952)
+    val color = if (!isDarkTheme) activeBarColorLight else activeBarColorDark
+
     Box(
         modifier = modifier
             .fillMaxWidth(0.9f)
@@ -471,10 +475,11 @@ fun Preview(viewModel: GameViewModel = viewModel(factory = GameViewModelFactory(
         DisplayResults(5, viewModel::restartGame, { 50L }, {})
     }
 }
+
 @Preview(showBackground = true)
 @Composable
 fun Preview2() {
     SwiftWordsTheme {
-        LetterBox('a', { true },true)
+        LetterBox('a', { true }, true)
     }
 }
