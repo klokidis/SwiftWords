@@ -324,7 +324,7 @@ fun LetterBox(
             isCorrect() == true && !isDarkTheme -> lightCorrect // Light theme correct color
             isCorrect() == false && isDarkTheme -> darkIncorrect// Dark theme incorrect color
             isCorrect() == false && !isDarkTheme ->  lightIncorrect// Light theme incorrect color
-            else -> color // Default color if isCorrect is null
+            else -> boxColor.darkColor // Default color if isCorrect is null
         }
     }
 

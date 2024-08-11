@@ -1,6 +1,7 @@
 package com.example.swiftwords.ui.levels
 
 import android.view.MotionEvent
+import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
@@ -56,6 +57,16 @@ fun CurrentLevel(
             animationSpec = tween(50),
             label = ""
         )
+        val animatedColor by animateColorAsState(
+            targetValue = color,
+            animationSpec = tween(durationMillis = 250),
+            label = ""
+        )
+        val animatedShadowColor by animateColorAsState(
+            targetValue = shadowColor,
+            animationSpec = tween(durationMillis = 250),
+            label = ""
+        )
         var buttonSize by remember { mutableStateOf(IntSize.Zero) }
         val interactionSource = remember { MutableInteractionSource() }
 
@@ -73,7 +84,7 @@ fun CurrentLevel(
                     translationY = shadowSize
                 }
                 .clip(CircleShape)
-                .background(shadowColor)
+                .background(animatedShadowColor)
         )
 
         Button(
@@ -119,7 +130,7 @@ fun CurrentLevel(
                 },
             contentPadding = PaddingValues(0.dp),
             colors = ButtonDefaults.buttonColors(
-                containerColor = color,
+                containerColor = animatedColor,
                 contentColor = textColor
             ),
             shape = CircleShape
