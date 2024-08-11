@@ -65,6 +65,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.swiftwords.R
 import com.example.swiftwords.data.ColorPair
 import com.example.swiftwords.data.DataSource
+import com.example.swiftwords.ui.levels.darken
 import com.example.swiftwords.ui.theme.SwiftWordsTheme
 import kotlinx.coroutines.launch
 import kotlin.reflect.KSuspendFunction1
@@ -307,12 +308,12 @@ fun LetterBox(
     colorCode: Int,
     boxColor: ColorPair = DataSource().colorPairs[colorCode],
     isDarkTheme: Boolean = isSystemInDarkTheme(),
-    darkCorrect: Color = Color(0xFF078b2c),
-    darkIncorrect: Color =  Color(0xFFcb2020),
+    darkCorrect: Color = Color(0xFF2AE45D),
+    darkIncorrect: Color =  Color(0xFFFD0000),
     lightCorrect: Color = Color(0xFF00c555),
     lightIncorrect: Color = Color(0xFFe80000),
-    shadowLightDp: Dp = 9.dp,
-    shadowDarkDp: Dp = 15.dp,
+    shadowLightDp: Dp = 11.dp,
+    shadowDarkDp: Dp = 18.dp,
 ) {
     // Compute shadowDp based on the theme
     val shadowDp = if (isDarkTheme) shadowDarkDp else shadowLightDp
@@ -362,7 +363,7 @@ fun Timer(
     value: () -> Float,
     colorCode: Int,
     modifier: Modifier = Modifier,
-    inactiveBarColor: Color = Color.DarkGray,
+    inactiveBarColor: Color = Color.Gray.darken(),
     strokeWidth: Dp = 10.dp
 ) {
     var size by remember {

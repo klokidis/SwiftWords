@@ -1,6 +1,9 @@
 package com.example.swiftwords.ui.levels
 
+import androidx.compose.animation.animateColorAsState
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -29,6 +32,7 @@ import androidx.compose.ui.unit.Dp
 import com.example.swiftwords.R
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.swiftwords.data.DataSource
 import com.example.swiftwords.ui.AppViewModelProvider
 import com.example.swiftwords.ui.theme.SwiftWordsTheme
 
@@ -65,7 +69,7 @@ fun LevelScreen(
             modifier = Modifier.fillMaxSize(),
             contentAlignment = Alignment.BottomCenter
         ) {
-            BottomLevel(navigateToLevel, level.toString())
+            BottomLevel(navigateToLevel, level.toString(),color)
         }
     }
 }
@@ -166,22 +170,29 @@ fun TopBar(livesLeft: Int, streak: Int) {
 
 
 @Composable
-fun BottomLevel(onClick: () -> Unit, level: String) {
+fun BottomLevel(onClick: () -> Unit, level: String, color: Int) {
+    val animatedColor by animateColorAsState(
+        targetValue = DataSource().colorPairs[color].darkColor,
+        animationSpec = tween(durationMillis = 400),
+        label = ""
+    )
     Card(
         modifier = Modifier
             .padding(15.dp)
             .height(50.dp)
-            .fillMaxWidth(0.7f),
+            .fillMaxWidth(0.6f),
         elevation = CardDefaults.cardElevation(
             defaultElevation = 4.dp,
         ),
         onClick = onClick
     ) {
         Box(
-            modifier = Modifier.fillMaxSize(),
+            modifier = Modifier
+                .background(animatedColor)
+                .fillMaxSize(),
             contentAlignment = Alignment.Center
         ) {
-            Text(text = "Level: $level")
+            Text(text = "Level: $level", color = Color.White)
         }
     }
 }

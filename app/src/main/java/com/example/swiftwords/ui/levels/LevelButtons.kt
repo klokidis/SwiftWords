@@ -59,12 +59,12 @@ fun CurrentLevel(
         )
         val animatedColor by animateColorAsState(
             targetValue = color,
-            animationSpec = tween(durationMillis = 250),
+            animationSpec = tween(durationMillis = 400),
             label = ""
         )
         val animatedShadowColor by animateColorAsState(
             targetValue = shadowColor,
-            animationSpec = tween(durationMillis = 250),
+            animationSpec = tween(durationMillis = 400),
             label = ""
         )
         var buttonSize by remember { mutableStateOf(IntSize.Zero) }
