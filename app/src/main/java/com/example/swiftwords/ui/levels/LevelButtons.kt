@@ -24,7 +24,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Color.Companion.Gray
-import androidx.compose.ui.graphics.Color.Companion.Green
 import androidx.compose.ui.input.pointer.pointerInteropFilter
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.tooling.preview.Preview
@@ -32,6 +31,7 @@ import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
+import com.example.swiftwords.data.DataSource
 
 private val shadowSize = 4.dp
 
@@ -40,9 +40,10 @@ private val shadowSize = 4.dp
 fun CurrentLevel(
     modifier: Modifier,
     text: String,
-    color: Color = Green,
+    colorCode: Int,
+    color: Color = DataSource().colorPairs[colorCode].darkColor,
     textColor: Color = Color.White,
-    shadowColor: Color = Color(0xFF4e9a00),
+    shadowColor: Color = color.copy(alpha = 1f).darken(),
     onClick: () -> Unit
 ) {
     ConstraintLayout(
@@ -219,13 +220,23 @@ fun Levels(
         }
     }
 }
+fun Color.darken(factor: Float = 0.7f): Color {
+    return Color(
+        red = red * factor,
+        green = green * factor,
+        blue = blue * factor,
+        alpha = alpha
+    )
+}
+
 @Preview(showBackground = true)
 @Composable
 private fun PreviewDuolingoButton() {
     Column(modifier = Modifier.fillMaxSize()) {
         CurrentLevel(
             modifier = Modifier,
-            text = "Preview"
+            text = "Preview",
+            2
         ) {}
         Levels(modifier = Modifier,
             text = "Preview")

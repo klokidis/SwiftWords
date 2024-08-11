@@ -38,6 +38,7 @@ fun LevelScreen(
     level: Int,
     livesLeft: Int,
     streak: Int,
+    color: Int,
     navigateToLevel: () -> Unit,
 ) {
     val levelUiState by levelViewModel.uiState.collectAsState()
@@ -55,7 +56,7 @@ fun LevelScreen(
             verticalArrangement = Arrangement.Top,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            LevelList(currentLevel = level, levelViewModel.calculatePaddingValues(level),navigateToLevel)
+            LevelList(currentLevel = level, levelViewModel.calculatePaddingValues(level),navigateToLevel,color)
         }
 
         TopBar(livesLeft, streak)
@@ -70,12 +71,17 @@ fun LevelScreen(
 }
 
 @Composable
-fun LevelList(currentLevel: Int, calculatePaddingValues: List<Pair<Dp, Dp>>,onClick: () -> Unit) {
+fun LevelList(
+    currentLevel: Int,
+    calculatePaddingValues: List<Pair<Dp, Dp>>,
+    onClick: () -> Unit,
+    color: Int
+) {
     for ((index, i) in (currentLevel - 3..currentLevel + 20).withIndex()) {
         if (i > 0) {
             val (leftPadding, rightPadding) = calculatePaddingValues.getOrNull(index) ?: continue
 
-            LevelCard(i, rightPadding, leftPadding, i, currentLevel,onClick)
+            LevelCard(i, rightPadding, leftPadding, i, currentLevel,onClick,color)
         }
     }
 }
@@ -87,7 +93,8 @@ fun LevelCard(
     leftPadding: Dp,
     thisLevel: Int,
     currentLevel: Int,
-    onClick: () -> Unit
+    onClick: () -> Unit,
+    color: Int
 ) {
     Box(
         modifier = Modifier
@@ -112,7 +119,8 @@ fun LevelCard(
                 CurrentLevel(
                     modifier = Modifier,
                     text = number.toString(),
-                    onClick = onClick
+                    onClick = onClick,
+                    colorCode = color,
                 )
             }
 
@@ -182,6 +190,6 @@ fun BottomLevel(onClick: () -> Unit, level: String) {
 @Composable
 fun CardPreview() {
     SwiftWordsTheme {
-        LevelCard(1, 19.dp, 19.dp, 1, 11,{})
+        LevelCard(1, 19.dp, 19.dp, 1, 11, {}, 2)
     }
 }

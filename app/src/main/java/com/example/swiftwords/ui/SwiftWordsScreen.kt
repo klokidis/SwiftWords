@@ -109,10 +109,12 @@ fun SwiftWordsApp(
                                             popUpTo(navController.graph.findStartDestination().id)
                                             launchSingleTop = true
                                         }
+
                                         1 -> navController.navigate(SwiftWordsScreen.Modes.name) {
                                             popUpTo(navController.graph.findStartDestination().id)
                                             launchSingleTop = true
                                         }
+
                                         2 -> navController.navigate(SwiftWordsScreen.Profile.name) {
                                             popUpTo(navController.graph.findStartDestination().id)
                                             launchSingleTop = true
@@ -149,7 +151,12 @@ fun SwiftWordsApp(
         ) {
             composable(route = SwiftWordsScreen.Levels.name) {
                 dataUiState.userDetails?.let { data ->
-                    LevelScreen(level = data.currentLevel, livesLeft = data.lives, streak = data.streak) {
+                    LevelScreen(
+                        level = data.currentLevel,
+                        livesLeft = data.lives,
+                        streak = data.streak,
+                        color = data.color
+                    ) {
                         viewModel.changeTime(40000L)
                         navController.navigate(SwiftWordsScreen.Game.name)
                     }
@@ -179,12 +186,15 @@ fun SwiftWordsApp(
             }
             composable(route = SwiftWordsScreen.Game.name) {
                 wordListState.value?.let { wordList ->
-                    Game(
-                        { mainUiState.gameTime },
-                        setOfLetters = mainUiState.setOfLettersForLevel,//maybe make it flow
-                        wordList = wordList,
-                        navigateUp = { navController.navigateUp() }
-                    )
+                    dataUiState.userDetails?.let { data ->
+                        Game(
+                            { mainUiState.gameTime },
+                            setOfLetters = mainUiState.setOfLettersForLevel,//maybe make it flow
+                            wordList = wordList,
+                            navigateUp = { navController.navigateUp() },
+                            colorCode = data.color
+                        )
+                    }
                 } ?: run {
                     Column(
                         modifier = Modifier.fillMaxSize(),

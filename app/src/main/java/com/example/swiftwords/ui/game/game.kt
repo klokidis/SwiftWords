@@ -63,6 +63,8 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.IntSize
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.swiftwords.R
+import com.example.swiftwords.data.ColorPair
+import com.example.swiftwords.data.DataSource
 import com.example.swiftwords.ui.theme.SwiftWordsTheme
 import kotlinx.coroutines.launch
 import kotlin.reflect.KSuspendFunction1
@@ -72,6 +74,7 @@ fun Game(
     newTime: () -> Long,
     setOfLetters: Set<Char>,
     wordList: Set<String>,
+    colorCode: Int,
     viewModel: GameViewModel = viewModel(factory = GameViewModelFactory(newTime)),
     navigateUp: () -> Unit
 ) {
@@ -127,6 +130,7 @@ fun Game(
                 // most values pass as () -> type to fix the unnecessary recomposition of the ui
                 Timer(
                     { gameUiState.value },
+                    colorCode
                 )
                 TimerText { gameUiState.currentTime }
             }
@@ -138,9 +142,9 @@ fun Game(
             ) {
                 val listOfLetters = setOfLetters.toList()
 
-                RowOfLetters(listOfLetters[0], listOfLetters[1], listOfLetters[2]) { isCorrect }
-                RowOfLetters(listOfLetters[3], listOfLetters[4], listOfLetters[5]) { isCorrect }
-                RowOfLetters(listOfLetters[6], listOfLetters[7], listOfLetters[8]) { isCorrect }
+                RowOfLetters(listOfLetters[0], listOfLetters[1], listOfLetters[2],colorCode) { isCorrect }
+                RowOfLetters(listOfLetters[3], listOfLetters[4], listOfLetters[5],colorCode) { isCorrect }
+                RowOfLetters(listOfLetters[6], listOfLetters[7], listOfLetters[8],colorCode) { isCorrect }
             }
 
             Spacer(modifier = Modifier.padding(10.dp))
@@ -245,13 +249,13 @@ fun CustomTextField(
 
 
 @Composable
-fun RowOfLetters(letter1: Char, letter2: Char, letter3: Char, isCorrect: () -> Boolean?) {
+fun RowOfLetters(letter1: Char, letter2: Char, letter3: Char,colorCode:Int, isCorrect: () -> Boolean?){
     Row(
         modifier = Modifier.wrapContentSize()
     ) {
-        LetterBox(letter1, isCorrect)
-        LetterBox(letter2, isCorrect)
-        LetterBox(letter3, isCorrect)
+        LetterBox(letter1, isCorrect,colorCode)
+        LetterBox(letter2, isCorrect,colorCode)
+        LetterBox(letter3, isCorrect,colorCode)
     }
 }
 
@@ -300,17 +304,19 @@ fun TextScore(score: () -> Int) {
 fun LetterBox(
     letter: Char,
     isCorrect: () -> Boolean?,
+    colorCode: Int,
+    boxColor: ColorPair = DataSource().colorPairs[colorCode],
     isDarkTheme: Boolean = isSystemInDarkTheme(),
-    darkCorrect : Color = Color(0xFF078b2c),
-    darkIncorrect : Color =  Color(0xFFcb2020),
-    lightCorrect : Color = Color(0xFF00c555),
-    lightIncorrect : Color = Color(0xFFe80000),
+    darkCorrect: Color = Color(0xFF078b2c),
+    darkIncorrect: Color =  Color(0xFFcb2020),
+    lightCorrect: Color = Color(0xFF00c555),
+    lightIncorrect: Color = Color(0xFFe80000),
     shadowLightDp: Dp = 9.dp,
-    shadowDarktDp: Dp = 15.dp,
+    shadowDarkDp: Dp = 15.dp,
 ) {
     // Compute shadowDp based on the theme
-    val shadowDp = if (isDarkTheme) shadowDarktDp else shadowLightDp
-
+    val shadowDp = if (isDarkTheme) shadowDarkDp else shadowLightDp
+    val color = if (isDarkTheme) boxColor.darkColor else boxColor.lightColor
     // Determine shadowColor based on correctness and theme
     val shadowColor = remember(isCorrect(), isDarkTheme) {
         when {
@@ -318,7 +324,7 @@ fun LetterBox(
             isCorrect() == true && !isDarkTheme -> lightCorrect // Light theme correct color
             isCorrect() == false && isDarkTheme -> darkIncorrect// Dark theme incorrect color
             isCorrect() == false && !isDarkTheme ->  lightIncorrect// Light theme incorrect color
-            else -> Color.Blue // Default color if isCorrect is null
+            else -> color // Default color if isCorrect is null
         }
     }
 
@@ -343,7 +349,7 @@ fun LetterBox(
         Box(
             modifier = Modifier
                 .fillMaxSize()
-                .background(MaterialTheme.colorScheme.onPrimary),
+                .background(color),
             contentAlignment = Alignment.Center,
         ) {
             Text(text = letter.toString())
@@ -354,17 +360,14 @@ fun LetterBox(
 @Composable
 fun Timer(
     value: () -> Float,
+    colorCode: Int,
     modifier: Modifier = Modifier,
     inactiveBarColor: Color = Color.DarkGray,
-    activeBarColorLight: Color = Color(0xFF76ffcf),
-    activeBarColorDark: Color = Color(0xFF082952),
-    strokeWidth: Dp = 10.dp,
-    isDarkTheme: Boolean = isSystemInDarkTheme()
+    strokeWidth: Dp = 10.dp
 ) {
     var size by remember {
         mutableStateOf(IntSize.Zero)
     }
-    val color = if (!isDarkTheme) activeBarColorLight else activeBarColorDark
 
     Box(
         modifier = modifier
@@ -391,7 +394,7 @@ fun Timer(
 
             // Draw the active line based on the current value
             drawLine(
-                color = color,
+                color = DataSource().colorPairs[colorCode].darkColor,
                 start = Offset(center.x - lineLength / 2, center.y),
                 end = Offset(center.x - lineLength / 2 + lineLength * currentValue, center.y),
                 strokeWidth = strokeWidth.toPx(),
@@ -482,10 +485,3 @@ fun Preview(viewModel: GameViewModel = viewModel(factory = GameViewModelFactory(
     }
 }
 
-@Preview(showBackground = true)
-@Composable
-fun Preview2() {
-    SwiftWordsTheme {
-        LetterBox('a', { true }, true)
-    }
-}
