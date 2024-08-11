@@ -18,7 +18,11 @@ data class UserDetails(
     val highScore: Int = 1,
     val dailyDate: String = "",
     val lives: Int = 5,
-    val lifeDate: String = ""//add set of char level
+    val lifeDate: String = "",//add set of char level
+    val setOfLetters: String = "",
+    val color: Int = 0,
+    val starterLevel: Int = 1,
+    val endingLevel: Int = 20,
 )
 
 fun UserDetails.toItem(): User = User(
@@ -30,7 +34,12 @@ fun UserDetails.toItem(): User = User(
     highScore = highScore,
     dailyDate = dailyDate,
     lives = lives,
-    lifeDate = lifeDate
+    lifeDate = lifeDate,
+    setOfLetters = setOfLetters,
+    color = color,
+    starterLevel = starterLevel,
+    endingLevel = endingLevel
+
 )
 
 
@@ -47,7 +56,10 @@ fun User.toUserDetails(): UserDetails = UserDetails(
     highScore = highScore,
     dailyDate = dailyDate,
     lives = lives,
-    lifeDate = lifeDate
+    lifeDate = lifeDate,
+    color = color,
+    starterLevel = starterLevel,
+    endingLevel = endingLevel
 )
 
 class DataViewmodel(private val userRepository: UserRepository) : ViewModel() {

@@ -14,6 +14,10 @@ data class User(
     val highScore: Int,
     val dailyDate: String,
     val lives: Int,
-    val lifeDate: String
+    val lifeDate: String,
+    val setOfLetters: String,
+    val color : Int,
+    val starterLevel: Int,
+    val endingLevel: Int
     // add current level array of char
 )
