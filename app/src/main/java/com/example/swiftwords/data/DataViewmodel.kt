@@ -25,7 +25,7 @@ data class UserDetails(
     val endingLevel: Int = 20,
 )
 
-fun UserDetails.toItem(): User = User(
+fun UserDetails.toUser(): User = User(
     id = id,
     nickname = nickname,
     character = character,//0 for male 1 for female
@@ -67,6 +67,6 @@ class DataViewmodel(private val userRepository: UserRepository) : ViewModel() {
         private set
 
     suspend fun saveUser() {
-        userRepository.insertUser(userUiState.userDetails.toItem())
+        userRepository.insertUser(userUiState.userDetails.toUser())
     }
 }

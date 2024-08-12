@@ -31,7 +31,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -48,18 +47,17 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.swiftwords.data.DataSource
 import com.example.swiftwords.ui.AppViewModelProvider
+import com.example.swiftwords.ui.GetDataViewModel
+import com.example.swiftwords.ui.ItemDetailsUiState
 import com.example.swiftwords.ui.theme.SwiftWordsTheme
 
 @Composable
 fun LevelScreen(
     levelViewModel: LevelViewModel = viewModel(factory = AppViewModelProvider.Factory),
-    level: Int,
-    livesLeft: Int,
-    streak: Int,
-    color: Int,
+    dataViewModel: GetDataViewModel,
+    dataUiState: ItemDetailsUiState,
     navigateToLevel: () -> Unit,
 ) {
-    val levelUiState by levelViewModel.uiState.collectAsState()
     val scrollState = rememberScrollState()
 
     Box(
@@ -74,24 +72,48 @@ fun LevelScreen(
             verticalArrangement = Arrangement.Top,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            LevelList(
-                currentLevel = level,
-                levelViewModel.calculatePaddingValues(level),
-                navigateToLevel,
-                color
+            // Display the LevelList if user details are available
+            dataUiState.userDetails?.let { userDetails ->
+                val userColor = userDetails.color
+                LevelList(
+                    currentLevel = userDetails.currentLevel,
+                    calculatePaddingValues = levelViewModel.calculatePaddingValues(userDetails.currentLevel),
+                    onClick = navigateToLevel,
+                    color = userColor
+                )
+            }
+        }
+
+        // Display the TopBar if user details are available
+        dataUiState.userDetails?.let { userDetails ->
+            val userLives = userDetails.lives
+            val userStreak = userDetails.streak
+            val userColor = userDetails.color
+            TopBar(
+                livesLeft = userLives,
+                streak = userStreak,
+                color = userColor,
+                changeColorFun = dataViewModel::updateUserColor
             )
         }
 
-        TopBar(livesLeft, streak, color)
-
+        // Display the BottomLevel if user details are available
         Box(
             modifier = Modifier.fillMaxSize(),
             contentAlignment = Alignment.BottomCenter
         ) {
-            BottomLevel(navigateToLevel, level.toString(), color)
+            dataUiState.userDetails?.let { userDetails ->
+                val userColor = userDetails.color
+                BottomLevel(
+                    navigateToLevel,
+                    userDetails.currentLevel.toString(),
+                    color = userColor
+                )
+            }
         }
     }
 }
+
 
 @Composable
 fun LevelList(
@@ -160,7 +182,7 @@ fun LevelCard(
 }
 
 @Composable
-fun TopBar(livesLeft: Int, streak: Int, color: Int) {
+fun TopBar(livesLeft: Int, streak: Int, color: Int, changeColorFun: (Int) -> Unit) {
     Surface(
         modifier = Modifier
             .fillMaxWidth()
@@ -175,7 +197,7 @@ fun TopBar(livesLeft: Int, streak: Int, color: Int) {
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.Center
         ) {
-            MenuColorPicker(color)
+            MenuColorPicker(color, changeColorFun)
             Spacer(modifier = Modifier.weight(1f))
             Image(painter = painterResource(id = R.drawable.done), contentDescription = "streak")
             Text(text = streak.toString(), modifier = Modifier.padding(start = 8.dp))
@@ -190,7 +212,7 @@ fun TopBar(livesLeft: Int, streak: Int, color: Int) {
 }
 
 @Composable
-fun MenuColorPicker(color: Int) {
+fun MenuColorPicker(color: Int, changeColorFun: (Int) -> Unit) {
     var isExpanded by remember { mutableStateOf(false) }
     val scrollState = rememberScrollState()
     Box(
@@ -213,7 +235,11 @@ fun MenuColorPicker(color: Int) {
                     modifier = Modifier
                         .padding(start = 4.dp)
                         .clip(RoundedCornerShape(40.dp))
-                        .border(1.dp, DataSource().colorPairs[color].darkColor, RoundedCornerShape(40.dp))
+                        .border(
+                            1.dp,
+                            DataSource().colorPairs[color].darkColor,
+                            RoundedCornerShape(40.dp)
+                        )
                         .height(40.dp)
                         .wrapContentSize(),
                 ) {
@@ -225,7 +251,9 @@ fun MenuColorPicker(color: Int) {
                                     .size(26.dp)
                                     .clip(RoundedCornerShape(26.dp))
                                     .background(color.lightColor)
-                                    .clickable { }
+                                    .clickable {
+                                        changeColorFun(color.id)
+                                    }
                             ) {
                                 Box(
                                     modifier = Modifier
@@ -247,7 +275,7 @@ fun MenuColorPicker(color: Int) {
 @Preview(showBackground = true)
 @Composable
 fun PreviewMenuColorPicker() {
-    MenuColorPicker(2)
+    MenuColorPicker(2, {})
 }
 
 
@@ -283,6 +311,6 @@ fun BottomLevel(onClick: () -> Unit, level: String, color: Int) {
 @Composable
 fun CardPreview() {
     SwiftWordsTheme {
-        MenuColorPicker(2)
+        MenuColorPicker(2, {})
     }
 }

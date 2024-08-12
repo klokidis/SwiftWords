@@ -37,7 +37,7 @@ fun Loading(
             ChooseCharacter()
         }
         else -> {
-            SwiftWordsApp(context,dataUiState)
+            SwiftWordsApp(context,dataUiState,viewModel)
         }
     }
 }

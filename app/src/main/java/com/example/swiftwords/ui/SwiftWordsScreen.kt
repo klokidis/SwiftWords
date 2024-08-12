@@ -51,6 +51,7 @@ enum class SwiftWordsScreen {
 fun SwiftWordsApp(
     context: Context,
     dataUiState: ItemDetailsUiState,
+    dataViewmodel: GetDataViewModel,
     viewModel: SwiftWordsMainViewModel = viewModel(factory = AppViewModelProvider.Factory),
     navController: NavHostController = rememberNavController()
 ) {
@@ -152,10 +153,8 @@ fun SwiftWordsApp(
             composable(route = SwiftWordsScreen.Levels.name) {
                 dataUiState.userDetails?.let { data ->
                     LevelScreen(
-                        level = data.currentLevel,
-                        livesLeft = data.lives,
-                        streak = data.streak,
-                        color = data.color
+                        dataViewModel = dataViewmodel,
+                        dataUiState = dataUiState
                     ) {
                         viewModel.changeTime(40000L)
                         navController.navigate(SwiftWordsScreen.Game.name)
