@@ -155,8 +155,7 @@ fun LevelCard(
                 Levels(
                     modifier = Modifier,
                     text = number.toString(),
-                    color = Color.Yellow,
-                    shadowColor = Color.DarkGray
+                    color = Color(0xFFD1B10F),
                 )
             }
 
@@ -173,8 +172,7 @@ fun LevelCard(
                 Levels(
                     modifier = Modifier,
                     text = number.toString(),
-                    color = Color.Gray,
-                    shadowColor = Color.Black
+                    color = Color(0xFF393A3C),
                 )
             }
         }

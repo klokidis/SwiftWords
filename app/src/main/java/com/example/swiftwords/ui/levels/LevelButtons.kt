@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -34,7 +35,7 @@ import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
 import com.example.swiftwords.data.DataSource
 
-private val shadowSize = 4.dp
+private val shadowSize = 8.dp
 
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
@@ -44,7 +45,7 @@ fun CurrentLevel(
     colorCode: Int,
     color: Color = DataSource().colorPairs[colorCode].darkColor,
     textColor: Color = Color.White,
-    shadowColor: Color = color.copy(alpha = 1f).darken(),
+    shadowColor: Color = DataSource().colorPairs[colorCode].darkColor.darken(0.6f),
     onClick: () -> Unit
 ) {
     ConstraintLayout(
@@ -147,7 +148,7 @@ fun Levels(
     text: String,
     color: Color = Gray,
     textColor: Color = Color.White,
-    shadowColor: Color = Color(0xFF4e9a00),
+    shadowColor: Color = color.darken(0.65f),
 ) {
     ConstraintLayout(
         modifier = modifier
@@ -231,6 +232,7 @@ fun Levels(
         }
     }
 }
+
 fun Color.darken(factor: Float = 0.7f): Color {
     return Color(
         red = red * factor,
@@ -257,7 +259,5 @@ private fun PreviewDuolingoButton() {
             text = "Preview",
             2
         ) {}
-        Levels(modifier = Modifier,
-            text = "Preview")
     }
 }
