@@ -240,6 +240,14 @@ fun Color.darken(factor: Float = 0.7f): Color {
     )
 }
 
+fun Color.brighten(factor: Float = 1.5f): Color {
+    return copy(
+        red = (red * factor).coerceAtMost(1f),
+        green = (green * factor).coerceAtMost(1f),
+        blue = (blue * factor).coerceAtMost(1f)
+    )
+}
+
 @Preview(showBackground = true)
 @Composable
 private fun PreviewDuolingoButton() {

@@ -34,11 +34,14 @@ class DataSource {
     )
 
     val colorPairs = listOf(
-        ColorPair(id = 0, lightColor = Color.White, darkColor = Color(0xFF8B0000)), // Red
-        ColorPair(id = 1, lightColor = Color.White, darkColor = Color(0xFF006400)), // Green
-        ColorPair(id = 2, lightColor = Color.White, darkColor = Color(0xFF092E5C)), // Blue
-        ColorPair(id = 3, lightColor = Color.White, darkColor = Color(0xFF0C9B86)), // Yellow
-        ColorPair(id = 4, lightColor = Color.White, darkColor = Color(0xFF7E0A8A)),  // Magenta
+        ColorPair(id = 0, lightColor = Color.White, darkColor = Color(0xFF8B0000)),
+        ColorPair(id = 1, lightColor = Color.White, darkColor = Color(0xFF006400)),
+        ColorPair(id = 2, lightColor = Color.White, darkColor = Color(0xFF092E5C)),
+        ColorPair(id = 3, lightColor = Color.White, darkColor = Color(0xFF0C9B86)),
+        ColorPair(id = 4, lightColor = Color.White, darkColor = Color(0xFF7E0A8A)),
+        ColorPair(id = 5, lightColor = Color.White, darkColor = Color(0xFFA7105E)),
+        ColorPair(id = 6, lightColor = Color.White, darkColor = Color(0xFFAC5811)),
+        ColorPair(id = 7, lightColor = Color.White, darkColor = Color(0xFF7AA710)),
     )
 }
 
