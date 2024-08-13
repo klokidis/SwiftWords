@@ -355,6 +355,7 @@ fun LetterBox(
     // Compute shadowDp based on the theme
     val shadowDp = if (isDarkTheme) shadowDarkDp else shadowLightDp
     val color = if (isDarkTheme) boxColor.darkColor else boxColor.lightColor
+    val textColor = if (!isDarkTheme) boxColor.darkColor else boxColor.lightColor
     // Determine shadowColor based on correctness and theme
     val shadowColor = remember(isCorrect(), isDarkTheme) {
         when {
@@ -390,7 +391,10 @@ fun LetterBox(
                 .background(color),
             contentAlignment = Alignment.Center,
         ) {
-            Text(text = letter.toString())
+            Text(
+                text = letter.toString(),
+                style = MaterialTheme.typography.titleSmall
+            )
         }
     }
 }
