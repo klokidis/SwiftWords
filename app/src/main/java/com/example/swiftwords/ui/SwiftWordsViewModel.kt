@@ -23,11 +23,7 @@ class SwiftWordsMainViewModel : ViewModel() {
     val uiState: StateFlow<MainUiState> = _uiState.asStateFlow()
 
     init {
-        _uiState.update { currentState ->
-            currentState.copy(
-                setOfLettersForLevel = generateNewRandomLetters()
-            )
-        }
+       generateNewRandomLetters()
     }
 
     suspend fun getSetFromFile(context: Context): Set<String> {
@@ -74,7 +70,7 @@ class SwiftWordsMainViewModel : ViewModel() {
         }
     }
 
-    private fun generateNewRandomLetters(): Set<Char> {
+    fun generateNewRandomLetters(){
         val vowels = mutableListOf('A', 'E', 'I', 'O')
         val consonants = ('A'..'Z').filter { it !in vowels }.toMutableList()
 
@@ -101,7 +97,11 @@ class SwiftWordsMainViewModel : ViewModel() {
         }
 
         val combinedList = randomVowels + randomConsonants + randomOthers
-        return combinedList.shuffled().toSet()
+        _uiState.update { currentState ->
+            currentState.copy(
+                setOfLettersForLevel = combinedList.shuffled().toSet()
+            )
+        }
     }
 }
 

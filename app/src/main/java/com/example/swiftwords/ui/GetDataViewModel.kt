@@ -40,7 +40,15 @@ class GetDataViewModel(private val userRepository: UserRepository) : ViewModel()
                 userRepository.updateUser(currentUser.copy(color = newColor))
             }
         }
+    }
 
+    fun increaseCurrentLevel() {
+        viewModelScope.launch {
+            val currentUser = getDataUiState.value.userDetails?.toUser()
+            if (currentUser != null) {
+                userRepository.updateUser(currentUser.copy(currentLevel = currentUser.currentLevel + 1))
+            }
+        }
     }
 
 

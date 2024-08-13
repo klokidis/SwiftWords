@@ -151,14 +151,12 @@ fun SwiftWordsApp(
             modifier = Modifier.padding(paddingValues)
         ) {
             composable(route = SwiftWordsScreen.Levels.name) {
-                dataUiState.userDetails?.let { data ->
-                    LevelScreen(
-                        dataViewModel = dataViewmodel,
-                        dataUiState = dataUiState
-                    ) {
-                        viewModel.changeTime(40000L)
-                        navController.navigate(SwiftWordsScreen.Game.name)
-                    }
+                LevelScreen(
+                    dataViewModel = dataViewmodel,
+                    dataUiState = dataUiState
+                ) {
+                    viewModel.changeTime(40000L)
+                    navController.navigate(SwiftWordsScreen.Game.name)
                 }
             }
             composable(route = SwiftWordsScreen.Modes.name) {
@@ -191,8 +189,10 @@ fun SwiftWordsApp(
                             setOfLetters = mainUiState.setOfLettersForLevel,//maybe make it flow
                             wordList = wordList,
                             navigateUp = { navController.navigateUp() },
-                            colorCode = data.color
-                        )
+                            colorCode = data.color,
+                            increaseScore = dataViewmodel::increaseCurrentLevel,
+                            generateNewLetters = viewModel::generateNewRandomLetters
+                            )
                     }
                 } ?: run {
                     Column(

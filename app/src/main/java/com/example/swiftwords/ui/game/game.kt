@@ -58,7 +58,6 @@ import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.IntSize
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -67,8 +66,8 @@ import com.example.swiftwords.data.ColorPair
 import com.example.swiftwords.data.DataSource
 import com.example.swiftwords.ui.levels.brighten
 import com.example.swiftwords.ui.levels.darken
-import com.example.swiftwords.ui.theme.SwiftWordsTheme
 import kotlinx.coroutines.launch
+import kotlin.reflect.KFunction0
 import kotlin.reflect.KSuspendFunction1
 
 @Composable
@@ -77,8 +76,10 @@ fun Game(
     setOfLetters: Set<Char>,
     wordList: Set<String>,
     colorCode: Int,
+    increaseScore: () -> Unit,
     viewModel: GameViewModel = viewModel(factory = GameViewModelFactory(newTime)),
-    navigateUp: () -> Unit
+    navigateUp: () -> Unit,
+    generateNewLetters: KFunction0<Unit>
 ) {
     val gameUiState by viewModel.uiState.collectAsState()
     val isTimerRunning by remember { derivedStateOf { gameUiState.isTimerRunning } }
@@ -213,7 +214,7 @@ fun Game(
 
     }
     if (!isTimerRunning) {
-        DisplayResults(gameUiState.score, viewModel::restartGame, newTime, navigateUp)
+        DisplayResults(gameUiState.score, viewModel::restartGame, newTime, navigateUp,increaseScore,generateNewLetters)
     }
 }
 
@@ -450,7 +451,9 @@ fun DisplayResults(
     score: Int,
     restart: KSuspendFunction1<Long, Unit>,
     time: () -> Long,
-    navigateUp: () -> Unit
+    navigateUp: () -> Unit,
+    increaseScore: () -> Unit,
+    generateNewLetters: KFunction0<Unit>
 ) {
     val coroutineScope = rememberCoroutineScope()
     Box(
@@ -505,6 +508,8 @@ fun DisplayResults(
                     TextButton(
                         onClick = {
                             coroutineScope.launch {
+                                increaseScore()
+                                generateNewLetters()
                                 restart(time())
                             }
                         },
@@ -517,12 +522,3 @@ fun DisplayResults(
         }
     }
 }
-
-@Preview(showBackground = true)
-@Composable
-fun Preview(viewModel: GameViewModel = viewModel(factory = GameViewModelFactory({ 50L }))) {
-    SwiftWordsTheme {
-        DisplayResults(5, viewModel::restartGame, { 50L }, {})
-    }
-}
-
