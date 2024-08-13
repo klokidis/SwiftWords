@@ -77,6 +77,8 @@ fun LevelScreen(
                 val userColor = userDetails.color
                 LevelList(
                     currentLevel = userDetails.currentLevel,
+                    startingLevel = userDetails.starterLevel,
+                    endingLevel = userDetails.endingLevel,
                     calculatePaddingValues = levelViewModel.calculatePaddingValues(userDetails.currentLevel),
                     onClick = navigateToLevel,
                     color = userColor
@@ -120,9 +122,11 @@ fun LevelList(
     currentLevel: Int,
     calculatePaddingValues: List<Pair<Dp, Dp>>,
     onClick: () -> Unit,
-    color: Int
+    color: Int,
+    startingLevel: Int,
+    endingLevel: Int
 ) {
-    for ((index, i) in (currentLevel - 3..currentLevel + 20).withIndex()) {
+    for ((index, i) in (startingLevel..endingLevel).withIndex()) {
         if (i > 0) {
             val (leftPadding, rightPadding) = calculatePaddingValues.getOrNull(index) ?: continue
 

@@ -16,6 +16,7 @@ data class ItemDetailsUiState(
     val userDetails: UserDetails? = null,
     val isLoading: Boolean = true
 )
+
 class GetDataViewModel(private val userRepository: UserRepository) : ViewModel() {
 
     val getDataUiState: StateFlow<ItemDetailsUiState> =
@@ -33,7 +34,7 @@ class GetDataViewModel(private val userRepository: UserRepository) : ViewModel()
                 initialValue = ItemDetailsUiState(isLoading = true)
             )
 
-    fun updateUserColor(newColor:Int) {
+    fun updateUserColor(newColor: Int) {
         viewModelScope.launch {
             val currentUser = getDataUiState.value.userDetails?.toUser()
             if (currentUser != null) {
@@ -47,10 +48,24 @@ class GetDataViewModel(private val userRepository: UserRepository) : ViewModel()
             val currentUser = getDataUiState.value.userDetails?.toUser()
             if (currentUser != null) {
                 userRepository.updateUser(currentUser.copy(currentLevel = currentUser.currentLevel + 1))
+                checkLevelSpacing()
             }
         }
     }
 
+    private suspend fun checkLevelSpacing() {
+        val currentUser = getDataUiState.value.userDetails?.toUser()
+        if (currentUser != null) {
+            if (currentUser.currentLevel > currentUser.endingLevel - 4) {
+                userRepository.updateUser(
+                    currentUser.copy(
+                        starterLevel = currentUser.currentLevel - 2,
+                        endingLevel = currentUser.currentLevel + 30
+                    )
+                )
+            }
+        }
+    }
 
 
     companion object {
