@@ -1,15 +1,17 @@
 <resources>
     <string name="app_name">Swift Words</string>
     <string name="home">Home</string>
-    <string name="modes">Modes</string>
+    <string name="modes">Game Modes</string>
     <string name="profile">Profile</string>
     <string name="game">Game</string>
     <string name="exit">exit game</string>
-    <string name="textfield">textfield for answers</string>
+    <string name="textfield">text Field for answers</string>
     <string name="fast">Fast Game</string>
     <string name="unlimited">unlimited time</string>
     <string name="choose">Choose</string>
     <string name="choose2">Your Character</string>
     <string name="girlName">example</string>
     <string name="boyName">example</string>
+    <string name="levels">Levels</string>
+    <string name="pickTheme">pick color theme</string>
 </resources>

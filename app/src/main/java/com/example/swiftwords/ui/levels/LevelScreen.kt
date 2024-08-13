@@ -22,11 +22,10 @@ import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Face
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -39,7 +38,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import com.example.swiftwords.R
@@ -225,13 +227,19 @@ fun MenuColorPicker(color: Int, changeColorFun: (Int) -> Unit) {
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.Center
         ) {
-            Icon(
-                modifier = Modifier
-                    .size(30.dp)
-                    .clickable { isExpanded = !isExpanded },
-                imageVector = Icons.Filled.Face,
-                contentDescription = "",
-            )
+            IconButton(onClick = { isExpanded = !isExpanded  }) {
+                Icon(
+                    modifier = Modifier
+                        .size(30.dp),
+                    imageVector =
+                    if (isExpanded) {
+                        ImageVector.vectorResource(R.drawable.palette_filled)
+                    } else {
+                        ImageVector.vectorResource(R.drawable.palette)
+                    },
+                    contentDescription = stringResource(R.string.pickTheme)
+                )
+            }
             AnimatedVisibility(visible = isExpanded) {
                 Row(
                     modifier = Modifier

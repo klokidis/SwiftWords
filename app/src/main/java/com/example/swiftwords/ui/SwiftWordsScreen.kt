@@ -26,6 +26,8 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.vectorResource
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
@@ -133,7 +135,7 @@ fun SwiftWordsApp(
                                     }
                                 }) {
                                     Icon(
-                                        imageVector = if (index == selectedItemIndex) item.imageSelected else item.imageUnSelected,
+                                        imageVector = if (index == selectedItemIndex) ImageVector.vectorResource(id = item.imageSelected) else ImageVector.vectorResource(id = item.imageUnSelected),
                                         contentDescription = stringResource(id = item.title)
                                     )
                                 }
