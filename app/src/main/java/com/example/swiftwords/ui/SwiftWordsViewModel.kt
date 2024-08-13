@@ -3,12 +3,12 @@ package com.example.swiftwords.ui
 import android.content.Context
 import androidx.lifecycle.ViewModel
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.withContext
+import java.util.Locale
 
 data class MainUiState(
     var setOfLettersForLevel: Set<Char> = setOf(),
@@ -26,32 +26,11 @@ class SwiftWordsMainViewModel : ViewModel() {
        generateNewRandomLetters()
     }
 
-    suspend fun getSetFromFile(context: Context): Set<String> {
-        return withContext(Dispatchers.IO) {
-            // Convert letters for the level to a set of lowercase characters once
-            val lettersForLevel = uiState.value.setOfLettersForLevel
-                .map { it.lowercaseChar() }
-                .toSet()
-
-            // Load words asynchronously
-            val wordsDeferred = async { loadWordsFromAssets(context) }
-
-            // Await the result and filter words
-            val filteredWords = wordsDeferred.await()
-                .map { it.lowercase() }
-                .toSet()
-
-            // Update the state with filtered words
-            filteredWords
-        }
-    }
-
-
-    private suspend fun loadWordsFromAssets(context: Context): Set<String> {
+    suspend fun loadWordsFromAssets(context: Context): Set<String> {
         return withContext(Dispatchers.IO) {
             val words = mutableSetOf<String>()
             context.assets.open("engwords").bufferedReader().useLines { lines ->
-                lines.forEach { words.add(it.trim()) }
+                lines.forEach { words.add(it.trim().lowercase(Locale.ROOT)) }
             }
             words
         }

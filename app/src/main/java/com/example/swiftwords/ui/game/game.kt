@@ -73,16 +73,16 @@ import kotlin.reflect.KSuspendFunction1
 @Composable
 fun Game(
     newTime: () -> Long,
-    setOfLetters: Set<Char>,
     wordList: Set<String>,
     colorCode: Int,
     increaseScore: () -> Unit,
     viewModel: GameViewModel = viewModel(factory = GameViewModelFactory(newTime)),
     navigateUp: () -> Unit,
-    mainViewModel: SwiftWordsMainViewModel
+    mainViewModel: SwiftWordsMainViewModel,
 ) {
     val gameUiState by viewModel.uiState.collectAsState()
     val isTimerRunning by remember { derivedStateOf { gameUiState.isTimerRunning } }
+    val mainUiState by mainViewModel.uiState.collectAsState()
 
     val coroutineScope = rememberCoroutineScope()
     var textState by rememberSaveable { mutableStateOf("") }
@@ -96,7 +96,7 @@ fun Game(
         {
             isLoading = true
             coroutineScope.launch {
-                isCorrect = viewModel.checkAnswer({ textState }, wordList, setOfLetters)
+                isCorrect = viewModel.checkAnswer({ textState }, wordList, mainUiState.setOfLettersForLevel)
                 isLoading = false
                 textState = ""  // Reset textState after isCorrect is updated
             }
@@ -143,7 +143,7 @@ fun Game(
                 verticalArrangement = Arrangement.Center,
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                val listOfLetters = setOfLetters.toList()
+                val listOfLetters = mainUiState.setOfLettersForLevel.toList()
 
                 RowOfLetters(
                     listOfLetters[0],
@@ -214,7 +214,14 @@ fun Game(
 
     }
     if (!isTimerRunning) {
-        DisplayResults(gameUiState.score, viewModel::restartGame, newTime, navigateUp,increaseScore,mainViewModel)
+        DisplayResults(
+            gameUiState.score,
+            viewModel::restartGame,
+            newTime,
+            navigateUp,
+            increaseScore,
+            mainViewModel
+        )
     }
 }
 
@@ -517,7 +524,7 @@ fun DisplayResults(
                                 restart(time())
                             }
                         },
-                        enabled = score >= 10
+                        enabled = true
                     ) {
                         Text("Next Level")
                     }

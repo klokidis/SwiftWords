@@ -1,7 +1,6 @@
 package com.example.swiftwords.ui
 
 import android.content.Context
-import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -63,7 +62,6 @@ fun SwiftWordsApp(
     var selectedItemIndex by rememberSaveable { mutableIntStateOf(0) }
 
     LaunchedEffect(currentScreen) {
-        Log.d("klok", dataUiState.userDetails.toString())
         val newIndex = when (currentScreen) {
             SwiftWordsScreen.Levels -> 0
             SwiftWordsScreen.Modes -> 1
@@ -76,21 +74,22 @@ fun SwiftWordsApp(
         }
     }
 
-
     val wordListState = rememberSaveable { mutableStateOf<Set<String>?>(null) }
     val coroutineScope = rememberCoroutineScope()
     val coroutineLaunched = rememberSaveable { mutableStateOf(false) }
 
     LaunchedEffect(Unit) {
-        if (!coroutineLaunched.value) {
-            coroutineScope.launch {
-                try {
-                    val wordList = viewModel.getSetFromFile(context)
-                    wordListState.value = wordList
-                    coroutineLaunched.value = true
-                } catch (e: Exception) {
-                    // Handle the exception appropriately, update UI to show an error message
-                    e.printStackTrace()
+        coroutineScope.launch {
+            if (!coroutineLaunched.value) {
+                coroutineScope.launch {
+                    try {
+                        val wordList = viewModel.loadWordsFromAssets(context)
+                        wordListState.value = wordList
+                        coroutineLaunched.value = true
+                    } catch (e: Exception) {
+                        // Handle the exception appropriately, update UI to show an error message
+                        e.printStackTrace()
+                    }
                 }
             }
         }
@@ -186,13 +185,12 @@ fun SwiftWordsApp(
                     dataUiState.userDetails?.let { data ->
                         Game(
                             { mainUiState.gameTime },
-                            setOfLetters = mainUiState.setOfLettersForLevel,//maybe make it flow
                             wordList = wordList,
                             navigateUp = { navController.navigateUp() },
                             colorCode = data.color,
                             increaseScore = dataViewmodel::increaseCurrentLevel,
                             mainViewModel = viewModel
-                            )
+                        )
                     }
                 } ?: run {
                     Column(
