@@ -191,7 +191,7 @@ fun SwiftWordsApp(
                             navigateUp = { navController.navigateUp() },
                             colorCode = data.color,
                             increaseScore = dataViewmodel::increaseCurrentLevel,
-                            generateNewLetters = viewModel::generateNewRandomLetters
+                            mainViewModel = viewModel
                             )
                     }
                 } ?: run {

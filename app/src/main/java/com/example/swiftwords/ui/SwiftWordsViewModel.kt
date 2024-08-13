@@ -39,15 +39,10 @@ class SwiftWordsMainViewModel : ViewModel() {
             // Await the result and filter words
             val filteredWords = wordsDeferred.await()
                 .map { it.lowercase() }
-                .filter { word ->
-                    // Check if all characters of the word are in the set of letters
-                    word.all { it in lettersForLevel }
-                }
                 .toSet()
 
             // Update the state with filtered words
             filteredWords
-
         }
     }
 

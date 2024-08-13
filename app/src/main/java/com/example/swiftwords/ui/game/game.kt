@@ -64,10 +64,10 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.swiftwords.R
 import com.example.swiftwords.data.ColorPair
 import com.example.swiftwords.data.DataSource
+import com.example.swiftwords.ui.SwiftWordsMainViewModel
 import com.example.swiftwords.ui.levels.brighten
 import com.example.swiftwords.ui.levels.darken
 import kotlinx.coroutines.launch
-import kotlin.reflect.KFunction0
 import kotlin.reflect.KSuspendFunction1
 
 @Composable
@@ -79,7 +79,7 @@ fun Game(
     increaseScore: () -> Unit,
     viewModel: GameViewModel = viewModel(factory = GameViewModelFactory(newTime)),
     navigateUp: () -> Unit,
-    generateNewLetters: KFunction0<Unit>
+    mainViewModel: SwiftWordsMainViewModel
 ) {
     val gameUiState by viewModel.uiState.collectAsState()
     val isTimerRunning by remember { derivedStateOf { gameUiState.isTimerRunning } }
@@ -214,7 +214,7 @@ fun Game(
 
     }
     if (!isTimerRunning) {
-        DisplayResults(gameUiState.score, viewModel::restartGame, newTime, navigateUp,increaseScore,generateNewLetters)
+        DisplayResults(gameUiState.score, viewModel::restartGame, newTime, navigateUp,increaseScore,mainViewModel)
     }
 }
 
@@ -457,7 +457,7 @@ fun DisplayResults(
     time: () -> Long,
     navigateUp: () -> Unit,
     increaseScore: () -> Unit,
-    generateNewLetters: KFunction0<Unit>
+    generateNewLetters: SwiftWordsMainViewModel
 ) {
     val coroutineScope = rememberCoroutineScope()
     Box(
@@ -513,7 +513,7 @@ fun DisplayResults(
                         onClick = {
                             coroutineScope.launch {
                                 increaseScore()
-                                generateNewLetters()
+                                generateNewLetters.generateNewRandomLetters()
                                 restart(time())
                             }
                         },
