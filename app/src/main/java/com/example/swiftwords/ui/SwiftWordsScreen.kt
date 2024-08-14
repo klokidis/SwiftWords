@@ -97,11 +97,12 @@ fun SwiftWordsApp(
         }
     }
 
-    val barItems = rememberSaveable{ DataSource().barItems }
+
 
     Scaffold(
         bottomBar = {
             if (currentScreen != SwiftWordsScreen.Game) {
+                val barItems = remember { DataSource().barItems }
                 NavigationBar {
                     barItems.forEachIndexed { index, item ->
                         NavigationBarItem(
