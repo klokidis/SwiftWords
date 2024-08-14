@@ -283,7 +283,7 @@ fun Color.brighten(factor: Float = 1.5f): Color {
 
 @Preview(showBackground = true)
 @Composable
-private fun PreviewDuolingoButton() {
+private fun PreviewButton() {
     Column(modifier = Modifier.fillMaxSize()) {
         CurrentLevel(
             modifier = Modifier,
