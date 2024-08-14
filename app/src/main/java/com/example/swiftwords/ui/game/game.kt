@@ -357,7 +357,7 @@ fun LetterBox(
     lightCorrect: Color = Color(0xFF00c555),
     lightIncorrect: Color = Color(0xFFe80000),
     shadowLightDp: Dp = 13.dp,
-    shadowDarkDp: Dp = 32.dp,
+    shadowDarkDp: Dp = 30.dp,
 ) {
     // Compute shadowDp based on the theme
     val shadowDp = if (isDarkTheme) shadowDarkDp else shadowLightDp
@@ -524,7 +524,7 @@ fun DisplayResults(
                                 restart(time())
                             }
                         },
-                        enabled = true
+                        enabled = score > 10
                     ) {
                         Text("Next Level")
                     }

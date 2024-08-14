@@ -46,16 +46,13 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import com.example.swiftwords.R
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.swiftwords.data.DataSource
-import com.example.swiftwords.ui.AppViewModelProvider
 import com.example.swiftwords.ui.GetDataViewModel
 import com.example.swiftwords.ui.ItemDetailsUiState
 import com.example.swiftwords.ui.theme.SwiftWordsTheme
 
 @Composable
 fun LevelScreen(
-    levelViewModel: LevelViewModel = viewModel(factory = AppViewModelProvider.Factory),
     dataViewModel: GetDataViewModel,
     dataUiState: ItemDetailsUiState,
     navigateToLevel: () -> Unit,
@@ -81,7 +78,7 @@ fun LevelScreen(
                     currentLevel = userDetails.currentLevel,
                     startingLevel = userDetails.starterLevel,
                     endingLevel = userDetails.endingLevel,
-                    calculatePaddingValues = levelViewModel.calculatePaddingValues(userDetails.currentLevel),
+                    calculatePaddingValues = DataSource().paddingList,
                     onClick = navigateToLevel,
                     color = userColor
                 )
@@ -227,7 +224,7 @@ fun MenuColorPicker(color: Int, changeColorFun: (Int) -> Unit) {
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.Center
         ) {
-            IconButton(onClick = { isExpanded = !isExpanded  }) {
+            IconButton(onClick = { isExpanded = !isExpanded }) {
                 Icon(
                     modifier = Modifier
                         .size(30.dp),

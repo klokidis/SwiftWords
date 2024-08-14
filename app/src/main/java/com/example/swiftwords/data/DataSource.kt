@@ -1,6 +1,8 @@
 package com.example.swiftwords.data
 
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.dp
 import com.example.swiftwords.R
 import com.example.swiftwords.model.BarItem
 
@@ -35,6 +37,59 @@ class DataSource {
         ColorPair(id = 5, lightColor = Color.White, darkColor = Color(0xFFA7105E)),
         ColorPair(id = 6, lightColor = Color.White, darkColor = Color(0xFFAC5811)),
         ColorPair(id = 7, lightColor = Color.White, darkColor = Color(0xFF7AA710)),
+    )
+    val paddingList: List<Pair<Dp, Dp>> = listOf(
+        // Right padding increases, left stays at 0
+        Pair(0.dp, 0.dp),
+        Pair(0.dp, 70.dp),
+        Pair(0.dp, 140.dp),
+        Pair(70.dp, 100.dp),
+        Pair(170.dp, 70.dp),
+        Pair(190.dp, 0.dp),
+        Pair(170.dp, 70.dp),
+        Pair(70.dp, 100.dp),
+        Pair(0.dp, 140.dp),
+        Pair(70.dp, 100.dp),
+        Pair(170.dp, 70.dp),
+        Pair(190.dp, 0.dp),
+        Pair(170.dp, 70.dp),
+        Pair(70.dp, 100.dp),
+        Pair(0.dp, 140.dp),
+        Pair(70.dp, 100.dp),
+        Pair(170.dp, 70.dp),
+        Pair(190.dp, 0.dp),
+        Pair(170.dp, 70.dp),
+        Pair(70.dp, 100.dp),
+        Pair(0.dp, 140.dp),
+        Pair(70.dp, 100.dp),
+        Pair(170.dp, 70.dp),
+        Pair(190.dp, 0.dp),
+        Pair(170.dp, 70.dp),
+        Pair(70.dp, 100.dp),
+        Pair(0.dp, 140.dp),
+        Pair(70.dp, 100.dp),
+        Pair(170.dp, 70.dp),
+        Pair(190.dp, 0.dp),
+        Pair(170.dp, 70.dp),
+        Pair(70.dp, 100.dp),
+        Pair(0.dp, 140.dp),
+        Pair(70.dp, 100.dp),
+        Pair(170.dp, 70.dp),
+        Pair(190.dp, 0.dp),
+        Pair(170.dp, 70.dp),
+        Pair(70.dp, 100.dp),
+        Pair(0.dp, 140.dp),
+        Pair(70.dp, 100.dp),
+        Pair(170.dp, 70.dp),
+        Pair(190.dp, 0.dp),
+        Pair(170.dp, 70.dp),
+        Pair(70.dp, 100.dp),
+        Pair(0.dp, 140.dp),
+        Pair(70.dp, 100.dp),
+        Pair(170.dp, 70.dp),
+        Pair(190.dp, 0.dp),
+        Pair(170.dp, 70.dp),
+        Pair(70.dp, 100.dp),
     )
 }
 
