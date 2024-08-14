@@ -147,7 +147,7 @@ fun CurrentLevel(
             Text(
                 text = text,
                 style = MaterialTheme.typography.titleMedium,
-                modifier = Modifier.padding(bottom = 6.dp, end = 3.dp)
+                modifier = Modifier.padding(bottom = 6.dp)
             )
         }
     }
