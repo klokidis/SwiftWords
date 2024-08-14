@@ -14,6 +14,9 @@ val Bebasneuregular = FontFamily(
 val Radiocanadabigregular = FontFamily(
     Font(R.font.radiocanadabigregular),
 )
+val pacificoregular = FontFamily(
+    Font(R.font.pacificoregular),
+)
 
 // Set of Material typography styles to start with
 val Typography = Typography(
@@ -30,6 +33,10 @@ val Typography = Typography(
         fontSize = 35.sp,
         lineHeight = 24.sp,
         letterSpacing = 0.5.sp
+    ),
+    titleMedium = TextStyle(
+        fontFamily = pacificoregular,
+        fontSize = 30.sp,
     ),
     titleSmall = TextStyle(
         fontFamily = Radiocanadabigregular,
