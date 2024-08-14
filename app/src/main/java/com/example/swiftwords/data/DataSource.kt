@@ -38,6 +38,7 @@ class DataSource {
         ColorPair(id = 6, lightColor = Color.White, darkColor = Color(0xFFAC5811)),
         ColorPair(id = 7, lightColor = Color.White, darkColor = Color(0xFF7AA710)),
     )
+
     val paddingList: List<Pair<Dp, Dp>> = listOf(
         // Right padding increases, left stays at 0
         Pair(0.dp, 0.dp),
@@ -92,7 +93,6 @@ class DataSource {
         Pair(70.dp, 100.dp),
     )
 }
-
 
 data class ColorPair(
     val id: Int,

@@ -8,6 +8,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.horizontalScroll
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -142,8 +143,11 @@ fun LevelCard(
     thisLevel: Int,
     currentLevel: Int,
     onClick: () -> Unit,
-    color: Int
+    color: Int,
+    isDarkTheme: Boolean = isSystemInDarkTheme(),
 ) {
+    val upcomingLevelColor = if (isDarkTheme) Color(0xFF3B3B3D) else Color(0xFF6D6D74)
+
     Box(
         modifier = Modifier
             .padding(
@@ -156,9 +160,9 @@ fun LevelCard(
         when {
             thisLevel < currentLevel -> {
                 Levels(
+                    true,
                     modifier = Modifier,
-                    text = number.toString(),
-                    color = Color(0xFFD1B10F),
+                    color = DataSource().colorPairs[color].darkColor,
                 )
             }
 
@@ -173,9 +177,9 @@ fun LevelCard(
 
             else -> {
                 Levels(
+                    false,
                     modifier = Modifier,
-                    text = number.toString(),
-                    color = Color(0xFF393A3C),
+                    color = upcomingLevelColor,
                 )
             }
         }

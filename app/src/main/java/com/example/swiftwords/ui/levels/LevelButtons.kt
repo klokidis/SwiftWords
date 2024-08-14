@@ -10,11 +10,14 @@ import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material.icons.materialIcon
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -28,11 +31,14 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Color.Companion.Gray
 import androidx.compose.ui.input.pointer.pointerInteropFilter
 import androidx.compose.ui.layout.onGloballyPositioned
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
+import com.example.swiftwords.R
 import com.example.swiftwords.data.DataSource
 
 private val shadowSize = 8.dp
@@ -43,6 +49,7 @@ fun CurrentLevel(
     modifier: Modifier,
     text: String,
     colorCode: Int,
+    size: Dp = 90.dp,
     color: Color = DataSource().colorPairs[colorCode].darkColor,
     textColor: Color = Color.White,
     shadowColor: Color = DataSource().colorPairs[colorCode].darkColor.darken(0.6f),
@@ -71,7 +78,7 @@ fun CurrentLevel(
         var buttonSize by remember { mutableStateOf(IntSize.Zero) }
         val interactionSource = remember { MutableInteractionSource() }
 
-        Box(
+        Spacer(
             modifier = Modifier
                 .constrainAs(back) {
                     width = Dimension.fillToConstraints
@@ -92,8 +99,8 @@ fun CurrentLevel(
             onClick = onClick,
             modifier = Modifier
                 .constrainAs(button) {
-                    width = Dimension.value(90.dp)
-                    height = Dimension.value(90.dp)
+                    width = Dimension.value(size)
+                    height = Dimension.value(size)
                     top.linkTo(parent.top)
 
                     translationY = animTranslationY
@@ -144,8 +151,9 @@ fun CurrentLevel(
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun Levels(
+    passed: Boolean,
     modifier: Modifier,
-    text: String,
+    size: Dp = 85.dp,
     color: Color = Gray,
     textColor: Color = Color.White,
     shadowColor: Color = color.darken(0.65f),
@@ -160,10 +168,20 @@ fun Levels(
             animationSpec = tween(50),
             label = ""
         )
+        val animatedColor by animateColorAsState(
+            targetValue = color,
+            animationSpec = tween(durationMillis = 400),
+            label = ""
+        )
+        val animatedShadowColor by animateColorAsState(
+            targetValue = shadowColor,
+            animationSpec = tween(durationMillis = 400),
+            label = ""
+        )
         var buttonSize by remember { mutableStateOf(IntSize.Zero) }
         val interactionSource = remember { MutableInteractionSource() }
 
-        Box(
+        Spacer(
             modifier = Modifier
                 .constrainAs(back) {
                     width = Dimension.fillToConstraints
@@ -177,15 +195,15 @@ fun Levels(
                     translationY = shadowSize
                 }
                 .clip(CircleShape)
-                .background(shadowColor)
+                .background(animatedShadowColor)
         )
 
         Button(
             onClick = { },
             modifier = Modifier
                 .constrainAs(button) {
-                    width = Dimension.value(90.dp)
-                    height = Dimension.value(90.dp)
+                    width = Dimension.value(size)
+                    height = Dimension.value(size)
                     top.linkTo(parent.top)
 
                     translationY = animTranslationY
@@ -223,12 +241,21 @@ fun Levels(
                 },
             contentPadding = PaddingValues(0.dp),
             colors = ButtonDefaults.buttonColors(
-                containerColor = color,
+                containerColor = animatedColor,
                 contentColor = textColor
             ),
             shape = CircleShape
         ) {
-            Text(text = text)
+            val icon = if (passed) {
+                painterResource(id = R.drawable.done_icon)
+            } else {
+                painterResource(id = R.drawable.outline_lock)
+            }
+            Icon(
+                painter = icon,
+                contentDescription = "",
+                modifier = Modifier.size(30.dp)
+            )
         }
     }
 }
