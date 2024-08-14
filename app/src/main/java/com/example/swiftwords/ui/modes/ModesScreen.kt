@@ -47,13 +47,13 @@ fun ModesScreen(
         ) {
             Row {
                 ModeCard(
-                    imageRes = R.drawable.done,
+                    imageRes = R.drawable.profile,
                     textRes = R.string.fast,
                     onClick = { navigateFastGame() },
                     modifier = Modifier.weight(1f)
                 )
                 ModeCard(
-                    imageRes = R.drawable.done,
+                    imageRes = R.drawable.profile,
                     textRes = R.string.unlimited,
                     onClick = { navigateLongGame() },
                     modifier = Modifier.weight(1f)
@@ -61,13 +61,13 @@ fun ModesScreen(
             }
             Row {
                 ModeCard(
-                    imageRes = R.drawable.done,
+                    imageRes = R.drawable.profile,
                     textRes = R.string.app_name,
                     onClick = { },
                     modifier = Modifier.weight(1f)
                 )
                 ModeCard(
-                    imageRes = R.drawable.done,
+                    imageRes = R.drawable.profile,
                     textRes = R.string.app_name,
                     onClick = { },
                     modifier = Modifier.weight(1f)
@@ -152,7 +152,7 @@ fun DailyCard(
                 .fillMaxSize()
         ) {
             Image(
-                painter = painterResource(R.drawable.done),
+                painter = painterResource(R.drawable.profile),
                 contentDescription = null,
                 contentScale = ContentScale.Fit,
                 modifier = Modifier
