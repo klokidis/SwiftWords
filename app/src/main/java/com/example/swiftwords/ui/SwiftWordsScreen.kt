@@ -97,10 +97,11 @@ fun SwiftWordsApp(
         }
     }
 
+    val barItems = rememberSaveable{ DataSource().barItems }
+
     Scaffold(
         bottomBar = {
             if (currentScreen != SwiftWordsScreen.Game) {
-                val barItems = remember { DataSource().barItems }
                 NavigationBar {
                     barItems.forEachIndexed { index, item ->
                         NavigationBarItem(
@@ -108,18 +109,27 @@ fun SwiftWordsApp(
                                 if (selectedItemIndex != index) {
                                     when (index) {
                                         0 -> navController.navigate(SwiftWordsScreen.Levels.name) {
-                                            popUpTo(navController.graph.findStartDestination().id)
+                                            popUpTo(navController.graph.findStartDestination().id) {
+                                                saveState = true
+                                            }
                                             launchSingleTop = true
+                                            restoreState = true
                                         }
 
                                         1 -> navController.navigate(SwiftWordsScreen.Modes.name) {
-                                            popUpTo(navController.graph.findStartDestination().id)
+                                            popUpTo(navController.graph.findStartDestination().id) {
+                                                saveState = true
+                                            }
                                             launchSingleTop = true
+                                            restoreState = true
                                         }
 
                                         2 -> navController.navigate(SwiftWordsScreen.Profile.name) {
-                                            popUpTo(navController.graph.findStartDestination().id)
+                                            popUpTo(navController.graph.findStartDestination().id) {
+                                                saveState = true
+                                            }
                                             launchSingleTop = true
+                                            restoreState = true
                                         }
                                     }
                                     selectedItemIndex = index

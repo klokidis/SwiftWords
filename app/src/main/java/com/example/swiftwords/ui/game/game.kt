@@ -102,6 +102,7 @@ fun Game(
             }
         }
     }
+
     Box(
         modifier = Modifier.fillMaxSize()
     ) {
@@ -524,7 +525,7 @@ fun DisplayResults(
                                 restart(time())
                             }
                         },
-                        enabled = score > 10
+                        enabled = score >=  10
                     ) {
                         Text("Next Level")
                     }
