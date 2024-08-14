@@ -48,6 +48,7 @@ import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.unit.Dp
 import com.example.swiftwords.R
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.swiftwords.data.ColorPair
 import com.example.swiftwords.ui.AppViewModelProvider
@@ -292,7 +293,7 @@ fun BottomLevel(onClick: () -> Unit, level: String, color: Int, colors: List<Col
                 .fillMaxSize(),
             contentAlignment = Alignment.Center
         ) {
-            Text(text = "Level: $level", color = Color.White)
+            Text(text = "Level: $level", color = Color.White,style = MaterialTheme.typography.titleSmall.copy(fontSize = 22.sp, letterSpacing = 1.sp))
         }
     }
 }

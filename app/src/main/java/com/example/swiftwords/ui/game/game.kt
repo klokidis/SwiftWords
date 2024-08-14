@@ -496,7 +496,7 @@ fun DisplayResults(
                 } else {
                     Text(
                         "you failed :( with score: $score",
-                        style = MaterialTheme.typography.titleMedium
+                        style = MaterialTheme.typography.titleSmall
                     )
                 }
                 Row(
