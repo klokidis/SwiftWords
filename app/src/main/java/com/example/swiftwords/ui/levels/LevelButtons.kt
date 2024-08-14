@@ -123,13 +123,6 @@ fun CurrentLevel(
                             onClick()
                         }
 
-                        MotionEvent.ACTION_MOVE -> {
-                            val isOutside = it.x.toInt() !in 0..buttonSize.width
-                                    || it.y.toInt() !in 0..buttonSize.height
-
-                            if (isOutside) animatedY = 0.dp
-                        }
-
                         MotionEvent.ACTION_CANCEL -> {
                             animatedY = 0.dp
                         }
@@ -227,13 +220,6 @@ fun Levels(
 
                         MotionEvent.ACTION_UP -> {
                             animatedY = 0.dp
-                        }
-
-                        MotionEvent.ACTION_MOVE -> {
-                            val isOutside = it.x.toInt() !in 0..buttonSize.width
-                                    || it.y.toInt() !in 0..buttonSize.height
-
-                            if (isOutside) animatedY = 0.dp
                         }
 
                         MotionEvent.ACTION_CANCEL -> {
