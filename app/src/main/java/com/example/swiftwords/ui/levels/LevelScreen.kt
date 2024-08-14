@@ -294,7 +294,7 @@ fun PreviewMenuColorPicker() {
 fun BottomLevel(onClick: () -> Unit, level: String, color: Int) {
     val animatedColor by animateColorAsState(
         targetValue = DataSource().colorPairs[color].darkColor,
-        animationSpec = tween(durationMillis = 400),
+        animationSpec = tween(durationMillis = 300),
         label = ""
     )
     Card(

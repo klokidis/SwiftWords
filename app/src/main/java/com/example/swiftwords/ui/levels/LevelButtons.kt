@@ -7,14 +7,12 @@ import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.indication
 import androidx.compose.foundation.interaction.MutableInteractionSource
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material.icons.materialIcon
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
@@ -52,7 +50,7 @@ fun CurrentLevel(
     size: Dp = 90.dp,
     color: Color = DataSource().colorPairs[colorCode].darkColor,
     textColor: Color = Color.White,
-    shadowColor: Color = DataSource().colorPairs[colorCode].darkColor.darken(0.6f),
+    shadowColor: Color = DataSource().colorPairs[colorCode].darkColor.darken(0.8f),
     onClick: () -> Unit
 ) {
     ConstraintLayout(
@@ -67,12 +65,12 @@ fun CurrentLevel(
         )
         val animatedColor by animateColorAsState(
             targetValue = color,
-            animationSpec = tween(durationMillis = 400),
+            animationSpec = tween(durationMillis = 300),
             label = ""
         )
         val animatedShadowColor by animateColorAsState(
             targetValue = shadowColor,
-            animationSpec = tween(durationMillis = 400),
+            animationSpec = tween(durationMillis = 300),
             label = ""
         )
         var buttonSize by remember { mutableStateOf(IntSize.Zero) }
@@ -156,7 +154,7 @@ fun Levels(
     size: Dp = 85.dp,
     color: Color = Gray,
     textColor: Color = Color.White,
-    shadowColor: Color = color.darken(0.65f),
+    shadowColor: Color = color.darken(0.8f),
 ) {
     ConstraintLayout(
         modifier = modifier
@@ -170,12 +168,12 @@ fun Levels(
         )
         val animatedColor by animateColorAsState(
             targetValue = color,
-            animationSpec = tween(durationMillis = 400),
+            animationSpec = tween(durationMillis = 300),
             label = ""
         )
         val animatedShadowColor by animateColorAsState(
             targetValue = shadowColor,
-            animationSpec = tween(durationMillis = 400),
+            animationSpec = tween(durationMillis = 300),
             label = ""
         )
         var buttonSize by remember { mutableStateOf(IntSize.Zero) }
