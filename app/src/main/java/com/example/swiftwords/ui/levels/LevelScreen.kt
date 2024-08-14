@@ -20,9 +20,10 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentSize
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
@@ -60,35 +61,35 @@ fun LevelScreen(
     dataUiState: ItemDetailsUiState,
     navigateToLevel: () -> Unit,
 ) {
-    // Observe UI state from ViewModel
     val levelUiState by levelViewModel.uiState.collectAsState()
-
-    // Scroll state for the vertical scrollable column
-    val scrollState = rememberScrollState()
 
     Box(
         modifier = Modifier.fillMaxSize(),
         contentAlignment = Alignment.TopStart
     ) {
-        // Main content column
-        Column(
+        LazyColumn(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(top = 20.dp)
-                .verticalScroll(scrollState),
+                .padding(top = 20.dp),
             verticalArrangement = Arrangement.Top,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             dataUiState.userDetails?.let { userDetails ->
-                LevelList(
-                    currentLevel = userDetails.currentLevel,
-                    startingLevel = userDetails.starterLevel,
-                    endingLevel = userDetails.endingLevel,
-                    calculatePaddingValues = levelUiState.padding,
-                    onClick = navigateToLevel,
-                    color = userDetails.color,
-                    colors = levelUiState.colors
-                )
+                itemsIndexed((userDetails.starterLevel..userDetails.endingLevel).toList()) { index, level ->
+                    if (level > 0) {
+                        val (leftPadding, rightPadding) = levelUiState.padding.getOrNull(index) ?: Pair(0.dp, 0.dp)
+                        LevelCard(
+                            number = level,
+                            rightPadding = rightPadding,
+                            leftPadding = leftPadding,
+                            thisLevel = level,
+                            currentLevel = userDetails.currentLevel,
+                            onClick = navigateToLevel,
+                            color = userDetails.color,
+                            colors = levelUiState.colors
+                        )
+                    }
+                }
             }
         }
 
@@ -120,27 +121,6 @@ fun LevelScreen(
     }
 }
 
-
-
-@Composable
-fun LevelList(
-    currentLevel: Int,
-    calculatePaddingValues: List<Pair<Dp, Dp>>,
-    onClick: () -> Unit,
-    color: Int,
-    startingLevel: Int,
-    endingLevel: Int,
-    colors: List<ColorPair>
-) {
-    for ((index, i) in (startingLevel..endingLevel).withIndex()) {
-        if (i > 0) {
-            val (leftPadding, rightPadding) = calculatePaddingValues.getOrNull(index) ?: continue
-
-            LevelCard(i, rightPadding, leftPadding, i, currentLevel, onClick, color,colors)
-        }
-    }
-}
-
 @Composable
 fun LevelCard(
     number: Int,
@@ -155,14 +135,13 @@ fun LevelCard(
 ) {
     val upcomingLevelColor = if (isDarkTheme) Color(0xFF3B3B3D) else Color(0xFF6D6D74)
 
-    Box(
+    Column(
         modifier = Modifier
             .padding(
                 start = leftPadding,
                 end = rightPadding,
                 top = 50.dp
             ),
-        contentAlignment = Alignment.Center
     ) {
         when {
             thisLevel < currentLevel -> {
