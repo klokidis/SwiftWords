@@ -159,6 +159,7 @@ fun LevelCard(
                     text = number.toString(),
                     onClick = onClick,
                     colorCode = color,
+                    color = colors,
                 )
             }
 

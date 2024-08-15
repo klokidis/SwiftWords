@@ -7,10 +7,8 @@ import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.indication
 import androidx.compose.foundation.interaction.MutableInteractionSource
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
@@ -32,14 +30,13 @@ import androidx.compose.ui.graphics.Color.Companion.Gray
 import androidx.compose.ui.input.pointer.pointerInteropFilter
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
 import com.example.swiftwords.R
-import com.example.swiftwords.data.DataSource
+import com.example.swiftwords.data.ColorPair
 
 private val shadowSize = 8.dp
 
@@ -50,9 +47,8 @@ fun CurrentLevel(
     text: String,
     colorCode: Int,
     size: Dp = 90.dp,
-    color: Color = DataSource().colorPairs[colorCode].darkColor,
+    color: List<ColorPair>,
     textColor: Color = Color.White,
-    shadowColor: Color = DataSource().colorPairs[colorCode].darkColor.darken(0.8f),
     onClick: () -> Unit
 ) {
     ConstraintLayout(
@@ -66,12 +62,12 @@ fun CurrentLevel(
             label = ""
         )
         val animatedColor by animateColorAsState(
-            targetValue = color,
+            targetValue = color[colorCode].darkColor,
             animationSpec = tween(durationMillis = 300),
             label = ""
         )
         val animatedShadowColor by animateColorAsState(
-            targetValue = shadowColor,
+            targetValue = color[colorCode].darkColor.darken(0.8f),
             animationSpec = tween(durationMillis = 300),
             label = ""
         )
@@ -267,14 +263,3 @@ fun Color.brighten(factor: Float = 1.5f): Color {
     )
 }
 
-@Preview(showBackground = true)
-@Composable
-private fun PreviewButton() {
-    Column(modifier = Modifier.fillMaxSize()) {
-        CurrentLevel(
-            modifier = Modifier,
-            text = "Preview",
-            2
-        ) {}
-    }
-}
