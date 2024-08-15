@@ -173,6 +173,7 @@ fun SwiftWordsApp(
             }
             composable(route = SwiftWordsScreen.Modes.name) {
                 ModesScreen(
+                    color = dataUiState.userDetails?.color,
                     navigateFastGame = {
                         viewModel.changeTime(20000L)
                         navController.navigate(SwiftWordsScreen.Game.name)

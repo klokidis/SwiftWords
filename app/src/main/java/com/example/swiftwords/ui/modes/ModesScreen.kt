@@ -1,38 +1,27 @@
 package com.example.swiftwords.ui.modes
 
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.shadow
-import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.dimensionResource
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.example.swiftwords.R
+import com.example.swiftwords.data.DataSource
+import com.example.swiftwords.ui.levels.ModesCards
+import com.example.swiftwords.ui.levels.darken
 
 
 @Composable
 fun ModesScreen(
     navigateFastGame: () -> Unit,
-    navigateLongGame: () -> Unit
+    navigateLongGame: () -> Unit,
+    color: Int?
 ) {
     val scrollState = rememberScrollState()
     Box(
@@ -43,20 +32,20 @@ fun ModesScreen(
         contentAlignment = Alignment.Center // Center content within the Box
     ) {
         Column(
-            horizontalAlignment = Alignment.CenterHorizontally
+            horizontalAlignment = Alignment.CenterHorizontally,
         ) {
             Row {
                 ModeCard(
                     imageRes = R.drawable.profile,
                     textRes = R.string.fast,
                     onClick = { navigateFastGame() },
-                    modifier = Modifier.weight(1f)
+                    color = color
                 )
                 ModeCard(
                     imageRes = R.drawable.profile,
                     textRes = R.string.unlimited,
                     onClick = { navigateLongGame() },
-                    modifier = Modifier.weight(1f)
+                    color = color
                 )
             }
             Row {
@@ -64,16 +53,16 @@ fun ModesScreen(
                     imageRes = R.drawable.profile,
                     textRes = R.string.app_name,
                     onClick = { },
-                    modifier = Modifier.weight(1f)
+                    color = color
                 )
                 ModeCard(
                     imageRes = R.drawable.profile,
                     textRes = R.string.app_name,
                     onClick = { },
-                    modifier = Modifier.weight(1f)
+                    color = color
                 )
             }
-            DailyCard({ })
+            BottomCard({ },color)
         }
     }
 }
@@ -83,82 +72,33 @@ fun ModeCard(
     imageRes: Int,
     textRes: Int,
     onClick: () -> Unit,
-    modifier: Modifier = Modifier
+    color: Int?
 ) {
-    Card(
-        colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.inverseOnSurface,
-        ),
-        modifier = modifier
-            .padding(10.dp)
-            .height(180.dp)
-            .shadow(
-                elevation = 2.dp,
-                shape = RoundedCornerShape(16.dp)
-            ),
-        elevation = CardDefaults.cardElevation(
-            defaultElevation = dimensionResource(id = R.dimen.elevation),
-        ),
-        onClick = onClick
-    ) {
-        Column(
-            verticalArrangement = Arrangement.Center,
-            horizontalAlignment = Alignment.CenterHorizontally,
-            modifier = Modifier
-                .padding(10.dp)
-                .fillMaxSize()
-        ) {
-            Image(
-                painter = painterResource(imageRes),
-                contentDescription = null,
-                modifier = Modifier.height(110.dp)
-            )
-            Text(text = stringResource(textRes))
-        }
+    Box(modifier=Modifier.padding(10.dp)) {
+        ModesCards(
+            imageRes = imageRes,
+            textRes = textRes,
+            color = DataSource().colorPairs[color!!].darkColor,
+            shadowColor = DataSource().colorPairs[color].darkColor.darken(),
+            onClick = onClick
+        )
     }
 }
 
 @Composable
-fun DailyCard(
+fun BottomCard(
     onButtonCard: () -> Unit,
+    color: Int?
 ) {
-    Card(
-        colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.inverseOnSurface,
-        ),
-        elevation = CardDefaults.cardElevation(
-            defaultElevation = 5.dp,
-        ),
-        modifier = Modifier
-            .clip(MaterialTheme.shapes.medium)
-            .height(180.dp)
-            .fillMaxWidth()
-            .padding(
-                top = 15.dp,
-                start = 10.dp,
-                end = 10.dp,
-                bottom = 10.dp
-            )
-            .shadow(
-                elevation = 2.dp,
-                shape = RoundedCornerShape(16.dp)
-            ),
-        onClick = { },
-    ) {
-        Column(
-            verticalArrangement = Arrangement.Center,
-            horizontalAlignment = Alignment.CenterHorizontally,
-            modifier = Modifier
-                .fillMaxSize()
-        ) {
-            Image(
-                painter = painterResource(R.drawable.profile),
-                contentDescription = null,
-                contentScale = ContentScale.Fit,
-                modifier = Modifier
-                    .height(110.dp)
-            )
-            Text(text = stringResource(R.string.app_name))
-        }
+    Box(modifier = Modifier.padding(10.dp)) {
+        ModesCards(
+            imageRes = R.drawable.profile,
+            textRes = R.string.levels,
+            color = DataSource().colorPairs[color!!].darkColor,
+            shadowColor = DataSource().colorPairs[color].darkColor.darken(),
+            heightCustom = 150.dp,
+            widthCustom = 370.dp,
+            onClick = onButtonCard
+        )
     }
 }
