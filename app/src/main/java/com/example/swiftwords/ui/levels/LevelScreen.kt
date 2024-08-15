@@ -294,7 +294,11 @@ fun BottomLevel(onClick: () -> Unit, level: String, color: Int, colors: List<Col
                 .fillMaxSize(),
             contentAlignment = Alignment.Center
         ) {
-            Text(text = "Level: $level", color = Color.White,style = MaterialTheme.typography.titleSmall.copy(fontSize = 22.sp, letterSpacing = 1.sp))
+            Text(
+                text = "Level: $level",
+                color = Color.White,
+                style = MaterialTheme.typography.titleSmall.copy(fontSize = 22.sp, letterSpacing = 1.sp)
+            )
         }
     }
 }

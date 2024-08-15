@@ -12,7 +12,9 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -260,9 +262,8 @@ fun Levels(
 fun ModesCards(
     imageRes: Int,
     textRes: Int,
-    size: Dp = 175.dp,
+    size: Dp = 155.dp,
     heightCustom: Dp = size,
-    widthCustom: Dp = size,
     color: Color,
     textColor: Color = Color.White,
     shadowColor: Color,
@@ -301,10 +302,10 @@ fun ModesCards(
         Button(
             onClick = {},
             modifier = Modifier
+                .fillMaxWidth()
                 .constrainAs(button) {
-                    width = Dimension.value(widthCustom)
-                    height = Dimension.value(heightCustom)
                     top.linkTo(parent.top)
+                    height = Dimension.value(heightCustom)
 
                     translationY = animTranslationY
                 }
