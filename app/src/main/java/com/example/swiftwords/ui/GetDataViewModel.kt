@@ -43,12 +43,24 @@ class GetDataViewModel(private val userRepository: UserRepository) : ViewModel()
         }
     }
 
-    fun increaseCurrentLevel() {
+    fun increaseCurrentLevel(score: Int) {
         viewModelScope.launch {
             val currentUser = getDataUiState.value.userDetails?.toUser()
             if (currentUser != null) {
                 userRepository.updateUser(currentUser.copy(currentLevel = currentUser.currentLevel + 1))
                 checkLevelSpacing()
+                checkHighScore(score)
+            }
+        }
+    }
+
+    suspend fun checkHighScore(thisScore: Int) {
+        viewModelScope.launch {
+            val currentUser = getDataUiState.value.userDetails?.toUser()
+            if (currentUser != null) {
+                if(thisScore > currentUser.highScore) {
+                    userRepository.updateUser(currentUser.copy(highScore = thisScore))
+                }
             }
         }
     }
@@ -60,7 +72,7 @@ class GetDataViewModel(private val userRepository: UserRepository) : ViewModel()
                 userRepository.updateUser(
                     currentUser.copy(
                         starterLevel = currentUser.currentLevel - 2,
-                        endingLevel = currentUser.currentLevel + 20
+                        endingLevel = currentUser.currentLevel + 18
                     )
                 )
             }

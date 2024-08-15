@@ -68,6 +68,7 @@ import com.example.swiftwords.ui.SwiftWordsMainViewModel
 import com.example.swiftwords.ui.levels.brighten
 import com.example.swiftwords.ui.levels.darken
 import kotlinx.coroutines.launch
+import kotlin.reflect.KFunction1
 import kotlin.reflect.KSuspendFunction1
 
 @Composable
@@ -75,10 +76,11 @@ fun Game(
     newTime: () -> Long,
     wordList: Set<String>,
     colorCode: Int,
-    increaseScore: () -> Unit,
+    increaseScore: KFunction1<Int, Unit>,
     viewModel: GameViewModel = viewModel(factory = GameViewModelFactory(newTime)),
     navigateUp: () -> Unit,
     mainViewModel: SwiftWordsMainViewModel,
+    checkHighScore: KSuspendFunction1<Int, Unit>,
 ) {
     val gameUiState by viewModel.uiState.collectAsState()
     val isTimerRunning by remember { derivedStateOf { gameUiState.isTimerRunning } }
@@ -97,6 +99,7 @@ fun Game(
             isLoading = true
             coroutineScope.launch {
                 isCorrect = viewModel.checkAnswer({ textState }, wordList, mainUiState.setOfLettersForLevel)
+                checkHighScore(gameUiState.score)
                 isLoading = false
                 textState = ""  // Reset textState after isCorrect is updated
             }
@@ -209,7 +212,8 @@ fun Game(
                 CustomButton(
                     checkAnswer = checkAnswer,
                     colorCode = colorCode,
-                    isTimerRunning = { isTimerRunning })
+                    isTimerRunning = { isTimerRunning },
+                )
             }
         }
 
@@ -231,7 +235,7 @@ fun CustomButton(
     checkAnswer: () -> Unit,
     isTimerRunning: () -> Boolean,
     colorCode: Int,
-    isDarkTheme: Boolean = isSystemInDarkTheme()
+    isDarkTheme: Boolean = isSystemInDarkTheme(),
 ) {
     val textColor = if (isDarkTheme) {
         DataSource().colorPairs[colorCode].darkColor.brighten()
@@ -464,7 +468,7 @@ fun DisplayResults(
     restart: KSuspendFunction1<Long, Unit>,
     time: () -> Long,
     navigateUp: () -> Unit,
-    increaseScore: () -> Unit,
+    increaseScore: KFunction1<Int, Unit>,
     generateNewLetters: SwiftWordsMainViewModel
 ) {
     val coroutineScope = rememberCoroutineScope()
@@ -491,7 +495,7 @@ fun DisplayResults(
                 if (score >= 10) {
                     Text(
                         "Congrats!! you passed with score: $score",
-                        style = MaterialTheme.typography.titleMedium
+                        style = MaterialTheme.typography.titleSmall
                     )
                 } else {
                     Text(
@@ -520,7 +524,7 @@ fun DisplayResults(
                     TextButton(
                         onClick = {
                             coroutineScope.launch {
-                                increaseScore()
+                                increaseScore(score)
                                 generateNewLetters.generateNewRandomLetters()
                                 restart(time())
                             }

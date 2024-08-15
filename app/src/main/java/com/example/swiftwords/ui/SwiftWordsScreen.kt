@@ -202,6 +202,7 @@ fun SwiftWordsApp(
                             navigateUp = { navController.navigateUp() },
                             colorCode = data.color,
                             increaseScore = dataViewmodel::increaseCurrentLevel,
+                            checkHighScore = dataViewmodel::checkHighScore,
                             mainViewModel = viewModel
                         )
                     }
