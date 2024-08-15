@@ -100,7 +100,8 @@ fun BottomCard(
             textRes = R.string.levels,
             color = DataSource().colorPairs[color!!].darkColor,
             shadowColor = DataSource().colorPairs[color].darkColor.darken(),
-            onClick = onButtonCard
+            onClick = onButtonCard,
+            size = 155.dp
         )
     }
 }

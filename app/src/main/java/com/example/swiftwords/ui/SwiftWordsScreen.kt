@@ -4,8 +4,6 @@ import android.content.Context
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material3.Badge
-import androidx.compose.material3.BadgedBox
 import androidx.compose.material3.Icon
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
@@ -139,17 +137,12 @@ fun SwiftWordsApp(
                             selected = selectedItemIndex == index,
                             label = { Text(text = stringResource(item.title)) },
                             icon = {
-                                BadgedBox(badge = {
-                                    //this is for red notification
-                                    if (item.hasNews) {
-                                        Badge()
-                                    }
-                                }) {
-                                    Icon(
-                                        imageVector = if (index == selectedItemIndex) ImageVector.vectorResource(id = item.imageSelected) else ImageVector.vectorResource(id = item.imageUnSelected),
-                                        contentDescription = stringResource(id = item.title)
-                                    )
-                                }
+                                Icon(
+                                    imageVector = if (index == selectedItemIndex) ImageVector.vectorResource(
+                                        id = item.imageSelected
+                                    ) else ImageVector.vectorResource(id = item.imageUnSelected),
+                                    contentDescription = stringResource(id = item.title)
+                                )
                             }
                         )
                     }
@@ -190,7 +183,9 @@ fun SwiftWordsApp(
                         data.currentLevel,
                         data.streak,
                         data.highScore,
-                        data.nickname
+                        data.nickname,
+                        data.character,
+                        data.color
                     )
                 }
             }

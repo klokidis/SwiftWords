@@ -11,20 +11,17 @@ class DataSource {
         BarItem(
             R.string.levels,
             R.drawable.levels,
-            R.drawable.levels,
-            false
+            R.drawable.levels
         ),
         BarItem(
             R.string.modes,
             R.drawable.controller_filled,
-            R.drawable.controller,
-            true
+            R.drawable.controller
         ),
         BarItem(
             R.string.profile,
             R.drawable.profilr_filled,
-            R.drawable.profile,
-            false
+            R.drawable.profile
         )
     )
 

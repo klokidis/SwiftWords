@@ -3,19 +3,26 @@ package com.example.swiftwords.ui.profile
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.example.swiftwords.R
 import com.example.swiftwords.ui.theme.SwiftWordsTheme
 
@@ -24,9 +31,16 @@ fun ProfileScreen(
     currentLevel: Int,
     streak: Int,
     highScore: Int,
-    name: String
+    name: String,
+    character: Boolean,
+    color: Int
 ) {
     val scrollState = rememberScrollState()
+    val painter = if(character){
+        painterResource(id = R.drawable.cypher)
+    }else{
+        painterResource(id = R.drawable.sage)
+    }
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -36,12 +50,18 @@ fun ProfileScreen(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Image(
-            painter = painterResource(id = R.drawable.profile),
+            painter = painter,
             contentDescription = null,
+            contentScale = ContentScale.Crop,
+            modifier = Modifier
+                .size(160.dp)
+                .clip(CircleShape)
+                //.border(2.dp, DataSource().colorPairs[color].darkColor, CircleShape)//optional
         )
-        Spacer(modifier = Modifier.padding(7.dp))
+        Spacer(modifier = Modifier.padding(4.dp))
         Text(
-            text = name
+            text = name,
+            style = MaterialTheme.typography.titleSmall.copy(fontSize = 30.sp, letterSpacing = 1.sp)
         )
         Spacer(modifier = Modifier.padding(20.dp))
         Scores(currentLevel, highScore, streak)
@@ -50,25 +70,35 @@ fun ProfileScreen(
 
 @Composable
 fun Scores(currentLevel: Int, highScore: Int, streak: Int) {
-    Column(
+    Row(
         modifier = Modifier
-            .fillMaxWidth()
-            .padding(20.dp),
-        verticalArrangement = Arrangement.Top,
-        horizontalAlignment = Alignment.Start
+            .fillMaxWidth(),
+
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.Center
+    ) {
+        TextScores("Current level", currentLevel.toString())
+        Spacer(modifier = Modifier.padding(15.dp))
+        TextScores("High Score", highScore.toString())
+        Spacer(modifier = Modifier.padding(15.dp))
+        TextScores("daily streak", streak.toString())
+    }
+}
+
+@Composable
+fun TextScores(content: String,score: String){
+    Column(
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Text(
-            text = "Current level:  $currentLevel"
+            text = content,
+            style = MaterialTheme.typography.titleSmall.copy(fontSize = 16.sp)
         )
-        Spacer(modifier = Modifier.padding(5.dp))
         Text(
-            text = "High Score:  $highScore"
+            text = score,
+            style = MaterialTheme.typography.titleMedium.copy(fontSize = 20.sp)
         )
-        Spacer(modifier = Modifier.padding(5.dp))
-        Text(
-            text = "daily streak:  $streak"
-        )
-        Spacer(modifier = Modifier.padding(5.dp))
     }
 }
 /*
@@ -154,6 +184,6 @@ private suspend fun animateText(text: String, callback: (String) -> Unit) {
 @Composable
 fun ProfilePreview() {
     SwiftWordsTheme {
-        ProfileScreen(20, 1, 2,"")
+        ProfileScreen(20, 1, 2, "dimitris", true, 1)
     }
 }

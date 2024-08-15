@@ -261,7 +261,7 @@ fun Levels(
 fun ModesCards(
     imageRes: Int,
     textRes: Int,
-    size: Dp = 165.dp,
+    size: Dp = 170.dp,
     heightCustom: Dp = size,
     color: Color,
     textColor: Color = Color.White,
