@@ -27,14 +27,11 @@ fun ModesScreen(
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .padding(10.dp)
             .verticalScroll(scrollState),
         contentAlignment = Alignment.Center
     ) {
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
-            modifier = Modifier
-                .fillMaxSize()
         ) {
             Row(modifier = Modifier.fillMaxSize()) {
                 ModeCard(
