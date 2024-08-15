@@ -101,7 +101,7 @@ fun CurrentLevel(
         )
 
         Button(
-            onClick = onClick,
+            onClick = {},
             modifier = Modifier
                 .constrainAs(button) {
                     width = Dimension.value(size)
@@ -299,7 +299,7 @@ fun ModesCards(
         )
 
         Button(
-            onClick = onClick,
+            onClick = {},
             modifier = Modifier
                 .constrainAs(button) {
                     width = Dimension.value(widthCustom)
