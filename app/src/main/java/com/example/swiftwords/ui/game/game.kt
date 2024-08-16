@@ -537,7 +537,7 @@ fun DisplayResults(
                                 restart(time())
                             }
                         },
-                        enabled = score >= 0
+                        enabled = score >= 10
                     ) {
                         Text("Next Level")
                     }
