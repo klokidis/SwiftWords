@@ -76,6 +76,7 @@ fun Game(
     newTime: () -> Long,
     wordList: Set<String>,
     colorCode: Int,
+    isMode: Boolean,
     increaseScore: KFunction1<Int, Unit>,
     viewModel: GameViewModel = viewModel(factory = GameViewModelFactory(newTime)),
     navigateUp: () -> Unit,
@@ -92,13 +93,21 @@ fun Game(
     var isLoading by rememberSaveable { mutableStateOf(false) }
     var lastMessage by rememberSaveable { mutableStateOf("Please enter an answer.") }
     val scroll = rememberScrollState()
-
+    val setOfLetters = if (isMode) {
+        mainUiState.setOfLettersForMode
+    } else {
+        mainUiState.setOfLettersForLevel
+    }
     // Function to check the answer and update the UI state
     val checkAnswer: () -> Unit = remember { // remember so it doesn't composition
         {
             isLoading = true
             coroutineScope.launch {
-                isCorrect = viewModel.checkAnswer({ textState }, wordList, mainUiState.setOfLettersForLevel)
+                isCorrect = viewModel.checkAnswer(
+                    { textState },
+                    wordList,
+                    setOfLetters
+                )
                 checkHighScore(gameUiState.score)
                 isLoading = false
                 textState = ""  // Reset textState after isCorrect is updated
@@ -147,7 +156,7 @@ fun Game(
                 verticalArrangement = Arrangement.Center,
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                val listOfLetters = mainUiState.setOfLettersForLevel.toList()
+                val listOfLetters = setOfLetters.toList()
 
                 RowOfLetters(
                     listOfLetters[0],
@@ -367,7 +376,6 @@ fun LetterBox(
     // Compute shadowDp based on the theme
     val shadowDp = if (isDarkTheme) shadowDarkDp else shadowLightDp
     val color = if (isDarkTheme) boxColor.darkColor else boxColor.lightColor
-    val textColor = if (!isDarkTheme) boxColor.darkColor else boxColor.lightColor
     // Determine shadowColor based on correctness and theme
     val shadowColor = remember(isCorrect(), isDarkTheme) {
         when {
@@ -469,7 +477,7 @@ fun DisplayResults(
     time: () -> Long,
     navigateUp: () -> Unit,
     increaseScore: KFunction1<Int, Unit>,
-    generateNewLetters: SwiftWordsMainViewModel
+    viewModel: SwiftWordsMainViewModel
 ) {
     val coroutineScope = rememberCoroutineScope()
     Box(
@@ -525,11 +533,11 @@ fun DisplayResults(
                         onClick = {
                             coroutineScope.launch {
                                 increaseScore(score)
-                                generateNewLetters.generateNewRandomLetters()
+                                viewModel.generateRandomLettersForBoth()
                                 restart(time())
                             }
                         },
-                        enabled = score >=  10
+                        enabled = score >= 0
                     ) {
                         Text("Next Level")
                     }

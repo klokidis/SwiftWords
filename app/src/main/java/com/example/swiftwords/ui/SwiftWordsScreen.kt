@@ -160,6 +160,7 @@ fun SwiftWordsApp(
                     dataViewModel = dataViewmodel,
                     dataUiState = dataUiState
                 ) {
+                    viewModel.changeGameState(false)
                     viewModel.changeTime(40000L)
                     navController.navigate(SwiftWordsScreen.Game.name)
                 }
@@ -169,10 +170,12 @@ fun SwiftWordsApp(
                     color = dataUiState.userDetails?.color,
                     navigateFastGame = {
                         viewModel.changeTime(20000L)
+                        viewModel.changeGameState(true)
                         navController.navigate(SwiftWordsScreen.Game.name)
                     },
                     navigateLongGame = {
                         viewModel.changeTime(130000000L) //130000000L means no time
+                        viewModel.changeGameState(true)
                         navController.navigate(SwiftWordsScreen.Game.name)
                     }
                 )
@@ -199,7 +202,8 @@ fun SwiftWordsApp(
                             colorCode = data.color,
                             increaseScore = dataViewmodel::increaseCurrentLevel,
                             checkHighScore = dataViewmodel::checkHighScore,
-                            mainViewModel = viewModel
+                            mainViewModel = viewModel,
+                            isMode = mainUiState.isMode
                         )
                     }
                 } ?: run {

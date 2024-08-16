@@ -14,7 +14,8 @@ data class MainUiState(
     var setOfLettersForLevel: Set<Char> = setOf(),
     var setOfLettersForMode: Set<Char> = setOf(),
     val gameTime: Long = 40000L,
-    val currentLevel: Int = 11
+    val currentLevel: Int = 11,
+    val isMode: Boolean = false
 )
 
 class SwiftWordsMainViewModel : ViewModel() {
@@ -23,7 +24,8 @@ class SwiftWordsMainViewModel : ViewModel() {
     val uiState: StateFlow<MainUiState> = _uiState.asStateFlow()
 
     init {
-       generateNewRandomLetters()
+        generateRandomLettersForMode()
+        generateRandomLettersForLevel()
     }
 
     suspend fun loadWordsFromAssets(context: Context): Set<String> {
@@ -44,7 +46,40 @@ class SwiftWordsMainViewModel : ViewModel() {
         }
     }
 
-    fun generateNewRandomLetters(){
+    fun changeGameState(isMode: Boolean) {
+        _uiState.update { currentState ->
+            currentState.copy(
+                isMode = isMode,
+            )
+        }
+    }
+
+    private fun generateRandomLettersForMode() {
+        _uiState.update { currentState ->
+            currentState.copy(
+                setOfLettersForMode = generateNewRandomLetters()
+            )
+        }
+    }
+
+    private fun generateRandomLettersForLevel() {
+        _uiState.update { currentState ->
+            currentState.copy(
+                setOfLettersForLevel = generateNewRandomLetters()
+            )
+        }
+    }
+
+    fun generateRandomLettersForBoth() {
+        _uiState.update { currentState ->
+            currentState.copy(
+                setOfLettersForLevel = generateNewRandomLetters(),
+                setOfLettersForMode = generateNewRandomLetters()
+            )
+        }
+    }
+
+    private fun generateNewRandomLetters(): Set<Char> {
         val vowels = mutableListOf('A', 'E', 'I', 'O')
         val consonants = ('A'..'Z').filter { it !in vowels }.toMutableList()
 
@@ -71,11 +106,8 @@ class SwiftWordsMainViewModel : ViewModel() {
         }
 
         val combinedList = randomVowels + randomConsonants + randomOthers
-        _uiState.update { currentState ->
-            currentState.copy(
-                setOfLettersForLevel = combinedList.shuffled().toSet()
-            )
-        }
+
+        return combinedList.shuffled().toSet()
     }
 }
 
