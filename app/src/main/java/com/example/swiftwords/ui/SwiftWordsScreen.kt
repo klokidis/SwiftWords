@@ -208,7 +208,8 @@ fun SwiftWordsApp(
                                 mainUiState.setOfLettersForMode
                             } else {
                                 mainUiState.setOfLettersForLevel
-                            }
+                            },
+                            highScore = data.highScore
                         )
                     }
                 } ?: run {
