@@ -104,7 +104,9 @@ fun Game(
                     wordList,
                     setOfLetters
                 )
-                checkHighScore(gameUiState.score)
+                if(!isMode) {
+                    checkHighScore(gameUiState.score)
+                }
                 isLoading = false
                 textState = ""  // Reset textState after isCorrect is updated
             }

@@ -15,7 +15,7 @@ data class MainUiState(
     var setOfLettersForMode: Set<Char> = setOf(),
     val gameTime: Long = 40000L,
     val currentLevel: Int = 11,
-    val isMode: Boolean = false
+    val isMode: Boolean = false,
 )
 
 class SwiftWordsMainViewModel : ViewModel() {
