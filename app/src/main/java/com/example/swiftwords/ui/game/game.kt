@@ -91,7 +91,6 @@ fun Game(
 ) {
     val gameUiState by viewModel.uiState.collectAsState()
     val isTimerRunning by remember { derivedStateOf { gameUiState.isTimerRunning } }
-    val mainUiState by mainViewModel.uiState.collectAsState()
 
     val coroutineScope = rememberCoroutineScope()
     var textState by rememberSaveable { mutableStateOf("") }
@@ -100,7 +99,7 @@ fun Game(
     var lastMessage by rememberSaveable { mutableStateOf("Please enter an answer.") }
     val scroll = rememberScrollState()
     // Function to check the answer and update the UI state
-    val checkAnswer: () -> Unit = remember { // remember so it doesn't composition
+    val checkAnswer: () -> Unit = remember(setOfLetters) { // remember so it doesn't composition
         {
             isLoading = true
             coroutineScope.launch {
