@@ -192,14 +192,27 @@ fun TopBar(livesLeft: Int, streak: Int, color: Int, changeColorFun: (Int) -> Uni
         ) {
             MenuColorPicker(color, changeColorFun,colors)
             Spacer(modifier = Modifier.weight(1f))
-            Image(painter = painterResource(id = R.drawable.profilr_filled), contentDescription = "streak")
-            Text(text = streak.toString(), modifier = Modifier.padding(start = 8.dp))
+            Image(
+                painter = painterResource(id = R.drawable.streak),
+                contentDescription = "streak"
+            )
+            Text(
+                text = streak.toString(),
+                modifier = Modifier
+                    .padding(start = 3.dp, bottom = 3.dp),
+                style = MaterialTheme.typography.titleMedium.copy(fontSize = 23.sp)
+            )
             Spacer(modifier = Modifier.weight(1f))
             Image(
-                painter = painterResource(id = R.drawable.profile),
+                painter = painterResource(id = R.drawable.heart),
+                modifier = Modifier.size(30.dp),
                 contentDescription = "lives left"
             )
-            Text(text = livesLeft.toString(), modifier = Modifier.padding(start = 8.dp))
+            Text(
+                text = livesLeft.toString(),
+                modifier = Modifier.padding(start = 3.dp, bottom = 3.dp, end = 5.dp),
+                style = MaterialTheme.typography.titleMedium.copy(fontSize = 23.sp)
+            )
         }
     }
 }
