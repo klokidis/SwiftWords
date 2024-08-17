@@ -242,16 +242,19 @@ fun Levels(
             ),
             shape = CircleShape
         ) {
-            val icon = if (passed) {
-                painterResource(id = R.drawable.done_icon)
+            if (passed) {
+                Icon(
+                    painter = painterResource(id = R.drawable.done_icon),
+                    contentDescription = "",
+                    modifier = Modifier.size(40.dp)
+                )
             } else {
-                painterResource(id = R.drawable.outline_lock)
+                Icon(
+                    painter = painterResource(id = R.drawable.outline_lock),
+                    contentDescription = "",
+                    modifier = Modifier.size(30.dp)
+                )
             }
-            Icon(
-                painter = icon,
-                contentDescription = "",
-                modifier = Modifier.size(30.dp)
-            )
         }
     }
 }
