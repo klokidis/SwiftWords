@@ -1,7 +1,10 @@
 package com.example.swiftwords.ui.game
 
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -224,22 +227,21 @@ fun Game(
         }
 
     }
-    if (!isTimerRunning) {
-        DisplayResults(
-            gameUiState.score,
-            viewModel::restartGame,
-            newTime,
-            navigateUp,
-            increaseScore,
-            mainViewModel,
-            isMode,
-            highScore,
-            checkHighScore,
-            onClickAgain = {
-                isCorrect = null
-            }
-        )
-    }
+    DisplayResults(
+        gameUiState.score,
+        viewModel::restartGame,
+        newTime,
+        navigateUp,
+        increaseScore,
+        mainViewModel,
+        isMode,
+        highScore,
+        checkHighScore,
+        onClickAgain = {
+            isCorrect = null
+        },
+        isVisible = !isTimerRunning
+    )
 }
 
 @Composable
@@ -485,121 +487,133 @@ fun DisplayResults(
     highScore: Int,
     checkHighScore: suspend (Int) -> Unit,
     onClickAgain: () -> Unit,
+    isVisible: Boolean
 ) {
-    val coroutineScope = rememberCoroutineScope()
-    Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(Color.Black.copy(alpha = 0.4f)),
-    ) {
-        Card(
+    AnimatedVisibility(
+        visible = isVisible,
+        enter = fadeIn(
+            // Overwrites the initial value of alpha to 0.2f for fade in, 0 by default
+            initialAlpha = 0.2f
+        ),
+        exit = fadeOut(
+            // Overwrites the default animation with tween
+            animationSpec = tween(durationMillis = 200)
+        )) {
+        val coroutineScope = rememberCoroutineScope()
+        Box(
             modifier = Modifier
-                .align(Alignment.Center),
+                .fillMaxSize()
+                .background(Color.Black.copy(alpha = 0.4f)),
         ) {
-            if (score > highScore && !isMode) {
-                Column(
-                    modifier = Modifier
-                        .padding(10.dp),
-                    verticalArrangement = Arrangement.Center,
-                    horizontalAlignment = Alignment.CenterHorizontally
-                ) {
-                    Image(
-                        painter = painterResource(id = R.drawable.sage),
-                        modifier = Modifier.size(220.dp),
-                        contentDescription = null
-                    )
-                    Text(
-                        "New high score: $score",
-                        style = MaterialTheme.typography.titleSmall
-                    )
-                    TextButton(
-                        onClick = {
-                            coroutineScope.launch {
-                                checkHighScore(score)
-                            }
-                        },
+            Card(
+                modifier = Modifier
+                    .align(Alignment.Center),
+            ) {
+                if (score > highScore && !isMode) {
+                    Column(
+                        modifier = Modifier
+                            .padding(10.dp),
+                        verticalArrangement = Arrangement.Center,
+                        horizontalAlignment = Alignment.CenterHorizontally
                     ) {
-                        Text("Claim")
-                    }
-                }
-            } else {
-                Column(
-                    modifier = Modifier
-                        .padding(10.dp),
-                    verticalArrangement = Arrangement.Center,
-                    horizontalAlignment = Alignment.CenterHorizontally
-                ) {
-                    Image(
-                        painter = painterResource(id = R.drawable.sage),
-                        modifier = Modifier.size(220.dp),
-                        contentDescription = null
-                    )
-                    when {
-                        score >= 10 && !isMode -> {
-                            Text(
-                                "Congrats!! you passed with score: $score",
-                                style = MaterialTheme.typography.titleSmall
-                            )
-                        }
-
-                        !isMode -> {
-                            Text(
-                                "you failed :( with score: $score",
-                                style = MaterialTheme.typography.titleSmall
-                            )
-                        }
-
-                        else -> {
-                            Text(
-                                "nice try!! with score: $score",
-                                style = MaterialTheme.typography.titleSmall
-                            )
-                        }
-                    }
-
-                    Row(
-                        horizontalArrangement = Arrangement.Center,
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
+                        Image(
+                            painter = painterResource(id = R.drawable.sage),
+                            modifier = Modifier.size(220.dp),
+                            contentDescription = null
+                        )
+                        Text(
+                            "New high score: $score",
+                            style = MaterialTheme.typography.titleSmall
+                        )
                         TextButton(
-                            onClick = navigateUp,
-                        ) {
-                            Text("Exit")
-                        }
-                        if (isMode) {
-                            TextButton(
-                                onClick = {
-                                    onClickAgain()
-                                    coroutineScope.launch {
-                                        viewModel.generateRandomLettersForBoth()
-                                        restart(time())
-                                    }
+                            onClick = {
+                                coroutineScope.launch {
+                                    checkHighScore(score)
                                 }
-                            ) {
-                                Text("Play Again")
+                            },
+                        ) {
+                            Text("Claim")
+                        }
+                    }
+                } else {
+                    Column(
+                        modifier = Modifier
+                            .padding(10.dp),
+                        verticalArrangement = Arrangement.Center,
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
+                        Image(
+                            painter = painterResource(id = R.drawable.sage),
+                            modifier = Modifier.size(220.dp),
+                            contentDescription = null
+                        )
+                        when {
+                            score >= 10 && !isMode -> {
+                                Text(
+                                    "Congrats!! you passed with score: $score",
+                                    style = MaterialTheme.typography.titleSmall
+                                )
                             }
-                        } else {
-                            TextButton(
-                                onClick = {
-                                    onClickAgain()
-                                    coroutineScope.launch {
-                                        restart(time())
-                                    }
-                                },
-                            ) {
-                                Text("Try Again (-1 life)")
+
+                            !isMode -> {
+                                Text(
+                                    "you failed :( with score: $score",
+                                    style = MaterialTheme.typography.titleSmall
+                                )
                             }
+
+                            else -> {
+                                Text(
+                                    "nice try!! with score: $score",
+                                    style = MaterialTheme.typography.titleSmall
+                                )
+                            }
+                        }
+
+                        Row(
+                            horizontalArrangement = Arrangement.Center,
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
                             TextButton(
-                                onClick = {
-                                    coroutineScope.launch {
-                                        increaseScore(score)
-                                        viewModel.generateRandomLettersForBoth()
-                                        restart(time())
-                                    }
-                                },
-                                enabled = score >= 10
+                                onClick = navigateUp,
                             ) {
-                                Text("Next Level")
+                                Text("Exit")
+                            }
+                            if (isMode) {
+                                TextButton(
+                                    onClick = {
+                                        onClickAgain()
+                                        coroutineScope.launch {
+                                            viewModel.generateRandomLettersForBoth()
+                                            restart(time())
+                                        }
+                                    }
+                                ) {
+                                    Text("Play Again")
+                                }
+                            } else {
+                                TextButton(
+                                    onClick = {
+                                        onClickAgain()
+                                        coroutineScope.launch {
+                                            restart(time())
+                                        }
+                                    },
+                                ) {
+                                    Text("Try Again (-1 life)")
+                                }
+                                TextButton(
+                                    onClick = {
+                                        coroutineScope.launch {
+                                            increaseScore(score)
+                                            viewModel.generateRandomLettersForBoth()
+                                            restart(time())
+                                        }
+                                    },
+                                    enabled = score >= 10
+                                ) {
+                                    Text("Next Level")
+                                }
                             }
                         }
                     }
