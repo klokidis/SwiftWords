@@ -169,11 +169,13 @@ fun SwiftWordsApp(
                 ModesScreen(
                     color = dataUiState.userDetails?.color,
                     navigateFastGame = {
+                        viewModel.generateRandomLettersForMode()
                         viewModel.changeTime(20000L)
                         viewModel.changeGameState(true)
                         navController.navigate(SwiftWordsScreen.Game.name)
                     },
                     navigateLongGame = {
+                        viewModel.generateRandomLettersForMode()
                         viewModel.changeTime(130000000L) //130000000L means no time
                         viewModel.changeGameState(true)
                         navController.navigate(SwiftWordsScreen.Game.name)

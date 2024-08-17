@@ -53,7 +53,7 @@ class SwiftWordsMainViewModel : ViewModel() {
         }
     }
 
-    private fun generateRandomLettersForMode() {
+    fun generateRandomLettersForMode() {
         _uiState.update { currentState ->
             currentState.copy(
                 setOfLettersForMode = generateNewRandomLetters()
