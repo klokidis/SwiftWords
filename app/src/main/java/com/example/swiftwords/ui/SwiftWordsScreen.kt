@@ -203,7 +203,12 @@ fun SwiftWordsApp(
                             increaseScore = dataViewmodel::increaseCurrentLevel,
                             checkHighScore = dataViewmodel::checkHighScore,
                             mainViewModel = viewModel,
-                            isMode = mainUiState.isMode
+                            isMode = mainUiState.isMode,
+                            setOfLetters = if (mainUiState.isMode) {
+                                mainUiState.setOfLettersForMode
+                            } else {
+                                mainUiState.setOfLettersForLevel
+                            }
                         )
                     }
                 } ?: run {

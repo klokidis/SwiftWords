@@ -82,6 +82,7 @@ fun Game(
     navigateUp: () -> Unit,
     mainViewModel: SwiftWordsMainViewModel,
     checkHighScore: KSuspendFunction1<Int, Unit>,
+    setOfLetters: Set<Char>,
 ) {
     val gameUiState by viewModel.uiState.collectAsState()
     val isTimerRunning by remember { derivedStateOf { gameUiState.isTimerRunning } }
@@ -93,11 +94,6 @@ fun Game(
     var isLoading by rememberSaveable { mutableStateOf(false) }
     var lastMessage by rememberSaveable { mutableStateOf("Please enter an answer.") }
     val scroll = rememberScrollState()
-    val setOfLetters = if (isMode) {
-        mainUiState.setOfLettersForMode
-    } else {
-        mainUiState.setOfLettersForLevel
-    }
     // Function to check the answer and update the UI state
     val checkAnswer: () -> Unit = remember { // remember so it doesn't composition
         {
@@ -234,7 +230,8 @@ fun Game(
             newTime,
             navigateUp,
             increaseScore,
-            mainViewModel
+            mainViewModel,
+            isMode
         )
     }
 }
@@ -477,7 +474,8 @@ fun DisplayResults(
     time: () -> Long,
     navigateUp: () -> Unit,
     increaseScore: KFunction1<Int, Unit>,
-    viewModel: SwiftWordsMainViewModel
+    viewModel: SwiftWordsMainViewModel,
+    isMode: Boolean
 ) {
     val coroutineScope = rememberCoroutineScope()
     Box(
@@ -500,17 +498,27 @@ fun DisplayResults(
                     modifier = Modifier.size(220.dp),
                     contentDescription = null
                 )
-                if (score >= 10) {
-                    Text(
-                        "Congrats!! you passed with score: $score",
-                        style = MaterialTheme.typography.titleSmall
-                    )
-                } else {
-                    Text(
-                        "you failed :( with score: $score",
-                        style = MaterialTheme.typography.titleSmall
-                    )
+                when {
+                    score >= 10 && !isMode -> {
+                        Text(
+                            "Congrats!! you passed with score: $score",
+                            style = MaterialTheme.typography.titleSmall
+                        )
+                    }
+                    !isMode -> {
+                        Text(
+                            "you failed :( with score: $score",
+                            style = MaterialTheme.typography.titleSmall
+                        )
+                    }
+                    else -> {
+                        Text(
+                            "nice try!! with score: $score",
+                            style = MaterialTheme.typography.titleSmall
+                        )
+                    }
                 }
+
                 Row(
                     horizontalArrangement = Arrangement.Center,
                     verticalAlignment = Alignment.CenterVertically
@@ -520,26 +528,39 @@ fun DisplayResults(
                     ) {
                         Text("Exit")
                     }
-                    TextButton(
-                        onClick = {
-                            coroutineScope.launch {
-                                restart(time())
+                    if (isMode) {
+                        TextButton(
+                            onClick = {
+                                coroutineScope.launch {
+                                    viewModel.generateRandomLettersForBoth()
+                                    restart(time())
+                                }
                             }
-                        },
-                    ) {
-                        Text("Try Again (-1 life)")
-                    }
-                    TextButton(
-                        onClick = {
-                            coroutineScope.launch {
-                                increaseScore(score)
-                                viewModel.generateRandomLettersForBoth()
-                                restart(time())
-                            }
-                        },
-                        enabled = score >= 10
-                    ) {
-                        Text("Next Level")
+                        ) {
+                            Text("Play Again")
+                        }
+                    } else {
+                        TextButton(
+                            onClick = {
+                                coroutineScope.launch {
+                                    restart(time())
+                                }
+                            },
+                        ) {
+                            Text("Try Again (-1 life)")
+                        }
+                        TextButton(
+                            onClick = {
+                                coroutineScope.launch {
+                                    increaseScore(score)
+                                    viewModel.generateRandomLettersForBoth()
+                                    restart(time())
+                                }
+                            },
+                            enabled = score >= 10
+                        ) {
+                            Text("Next Level")
+                        }
                     }
                 }
             }

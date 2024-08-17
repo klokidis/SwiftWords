@@ -24,8 +24,7 @@ class SwiftWordsMainViewModel : ViewModel() {
     val uiState: StateFlow<MainUiState> = _uiState.asStateFlow()
 
     init {
-        generateRandomLettersForMode()
-        generateRandomLettersForLevel()
+        generateRandomLettersForBoth()
     }
 
     suspend fun loadWordsFromAssets(context: Context): Set<String> {
