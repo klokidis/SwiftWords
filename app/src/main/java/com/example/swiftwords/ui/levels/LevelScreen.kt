@@ -194,6 +194,7 @@ fun TopBar(livesLeft: Int, streak: Int, color: Int, changeColorFun: (Int) -> Uni
             Spacer(modifier = Modifier.weight(1f))
             Image(
                 painter = painterResource(id = R.drawable.streak),
+                modifier = Modifier.size(30.dp),
                 contentDescription = "streak"
             )
             Text(
@@ -205,7 +206,7 @@ fun TopBar(livesLeft: Int, streak: Int, color: Int, changeColorFun: (Int) -> Uni
             Spacer(modifier = Modifier.weight(1f))
             Image(
                 painter = painterResource(id = R.drawable.heart),
-                modifier = Modifier.size(30.dp),
+                modifier = Modifier.size(28.dp),
                 contentDescription = "lives left"
             )
             Text(
