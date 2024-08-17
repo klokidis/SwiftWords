@@ -78,7 +78,7 @@ fun ModeCard(
     color: Int?,
     modifier: Modifier = Modifier
 ) {
-    Box(modifier = modifier.padding(start = 4.dp, end = 4.dp, top = 15.dp)) {
+    Box(modifier = modifier.padding(start = 4.dp, end = 4.dp, top = 16.dp)) {
         ModesCards(
             imageRes = imageRes,
             textRes = textRes,
@@ -94,14 +94,14 @@ fun BottomCard(
     onButtonCard: () -> Unit,
     color: Int?
 ) {
-    Box(modifier = Modifier.padding(start = 10.dp, end = 10.dp, top = 15.dp, bottom = 10.dp)) {
+    Box(modifier = Modifier.padding(start = 10.dp, end = 10.dp, top = 16.dp, bottom = 10.dp)) {
         ModesCards(
             imageRes = R.drawable.profile,
             textRes = R.string.levels,
             color = DataSource().colorPairs[color!!].darkColor,
             shadowColor = DataSource().colorPairs[color].darkColor.darken(),
             onClick = onButtonCard,
-            size = 155.dp
+            size = 150.dp
         )
     }
 }
