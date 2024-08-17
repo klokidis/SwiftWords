@@ -509,7 +509,7 @@ fun DisplayResults(
                         contentDescription = null
                     )
                     Text(
-                        "New high score!!!!: $score",
+                        "New high score: $score",
                         style = MaterialTheme.typography.titleSmall
                     )
                     TextButton(
