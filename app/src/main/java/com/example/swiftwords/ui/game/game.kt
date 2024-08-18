@@ -58,7 +58,6 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.ui.draw.scale
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.onSizeChanged
@@ -74,6 +73,7 @@ import com.example.swiftwords.R
 import com.example.swiftwords.data.ColorPair
 import com.example.swiftwords.data.DataSource
 import com.example.swiftwords.ui.SwiftWordsMainViewModel
+import com.example.swiftwords.ui.levels.KeyCards
 import com.example.swiftwords.ui.levels.brighten
 import com.example.swiftwords.ui.levels.darken
 import kotlinx.coroutines.launch
@@ -250,8 +250,10 @@ fun Game(
                     imageVector = ImageVector.vectorResource(R.drawable.keyboard_24px),
                     contentDescription = "keyboard",
                 )
-
                 Spacer(modifier = Modifier.weight(1f))
+            }
+            if (checked()) {
+                CustomKeyboard(listOfLetters = setOfLetters.toList(), colorCode)
             }
         }
 
@@ -271,6 +273,64 @@ fun Game(
         },
         isVisible = !isTimerRunning
     )
+}
+
+@Composable
+fun CustomKeyboard(
+    listOfLetters: List<Char>,
+    colorCode: Int,
+) {
+    Column(
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        Row {
+            CustomLetterClick(listOfLetters[0], colorCode, onLetterClicked = {})
+            Spacer(modifier = Modifier.size(11.dp))
+            CustomLetterClick(listOfLetters[1], colorCode, onLetterClicked = {})
+            Spacer(modifier = Modifier.size(11.dp))
+            CustomLetterClick(listOfLetters[2], colorCode, onLetterClicked = {})
+            Spacer(modifier = Modifier.size(11.dp))
+            CustomLetterClick(listOfLetters[2], colorCode, onLetterClicked = {})
+            Spacer(modifier = Modifier.size(11.dp))
+            CustomLetterClick(
+                listOfLetters[2],
+                image = R.drawable.keyboard_24px,
+                colorCode = colorCode,
+                onLetterClicked = {}
+            )
+        }
+        Row {
+            CustomLetterClick(listOfLetters[6], colorCode, onLetterClicked = {})
+            Spacer(modifier = Modifier.size(9.dp))
+            CustomLetterClick(listOfLetters[3], colorCode, onLetterClicked = {})
+            Spacer(modifier = Modifier.size(9.dp))
+            CustomLetterClick(listOfLetters[4], colorCode, onLetterClicked = {})
+            Spacer(modifier = Modifier.size(9.dp))
+            CustomLetterClick(listOfLetters[5], colorCode, onLetterClicked = {})
+            Spacer(modifier = Modifier.size(9.dp))
+            CustomLetterClick(listOfLetters[8], colorCode, onLetterClicked = {})
+        }
+    }
+}
+
+@Composable
+fun CustomLetterClick(
+    letter: Char,
+    colorCode: Int,
+    boxColor: ColorPair = DataSource().colorPairs[colorCode],
+    onLetterClicked: () -> Unit,
+    image: Int? = null
+) {
+    Box(modifier = Modifier.padding(top = 20.dp)) {
+        KeyCards(
+            thisLetter = letter,
+            color = boxColor.darkColor,
+            shadowColor = boxColor.darkColor.darken(),
+            onClick = onLetterClicked,
+            imageRes = image
+        )
+    }
 }
 
 @Composable

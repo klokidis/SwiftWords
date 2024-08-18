@@ -360,6 +360,122 @@ fun ModesCards(
     }
 }
 
+@OptIn(ExperimentalComposeUiApi::class)
+@Composable
+fun KeyCards(
+    thisLetter: Char,
+    imageRes: Int? = null,
+    color: Color,
+    textColor: Color = Color.White,
+    shadowColor: Color,
+    onClick: () -> Unit
+) {
+    val cornerRadius = 16.dp // Adjust the corner radius as needed
+
+    ConstraintLayout {
+        val (back, button) = createRefs()
+        val customWidth = if(imageRes == null){
+             60.dp
+        }else{
+            70.dp
+        }
+
+        var animatedY by remember { mutableStateOf(0.dp) }
+        val animTranslationY by animateDpAsState(
+            targetValue = animatedY,
+            animationSpec = tween(50),
+            label = ""
+        )
+        var buttonSize by remember { mutableStateOf(IntSize.Zero) }
+        val interactionSource = remember { MutableInteractionSource() }
+
+        Spacer(
+            modifier = Modifier
+                .constrainAs(back) {
+                    width = Dimension.fillToConstraints
+                    height = Dimension.fillToConstraints
+
+                    start.linkTo(button.start)
+                    end.linkTo(button.end)
+                    top.linkTo(button.top)
+                    bottom.linkTo(button.bottom)
+
+                    translationY = 4.dp
+                }
+                .clip(RoundedCornerShape(cornerRadius))
+                .background(shadowColor)
+        )
+
+        Button(
+            onClick = {},
+            modifier = Modifier
+                .fillMaxWidth()
+                .constrainAs(button) {
+                    top.linkTo(parent.top)
+                    height = Dimension.value(60.dp)
+                    width = Dimension.value(customWidth)
+
+                    translationY = animTranslationY
+                }
+                .clip(RoundedCornerShape(cornerRadius)) // Ensure the button is clipped to the rounded rectangle shape
+                .indication(
+                    interactionSource = interactionSource,
+                    indication = null
+                )
+                .onGloballyPositioned {
+                    buttonSize = it.size
+                }
+                .pointerInteropFilter {
+                    when (it.action) {
+                        MotionEvent.ACTION_DOWN -> {
+                            animatedY = 4.dp
+                        }
+
+                        MotionEvent.ACTION_UP -> {
+                            animatedY = 0.dp
+                            onClick()
+                        }
+
+                        MotionEvent.ACTION_CANCEL -> {
+                            animatedY = 0.dp
+                        }
+                    }
+                    true
+                },
+            contentPadding = PaddingValues(0.dp),
+            colors = ButtonDefaults.buttonColors(
+                containerColor = color,
+                contentColor = textColor
+            ),
+            shape = RoundedCornerShape(cornerRadius) // Apply the rounded rectangle shape directly to the button
+        ) {
+            Column(
+                verticalArrangement = Arrangement.Center,
+                horizontalAlignment = Alignment.CenterHorizontally,
+                modifier = Modifier
+                    .fillMaxSize()
+            ) {
+                if(imageRes==null) {
+                    Text(
+                        text = thisLetter.toString(),
+                        style = MaterialTheme.typography.titleSmall.copy(
+                            fontSize = 20.sp,
+                            letterSpacing = 1.sp
+                        )
+                    )
+                }else{
+                    Image(
+                        painter = painterResource(imageRes),
+                        contentDescription = null,
+                        modifier = Modifier.size(60.dp)
+                    )
+                }
+            }
+        }
+    }
+}
+
+
 fun Color.darken(factor: Float = 0.7f): Color {
     return Color(
         red = red * factor,
