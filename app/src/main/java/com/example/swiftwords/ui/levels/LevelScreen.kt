@@ -195,13 +195,13 @@ fun TopBar(livesLeft: Int, streak: Int, color: Int, changeColorFun: (Int) -> Uni
             if(streak == 0){
                 Image(
                     painter = painterResource(id = R.drawable.fire_off),
-                    modifier = Modifier.size(43.dp),
+                    modifier = Modifier.size(30.dp),
                     contentDescription = "streak"
                 )
             }else{
                 Image(
                     painter = painterResource(id = R.drawable.fire_on),
-                    modifier = Modifier.size(43.dp),
+                    modifier = Modifier.size(30.dp),
                     contentDescription = "streak"
                 )
             }
@@ -244,9 +244,9 @@ fun MenuColorPicker(color: Int, changeColorFun: (Int) -> Unit, colors: List<Colo
                         .size(30.dp),
                     imageVector =
                     if (isExpanded) {
-                        ImageVector.vectorResource(R.drawable.palette_filled)
+                        ImageVector.vectorResource(R.drawable.format_paint_24px)
                     } else {
-                        ImageVector.vectorResource(R.drawable.palette)
+                        ImageVector.vectorResource(R.drawable.format_paint_24px_noexp)
                     },
                     contentDescription = stringResource(R.string.pickTheme)
                 )
