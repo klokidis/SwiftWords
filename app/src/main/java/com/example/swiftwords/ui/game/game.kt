@@ -49,6 +49,8 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
+import androidx.compose.material3.Checkbox
+import androidx.compose.material3.CheckboxDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.TextButton
@@ -56,10 +58,13 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.ui.draw.scale
 import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.IntSize
@@ -72,6 +77,7 @@ import com.example.swiftwords.ui.SwiftWordsMainViewModel
 import com.example.swiftwords.ui.levels.brighten
 import com.example.swiftwords.ui.levels.darken
 import kotlinx.coroutines.launch
+import kotlin.reflect.KFunction0
 import kotlin.reflect.KFunction1
 import kotlin.reflect.KSuspendFunction1
 
@@ -88,17 +94,17 @@ fun Game(
     checkHighScore: KSuspendFunction1<Int, Unit>,
     setOfLetters: Set<Char>,
     highScore: Int,
+    checked: () -> Boolean,
+    changeChecked: KFunction0<Unit>
 ) {
     val gameUiState by viewModel.uiState.collectAsState()
     val isTimerRunning by remember { derivedStateOf { gameUiState.isTimerRunning } }
-
     val coroutineScope = rememberCoroutineScope()
     var textState by rememberSaveable { mutableStateOf("") }
     var isCorrect by rememberSaveable { mutableStateOf<Boolean?>(null) }
     var isLoading by rememberSaveable { mutableStateOf(false) }
     var lastMessage by rememberSaveable { mutableStateOf("Please enter an answer.") }
     val scroll = rememberScrollState()
-    // Function to check the answer and update the UI state
     val checkAnswer: () -> Unit = remember(setOfLetters) { // remember so it doesn't composition
         {
             isLoading = true
@@ -223,24 +229,48 @@ fun Game(
                     isTimerRunning = { isTimerRunning },
                 )
             }
+            Row(
+                modifier = Modifier
+                    .padding(start = 37.dp)
+                    .fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.Center
+
+            ) {
+                Checkbox(
+                    checked = checked(),
+                    onCheckedChange = {
+                        changeChecked()
+                    },
+                    colors = CheckboxDefaults.colors(
+                        checkedColor = DataSource().colorPairs[colorCode].darkColor,
+                    )
+                )
+                Icon(
+                    imageVector = ImageVector.vectorResource(R.drawable.keyboard_24px),
+                    contentDescription = "keyboard",
+                )
+
+                Spacer(modifier = Modifier.weight(1f))
+            }
         }
 
     }
-        DisplayResults(
-            { gameUiState.score },
-            viewModel::restartGame,
-            newTime,
-            navigateUp,
-            increaseScore,
-            mainViewModel,
-            isMode,
-            highScore,
-            checkHighScore,
-            onClickAgain = {
-                isCorrect = null
-            },
-            isVisible = !isTimerRunning
-        )
+    DisplayResults(
+        { gameUiState.score },
+        viewModel::restartGame,
+        newTime,
+        navigateUp,
+        increaseScore,
+        mainViewModel,
+        isMode,
+        highScore,
+        checkHighScore,
+        onClickAgain = {
+            isCorrect = null
+        },
+        isVisible = !isTimerRunning
+    )
 }
 
 @Composable
@@ -497,7 +527,8 @@ fun DisplayResults(
         exit = fadeOut(
             // Overwrites the default animation with tween
             animationSpec = tween(durationMillis = 200)
-        )) {
+        )
+    ) {
         val coroutineScope = rememberCoroutineScope()
         Box(
             modifier = Modifier
@@ -521,7 +552,7 @@ fun DisplayResults(
                             contentDescription = null
                         )
                         Text(
-                            "New high score: "+ score().toString(),
+                            "New high score: " + score().toString(),
                             style = MaterialTheme.typography.titleSmall
                         )
                         TextButton(
@@ -549,7 +580,7 @@ fun DisplayResults(
                         when {
                             score() >= 10 && !isMode -> {
                                 Text(
-                                    "Congrats!! you passed with score: "+ score().toString(),
+                                    "Congrats!! you passed with score: " + score().toString(),
                                     style = MaterialTheme.typography.titleSmall
                                 )
                             }

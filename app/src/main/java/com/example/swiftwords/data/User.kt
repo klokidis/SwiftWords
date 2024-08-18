@@ -18,5 +18,6 @@ data class User(
     val setOfLetters: String, //to-do
     val color : Int,
     val starterLevel: Int,
-    val endingLevel: Int
+    val endingLevel: Int,
+    val checked: Boolean
 )

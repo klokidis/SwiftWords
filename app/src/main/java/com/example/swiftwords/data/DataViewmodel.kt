@@ -23,6 +23,7 @@ data class UserDetails(
     val color: Int = 0,
     val starterLevel: Int = 1,
     val endingLevel: Int = 20,
+    val checked: Boolean = false,
 )
 
 fun UserDetails.toUser(): User = User(
@@ -38,8 +39,8 @@ fun UserDetails.toUser(): User = User(
     setOfLetters = setOfLetters,
     color = color,
     starterLevel = starterLevel,
-    endingLevel = endingLevel
-
+    endingLevel = endingLevel,
+    checked = checked
 )
 
 
@@ -59,7 +60,8 @@ fun User.toUserDetails(): UserDetails = UserDetails(
     lifeDate = lifeDate,
     color = color,
     starterLevel = starterLevel,
-    endingLevel = endingLevel
+    endingLevel = endingLevel,
+    checked = checked
 )
 
 class DataViewmodel(private val userRepository: UserRepository) : ViewModel() {

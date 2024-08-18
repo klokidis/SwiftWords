@@ -25,6 +25,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.vectorResource
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavGraph.Companion.findStartDestination
@@ -48,12 +49,12 @@ enum class SwiftWordsScreen {
 
 @Composable
 fun SwiftWordsApp(
-    context: Context,
     dataUiState: ItemDetailsUiState,
     dataViewmodel: GetDataViewModel,
     viewModel: SwiftWordsMainViewModel = viewModel(factory = AppViewModelProvider.Factory),
     navController: NavHostController = rememberNavController()
 ) {
+    val context = LocalContext.current // Get context from LocalContext
     val backStackEntry by navController.currentBackStackEntryAsState()
     val mainUiState by viewModel.uiState.collectAsState()
     val currentScreen = SwiftWordsScreen.valueOf(
@@ -211,7 +212,9 @@ fun SwiftWordsApp(
                             } else {
                                 mainUiState.setOfLettersForLevel
                             },
-                            highScore = data.highScore
+                            highScore = data.highScore,
+                            checked = { data.checked },
+                            changeChecked = dataViewmodel::updateChecked
                         )
                     }
                 } ?: run {

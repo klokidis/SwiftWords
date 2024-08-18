@@ -43,6 +43,15 @@ class GetDataViewModel(private val userRepository: UserRepository) : ViewModel()
         }
     }
 
+    fun updateChecked() {
+        viewModelScope.launch {
+            val currentUser = getDataUiState.value.userDetails?.toUser()
+            if (currentUser != null) {
+                userRepository.updateUser(currentUser.copy(checked = !currentUser.checked))
+            }
+        }
+    }
+
     fun increaseCurrentLevel(score: Int) {
         viewModelScope.launch {
             val currentUser = getDataUiState.value.userDetails?.toUser()

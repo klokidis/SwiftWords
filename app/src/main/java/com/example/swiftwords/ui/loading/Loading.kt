@@ -1,13 +1,10 @@
 package com.example.swiftwords.ui.loading
 
-import android.content.Context
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -18,26 +15,29 @@ import com.example.swiftwords.ui.choose.ChooseCharacter
 
 @Composable
 fun Loading(
-    context: Context,
     viewModel: GetDataViewModel = viewModel(factory = AppViewModelProvider.Factory)
 ) {
     val dataUiState by viewModel.getDataUiState.collectAsState()
 
+    // Extract the relevant UI state
+    val isLoading = remember(dataUiState.isLoading) { dataUiState.isLoading }
+    val userId = remember(dataUiState.userDetails?.id) { dataUiState.userDetails?.id }
+
+    // Handle different states based on extracted values
     when {
-        dataUiState.isLoading -> {
-            Column(
-                modifier = Modifier.fillMaxSize(),
-                verticalArrangement = Arrangement.Center,
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                Text("Loading...")
-            }
-        }
-        dataUiState.userDetails?.id == 1 -> {
-            ChooseCharacter()
-        }
-        else -> {
-            SwiftWordsApp(context,dataUiState,viewModel)
-        }
+        isLoading -> LoadingView()
+        userId == 2 -> ChooseCharacter()
+        else -> SwiftWordsApp(dataUiState, viewModel)
+    }
+}
+
+@Composable
+fun LoadingView() {
+    Column(
+        modifier = Modifier.fillMaxSize(),
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        Text("Loading...")
     }
 }
