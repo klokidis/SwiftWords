@@ -226,21 +226,21 @@ fun Game(
         }
 
     }
-    DisplayResults(
-        gameUiState.score,
-        viewModel::restartGame,
-        newTime,
-        navigateUp,
-        increaseScore,
-        mainViewModel,
-        isMode,
-        highScore,
-        checkHighScore,
-        onClickAgain = {
-            isCorrect = null
-        },
-        isVisible = !isTimerRunning
-    )
+        DisplayResults(
+            { gameUiState.score },
+            viewModel::restartGame,
+            newTime,
+            navigateUp,
+            increaseScore,
+            mainViewModel,
+            isMode,
+            highScore,
+            checkHighScore,
+            onClickAgain = {
+                isCorrect = null
+            },
+            isVisible = !isTimerRunning
+        )
 }
 
 @Composable
@@ -476,7 +476,7 @@ fun Timer(
 
 @Composable
 fun DisplayResults(
-    score: Int,
+    score: () -> Int,
     restart: KSuspendFunction1<Long, Unit>,
     time: () -> Long,
     navigateUp: () -> Unit,
@@ -508,7 +508,7 @@ fun DisplayResults(
                 modifier = Modifier
                     .align(Alignment.Center),
             ) {
-                if (score > highScore && !isMode) {
+                if (score() > highScore && !isMode) {
                     Column(
                         modifier = Modifier
                             .padding(10.dp),
@@ -521,13 +521,13 @@ fun DisplayResults(
                             contentDescription = null
                         )
                         Text(
-                            "New high score: $score",
+                            "New high score: "+ score().toString(),
                             style = MaterialTheme.typography.titleSmall
                         )
                         TextButton(
                             onClick = {
                                 coroutineScope.launch {
-                                    checkHighScore(score)
+                                    checkHighScore(score())
                                 }
                             },
                         ) {
@@ -547,23 +547,23 @@ fun DisplayResults(
                             contentDescription = null
                         )
                         when {
-                            score >= 10 && !isMode -> {
+                            score() >= 10 && !isMode -> {
                                 Text(
-                                    "Congrats!! you passed with score: $score",
+                                    "Congrats!! you passed with score: "+ score().toString(),
                                     style = MaterialTheme.typography.titleSmall
                                 )
                             }
 
                             !isMode -> {
                                 Text(
-                                    "you failed :( with score: $score",
+                                    "you failed :( with score: " + score().toString(),
                                     style = MaterialTheme.typography.titleSmall
                                 )
                             }
 
                             else -> {
                                 Text(
-                                    "nice try!! with score: $score",
+                                    "nice try!! with score: " + score().toString(),
                                     style = MaterialTheme.typography.titleSmall
                                 )
                             }
@@ -604,12 +604,12 @@ fun DisplayResults(
                                 TextButton(
                                     onClick = {
                                         coroutineScope.launch {
-                                            increaseScore(score)
+                                            increaseScore(score())
                                             viewModel.generateRandomLettersForBoth()
                                             restart(time())
                                         }
                                     },
-                                    enabled = score >= 10
+                                    enabled = score() >= 10
                                 ) {
                                     Text("Next Level")
                                 }
