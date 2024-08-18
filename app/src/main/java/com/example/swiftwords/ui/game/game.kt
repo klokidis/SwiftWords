@@ -253,7 +253,9 @@ fun Game(
                 Spacer(modifier = Modifier.weight(1f))
             }
             if (checked()) {
-                CustomKeyboard(listOfLetters = setOfLetters.toList(), colorCode)
+                CustomKeyboard(listOfLetters = setOfLetters.toList(), colorCode, onClick = { newText -> textState =
+                    newText.toString()
+                },word = textState)
             }
         }
 
@@ -279,44 +281,48 @@ fun Game(
 fun CustomKeyboard(
     listOfLetters: List<Char>,
     colorCode: Int,
+    onClick: (Any?) -> Unit,
+    word: String
 ) {
     Column(
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Row {
-            CustomLetterClick(listOfLetters[0], colorCode, onLetterClicked = {})
+            CustomLetterClick(listOfLetters[0], colorCode, onLetterClicked = onClick, word = word)
             Spacer(modifier = Modifier.size(10.dp))
-            CustomLetterClick(listOfLetters[1], colorCode, onLetterClicked = {})
+            CustomLetterClick(listOfLetters[1], colorCode, onLetterClicked = onClick, word = word)
             Spacer(modifier = Modifier.size(10.dp))
-            CustomLetterClick(listOfLetters[2], colorCode, onLetterClicked = {})
+            CustomLetterClick(listOfLetters[2], colorCode, onLetterClicked = onClick, word = word)
             Spacer(modifier = Modifier.size(10.dp))
             CustomLetterClick(
                 listOfLetters[2],
                 image = R.drawable.backspace_24px,
                 colorCode = colorCode,
-                onLetterClicked = {}
+                onLetterClicked = {},
+                word = word
             )
         }
         Row {
-            CustomLetterClick(listOfLetters[3], colorCode, onLetterClicked = {})
+            CustomLetterClick(listOfLetters[3], colorCode, onLetterClicked = onClick, word = word)
             Spacer(modifier = Modifier.size(10.dp))
-            CustomLetterClick(listOfLetters[4], colorCode, onLetterClicked = {})
+            CustomLetterClick(listOfLetters[4], colorCode, onLetterClicked = onClick, word = word)
             Spacer(modifier = Modifier.size(10.dp))
-            CustomLetterClick(listOfLetters[5], colorCode, onLetterClicked = {})
+            CustomLetterClick(listOfLetters[5], colorCode, onLetterClicked = onClick, word = word)
         }
         Row {
-            CustomLetterClick(listOfLetters[6], colorCode, onLetterClicked = {})
+            CustomLetterClick(listOfLetters[6], colorCode, onLetterClicked = onClick, word = word)
             Spacer(modifier = Modifier.size(10.dp))
-            CustomLetterClick(listOfLetters[7], colorCode, onLetterClicked = {})
+            CustomLetterClick(listOfLetters[7], colorCode, onLetterClicked = onClick, word = word)
             Spacer(modifier = Modifier.size(10.dp))
-            CustomLetterClick(listOfLetters[8], colorCode, onLetterClicked = {})
+            CustomLetterClick(listOfLetters[8], colorCode, onLetterClicked = onClick, word = word)
             Spacer(modifier = Modifier.size(10.dp))
             CustomLetterClick(
                 thisText = "ENTER",
                 letter = ' ',
                 colorCode = colorCode,
-                onLetterClicked = {}
+                onLetterClicked = {},
+                word = word
             )
         }
     }
@@ -327,9 +333,10 @@ fun CustomLetterClick(
     letter: Char,
     colorCode: Int,
     boxColor: ColorPair = DataSource().colorPairs[colorCode],
-    onLetterClicked: () -> Unit,
+    onLetterClicked: (Any?) -> Unit,
     image: Int? = null,
-    thisText: String? = null
+    thisText: String? = null,
+    word: String
 ) {
     Box(modifier = Modifier.padding(top = 15.dp)) {
         KeyCards(
@@ -338,7 +345,8 @@ fun CustomLetterClick(
             shadowColor = boxColor.darkColor.darken(),
             onClick = onLetterClicked,
             imageRes = image,
-            thisText = thisText
+            thisText = thisText,
+            thisWord = word
         )
     }
 }

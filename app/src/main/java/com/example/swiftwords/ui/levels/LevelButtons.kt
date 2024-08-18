@@ -28,6 +28,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
@@ -47,6 +48,9 @@ import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
 import com.example.swiftwords.R
 import com.example.swiftwords.data.ColorPair
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
+import java.util.Locale
 
 private val shadowSize = 8.dp
 
@@ -364,15 +368,16 @@ fun ModesCards(
 @Composable
 fun KeyCards(
     thisLetter: Char,
+    thisWord: String,
     imageRes: Int? = null,
     thisText: String? = null,
     color: Color,
     textColor: Color = Color.White,
     shadowColor: Color,
-    onClick: () -> Unit
+    onClick: (Any?) -> Unit
 ) {
     val cornerRadius = 16.dp // Adjust the corner radius as needed
-
+    val coroutineScope = rememberCoroutineScope()
     ConstraintLayout {
         val (back, button) = createRefs()
         val customWidth = if(imageRes == null && thisText == null){
@@ -408,7 +413,7 @@ fun KeyCards(
         )
 
         Button(
-            onClick = {},
+            onClick = { onClick(thisWord.lowercase(Locale.ROOT) + thisLetter.lowercase(Locale.ROOT))},
             modifier = Modifier
                 .fillMaxWidth()
                 .constrainAs(button) {
@@ -429,12 +434,16 @@ fun KeyCards(
                 .pointerInteropFilter {
                     when (it.action) {
                         MotionEvent.ACTION_DOWN -> {
-                            animatedY = 4.dp
+                            coroutineScope.launch {
+                                animatedY = 4.dp
+                                onClick(thisWord.lowercase(Locale.ROOT)+thisLetter.lowercase(Locale.ROOT))
+                                delay(150L)
+                                animatedY = 0.dp
+                            }
                         }
 
                         MotionEvent.ACTION_UP -> {
                             animatedY = 0.dp
-                            onClick()
                         }
 
                         MotionEvent.ACTION_CANCEL -> {
