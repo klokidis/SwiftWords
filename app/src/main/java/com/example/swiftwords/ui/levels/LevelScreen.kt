@@ -28,6 +28,7 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -230,6 +231,12 @@ fun TopBar(livesLeft: Int, streak: Int, color: Int, changeColorFun: (Int) -> Uni
 fun MenuColorPicker(color: Int, changeColorFun: (Int) -> Unit, colors: List<ColorPair>) {
     var isExpanded by remember { mutableStateOf(false) }
     val scrollState = rememberScrollState()
+    val animatedColorIconButton by animateColorAsState(
+        if (isExpanded) colors[color].darkColor else MaterialTheme.colorScheme.surface,
+        animationSpec = tween(durationMillis = 300),
+        label = ""
+    )
+
     Box(
         modifier = Modifier
             .wrapContentSize()
@@ -238,7 +245,9 @@ fun MenuColorPicker(color: Int, changeColorFun: (Int) -> Unit, colors: List<Colo
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.Center
         ) {
-            IconButton(onClick = { isExpanded = !isExpanded }) {
+            IconButton(onClick = { isExpanded = !isExpanded },colors = IconButtonDefaults.iconButtonColors(
+                containerColor = animatedColorIconButton
+            )) {
                 Icon(
                     modifier = Modifier
                         .size(30.dp),
@@ -248,7 +257,8 @@ fun MenuColorPicker(color: Int, changeColorFun: (Int) -> Unit, colors: List<Colo
                     } else {
                         ImageVector.vectorResource(R.drawable.format_paint_24px_noexp)
                     },
-                    contentDescription = stringResource(R.string.pickTheme)
+                    contentDescription = stringResource(R.string.pickTheme),
+                    tint = if (isExpanded) MaterialTheme.colorScheme.surface else MaterialTheme.colorScheme.onBackground// Change icon color when expanded
                 )
             }
             AnimatedVisibility(visible = isExpanded) {
