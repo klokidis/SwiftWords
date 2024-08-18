@@ -192,11 +192,19 @@ fun TopBar(livesLeft: Int, streak: Int, color: Int, changeColorFun: (Int) -> Uni
         ) {
             MenuColorPicker(color, changeColorFun,colors)
             Spacer(modifier = Modifier.weight(1f))
-            Image(
-                painter = painterResource(id = R.drawable.streak),
-                modifier = Modifier.size(30.dp),
-                contentDescription = "streak"
-            )
+            if(streak == 0){
+                Image(
+                    painter = painterResource(id = R.drawable.fire_off),
+                    modifier = Modifier.size(43.dp),
+                    contentDescription = "streak"
+                )
+            }else{
+                Image(
+                    painter = painterResource(id = R.drawable.fire_on),
+                    modifier = Modifier.size(43.dp),
+                    contentDescription = "streak"
+                )
+            }
             Text(
                 text = streak.toString(),
                 modifier = Modifier
