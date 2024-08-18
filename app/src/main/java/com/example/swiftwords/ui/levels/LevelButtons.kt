@@ -365,6 +365,7 @@ fun ModesCards(
 fun KeyCards(
     thisLetter: Char,
     imageRes: Int? = null,
+    thisText: String? = null,
     color: Color,
     textColor: Color = Color.White,
     shadowColor: Color,
@@ -374,10 +375,10 @@ fun KeyCards(
 
     ConstraintLayout {
         val (back, button) = createRefs()
-        val customWidth = if(imageRes == null){
+        val customWidth = if(imageRes == null && thisText == null){
              60.dp
         }else{
-            70.dp
+            75.dp
         }
 
         var animatedY by remember { mutableStateOf(0.dp) }
@@ -457,7 +458,7 @@ fun KeyCards(
             ) {
                 if(imageRes==null) {
                     Text(
-                        text = thisLetter.toString(),
+                        text = thisText ?: thisLetter.toString(),
                         style = MaterialTheme.typography.titleSmall.copy(
                             fontSize = 20.sp,
                             letterSpacing = 1.sp
@@ -467,7 +468,7 @@ fun KeyCards(
                     Image(
                         painter = painterResource(imageRes),
                         contentDescription = null,
-                        modifier = Modifier.size(60.dp)
+                        modifier = Modifier.size(50.dp).padding(end = 3.dp)
                     )
                 }
             }

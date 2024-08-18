@@ -286,30 +286,38 @@ fun CustomKeyboard(
     ) {
         Row {
             CustomLetterClick(listOfLetters[0], colorCode, onLetterClicked = {})
-            Spacer(modifier = Modifier.size(11.dp))
+            Spacer(modifier = Modifier.size(10.dp))
             CustomLetterClick(listOfLetters[1], colorCode, onLetterClicked = {})
-            Spacer(modifier = Modifier.size(11.dp))
+            Spacer(modifier = Modifier.size(10.dp))
             CustomLetterClick(listOfLetters[2], colorCode, onLetterClicked = {})
-            Spacer(modifier = Modifier.size(11.dp))
-            CustomLetterClick(listOfLetters[2], colorCode, onLetterClicked = {})
-            Spacer(modifier = Modifier.size(11.dp))
+            Spacer(modifier = Modifier.size(10.dp))
             CustomLetterClick(
                 listOfLetters[2],
-                image = R.drawable.keyboard_24px,
+                image = R.drawable.backspace_24px,
                 colorCode = colorCode,
                 onLetterClicked = {}
             )
         }
         Row {
-            CustomLetterClick(listOfLetters[6], colorCode, onLetterClicked = {})
-            Spacer(modifier = Modifier.size(9.dp))
             CustomLetterClick(listOfLetters[3], colorCode, onLetterClicked = {})
-            Spacer(modifier = Modifier.size(9.dp))
+            Spacer(modifier = Modifier.size(10.dp))
             CustomLetterClick(listOfLetters[4], colorCode, onLetterClicked = {})
-            Spacer(modifier = Modifier.size(9.dp))
+            Spacer(modifier = Modifier.size(10.dp))
             CustomLetterClick(listOfLetters[5], colorCode, onLetterClicked = {})
-            Spacer(modifier = Modifier.size(9.dp))
+        }
+        Row {
+            CustomLetterClick(listOfLetters[6], colorCode, onLetterClicked = {})
+            Spacer(modifier = Modifier.size(10.dp))
+            CustomLetterClick(listOfLetters[7], colorCode, onLetterClicked = {})
+            Spacer(modifier = Modifier.size(10.dp))
             CustomLetterClick(listOfLetters[8], colorCode, onLetterClicked = {})
+            Spacer(modifier = Modifier.size(10.dp))
+            CustomLetterClick(
+                thisText = "ENTER",
+                letter = ' ',
+                colorCode = colorCode,
+                onLetterClicked = {}
+            )
         }
     }
 }
@@ -320,15 +328,17 @@ fun CustomLetterClick(
     colorCode: Int,
     boxColor: ColorPair = DataSource().colorPairs[colorCode],
     onLetterClicked: () -> Unit,
-    image: Int? = null
+    image: Int? = null,
+    thisText: String? = null
 ) {
-    Box(modifier = Modifier.padding(top = 20.dp)) {
+    Box(modifier = Modifier.padding(top = 15.dp)) {
         KeyCards(
             thisLetter = letter,
             color = boxColor.darkColor,
             shadowColor = boxColor.darkColor.darken(),
             onClick = onLetterClicked,
-            imageRes = image
+            imageRes = image,
+            thisText = thisText
         )
     }
 }
