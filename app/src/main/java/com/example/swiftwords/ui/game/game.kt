@@ -272,6 +272,7 @@ fun Game(
         checkHighScore,
         onClickAgain = {
             isCorrect = null
+            textState = ""
         },
         isVisible = !isTimerRunning
     )
