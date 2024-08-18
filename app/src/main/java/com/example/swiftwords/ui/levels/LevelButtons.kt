@@ -413,7 +413,13 @@ fun KeyCards(
         )
 
         Button(
-            onClick = { onClick(thisWord.lowercase(Locale.ROOT) + thisLetter.lowercase(Locale.ROOT))},
+            onClick = {
+                onClick(thisWord.lowercase(Locale.ROOT) + thisLetter.lowercase(Locale.ROOT))
+                coroutineScope.launch {
+                    animatedY = 4.dp
+                    delay(250L)
+                    animatedY = 0.dp
+                }},
             modifier = Modifier
                 .fillMaxWidth()
                 .constrainAs(button) {
@@ -437,7 +443,7 @@ fun KeyCards(
                             coroutineScope.launch {
                                 animatedY = 4.dp
                                 onClick(thisWord.lowercase(Locale.ROOT)+thisLetter.lowercase(Locale.ROOT))
-                                delay(150L)
+                                delay(250L)
                                 animatedY = 0.dp
                             }
                         }
