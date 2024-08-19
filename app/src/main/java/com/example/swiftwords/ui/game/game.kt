@@ -64,7 +64,11 @@ import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.Font
+import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.sp
@@ -182,8 +186,10 @@ fun Game(
                     colorCode
                 ) { isCorrect }
             }
-
             Spacer(modifier = Modifier.padding(10.dp))
+            if (checked()) {
+                Spacer(modifier = Modifier.weight(0.5f))
+            }
             Row(
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.Center
@@ -192,12 +198,12 @@ fun Game(
                     text = when {
                         isLoading -> lastMessage // Keep the same message while loading
                         isCorrect == true -> {
-                            lastMessage = "Correct answer!"
+                            lastMessage = "Correct"
                             lastMessage
                         }
 
                         isCorrect == false -> {
-                            lastMessage = "Incorrect answer."
+                            lastMessage = "Incorrect"
                             lastMessage
                         }
 
@@ -205,7 +211,15 @@ fun Game(
                             lastMessage = "Please enter an answer."
                             lastMessage
                         }
-                    }
+                    },
+                    style = MaterialTheme.typography.titleSmall.copy(
+                        fontSize = 16.sp,
+                        color = when (isCorrect) {
+                            true -> Color(0xFF006D2F)  // Correct color
+                            false -> Color(0xFF8D0C0C) // Incorrect color
+                            else -> Color.Unspecified  // Default color when isCorrect is null
+                        }
+                    )
                 )
                 Spacer(modifier = Modifier.padding(5.dp))
                 TextScore { gameUiState.score }
@@ -221,17 +235,38 @@ fun Game(
                     { textState },
                     { newText -> textState = newText },
                     checkAnswer,
-                    { isTimerRunning }
+                    { isTimerRunning },
+                    modifier = Modifier.weight(1f),
+                    checked()
                 )
-                CustomButton(
-                    checkAnswer = checkAnswer,
-                    colorCode = colorCode,
-                    isTimerRunning = { isTimerRunning },
+                if (!checked()) {
+                    CustomButton(
+                        checkAnswer = checkAnswer,
+                        colorCode = colorCode,
+                        isTimerRunning = { isTimerRunning },
+                    )
+                } else {
+                    Spacer(modifier = Modifier.size(30.dp))
+                }
+            }
+            Spacer(modifier = Modifier.weight(0.2f))
+            if (checked()) {
+                CustomKeyboard(
+                    listOfLetters = setOfLetters.toList(),
+                    colorCode,
+                    onClick = { newText ->
+                        textState =
+                            newText.toString()
+                    },
+                    word = textState,
+                    onEnter = checkAnswer,
+                    onRemove = { textState = textState.dropLast(1) }
                 )
             }
+            Spacer(modifier = Modifier.weight(1f))
             Row(
                 modifier = Modifier
-                    .padding(start = 37.dp)
+                    .padding(start = 3.dp)
                     .fillMaxWidth(),
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.Center
@@ -252,13 +287,7 @@ fun Game(
                 )
                 Spacer(modifier = Modifier.weight(1f))
             }
-            if (checked()) {
-                CustomKeyboard(listOfLetters = setOfLetters.toList(), colorCode, onClick = { newText -> textState =
-                    newText.toString()
-                },word = textState)
-            }
         }
-
     }
     DisplayResults(
         { gameUiState.score },
@@ -283,7 +312,9 @@ fun CustomKeyboard(
     listOfLetters: List<Char>,
     colorCode: Int,
     onClick: (Any?) -> Unit,
-    word: String
+    word: String,
+    onEnter: () -> Unit,
+    onRemove: () -> Unit
 ) {
     Column(
         verticalArrangement = Arrangement.Center,
@@ -300,7 +331,7 @@ fun CustomKeyboard(
                 listOfLetters[2],
                 image = R.drawable.backspace_24px,
                 colorCode = colorCode,
-                onLetterClicked = {},
+                onLetterClicked = { onRemove() },
                 word = word
             )
         }
@@ -322,7 +353,7 @@ fun CustomKeyboard(
                 thisText = "ENTER",
                 letter = ' ',
                 colorCode = colorCode,
-                onLetterClicked = {},
+                onLetterClicked = { onEnter() },
                 word = word
             )
         }
@@ -372,7 +403,7 @@ fun CustomButton(
         contentPadding = PaddingValues(0.dp),
         enabled = isTimerRunning(),
         modifier = Modifier
-            .padding(start = 10.dp, top = 5.dp)
+            .padding(start = 10.dp, top = 5.dp, end = 5.dp)
             .width(70.dp)
             .height(50.dp)
     ) {
@@ -389,7 +420,9 @@ fun CustomTextField(
     textState: () -> String,
     onValueChange: (String) -> Unit,
     onDone: () -> Unit,
-    isTimerRunning: () -> Boolean
+    isTimerRunning: () -> Boolean,
+    modifier: Modifier,
+    isChecked: Boolean
 ) {
     OutlinedTextField(
         value = textState(),
@@ -399,10 +432,15 @@ fun CustomTextField(
         keyboardActions = KeyboardActions(
             onDone = { onDone() }
         ),
-        modifier = Modifier
-            .width(250.dp),
+        modifier = modifier
+            .padding(start = 20.dp, end = 5.dp),
         onValueChange = onValueChange,
         label = { Text("") },
+        textStyle = TextStyle(
+            textAlign = if (isChecked) TextAlign.Center else TextAlign.Start,
+            fontFamily = FontFamily(Font(R.font.radiocanadabigregular)),
+            fontSize = 23.sp
+        ),
         colors = OutlinedTextFieldDefaults.colors(
             focusedContainerColor = MaterialTheme.colorScheme.secondary,
             unfocusedContainerColor = MaterialTheme.colorScheme.secondary,
@@ -468,7 +506,7 @@ fun TextScore(score: () -> Int) {
     // Only recomposes if scoreValue changes
     Text(
         text = "score: $scoreValue",
-        style = MaterialTheme.typography.bodyLarge // Optional: Customize text style
+        style = MaterialTheme.typography.titleSmall.copy(fontSize = 17.sp)
     )
 }
 
