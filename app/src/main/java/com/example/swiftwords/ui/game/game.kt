@@ -252,7 +252,7 @@ fun Game(
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(start = 10.dp, end = 5.dp, bottom = 2.dp),
+                    .padding(start = 10.dp, end = 5.dp),
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.Center
             ) {
