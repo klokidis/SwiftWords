@@ -41,6 +41,7 @@ import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
@@ -60,6 +61,8 @@ import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.geometry.Size
+import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.res.painterResource
@@ -146,7 +149,7 @@ fun Game(
             ) {
                 IconButton(
                     onClick = navigateUp,
-                    modifier = Modifier.size(27.dp)
+                    modifier = Modifier.size(27.dp).padding(start = 2.dp)
                 ) {
                     Icon(
                         imageVector = Icons.AutoMirrored.Filled.ArrowBack,
@@ -155,43 +158,63 @@ fun Game(
                     )
                 }
                 // most values pass as () -> type to fix the unnecessary recomposition of the ui
-                Timer(
-                    { gameUiState.value },
-                    colorCode
-                )
-                TimerText { gameUiState.currentTime }
+                if(!checked()) {
+                    Timer(
+                        { gameUiState.value },
+                        colorCode
+                    )
+                    TimerText { gameUiState.currentTime }
+                }else{
+                    Spacer(modifier = Modifier.weight(1f))
+                }
+            }
+            if(!checked()) {
+                Spacer(modifier = Modifier.padding(10.dp))
+            }else{
+                Spacer(modifier = Modifier.weight(1f))
+            }
+            if(!checked()) {
+                Column(
+                    verticalArrangement = Arrangement.Center,
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    val listOfLetters = setOfLetters.toList()
+
+                    RowOfLetters(
+                        listOfLetters[0],
+                        listOfLetters[1],
+                        listOfLetters[2],
+                        colorCode
+                    ) { isCorrect }
+                    RowOfLetters(
+                        listOfLetters[3],
+                        listOfLetters[4],
+                        listOfLetters[5],
+                        colorCode
+                    ) { isCorrect }
+                    RowOfLetters(
+                        listOfLetters[6],
+                        listOfLetters[7],
+                        listOfLetters[8],
+                        colorCode
+                    ) { isCorrect }
+                }
+            }else{
+                Box(
+                    contentAlignment = Alignment.Center,
+                    modifier = Modifier
+                        .fillMaxSize(1f)
+                        .padding(bottom = 5.dp)
+                ) {
+                    TimerCircular(
+                        value = { gameUiState.value },
+                        currentTime = { gameUiState.currentTime },
+                        activeBarColor = DataSource().colorPairs[colorCode].darkColor,
+                        modifier = Modifier.size(230.dp)  // Adjust the size as per your requirement
+                    )
+                }
             }
             Spacer(modifier = Modifier.padding(10.dp))
-
-            Column(
-                verticalArrangement = Arrangement.Center,
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                val listOfLetters = setOfLetters.toList()
-
-                RowOfLetters(
-                    listOfLetters[0],
-                    listOfLetters[1],
-                    listOfLetters[2],
-                    colorCode
-                ) { isCorrect }
-                RowOfLetters(
-                    listOfLetters[3],
-                    listOfLetters[4],
-                    listOfLetters[5],
-                    colorCode
-                ) { isCorrect }
-                RowOfLetters(
-                    listOfLetters[6],
-                    listOfLetters[7],
-                    listOfLetters[8],
-                    colorCode
-                ) { isCorrect }
-            }
-            Spacer(modifier = Modifier.padding(10.dp))
-            if (checked()) {
-                Spacer(modifier = Modifier.weight(0.5f))
-            }
             Row(
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.Center
@@ -229,7 +252,7 @@ fun Game(
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(start = 10.dp, end = 5.dp),
+                    .padding(start = 10.dp, end = 5.dp, bottom = 2.dp),
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.Center
             ) {
@@ -248,7 +271,7 @@ fun Game(
                         isTimerRunning = { isTimerRunning },
                     )
                 } else {
-                    Spacer(modifier = Modifier.size(30.dp))
+                    Spacer(modifier = Modifier.size(25.dp))
                 }
             }
             Spacer(modifier = Modifier.weight(0.2f))
@@ -319,6 +342,7 @@ fun CustomKeyboard(
     onRemove: () -> Unit
 ) {
     Column(
+        modifier = Modifier.padding(top=5.dp),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
@@ -573,57 +597,6 @@ fun LetterBox(
 }
 
 @Composable
-fun Timer(
-    value: () -> Float,
-    colorCode: Int,
-    modifier: Modifier = Modifier,
-    isDarkTheme: Boolean = isSystemInDarkTheme(),
-    strokeWidth: Dp = 10.dp
-) {
-    var size by remember {
-        mutableStateOf(IntSize.Zero)
-    }
-    val inactiveBarColor = if (isDarkTheme) {
-        Color.Gray.darken()
-    } else {
-        Color.White.darken()
-    }
-    Box(
-        modifier = modifier
-            .fillMaxWidth(0.9f)
-            .onSizeChanged {
-                size = it
-            }
-    ) {
-        // draw the timer
-        Canvas(modifier = modifier) {
-            val sizePx = size
-            val center = Offset(sizePx.width / 2f, sizePx.height / 2f)
-            val lineLength = sizePx.width / 1.2f
-            val currentValue = value()
-
-            // Draw the inactive line
-            drawLine(
-                color = inactiveBarColor,
-                start = Offset(center.x - lineLength / 2, center.y),
-                end = Offset(center.x + lineLength / 2, center.y),
-                strokeWidth = strokeWidth.toPx(),
-                cap = StrokeCap.Round
-            )
-
-            // Draw the active line based on the current value
-            drawLine(
-                color = DataSource().colorPairs[colorCode].darkColor,
-                start = Offset(center.x - lineLength / 2, center.y),
-                end = Offset(center.x - lineLength / 2 + lineLength * currentValue, center.y),
-                strokeWidth = strokeWidth.toPx(),
-                cap = StrokeCap.Round
-            )
-        }
-    }
-}
-
-@Composable
 fun DisplayResults(
     score: () -> Int,
     restart: KSuspendFunction1<Long, Unit>,
@@ -746,7 +719,7 @@ fun DisplayResults(
                                             restart(time())
                                         }
                                     },
-                                            enabled = buttonsEnabled
+                                    enabled = buttonsEnabled
                                 ) {
                                     Text("Play Again")
                                 }
@@ -782,4 +755,128 @@ fun DisplayResults(
             }
         }
     }
+}
+
+@Composable
+fun Timer(
+    value: () -> Float,
+    colorCode: Int,
+    modifier: Modifier = Modifier,
+    isDarkTheme: Boolean = isSystemInDarkTheme(),
+    strokeWidth: Dp = 10.dp
+) {
+    var size by remember {
+        mutableStateOf(IntSize.Zero)
+    }
+    val inactiveBarColor = if (isDarkTheme) {
+        Color.Gray.darken()
+    } else {
+        Color.White.darken()
+    }
+    Box(
+        modifier = modifier
+            .fillMaxWidth(0.9f)
+            .onSizeChanged {
+                size = it
+            }
+    ) {
+        // draw the timer
+        Canvas(modifier = modifier) {
+            val sizePx = size
+            val center = Offset(sizePx.width / 2f, sizePx.height / 2f)
+            val lineLength = sizePx.width / 1.2f
+            val currentValue = value()
+
+            // Draw the inactive line
+            drawLine(
+                color = inactiveBarColor,
+                start = Offset(center.x - lineLength / 2, center.y),
+                end = Offset(center.x + lineLength / 2, center.y),
+                strokeWidth = strokeWidth.toPx(),
+                cap = StrokeCap.Round
+            )
+
+            // Draw the active line based on the current value
+            drawLine(
+                color = DataSource().colorPairs[colorCode].darkColor,
+                start = Offset(center.x - lineLength / 2, center.y),
+                end = Offset(center.x - lineLength / 2 + lineLength * currentValue, center.y),
+                strokeWidth = strokeWidth.toPx(),
+                cap = StrokeCap.Round
+            )
+        }
+    }
+}
+
+@Composable
+fun TimerCircular(
+    value: () -> Float,
+    currentTime: () -> Long,
+    activeBarColor: Color,
+    modifier: Modifier = Modifier,
+    strokeWidth: Dp = 10.dp,
+    isDarkTheme: Boolean = isSystemInDarkTheme(),
+) {
+    val inactiveBarColor = if (isDarkTheme) {
+        Color.Gray.darken()
+    } else {
+        Color.White.darken()
+    }
+    var size by remember {
+        mutableStateOf(IntSize.Zero)
+    }
+
+    Box(
+        contentAlignment = Alignment.Center,
+        modifier = modifier
+            .onSizeChanged {
+                size = it
+            }
+    ) {
+        Canvas(modifier = Modifier.fillMaxSize()) {
+            drawArc(
+                color = inactiveBarColor,
+                startAngle = -215f,
+                sweepAngle = 250f,
+                useCenter = false,
+                size = Size(size.width.toFloat(), size.height.toFloat()),
+                style = Stroke(strokeWidth.toPx(), cap = StrokeCap.Round)
+            )
+            drawArc(
+                color = activeBarColor,
+                startAngle = -215f,
+                sweepAngle = 250f * value(),
+                useCenter = false,
+                size = Size(size.width.toFloat(), size.height.toFloat()),
+                style = Stroke(strokeWidth.toPx(), cap = StrokeCap.Round)
+            )
+        }
+        CanvasText(currentTime)
+    }
+}
+
+@Composable
+fun CanvasText(currentTime: ()-> Long){
+    val formattedTime by remember(currentTime) {
+        derivedStateOf {
+            val time = currentTime()
+            if (time != 130000000L) {
+                if (time > 1000L) {
+                    time.toString().take(if (time < 10000L) 1 else 2)
+                } else {
+                    "0." + time.toString().take(1)
+                }
+            } else {
+                ""
+            }
+        }
+    }
+    Text(
+        text = formattedTime,
+        modifier = Modifier
+            .fillMaxWidth()
+            .wrapContentHeight(),
+        textAlign = TextAlign.Center,
+        style = MaterialTheme.typography.titleSmall.copy(fontSize = 30.sp)
+    )
 }

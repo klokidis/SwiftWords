@@ -417,7 +417,7 @@ fun KeyCards(
                 onClick(thisWord.lowercase(Locale.ROOT) + thisLetter.lowercase(Locale.ROOT))
                 coroutineScope.launch {
                     animatedY = 4.dp
-                    delay(250L)
+                    delay(150L)
                     animatedY = 0.dp
                 }},
             modifier = Modifier
