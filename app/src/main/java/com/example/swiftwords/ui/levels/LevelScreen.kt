@@ -232,7 +232,7 @@ fun MenuColorPicker(color: Int, changeColorFun: (Int) -> Unit, colors: List<Colo
     var isExpanded by remember { mutableStateOf(false) }
     val scrollState = rememberScrollState()
     val animatedColorIconButton by animateColorAsState(
-        if (isExpanded) colors[color].darkColor else MaterialTheme.colorScheme.surface,
+        if (isExpanded) colors[color].darkColor else MaterialTheme.colorScheme.background,
         animationSpec = tween(durationMillis = 300),
         label = ""
     )

@@ -250,7 +250,7 @@ fun Game(
                 }
             }
             Spacer(modifier = Modifier.weight(0.2f))
-            if (checked()) {
+            if (checked() && isTimerRunning) {
                 CustomKeyboard(
                     listOfLetters = setOfLetters.toList(),
                     colorCode,
@@ -299,9 +299,9 @@ fun Game(
         isMode,
         highScore,
         checkHighScore,
-        onClickAgain = {
-            isCorrect = null
+        restartGame = {
             textState = ""
+            isCorrect = null
         },
         isVisible = !isTimerRunning
     )
@@ -632,8 +632,8 @@ fun DisplayResults(
     isMode: Boolean,
     highScore: Int,
     checkHighScore: suspend (Int) -> Unit,
-    onClickAgain: () -> Unit,
-    isVisible: Boolean
+    isVisible: Boolean,
+    restartGame: () -> Unit
 ) {
     AnimatedVisibility(
         visible = isVisible,
@@ -729,7 +729,7 @@ fun DisplayResults(
                             if (isMode) {
                                 TextButton(
                                     onClick = {
-                                        onClickAgain()
+                                        restartGame()
                                         coroutineScope.launch {
                                             viewModel.generateRandomLettersForBoth()
                                             restart(time())
@@ -741,7 +741,7 @@ fun DisplayResults(
                             } else {
                                 TextButton(
                                     onClick = {
-                                        onClickAgain()
+                                        restartGame()
                                         coroutineScope.launch {
                                             restart(time())
                                         }
@@ -751,6 +751,7 @@ fun DisplayResults(
                                 }
                                 TextButton(
                                     onClick = {
+                                        restartGame()
                                         coroutineScope.launch {
                                             increaseScore(score())
                                             viewModel.generateRandomLettersForBoth()
