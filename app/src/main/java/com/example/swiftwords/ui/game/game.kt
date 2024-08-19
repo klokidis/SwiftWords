@@ -54,6 +54,7 @@ import androidx.compose.material3.CheckboxDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.TextButton
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.rememberCoroutineScope
@@ -80,6 +81,7 @@ import com.example.swiftwords.ui.SwiftWordsMainViewModel
 import com.example.swiftwords.ui.levels.KeyCards
 import com.example.swiftwords.ui.levels.brighten
 import com.example.swiftwords.ui.levels.darken
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlin.reflect.KFunction0
 import kotlin.reflect.KFunction1
@@ -647,6 +649,13 @@ fun DisplayResults(
         )
     ) {
         val coroutineScope = rememberCoroutineScope()
+        var buttonsEnabled by remember { mutableStateOf(false) }
+
+        // Launch a coroutine to enable the buttons after a delay
+        LaunchedEffect(Unit) {
+            delay(800L) // 1 second delay
+            buttonsEnabled = true
+        }
         Box(
             modifier = Modifier
                 .fillMaxSize()
@@ -678,6 +687,7 @@ fun DisplayResults(
                                     checkHighScore(score())
                                 }
                             },
+                            enabled = buttonsEnabled
                         ) {
                             Text("Claim")
                         }
@@ -723,6 +733,7 @@ fun DisplayResults(
                         ) {
                             TextButton(
                                 onClick = navigateUp,
+                                enabled = buttonsEnabled
                             ) {
                                 Text("Exit")
                             }
@@ -734,7 +745,8 @@ fun DisplayResults(
                                             viewModel.generateRandomLettersForBoth()
                                             restart(time())
                                         }
-                                    }
+                                    },
+                                            enabled = buttonsEnabled
                                 ) {
                                     Text("Play Again")
                                 }
@@ -746,6 +758,7 @@ fun DisplayResults(
                                             restart(time())
                                         }
                                     },
+                                    enabled = buttonsEnabled
                                 ) {
                                     Text("Try Again (-1 life)")
                                 }
@@ -758,7 +771,7 @@ fun DisplayResults(
                                             restart(time())
                                         }
                                     },
-                                    enabled = score() >= 10
+                                    enabled = score() >= 10 && buttonsEnabled
                                 ) {
                                     Text("Next Level")
                                 }
