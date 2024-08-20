@@ -1,4 +1,4 @@
-package com.example.swiftwords.ui.choose
+package com.example.swiftwords.ui.elements
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
