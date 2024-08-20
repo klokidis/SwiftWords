@@ -53,8 +53,10 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.swiftwords.data.ColorPair
 import com.example.swiftwords.ui.AppViewModelProvider
-import com.example.swiftwords.ui.GetDataViewModel
-import com.example.swiftwords.ui.ItemDetailsUiState
+import com.example.swiftwords.ui.elements.CurrentLevel
+import com.example.swiftwords.data.GetDataViewModel
+import com.example.swiftwords.data.ItemDetailsUiState
+import com.example.swiftwords.ui.elements.Levels
 
 @Composable
 fun LevelScreen(

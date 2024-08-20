@@ -1,6 +1,5 @@
 package com.example.swiftwords.ui
 
-import android.content.Context
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -34,6 +33,8 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import com.example.swiftwords.data.GetDataViewModel
+import com.example.swiftwords.data.ItemDetailsUiState
 import com.example.swiftwords.ui.game.Game
 import com.example.swiftwords.ui.levels.LevelScreen
 import com.example.swiftwords.ui.modes.ModesScreen
@@ -54,7 +55,6 @@ fun SwiftWordsApp(
     viewModel: SwiftWordsMainViewModel = viewModel(factory = AppViewModelProvider.Factory),
     navController: NavHostController = rememberNavController()
 ) {
-    val context = LocalContext.current // Get context from LocalContext
     val backStackEntry by navController.currentBackStackEntryAsState()
     val mainUiState by viewModel.uiState.collectAsState()
     val currentScreen = SwiftWordsScreen.valueOf(
@@ -70,7 +70,7 @@ fun SwiftWordsApp(
             else -> 0 // Default value
         }
 
-        if (selectedItemIndex != newIndex) {
+        if (selectedItemIndex != newIndex) {//for navigating back with back phone arrow
             selectedItemIndex = newIndex
         }
     }
@@ -78,9 +78,9 @@ fun SwiftWordsApp(
     val wordListState = rememberSaveable { mutableStateOf<Set<String>?>(null) }
     val coroutineScope = rememberCoroutineScope()
     val coroutineLaunched = rememberSaveable { mutableStateOf(false) }
-
+    val context = LocalContext.current // Get context from LocalContext
     LaunchedEffect(Unit) {
-        coroutineScope.launch {
+        coroutineScope.launch { //since it needs context its initialised here
             if (!coroutineLaunched.value) {
                 coroutineScope.launch {
                     try {
@@ -95,8 +95,6 @@ fun SwiftWordsApp(
             }
         }
     }
-
-
 
     Scaffold(
         bottomBar = {
@@ -161,7 +159,7 @@ fun SwiftWordsApp(
                     dataViewModel = dataViewmodel,
                     dataUiState = dataUiState
                 ) {
-                    viewModel.changeGameState(false)
+                    viewModel.changeGameState(false)//tells the game this is not a game mode
                     viewModel.changeTime(40000L)
                     navController.navigate(SwiftWordsScreen.Game.name)
                 }
@@ -172,13 +170,13 @@ fun SwiftWordsApp(
                     navigateFastGame = {
                         viewModel.generateRandomLettersForMode()
                         viewModel.changeTime(20000L)
-                        viewModel.changeGameState(true)
+                        viewModel.changeGameState(true)//this is a game mode
                         navController.navigate(SwiftWordsScreen.Game.name)
                     },
                     navigateLongGame = {
                         viewModel.generateRandomLettersForMode()
                         viewModel.changeTime(130000000L) //130000000L means no time
-                        viewModel.changeGameState(true)
+                        viewModel.changeGameState(true) //this is a game mode
                         navController.navigate(SwiftWordsScreen.Game.name)
                     }
                 )

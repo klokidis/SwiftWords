@@ -13,8 +13,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.example.swiftwords.R
 import com.example.swiftwords.data.DataSource
-import com.example.swiftwords.ui.levels.ModesCards
-import com.example.swiftwords.ui.levels.darken
+import com.example.swiftwords.ui.elements.ModesCards
+import com.example.swiftwords.ui.elements.darken
 
 
 @Composable

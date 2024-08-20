@@ -9,7 +9,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.swiftwords.ui.AppViewModelProvider
-import com.example.swiftwords.ui.GetDataViewModel
+import com.example.swiftwords.data.GetDataViewModel
 import com.example.swiftwords.ui.SwiftWordsApp
 import com.example.swiftwords.ui.choose.ChooseCharacter
 

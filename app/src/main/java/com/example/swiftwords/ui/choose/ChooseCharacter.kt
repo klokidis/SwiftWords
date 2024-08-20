@@ -32,15 +32,12 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.swiftwords.R
-import com.example.swiftwords.data.DataViewmodel
-import com.example.swiftwords.ui.AppViewModelProvider
 
 import com.example.swiftwords.ui.theme.SwiftWordsTheme
 
 @Composable
-fun ChooseCharacter(viewmodel: DataViewmodel = viewModel(factory = AppViewModelProvider.Factory)) {
+fun ChooseCharacter() {
     val scrollState = rememberScrollState()
     Column(
         modifier = Modifier

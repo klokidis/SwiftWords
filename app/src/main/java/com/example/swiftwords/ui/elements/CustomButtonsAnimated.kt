@@ -1,4 +1,4 @@
-package com.example.swiftwords.ui.levels
+package com.example.swiftwords.ui.elements
 
 import android.view.MotionEvent
 import androidx.compose.animation.animateColorAsState
@@ -406,7 +406,7 @@ fun KeyCards(
                     top.linkTo(button.top)
                     bottom.linkTo(button.bottom)
 
-                    translationY = 4.dp
+                    translationY = 5.dp
                 }
                 .clip(RoundedCornerShape(cornerRadius))
                 .background(shadowColor)
@@ -416,7 +416,7 @@ fun KeyCards(
             onClick = {
                 onClick(thisWord.lowercase(Locale.ROOT) + thisLetter.lowercase(Locale.ROOT))
                 coroutineScope.launch {
-                    animatedY = 4.dp
+                    animatedY = 5.dp
                     delay(150L)
                     animatedY = 0.dp
                 }},
@@ -441,9 +441,9 @@ fun KeyCards(
                     when (it.action) {
                         MotionEvent.ACTION_DOWN -> {
                             coroutineScope.launch {
-                                animatedY = 4.dp
+                                animatedY = 5.dp
                                 onClick(thisWord.lowercase(Locale.ROOT)+thisLetter.lowercase(Locale.ROOT))
-                                delay(250L)
+                                delay(300L)
                                 animatedY = 0.dp
                             }
                         }

@@ -116,7 +116,7 @@ class GameViewModel(time: () -> Long) : ViewModel() {
     }
 
     private suspend fun runClock() {
-        if (uiState.value.currentTime != 130000000L) {
+        if (uiState.value.currentTime != 130000000L) {//this means its on unlimited time
             delay(1300L)
             while (uiState.value.isTimerRunning) {
                 if (uiState.value.currentTime > 0L && uiState.value.isTimerRunning) {

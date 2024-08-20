@@ -14,7 +14,7 @@ data class MainUiState(
     var setOfLettersForLevel: Set<Char> = setOf(),
     var setOfLettersForMode: Set<Char> = setOf(),
     val gameTime: Long = 40000L,
-    val currentLevel: Int = 11,
+    val currentLevel: Int = 1,
     val isMode: Boolean = false,
 )
 

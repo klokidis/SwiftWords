@@ -81,9 +81,9 @@ import com.example.swiftwords.R
 import com.example.swiftwords.data.ColorPair
 import com.example.swiftwords.data.DataSource
 import com.example.swiftwords.ui.SwiftWordsMainViewModel
-import com.example.swiftwords.ui.levels.KeyCards
-import com.example.swiftwords.ui.levels.brighten
-import com.example.swiftwords.ui.levels.darken
+import com.example.swiftwords.ui.elements.KeyCards
+import com.example.swiftwords.ui.elements.brighten
+import com.example.swiftwords.ui.elements.darken
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlin.reflect.KFunction0

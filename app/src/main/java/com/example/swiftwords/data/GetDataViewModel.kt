@@ -1,11 +1,7 @@
-package com.example.swiftwords.ui
+package com.example.swiftwords.data
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.swiftwords.data.UserDetails
-import com.example.swiftwords.data.UserRepository
-import com.example.swiftwords.data.toUser
-import com.example.swiftwords.data.toUserDetails
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.map
