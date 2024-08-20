@@ -260,7 +260,7 @@ fun MenuColorPicker(color: Int, changeColorFun: (Int) -> Unit, colors: List<Colo
                         ImageVector.vectorResource(R.drawable.format_paint_24px_noexp)
                     },
                     contentDescription = stringResource(R.string.pickTheme),
-                    tint = if (isExpanded) MaterialTheme.colorScheme.surface else MaterialTheme.colorScheme.onBackground// Change icon color when expanded
+                    tint = if (isExpanded) MaterialTheme.colorScheme.surface else colors[color].darkColor// Change icon color when expanded
                 )
             }
             AnimatedVisibility(visible = isExpanded) {

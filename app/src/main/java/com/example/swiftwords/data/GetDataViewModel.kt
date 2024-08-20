@@ -77,7 +77,7 @@ class GetDataViewModel(private val userRepository: UserRepository) : ViewModel()
                 userRepository.updateUser(
                     currentUser.copy(
                         starterLevel = currentUser.currentLevel - 2,
-                        endingLevel = currentUser.currentLevel + 18
+                        endingLevel = currentUser.currentLevel + 26
                     )
                 )
             }
