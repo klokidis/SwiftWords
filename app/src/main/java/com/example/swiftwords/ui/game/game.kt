@@ -150,22 +150,24 @@ fun Game(
                 IconButton(
                     onClick = navigateUp,
                     modifier = Modifier
-                        .size(27.dp)
-                        .padding(start = 2.dp)
+                        .size(33.dp)
+                        .padding(start = 7.dp)
                 ) {
                     Icon(
                         imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                         contentDescription = stringResource(R.string.exit),
-                        modifier = Modifier.size(27.dp)
+                        modifier = Modifier.size(33.dp)
                     )
                 }
                 // most values pass as () -> type to fix the unnecessary recomposition of the ui
                 if (!checked()) {
                     Timer(
                         { gameUiState.value },
-                        colorCode
+                        colorCode,
+                        modifier = Modifier
+                            .fillMaxWidth(0.9f)
                     )
-                    TimerText { gameUiState.currentTime }
+                    TimerText(modifier = Modifier.weight(1f), currentTime ={  gameUiState.currentTime } )
                 } else {
                     Spacer(modifier = Modifier.weight(1f))
                 }
@@ -344,7 +346,7 @@ fun CustomKeyboard(
     onRemove: () -> Unit
 ) {
     Column(
-        modifier = Modifier.padding(top = 5.dp),
+        modifier = Modifier.padding(top = 5.dp, bottom = 50.dp),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
@@ -356,10 +358,10 @@ fun CustomKeyboard(
             CustomLetterClick(listOfLetters[2], colorCode, onLetterClicked = onClick, word = word)
             Spacer(modifier = Modifier.size(10.dp))
             CustomLetterClick(
-                listOfLetters[2],
-                image = R.drawable.backspace_24px,
+                thisText = "ENTER",
+                letter = ' ',
                 colorCode = colorCode,
-                onLetterClicked = { onRemove() },
+                onLetterClicked = { onEnter() },
                 word = word
             )
         }
@@ -378,10 +380,10 @@ fun CustomKeyboard(
             CustomLetterClick(listOfLetters[8], colorCode, onLetterClicked = onClick, word = word)
             Spacer(modifier = Modifier.size(10.dp))
             CustomLetterClick(
-                thisText = "ENTER",
-                letter = ' ',
+                listOfLetters[2],
+                image = R.drawable.backspace_24px,
                 colorCode = colorCode,
-                onLetterClicked = { onEnter() },
+                onLetterClicked = { onRemove() },
                 word = word
             )
         }
@@ -499,7 +501,7 @@ fun RowOfLetters(
 
 
 @Composable
-fun TimerText(currentTime: () -> Long) {
+fun TimerText(currentTime: () -> Long,modifier: Modifier) {
     // Remember the score value to avoid unnecessary recompositions
     val formattedTime by remember(currentTime) {
         derivedStateOf {
@@ -518,7 +520,8 @@ fun TimerText(currentTime: () -> Long) {
 
     Text(
         text = formattedTime,
-        modifier = Modifier.width(25.dp)
+        style = MaterialTheme.typography.titleSmall.copy(fontSize = 17.sp),
+        modifier = modifier.width(25.dp)
     )
 }
 
@@ -777,7 +780,6 @@ fun Timer(
     }
     Box(
         modifier = modifier
-            .fillMaxWidth(0.9f)
             .onSizeChanged {
                 size = it
             }
