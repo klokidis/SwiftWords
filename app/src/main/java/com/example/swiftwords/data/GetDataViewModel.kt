@@ -52,8 +52,17 @@ class GetDataViewModel(private val userRepository: UserRepository) : ViewModel()
         viewModelScope.launch {
             val currentUser = getDataUiState.value.userDetails?.toUser()
             if (currentUser != null) {
-                userRepository.updateUser(currentUser.copy(currentLevel = currentUser.currentLevel + 1))
-                checkLevelSpacing()
+                if (currentUser.currentLevel > currentUser.endingLevel - 4) {//check for level spacing
+                    userRepository.updateUser(
+                        currentUser.copy(
+                            starterLevel = currentUser.currentLevel + 1 - 2,
+                            endingLevel = currentUser.currentLevel + 1 + 26,
+                            currentLevel = currentUser.currentLevel + 1
+                        )
+                    )
+                } else {
+                    userRepository.updateUser(currentUser.copy(currentLevel = currentUser.currentLevel + 1))
+                }
                 checkHighScore(score)
             }
         }
@@ -63,23 +72,9 @@ class GetDataViewModel(private val userRepository: UserRepository) : ViewModel()
         viewModelScope.launch {
             val currentUser = getDataUiState.value.userDetails?.toUser()
             if (currentUser != null) {
-                if(thisScore > currentUser.highScore) {
+                if (thisScore > currentUser.highScore) {
                     userRepository.updateUser(currentUser.copy(highScore = thisScore))
                 }
-            }
-        }
-    }
-
-    private suspend fun checkLevelSpacing() {
-        val currentUser = getDataUiState.value.userDetails?.toUser()
-        if (currentUser != null) {
-            if (currentUser.currentLevel > currentUser.endingLevel - 4) {
-                userRepository.updateUser(
-                    currentUser.copy(
-                        starterLevel = currentUser.currentLevel - 2,
-                        endingLevel = currentUser.currentLevel + 26
-                    )
-                )
             }
         }
     }
