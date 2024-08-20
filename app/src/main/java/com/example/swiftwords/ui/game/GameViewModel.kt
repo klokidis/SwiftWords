@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -28,6 +29,9 @@ class GameViewModel(time: () -> Long) : ViewModel() {
 
     private val _uiState = MutableStateFlow(GameUiState())
     val uiState: StateFlow<GameUiState> = _uiState.asStateFlow()
+
+    // Declare a Job to track the coroutine
+    private var clockJob: Job? = null
 
     init {
         viewModelScope.launch {
@@ -82,7 +86,11 @@ class GameViewModel(time: () -> Long) : ViewModel() {
     }
 
     suspend fun restartGame(newTime: Long) {
-        viewModelScope.launch {
+        // Cancel the existing job if it's still active
+        clockJob?.cancel()
+
+        // Start a new coroutine and assign it to clockJob
+        clockJob = viewModelScope.launch {
             updateTime(newTime)
             runClock()
         }
