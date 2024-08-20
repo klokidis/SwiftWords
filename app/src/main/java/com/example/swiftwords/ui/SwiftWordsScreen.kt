@@ -12,14 +12,12 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.res.stringResource
-import com.example.swiftwords.data.DataSource
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -33,8 +31,10 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import com.example.swiftwords.R
 import com.example.swiftwords.data.GetDataViewModel
 import com.example.swiftwords.data.ItemDetailsUiState
+import com.example.swiftwords.model.BarItem
 import com.example.swiftwords.ui.game.Game
 import com.example.swiftwords.ui.levels.LevelScreen
 import com.example.swiftwords.ui.modes.ModesScreen
@@ -99,7 +99,23 @@ fun SwiftWordsApp(
     Scaffold(
         bottomBar = {
             if (currentScreen != SwiftWordsScreen.Game) {
-                val barItems = remember { DataSource().barItems }
+                val barItems = listOf(
+                    BarItem(
+                        R.string.levels,
+                        R.drawable.levels,
+                        R.drawable.levels
+                    ),
+                    BarItem(
+                        R.string.modes,
+                        R.drawable.controller_filled,
+                        R.drawable.controller
+                    ),
+                    BarItem(
+                        R.string.profile,
+                        R.drawable.profilr_filled,
+                        R.drawable.profile
+                    )
+                )
                 NavigationBar {
                     barItems.forEachIndexed { index, item ->
                         NavigationBarItem(

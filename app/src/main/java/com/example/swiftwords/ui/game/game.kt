@@ -149,7 +149,9 @@ fun Game(
             ) {
                 IconButton(
                     onClick = navigateUp,
-                    modifier = Modifier.size(27.dp).padding(start = 2.dp)
+                    modifier = Modifier
+                        .size(27.dp)
+                        .padding(start = 2.dp)
                 ) {
                     Icon(
                         imageVector = Icons.AutoMirrored.Filled.ArrowBack,
@@ -158,22 +160,22 @@ fun Game(
                     )
                 }
                 // most values pass as () -> type to fix the unnecessary recomposition of the ui
-                if(!checked()) {
+                if (!checked()) {
                     Timer(
                         { gameUiState.value },
                         colorCode
                     )
                     TimerText { gameUiState.currentTime }
-                }else{
+                } else {
                     Spacer(modifier = Modifier.weight(1f))
                 }
             }
-            if(!checked()) {
+            if (!checked()) {
                 Spacer(modifier = Modifier.padding(10.dp))
-            }else{
+            } else {
                 Spacer(modifier = Modifier.weight(1f))
             }
-            if(!checked()) {
+            if (!checked()) {
                 Column(
                     verticalArrangement = Arrangement.Center,
                     horizontalAlignment = Alignment.CenterHorizontally
@@ -199,7 +201,7 @@ fun Game(
                         colorCode
                     ) { isCorrect }
                 }
-            }else{
+            } else {
                 Box(
                     contentAlignment = Alignment.Center,
                     modifier = Modifier
@@ -342,7 +344,7 @@ fun CustomKeyboard(
     onRemove: () -> Unit
 ) {
     Column(
-        modifier = Modifier.padding(top=5.dp),
+        modifier = Modifier.padding(top = 5.dp),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
@@ -856,7 +858,7 @@ fun TimerCircular(
 }
 
 @Composable
-fun CanvasText(currentTime: ()-> Long){
+fun CanvasText(currentTime: () -> Long) {
     val formattedTime by remember(currentTime) {
         derivedStateOf {
             val time = currentTime()

@@ -3,27 +3,8 @@ package com.example.swiftwords.data
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import com.example.swiftwords.R
-import com.example.swiftwords.model.BarItem
 
 class DataSource {
-    val barItems = listOf(
-        BarItem(
-            R.string.levels,
-            R.drawable.levels,
-            R.drawable.levels
-        ),
-        BarItem(
-            R.string.modes,
-            R.drawable.controller_filled,
-            R.drawable.controller
-        ),
-        BarItem(
-            R.string.profile,
-            R.drawable.profilr_filled,
-            R.drawable.profile
-        )
-    )
 
     val colorPairs = listOf(
         ColorPair(id = 0, lightColor = Color.White, darkColor = Color(0xFF092E5C)),
