@@ -167,7 +167,9 @@ fun Game(
                         modifier = Modifier
                             .fillMaxWidth(0.9f)
                     )
-                    TimerText(modifier = Modifier.weight(1f), currentTime ={  gameUiState.currentTime } )
+                    TimerText(
+                        modifier = Modifier.weight(1f),
+                        currentTime = { gameUiState.currentTime })
                 } else {
                     Spacer(modifier = Modifier.weight(1f))
                 }
@@ -501,7 +503,7 @@ fun RowOfLetters(
 
 
 @Composable
-fun TimerText(currentTime: () -> Long,modifier: Modifier) {
+fun TimerText(currentTime: () -> Long, modifier: Modifier) {
     // Remember the score value to avoid unnecessary recompositions
     val formattedTime by remember(currentTime) {
         derivedStateOf {
@@ -710,7 +712,12 @@ fun DisplayResults(
                             verticalAlignment = Alignment.CenterVertically
                         ) {
                             TextButton(
-                                onClick = navigateUp,
+                                onClick = {
+                                    if (score() >= 10) {
+                                        increaseScore(score())
+                                    }
+                                    navigateUp()
+                                },
                                 enabled = buttonsEnabled
                             ) {
                                 Text("Exit")
