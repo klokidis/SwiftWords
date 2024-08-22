@@ -724,6 +724,10 @@ fun DisplayResults(
                         ) {
                             TextButton(
                                 onClick = {
+                                    if (score() >= 10) {
+                                        increaseScore(score())
+                                        viewModel.generateRandomLettersForBoth()
+                                    }
                                     navigateUp()
                                 },
                                 enabled = buttonsEnabled
@@ -896,6 +900,6 @@ fun CanvasText(currentTime: () -> Long) {
             .fillMaxWidth()
             .wrapContentHeight(),
         textAlign = TextAlign.Center,
-        style = MaterialTheme.typography.titleSmall.copy(fontSize = 30.sp)
+        style = MaterialTheme.typography.titleSmall.copy(fontSize = 43.sp)
     )
 }
