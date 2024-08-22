@@ -57,6 +57,9 @@ import com.example.swiftwords.ui.elements.CurrentLevel
 import com.example.swiftwords.data.GetDataViewModel
 import com.example.swiftwords.data.ItemDetailsUiState
 import com.example.swiftwords.ui.elements.Levels
+import java.text.SimpleDateFormat
+import java.util.Calendar
+import java.util.Locale
 
 @Composable
 fun LevelScreen(
@@ -213,7 +216,7 @@ fun TopBar(
 
             Image(
                 painter = when {
-                    streak == 0 -> {
+                    areDatesMoreThanOneDaysApart(formattedStreakDate, formattedDateNow) -> {
                         painterResource(id = R.drawable.fire_off)
                     }
 
@@ -230,7 +233,15 @@ fun TopBar(
             )
 
             Text(
-                text = streak.toString(),
+                text = when {
+                    areDatesMoreThanOneDaysApart(formattedStreakDate, formattedDateNow) -> {
+                        "0"
+                    }
+
+                    else -> {
+                        streak.toString()
+                    }
+                },
                 modifier = Modifier
                     .padding(start = 3.dp, bottom = 3.dp),
                 style = MaterialTheme.typography.titleMedium.copy(fontSize = 24.sp)
@@ -250,6 +261,42 @@ fun TopBar(
             )
         }
     }
+}
+
+
+//recalculate it here for faster change than data
+fun areDatesMoreThanOneDaysApart(date1: String, date2: String): Boolean {
+    // Define the date format with explicit locale
+    val dateFormat = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
+
+    // Parse the dates from the strings
+    val parsedDate1 = dateFormat.parse(date1)
+    val parsedDate2 = dateFormat.parse(date2)
+
+    // Create calendar instances and set the parsed dates
+    val calendar1 = Calendar.getInstance().apply {
+        if (parsedDate1 != null) {
+            time = parsedDate1
+        }
+    }
+    val calendar2 = Calendar.getInstance().apply {
+        if (parsedDate2 != null) {
+            time = parsedDate2
+        }
+    }
+
+    // Get the time in milliseconds for each date
+    val timeInMillis1 = calendar1.timeInMillis
+    val timeInMillis2 = calendar2.timeInMillis
+
+    // Calculate the difference in milliseconds
+    val differenceInMillis = Math.abs(timeInMillis1 - timeInMillis2)
+
+    // Calculate the difference in days
+    val differenceInDays = differenceInMillis / (24 * 60 * 60 * 1000)
+
+    // Return whether the difference is more than 2 days
+    return differenceInDays > 1
 }
 
 @Composable
