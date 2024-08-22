@@ -9,6 +9,9 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
+import java.time.temporal.ChronoUnit
 import java.util.Calendar
 import java.util.Locale
 
@@ -42,18 +45,31 @@ class GetDataViewModel(private val userRepository: UserRepository) : ViewModel()
             }
         }
     }
-
-    private fun setStreak() {
+    // Method to be called when the app launches to check and reset streak
+    fun checkAndResetStreak() {
         viewModelScope.launch {
-            val currentUser = getDataUiState.value.userDetails?.toUser()
-            if (currentUser != null) {
-                // Get the current date and format it to dd/MM/yyyy
-                val calendar = Calendar.getInstance()
-                val dateFormat = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
-                val formattedDate = dateFormat.format(calendar.time)
+            val currentUser = getDataUiState.value.userDetails?.toUser() ?: return@launch
 
-                // Update the user with the new streak date
-                userRepository.updateUser(currentUser.copy(dailyDate = formattedDate))
+            val dateFormat = DateTimeFormatter.ofPattern("dd/MM/yyyy")
+
+            // Parse the stored dailyDate and the current date
+            val storedDate = try {
+                LocalDate.parse(currentUser.dailyDate, dateFormat)
+            } catch (e: Exception) {
+                null
+            }
+            val currentDate = LocalDate.now()
+
+            // Check if the storedDate is more than one day before the current date
+            val isNewDay = if (storedDate != null) {
+                ChronoUnit.DAYS.between(storedDate, currentDate) > 1
+            } else {
+                true // If dailyDate is null or not properly parsed, assume a new day
+            }
+
+            // Reset the streak if it's a new day
+            if (isNewDay) {
+                userRepository.updateUser(currentUser.copy(streak = 0))
             }
         }
     }

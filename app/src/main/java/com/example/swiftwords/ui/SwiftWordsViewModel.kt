@@ -1,7 +1,6 @@
 package com.example.swiftwords.ui
 
 import android.content.Context
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.Dispatchers
@@ -33,7 +32,7 @@ class SwiftWordsMainViewModel : ViewModel() {
 
     init {
         generateRandomLettersForBoth()
-        updateDateAtHourChange()
+        updateDateEveryHour()
     }
 
     suspend fun loadWordsFromAssets(context: Context): Set<String> {
@@ -46,23 +45,11 @@ class SwiftWordsMainViewModel : ViewModel() {
         }
     }
 
-    private fun updateDateAtHourChange() {
+    private fun updateDateEveryHour() {
         viewModelScope.launch {
-            while (isActive) {
+            while (isActive) {  // This will keep the coroutine running as long as the ViewModel is active
                 getDate()  // Update the date
-
-                // Calculate the delay until the start of the next hour
-                val currentTime = Calendar.getInstance()
-                val nextHour = (currentTime.clone() as Calendar).apply {
-                    add(Calendar.HOUR_OF_DAY, 1)  // Move to the next hour
-                    set(Calendar.MINUTE, 0)
-                    set(Calendar.SECOND, 0)
-                    set(Calendar.MILLISECOND, 0)
-                }
-
-                val delayUntilNextHour = nextHour.timeInMillis - currentTime.timeInMillis
-
-                delay(delayUntilNextHour)  // Wait until the next hour
+                delay(3600_000L)  // Delay for 1 hour (3600 seconds * 1000 milliseconds)
             }
         }
     }
@@ -72,7 +59,6 @@ class SwiftWordsMainViewModel : ViewModel() {
         val calendar = Calendar.getInstance()
         val dateFormat = SimpleDateFormat("dd/MM/yyyy HH:mm:ss", Locale.getDefault())
         val formattedDate = dateFormat.format(calendar.time)
-        Log.d("klok",formattedDate)
 
         // Update the UiState with the current date
         _uiState.update{currentState ->
@@ -102,14 +88,6 @@ class SwiftWordsMainViewModel : ViewModel() {
         _uiState.update { currentState ->
             currentState.copy(
                 setOfLettersForMode = generateNewRandomLetters()
-            )
-        }
-    }
-
-    private fun generateRandomLettersForLevel() {
-        _uiState.update { currentState ->
-            currentState.copy(
-                setOfLettersForLevel = generateNewRandomLetters()
             )
         }
     }

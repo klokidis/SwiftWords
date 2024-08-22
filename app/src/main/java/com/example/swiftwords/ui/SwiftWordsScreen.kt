@@ -75,6 +75,10 @@ fun SwiftWordsApp(
         }
     }
 
+    LaunchedEffect(mainUiState.todayDate) {
+        dataViewmodel.checkAndResetStreak()
+    }
+
     val wordListState = rememberSaveable { mutableStateOf<Set<String>?>(null) }
     val coroutineScope = rememberCoroutineScope()
     val coroutineLaunched = rememberSaveable { mutableStateOf(false) }

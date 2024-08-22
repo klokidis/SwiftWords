@@ -135,6 +135,7 @@ fun Game(
         onDispose {
             if (gameUiState.score >= 10) {
                 increaseScore(gameUiState.score)
+                mainViewModel.generateRandomLettersForBoth()
             }
         }
     }
