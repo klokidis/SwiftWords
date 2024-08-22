@@ -190,8 +190,8 @@ fun TopBar(
     streakDate: String,
     dateNow: String
 ) {
-    val formattedStreakDate = streakDate.substring(0, 10)
-    val formattedDateNow = dateNow.substring(0, 10)
+    val formattedStreakDate = safeSubstring(streakDate, 10)
+    val formattedDateNow = safeSubstring(dateNow, 10)
     Surface(
         modifier = Modifier
             .fillMaxWidth()
@@ -358,5 +358,13 @@ fun BottomLevel(onClick: () -> Unit, level: String, color: Int, colors: List<Col
                 style = MaterialTheme.typography.titleSmall.copy(fontSize = 22.sp, letterSpacing = 1.sp)
             )
         }
+    }
+}
+
+fun safeSubstring(input: String, length: Int): String {
+    return if (input.length >= length) {
+        input.substring(0, length)
+    } else {
+        "01/01/1999"//return random date
     }
 }

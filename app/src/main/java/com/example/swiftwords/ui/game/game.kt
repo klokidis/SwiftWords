@@ -131,7 +131,7 @@ fun Game(
             }
         }
     }
-    DisposableEffect(Unit) {
+    DisposableEffect(Unit) { //update level even if user exist since he passed
         onDispose {
             if (gameUiState.score >= 10) {
                 increaseScore(gameUiState.score)
@@ -723,9 +723,6 @@ fun DisplayResults(
                         ) {
                             TextButton(
                                 onClick = {
-                                    if (score() >= 10) {
-                                        increaseScore(score())
-                                    }
                                     navigateUp()
                                 },
                                 enabled = buttonsEnabled
