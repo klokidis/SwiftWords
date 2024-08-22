@@ -172,8 +172,9 @@ fun SwiftWordsApp(
         ) {
             composable(route = SwiftWordsScreen.Levels.name) {
                 LevelScreen(
+                    dateNow = mainUiState.todayDate,
                     dataViewModel = dataViewmodel,
-                    dataUiState = dataUiState
+                    dataUiState = dataUiState,
                 ) {
                     viewModel.changeGameState(false)//tells the game this is not a game mode
                     viewModel.changeTime(40000L)
@@ -213,7 +214,9 @@ fun SwiftWordsApp(
                 wordListState.value?.let { wordList ->
                     dataUiState.userDetails?.let { data ->
                         Game(
-                            { mainUiState.gameTime },
+                            dateNow = mainUiState.todayDate,
+                            dataDate = { data.dailyDate },
+                            newTime = { mainUiState.gameTime },
                             wordList = wordList,
                             navigateUp = { navController.navigateUp() },
                             colorCode = data.color,

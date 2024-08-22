@@ -1,5 +1,6 @@
 package com.example.swiftwords.data
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.flow.SharingStarted
@@ -7,6 +8,9 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
+import java.text.SimpleDateFormat
+import java.util.Calendar
+import java.util.Locale
 
 data class ItemDetailsUiState(
     val userDetails: UserDetails? = null,
@@ -39,6 +43,21 @@ class GetDataViewModel(private val userRepository: UserRepository) : ViewModel()
         }
     }
 
+    private fun setStreak() {
+        viewModelScope.launch {
+            val currentUser = getDataUiState.value.userDetails?.toUser()
+            if (currentUser != null) {
+                // Get the current date and format it to dd/MM/yyyy
+                val calendar = Calendar.getInstance()
+                val dateFormat = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
+                val formattedDate = dateFormat.format(calendar.time)
+
+                // Update the user with the new streak date
+                userRepository.updateUser(currentUser.copy(dailyDate = formattedDate))
+            }
+        }
+    }
+
     fun updateChecked() {
         viewModelScope.launch {
             val currentUser = getDataUiState.value.userDetails?.toUser()
@@ -50,23 +69,41 @@ class GetDataViewModel(private val userRepository: UserRepository) : ViewModel()
 
     fun increaseCurrentLevel(score: Int) {
         viewModelScope.launch {
-            val currentUser = getDataUiState.value.userDetails?.toUser()
-            if (currentUser != null) {
-                if (currentUser.currentLevel > currentUser.endingLevel - 4) {//check for level spacing
-                    userRepository.updateUser(
-                        currentUser.copy(
-                            starterLevel = currentUser.currentLevel + 1 - 2,
-                            endingLevel = currentUser.currentLevel + 1 + 26,
-                            currentLevel = currentUser.currentLevel + 1
-                        )
-                    )
-                } else {
-                    userRepository.updateUser(currentUser.copy(currentLevel = currentUser.currentLevel + 1))
-                }
-                checkHighScore(score)
+            val currentUser = getDataUiState.value.userDetails?.toUser() ?: return@launch
+
+            val calendar = Calendar.getInstance()
+            val dateFormat = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
+            val formattedDate = dateFormat.format(calendar.time)
+            Log.d("klok", formattedDate)
+
+            val isNewDay = currentUser.dailyDate != formattedDate
+            val isLevelSpacing = currentUser.currentLevel > currentUser.endingLevel - 4
+
+            val newCurrentLevel = currentUser.currentLevel + 1
+            val newStarterLevel = newCurrentLevel - 2
+            val newEndingLevel = newCurrentLevel + 26
+
+            val updatedUser = if (isLevelSpacing) {
+                currentUser.copy(
+                    starterLevel = newStarterLevel,
+                    endingLevel = newEndingLevel,
+                    currentLevel = newCurrentLevel,
+                    dailyDate = formattedDate,
+                    streak = if (isNewDay) currentUser.streak + 1 else currentUser.streak
+                )
+            } else {
+                currentUser.copy(
+                    currentLevel = newCurrentLevel,
+                    dailyDate = formattedDate,
+                    streak = if (isNewDay) currentUser.streak + 1 else currentUser.streak
+                )
             }
+
+            userRepository.updateUser(updatedUser)
+            checkHighScore(score)
         }
     }
+
 
     suspend fun checkHighScore(thisScore: Int) {
         viewModelScope.launch {

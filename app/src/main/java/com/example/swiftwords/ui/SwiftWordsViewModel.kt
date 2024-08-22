@@ -1,13 +1,20 @@
 package com.example.swiftwords.ui
 
 import android.content.Context
+import android.util.Log
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.isActive
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import java.text.SimpleDateFormat
+import java.util.Calendar
 import java.util.Locale
 
 data class MainUiState(
@@ -16,6 +23,7 @@ data class MainUiState(
     val gameTime: Long = 40000L,
     val currentLevel: Int = 1,
     val isMode: Boolean = false,
+    val todayDate: String = ""
 )
 
 class SwiftWordsMainViewModel : ViewModel() {
@@ -25,6 +33,7 @@ class SwiftWordsMainViewModel : ViewModel() {
 
     init {
         generateRandomLettersForBoth()
+        updateDateAtHourChange()
     }
 
     suspend fun loadWordsFromAssets(context: Context): Set<String> {
@@ -34,6 +43,42 @@ class SwiftWordsMainViewModel : ViewModel() {
                 lines.forEach { words.add(it.trim().lowercase(Locale.ROOT)) }
             }
             words
+        }
+    }
+
+    private fun updateDateAtHourChange() {
+        viewModelScope.launch {
+            while (isActive) {
+                getDate()  // Update the date
+
+                // Calculate the delay until the start of the next hour
+                val currentTime = Calendar.getInstance()
+                val nextHour = (currentTime.clone() as Calendar).apply {
+                    add(Calendar.HOUR_OF_DAY, 1)  // Move to the next hour
+                    set(Calendar.MINUTE, 0)
+                    set(Calendar.SECOND, 0)
+                    set(Calendar.MILLISECOND, 0)
+                }
+
+                val delayUntilNextHour = nextHour.timeInMillis - currentTime.timeInMillis
+
+                delay(delayUntilNextHour)  // Wait until the next hour
+            }
+        }
+    }
+
+    private fun getDate() {
+        // Get the current date and format it
+        val calendar = Calendar.getInstance()
+        val dateFormat = SimpleDateFormat("dd/MM/yyyy HH:mm:ss", Locale.getDefault())
+        val formattedDate = dateFormat.format(calendar.time)
+        Log.d("klok",formattedDate)
+
+        // Update the UiState with the current date
+        _uiState.update{currentState ->
+            currentState.copy(
+                todayDate = formattedDate
+            )
         }
     }
 

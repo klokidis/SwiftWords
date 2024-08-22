@@ -60,6 +60,7 @@ import com.example.swiftwords.ui.elements.Levels
 
 @Composable
 fun LevelScreen(
+    dateNow: String,
     levelViewModel: LevelViewModel = viewModel(factory = AppViewModelProvider.Factory),
     dataViewModel: GetDataViewModel,
     dataUiState: ItemDetailsUiState,
@@ -102,6 +103,8 @@ fun LevelScreen(
             TopBar(
                 livesLeft = userDetails.lives,
                 streak = userDetails.streak,
+                streakDate = userDetails.dailyDate,
+                dateNow = dateNow,
                 color = userDetails.color,
                 changeColorFun = dataViewModel::updateUserColor,
                 colors = levelUiState.colors
@@ -178,7 +181,17 @@ fun LevelCard(
 }
 
 @Composable
-fun TopBar(livesLeft: Int, streak: Int, color: Int, changeColorFun: (Int) -> Unit,colors: List<ColorPair>) {
+fun TopBar(
+    livesLeft: Int,
+    streak: Int,
+    color: Int,
+    changeColorFun: (Int) -> Unit,
+    colors: List<ColorPair>,
+    streakDate: String,
+    dateNow: String
+) {
+    val formattedStreakDate = streakDate.substring(0, 10)
+    val formattedDateNow = dateNow.substring(0, 10)
     Surface(
         modifier = Modifier
             .fillMaxWidth()
@@ -195,19 +208,30 @@ fun TopBar(livesLeft: Int, streak: Int, color: Int, changeColorFun: (Int) -> Uni
         ) {
             MenuColorPicker(color, changeColorFun,colors)
             Spacer(modifier = Modifier.weight(1f))
-            if(streak == 0){
-                Image(
-                    painter = painterResource(id = R.drawable.fire_off),
-                    modifier = Modifier.size(30.dp),
-                    contentDescription = "streak"
-                )
-            }else{
-                Image(
-                    painter = painterResource(id = R.drawable.fire_on),
-                    modifier = Modifier.size(30.dp),
-                    contentDescription = "streak"
-                )
+            when {
+                streak == 0 -> {
+                    Image(
+                        painter = painterResource(id = R.drawable.fire_off),
+                        modifier = Modifier.size(30.dp),
+                        contentDescription = "streak"
+                    )
+                }
+                formattedDateNow != formattedStreakDate -> {
+                    Image(
+                        painter = painterResource(id = R.drawable.fire_ending),
+                        modifier = Modifier.size(30.dp),
+                        contentDescription = "streak"
+                    )
+                }
+                else -> {
+                    Image(
+                        painter = painterResource(id = R.drawable.fire_on),
+                        modifier = Modifier.size(30.dp),
+                        contentDescription = "streak"
+                    )
+                }
             }
+
             Text(
                 text = streak.toString(),
                 modifier = Modifier

@@ -55,6 +55,7 @@ import androidx.compose.material3.CheckboxDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.TextButton
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.derivedStateOf
@@ -92,6 +93,8 @@ import kotlin.reflect.KSuspendFunction1
 
 @Composable
 fun Game(
+    dateNow: String,
+    dataDate: () -> String,
     newTime: () -> Long,
     wordList: Set<String>,
     colorCode: Int,
@@ -104,7 +107,7 @@ fun Game(
     setOfLetters: Set<Char>,
     highScore: Int,
     checked: () -> Boolean,
-    changeChecked: KFunction0<Unit>
+    changeChecked: KFunction0<Unit>,
 ) {
     val gameUiState by viewModel.uiState.collectAsState()
     val isTimerRunning by remember { derivedStateOf { gameUiState.isTimerRunning } }
@@ -125,6 +128,13 @@ fun Game(
                 )
                 isLoading = false
                 textState = ""  // Reset textState after isCorrect is updated
+            }
+        }
+    }
+    DisposableEffect(Unit) {
+        onDispose {
+            if (gameUiState.score >= 10) {
+                increaseScore(gameUiState.score)
             }
         }
     }
@@ -330,11 +340,11 @@ fun Game(
         isMode,
         highScore,
         checkHighScore,
+        isVisible = !isTimerRunning,
         restartGame = {
             textState = ""
             isCorrect = null
-        },
-        isVisible = !isTimerRunning
+        }
     )
 }
 
@@ -615,7 +625,7 @@ fun DisplayResults(
     highScore: Int,
     checkHighScore: suspend (Int) -> Unit,
     isVisible: Boolean,
-    restartGame: () -> Unit
+    restartGame: () -> Unit,
 ) {
     AnimatedVisibility(
         visible = isVisible,
@@ -749,9 +759,9 @@ fun DisplayResults(
                                 }
                                 TextButton(
                                     onClick = {
+                                        increaseScore(score())
                                         restartGame()
                                         coroutineScope.launch {
-                                            increaseScore(score())
                                             viewModel.generateRandomLettersForBoth()
                                             restart(time())
                                         }
