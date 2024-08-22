@@ -82,7 +82,8 @@ fun LevelScreen(
             dataUiState.userDetails?.let { userDetails ->
                 itemsIndexed((userDetails.starterLevel..userDetails.endingLevel).toList()) { index, level ->
                     if (level > 0) {
-                        val (leftPadding, rightPadding) = levelUiState.padding.getOrNull(index) ?: Pair(0.dp, 0.dp)
+                        val (leftPadding, rightPadding) = levelUiState.padding.getOrNull(index)
+                            ?: Pair(0.dp, 0.dp)
                         LevelCard(
                             number = level,
                             rightPadding = rightPadding,
@@ -206,31 +207,27 @@ fun TopBar(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.Center
         ) {
-            MenuColorPicker(color, changeColorFun,colors)
+            MenuColorPicker(color, changeColorFun, colors)
+
             Spacer(modifier = Modifier.weight(1f))
-            when {
-                streak == 0 -> {
-                    Image(
-                        painter = painterResource(id = R.drawable.fire_off),
-                        modifier = Modifier.size(30.dp),
-                        contentDescription = "streak"
-                    )
-                }
-                formattedDateNow != formattedStreakDate -> {
-                    Image(
-                        painter = painterResource(id = R.drawable.fire_ending),
-                        modifier = Modifier.size(30.dp),
-                        contentDescription = "streak"
-                    )
-                }
-                else -> {
-                    Image(
-                        painter = painterResource(id = R.drawable.fire_on),
-                        modifier = Modifier.size(30.dp),
-                        contentDescription = "streak"
-                    )
-                }
-            }
+
+            Image(
+                painter = when {
+                    streak == 0 -> {
+                        painterResource(id = R.drawable.fire_off)
+                    }
+
+                    formattedDateNow != formattedStreakDate -> {
+                        painterResource(id = R.drawable.fire_ending)
+                    }
+
+                    else -> {
+                        painterResource(id = R.drawable.fire_on)
+                    }
+                },
+                modifier = Modifier.size(30.dp),
+                contentDescription = "streak"
+            )
 
             Text(
                 text = streak.toString(),
@@ -238,7 +235,9 @@ fun TopBar(
                     .padding(start = 3.dp, bottom = 3.dp),
                 style = MaterialTheme.typography.titleMedium.copy(fontSize = 24.sp)
             )
+
             Spacer(modifier = Modifier.weight(1f))
+
             Image(
                 painter = painterResource(id = R.drawable.heart),
                 modifier = Modifier.size(28.dp),
@@ -271,9 +270,12 @@ fun MenuColorPicker(color: Int, changeColorFun: (Int) -> Unit, colors: List<Colo
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.Center
         ) {
-            IconButton(onClick = { isExpanded = !isExpanded },colors = IconButtonDefaults.iconButtonColors(
-                containerColor = animatedColorIconButton
-            )) {
+            IconButton(
+                onClick = { isExpanded = !isExpanded },
+                colors = IconButtonDefaults.iconButtonColors(
+                    containerColor = animatedColorIconButton
+                )
+            ) {
                 Icon(
                     modifier = Modifier
                         .size(30.dp),
@@ -355,7 +357,10 @@ fun BottomLevel(onClick: () -> Unit, level: String, color: Int, colors: List<Col
             Text(
                 text = "Level: $level",
                 color = Color.White,
-                style = MaterialTheme.typography.titleSmall.copy(fontSize = 22.sp, letterSpacing = 1.sp)
+                style = MaterialTheme.typography.titleSmall.copy(
+                    fontSize = 22.sp,
+                    letterSpacing = 1.sp
+                )
             )
         }
     }
