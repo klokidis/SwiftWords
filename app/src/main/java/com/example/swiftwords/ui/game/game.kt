@@ -115,6 +115,7 @@ fun Game(
     var textState by rememberSaveable { mutableStateOf("") }
     var isCorrect by rememberSaveable { mutableStateOf<Boolean?>(null) }
     var isLoading by rememberSaveable { mutableStateOf(false) }
+    var onExitButtonPressed by rememberSaveable { mutableStateOf(false) }
     var lastMessage by rememberSaveable { mutableStateOf("Please enter an answer.") }
     val scroll = rememberScrollState()
     val checkAnswer: () -> Unit = remember(setOfLetters) { // remember so it doesn't composition
@@ -133,7 +134,7 @@ fun Game(
     }
     DisposableEffect(Unit) { //update level even if user exist since he passed
         onDispose {
-            if (gameUiState.score >= 10) {
+            if (!onExitButtonPressed && gameUiState.score >= 1) {
                 increaseScore(gameUiState.score)
                 mainViewModel.generateRandomLettersForBoth()
             }
@@ -345,7 +346,8 @@ fun Game(
         restartGame = {
             textState = ""
             isCorrect = null
-        }
+        },
+        exitPressed = { onExitButtonPressed = true}
     )
 }
 
@@ -627,6 +629,7 @@ fun DisplayResults(
     checkHighScore: suspend (Int) -> Unit,
     isVisible: Boolean,
     restartGame: () -> Unit,
+    exitPressed: () -> Unit,
 ) {
     AnimatedVisibility(
         visible = isVisible,
@@ -724,6 +727,7 @@ fun DisplayResults(
                         ) {
                             TextButton(
                                 onClick = {
+                                    exitPressed()
                                     if (score() >= 10) {
                                         increaseScore(score())
                                         viewModel.generateRandomLettersForBoth()
@@ -768,7 +772,7 @@ fun DisplayResults(
                                             restart(time())
                                         }
                                     },
-                                    enabled = score() >= 10 && buttonsEnabled
+                                    enabled = score() >= 0 && buttonsEnabled
                                 ) {
                                     Text("Next Level")
                                 }
