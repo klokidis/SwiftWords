@@ -32,7 +32,7 @@ class SwiftWordsMainViewModel : ViewModel() {
 
     init {
         generateRandomLettersForBoth()
-        updateDateEveryHour()
+        updateDateAtHourChange()
     }
 
     suspend fun loadWordsFromAssets(context: Context): Set<String> {
@@ -45,11 +45,23 @@ class SwiftWordsMainViewModel : ViewModel() {
         }
     }
 
-    private fun updateDateEveryHour() {
+    private fun updateDateAtHourChange() {
         viewModelScope.launch {
-            while (isActive) {  // This will keep the coroutine running as long as the ViewModel is active
+            while (isActive) {
                 getDate()  // Update the date
-                delay(3600_000L)  // Delay for 1 hour (3600 seconds * 1000 milliseconds)
+
+                // Calculate the delay until the start of the next hour
+                val currentTime = Calendar.getInstance()
+                val nextHour = (currentTime.clone() as Calendar).apply {
+                    add(Calendar.HOUR_OF_DAY, 1)  // Move to the next hour
+                    set(Calendar.MINUTE, 0)
+                    set(Calendar.SECOND, 0)
+                    set(Calendar.MILLISECOND, 0)
+                }
+
+                val delayUntilNextHour = nextHour.timeInMillis - currentTime.timeInMillis
+
+                delay(delayUntilNextHour)  // Wait until the next hour
             }
         }
     }

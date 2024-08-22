@@ -45,7 +45,7 @@ class GetDataViewModel(private val userRepository: UserRepository) : ViewModel()
             }
         }
     }
-    // Method to be called when the app launches to check and reset streak
+
     fun checkAndResetStreak() {
         viewModelScope.launch {
             val currentUser = getDataUiState.value.userDetails?.toUser() ?: return@launch

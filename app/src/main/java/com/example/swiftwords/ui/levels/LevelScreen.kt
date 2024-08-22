@@ -103,7 +103,7 @@ fun LevelScreen(
             TopBar(
                 livesLeft = userDetails.lives,
                 streak = userDetails.streak,
-                streakDate = userDetails.dailyDate,
+                streakDateData = userDetails.dailyDate,
                 dateNow = dateNow,
                 color = userDetails.color,
                 changeColorFun = dataViewModel::updateUserColor,
@@ -187,10 +187,10 @@ fun TopBar(
     color: Int,
     changeColorFun: (Int) -> Unit,
     colors: List<ColorPair>,
-    streakDate: String,
+    streakDateData: String,
     dateNow: String
 ) {
-    val formattedStreakDate = safeSubstring(streakDate, 10)
+    val formattedStreakDate = safeSubstring(streakDateData, 10)
     val formattedDateNow = safeSubstring(dateNow, 10)
     Surface(
         modifier = Modifier
