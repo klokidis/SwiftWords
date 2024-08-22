@@ -134,7 +134,7 @@ fun Game(
     }
     DisposableEffect(Unit) { //update level even if user exist since he passed
         onDispose {
-            if (!onExitButtonPressed && gameUiState.score >= 1) {
+            if (!onExitButtonPressed && gameUiState.score >= 1 && ! isMode) {
                 increaseScore(gameUiState.score)
                 mainViewModel.generateRandomLettersForBoth()
             }
@@ -728,7 +728,7 @@ fun DisplayResults(
                             TextButton(
                                 onClick = {
                                     exitPressed()
-                                    if (score() >= 10) {
+                                    if (score() >= 10 && !isMode) {
                                         increaseScore(score())
                                         viewModel.generateRandomLettersForBoth()
                                     }
