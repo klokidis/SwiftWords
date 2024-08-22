@@ -1,6 +1,5 @@
 package com.example.swiftwords.data
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.flow.SharingStarted
@@ -48,7 +47,7 @@ class GetDataViewModel(private val userRepository: UserRepository) : ViewModel()
 
     fun checkAndResetStreak() {
         viewModelScope.launch {
-            val currentUser = getDataUiState.value.userDetails?.toUser() ?: return@launch
+            val currentUser = getDataUiState.value.userDetails?.toUser() ?: return@launch //if null returns
 
             val dateFormat = DateTimeFormatter.ofPattern("dd/MM/yyyy")
 
@@ -61,14 +60,14 @@ class GetDataViewModel(private val userRepository: UserRepository) : ViewModel()
             val currentDate = LocalDate.now()
 
             // Check if the storedDate is more than one day before the current date
-            val isNewDay = if (storedDate != null) {
+            val loseTheStreak = if (storedDate != null) {
                 ChronoUnit.DAYS.between(storedDate, currentDate) > 1
             } else {
                 true // If dailyDate is null or not properly parsed, assume a new day
             }
 
-            // Reset the streak if it's a new day
-            if (isNewDay) {
+            // Reset the streak if it's more than one day before the current date
+            if (loseTheStreak) {
                 userRepository.updateUser(currentUser.copy(streak = 0))
             }
         }
@@ -90,7 +89,6 @@ class GetDataViewModel(private val userRepository: UserRepository) : ViewModel()
             val calendar = Calendar.getInstance()
             val dateFormat = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
             val formattedDate = dateFormat.format(calendar.time)
-            Log.d("klok", formattedDate)
 
             val isNewDay = currentUser.dailyDate != formattedDate
             val isLevelSpacing = currentUser.currentLevel > currentUser.endingLevel - 4
@@ -124,7 +122,6 @@ class GetDataViewModel(private val userRepository: UserRepository) : ViewModel()
                     streak = newStreak
                 )
             }
-
 
             userRepository.updateUser(updatedUser)
             checkHighScore(score)
