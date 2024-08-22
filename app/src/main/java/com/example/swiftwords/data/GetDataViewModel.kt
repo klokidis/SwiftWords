@@ -100,20 +100,31 @@ class GetDataViewModel(private val userRepository: UserRepository) : ViewModel()
             val newEndingLevel = newCurrentLevel + 26
 
             val updatedUser = if (isLevelSpacing) {
+                val newStreak = when {
+                    isNewDay -> currentUser.streak + 1
+                    currentUser.streak == 0 && !isNewDay -> 1 //in case of error
+                    else -> currentUser.streak
+                }
                 currentUser.copy(
                     starterLevel = newStarterLevel,
                     endingLevel = newEndingLevel,
                     currentLevel = newCurrentLevel,
                     dailyDate = formattedDate,
-                    streak = if (isNewDay) currentUser.streak + 1 else currentUser.streak
+                    streak = newStreak
                 )
             } else {
+                val newStreak = when {
+                    isNewDay -> currentUser.streak + 1
+                    currentUser.streak == 0 && !isNewDay -> 1
+                    else -> currentUser.streak
+                }
                 currentUser.copy(
                     currentLevel = newCurrentLevel,
                     dailyDate = formattedDate,
-                    streak = if (isNewDay) currentUser.streak + 1 else currentUser.streak
+                    streak = newStreak
                 )
             }
+
 
             userRepository.updateUser(updatedUser)
             checkHighScore(score)
