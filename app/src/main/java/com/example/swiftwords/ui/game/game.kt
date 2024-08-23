@@ -228,7 +228,7 @@ fun Game(
                         value = { gameUiState.value },
                         currentTime = { gameUiState.currentTime },
                         activeBarColor = DataSource().colorPairs[colorCode].darkColor,
-                        modifier = Modifier.size(230.dp)  // Adjust the size as per your requirement
+                        modifier = Modifier.size(230.dp)
                     )
                 }
             }
@@ -251,7 +251,7 @@ fun Game(
                         }
 
                         else -> {
-                            lastMessage = "Please enter an answer."
+                            lastMessage = "Enter an answer."
                             lastMessage
                         }
                     },
@@ -521,7 +521,7 @@ fun TimerText(currentTime: () -> Long, modifier: Modifier) {
     val formattedTime by remember(currentTime) {
         derivedStateOf {
             val time = currentTime()
-            if (time != 130000000L) {
+            if (time != 130000000L) { //meaning game mode with no time
                 if (time > 1000L) {
                     time.toString().take(if (time < 10000L) 1 else 2)
                 } else {
@@ -728,7 +728,7 @@ fun DisplayResults(
                             TextButton(
                                 onClick = {
                                     exitPressed()
-                                    if (score() >= 10 && !isMode) {
+                                    if (score() >= 1 && !isMode) {
                                         increaseScore(score())
                                         viewModel.generateRandomLettersForBoth()
                                     }

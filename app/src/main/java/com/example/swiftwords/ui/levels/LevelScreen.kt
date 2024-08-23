@@ -60,6 +60,7 @@ import com.example.swiftwords.ui.elements.Levels
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Locale
+import kotlin.math.abs
 
 @Composable
 fun LevelScreen(
@@ -290,7 +291,7 @@ fun areDatesMoreThanOneDaysApart(date1: String, date2: String): Boolean {
     val timeInMillis2 = calendar2.timeInMillis
 
     // Calculate the difference in milliseconds
-    val differenceInMillis = Math.abs(timeInMillis1 - timeInMillis2)
+    val differenceInMillis = abs(timeInMillis1 - timeInMillis2)
 
     // Calculate the difference in days
     val differenceInDays = differenceInMillis / (24 * 60 * 60 * 1000)
