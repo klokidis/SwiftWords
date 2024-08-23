@@ -47,7 +47,8 @@ class GetDataViewModel(private val userRepository: UserRepository) : ViewModel()
 
     fun checkAndResetStreak() {
         viewModelScope.launch {
-            val currentUser = getDataUiState.value.userDetails?.toUser() ?: return@launch //if null returns
+            val currentUser =
+                getDataUiState.value.userDetails?.toUser() ?: return@launch //if null returns
 
             val dateFormat = DateTimeFormatter.ofPattern("dd/MM/yyyy")
 
@@ -128,6 +129,30 @@ class GetDataViewModel(private val userRepository: UserRepository) : ViewModel()
         }
     }
 
+    fun increaseStreak() {
+        viewModelScope.launch {
+            val currentUser = getDataUiState.value.userDetails?.toUser() ?: return@launch
+
+            val calendar = Calendar.getInstance()
+            val dateFormat = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
+            val formattedDate = dateFormat.format(calendar.time)
+
+            val isNewDay = currentUser.dailyDate != formattedDate
+
+            val newStreak = when {
+                isNewDay -> currentUser.streak + 1
+                currentUser.streak == 0 && !isNewDay -> 1
+                else -> currentUser.streak
+            }
+
+            userRepository.updateUser(
+                currentUser.copy(
+                    dailyDate = formattedDate,
+                    streak = newStreak
+                )
+            )
+        }
+    }
 
     suspend fun checkHighScore(thisScore: Int) {
         viewModelScope.launch {

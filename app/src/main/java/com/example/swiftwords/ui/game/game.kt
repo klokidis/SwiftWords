@@ -108,6 +108,7 @@ fun Game(
     highScore: Int,
     checked: () -> Boolean,
     changeChecked: KFunction0<Unit>,
+    increaseStreak: KFunction0<Unit>,
 ) {
     val gameUiState by viewModel.uiState.collectAsState()
     val isTimerRunning by remember { derivedStateOf { gameUiState.isTimerRunning } }
@@ -347,7 +348,10 @@ fun Game(
             textState = ""
             isCorrect = null
         },
-        exitPressed = { onExitButtonPressed = true}
+        exitPressed = { onExitButtonPressed = true},
+        dateNow = dateNow,
+        dataDate = dataDate,
+        increaseStreak = increaseStreak
     )
 }
 
@@ -630,6 +634,9 @@ fun DisplayResults(
     isVisible: Boolean,
     restartGame: () -> Unit,
     exitPressed: () -> Unit,
+    dateNow: String,
+    dataDate: () -> String,
+    increaseStreak: KFunction0<Unit>,
 ) {
     AnimatedVisibility(
         visible = isVisible,
@@ -647,7 +654,7 @@ fun DisplayResults(
 
         // Launch a coroutine to enable the buttons after a delay
         LaunchedEffect(Unit) {
-            delay(800L) // 1 second delay
+            delay(800L)
             buttonsEnabled = true
         }
         Box(
@@ -687,6 +694,32 @@ fun DisplayResults(
                         }
                     }
                 } else {
+                    if(!isMode && (dateNow.substring(0, 10)!= dataDate()) && score() >= 1){
+                        Column(
+                            modifier = Modifier
+                                .padding(10.dp),
+                            verticalArrangement = Arrangement.Center,
+                            horizontalAlignment = Alignment.CenterHorizontally
+                        ) {
+                            Image(
+                                painter = painterResource(id = R.drawable.sage),
+                                modifier = Modifier.size(220.dp),
+                                contentDescription = null
+                            )
+                            Text(
+                                "good job streak increased",
+                                style = MaterialTheme.typography.titleSmall
+                            )
+                            TextButton(
+                                onClick = {
+                                    increaseStreak()
+                                },
+                                enabled = buttonsEnabled
+                            ) {
+                                Text("Claim")
+                            }
+                        }
+                    }else{
                     Column(
                         modifier = Modifier
                             .padding(10.dp),
@@ -779,6 +812,7 @@ fun DisplayResults(
                             }
                         }
                     }
+                        }
                 }
             }
         }

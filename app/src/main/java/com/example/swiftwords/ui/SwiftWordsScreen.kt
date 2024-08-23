@@ -218,6 +218,7 @@ fun SwiftWordsApp(
                 wordListState.value?.let { wordList ->
                     dataUiState.userDetails?.let { data ->
                         Game(
+                            increaseStreak = dataViewmodel::increaseStreak,
                             dateNow = mainUiState.todayDate,
                             dataDate = { data.dailyDate },
                             newTime = { mainUiState.gameTime },
