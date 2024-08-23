@@ -135,7 +135,7 @@ fun Game(
     }
     DisposableEffect(Unit) { //update level even if user exist since he passed
         onDispose {
-            if (!onExitButtonPressed && gameUiState.score >= 1 && ! isMode) {
+            if (!onExitButtonPressed && gameUiState.score >= 1 && !isMode) {
                 increaseScore(gameUiState.score)
                 mainViewModel.generateRandomLettersForBoth()
             }
@@ -348,7 +348,7 @@ fun Game(
             textState = ""
             isCorrect = null
         },
-        exitPressed = { onExitButtonPressed = true},
+        exitPressed = { onExitButtonPressed = true },
         dateNow = dateNow,
         dataDate = dataDate,
         increaseStreak = increaseStreak
@@ -694,7 +694,7 @@ fun DisplayResults(
                         }
                     }
                 } else {
-                    if(!isMode && (dateNow.substring(0, 10)!= dataDate()) && score() >= 1){
+                    if (!isMode && (dateNow.substring(0, 10) != dataDate()) && score() >= 1) {
                         Column(
                             modifier = Modifier
                                 .padding(10.dp),
@@ -719,100 +719,100 @@ fun DisplayResults(
                                 Text("Claim")
                             }
                         }
-                    }else{
-                    Column(
-                        modifier = Modifier
-                            .padding(10.dp),
-                        verticalArrangement = Arrangement.Center,
-                        horizontalAlignment = Alignment.CenterHorizontally
-                    ) {
-                        Image(
-                            painter = painterResource(id = R.drawable.sage),
-                            modifier = Modifier.size(220.dp),
-                            contentDescription = null
-                        )
-                        when {
-                            score() >= 10 && !isMode -> {
-                                Text(
-                                    "Congrats!! you passed with score: " + score().toString(),
-                                    style = MaterialTheme.typography.titleSmall
-                                )
-                            }
-
-                            !isMode -> {
-                                Text(
-                                    "you failed :( with score: " + score().toString(),
-                                    style = MaterialTheme.typography.titleSmall
-                                )
-                            }
-
-                            else -> {
-                                Text(
-                                    "nice try!! with score: " + score().toString(),
-                                    style = MaterialTheme.typography.titleSmall
-                                )
-                            }
-                        }
-
-                        Row(
-                            horizontalArrangement = Arrangement.Center,
-                            verticalAlignment = Alignment.CenterVertically
+                    } else {
+                        Column(
+                            modifier = Modifier
+                                .padding(10.dp),
+                            verticalArrangement = Arrangement.Center,
+                            horizontalAlignment = Alignment.CenterHorizontally
                         ) {
-                            TextButton(
-                                onClick = {
-                                    exitPressed()
-                                    if (score() >= 1 && !isMode) {
-                                        increaseScore(score())
-                                        viewModel.generateRandomLettersForBoth()
-                                    }
-                                    navigateUp()
-                                },
-                                enabled = buttonsEnabled
-                            ) {
-                                Text("Exit")
+                            Image(
+                                painter = painterResource(id = R.drawable.sage),
+                                modifier = Modifier.size(220.dp),
+                                contentDescription = null
+                            )
+                            when {
+                                score() >= 10 && !isMode -> {
+                                    Text(
+                                        "Congrats!! you passed with score: " + score().toString(),
+                                        style = MaterialTheme.typography.titleSmall
+                                    )
+                                }
+
+                                !isMode -> {
+                                    Text(
+                                        "you failed :( with score: " + score().toString(),
+                                        style = MaterialTheme.typography.titleSmall
+                                    )
+                                }
+
+                                else -> {
+                                    Text(
+                                        "nice try!! with score: " + score().toString(),
+                                        style = MaterialTheme.typography.titleSmall
+                                    )
+                                }
                             }
-                            if (isMode) {
+
+                            Row(
+                                horizontalArrangement = Arrangement.Center,
+                                verticalAlignment = Alignment.CenterVertically
+                            ) {
                                 TextButton(
                                     onClick = {
-                                        restartGame()
-                                        coroutineScope.launch {
+                                        exitPressed()
+                                        if (score() >= 1 && !isMode) {
+                                            increaseScore(score())
                                             viewModel.generateRandomLettersForBoth()
-                                            restart(time())
                                         }
+                                        navigateUp()
                                     },
                                     enabled = buttonsEnabled
                                 ) {
-                                    Text("Play Again")
+                                    Text("Exit")
                                 }
-                            } else {
-                                TextButton(
-                                    onClick = {
-                                        restartGame()
-                                        coroutineScope.launch {
-                                            restart(time())
-                                        }
-                                    },
-                                    enabled = buttonsEnabled
-                                ) {
-                                    Text("Try Again (-1 life)")
-                                }
-                                TextButton(
-                                    onClick = {
-                                        increaseScore(score())
-                                        restartGame()
-                                        coroutineScope.launch {
-                                            viewModel.generateRandomLettersForBoth()
-                                            restart(time())
-                                        }
-                                    },
-                                    enabled = score() >= 0 && buttonsEnabled
-                                ) {
-                                    Text("Next Level")
+                                if (isMode) {
+                                    TextButton(
+                                        onClick = {
+                                            restartGame()
+                                            coroutineScope.launch {
+                                                viewModel.generateRandomLettersForBoth()
+                                                restart(time())
+                                            }
+                                        },
+                                        enabled = buttonsEnabled
+                                    ) {
+                                        Text("Play Again")
+                                    }
+                                } else {
+                                    TextButton(
+                                        onClick = {
+                                            restartGame()
+                                            coroutineScope.launch {
+                                                restart(time())
+                                            }
+                                        },
+                                        enabled = buttonsEnabled
+                                    ) {
+                                        Text("Try Again (-1 life)")
+                                    }
+                                    TextButton(
+                                        onClick = {
+                                            increaseScore(score())
+                                            restartGame()
+                                            coroutineScope.launch {
+                                                viewModel.generateRandomLettersForBoth()
+                                                restart(time())
+                                            }
+                                        },
+                                        enabled = score() >= 0 && buttonsEnabled
+                                    ) {
+                                        Text("Next Level")
+                                    }
                                 }
                             }
                         }
                     }
-                        }
                 }
             }
         }
