@@ -14,31 +14,41 @@ class SoundViewModel(application: Application) : AndroidViewModel(application) {
     private val incorrectSound: MediaPlayer by lazy {
         MediaPlayer.create(application, R.raw.falsesound)
     }
-/*
-    private val winSound: MediaPlayer by lazy {
-        MediaPlayer.create(application, R.raw.win)
-    }
-*/
+
+    //variable to control volume
+    private val volume: Float = 0.1f // Volume level between 0.0 and 1.0
+
+    /*
+        private val winSound: MediaPlayer by lazy {
+            MediaPlayer.create(application, R.raw.win)
+        }
+    */
     fun playCorrectSound() {
         correctSound.seekTo(0)
+        incorrectSound.seekTo(0)
+        correctSound.setVolume(volume, volume)
         correctSound.start()
     }
+
     fun playIncorrectSound() {
+        correctSound.seekTo(0)
         incorrectSound.seekTo(0)
+        incorrectSound.setVolume(volume, volume)
         incorrectSound.start()
     }
-/*
-    fun playWinSound() {
-        winSound.start()
-    }
-*/
+
+    /*
+        fun playWinSound() {
+            winSound.start()
+        }
+    */
     override fun onCleared() {
         super.onCleared()
         correctSound.release()
 
         incorrectSound.release()
-    /*
-        winSound.release()
-        */
+        /*
+            winSound.release()
+            */
     }
 }
