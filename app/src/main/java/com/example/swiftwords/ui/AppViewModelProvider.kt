@@ -7,6 +7,7 @@ import androidx.lifecycle.viewmodel.viewModelFactory
 import com.example.swiftwords.data.DataViewmodel
 import com.example.swiftwords.InventoryApplication
 import com.example.swiftwords.data.GetDataViewModel
+import com.example.swiftwords.ui.elements.SoundViewModel
 import com.example.swiftwords.ui.levels.LevelViewModel
 
 
@@ -23,6 +24,9 @@ object AppViewModelProvider {
         }
         initializer {
             GetDataViewModel(inventoryApplication().container.userRepository)
+        }
+        initializer {
+            SoundViewModel(inventoryApplication())
         }
     }
 }
