@@ -25,13 +25,11 @@ class SoundViewModel(application: Application) : AndroidViewModel(application) {
     */
     fun playCorrectSound() {
         correctSound.seekTo(0)
-        incorrectSound.seekTo(0)
         correctSound.setVolume(volume, volume)
         correctSound.start()
     }
 
     fun playIncorrectSound() {
-        correctSound.seekTo(0)
         incorrectSound.seekTo(0)
         incorrectSound.setVolume(volume, volume)
         incorrectSound.start()
