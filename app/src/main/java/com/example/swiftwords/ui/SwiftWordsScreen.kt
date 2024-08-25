@@ -84,17 +84,15 @@ fun SwiftWordsApp(
     val coroutineLaunched = rememberSaveable { mutableStateOf(false) }
     val context = LocalContext.current // Get context from LocalContext
     LaunchedEffect(Unit) {
-        coroutineScope.launch { //since it needs context its initialised here
-            if (!coroutineLaunched.value) {
-                coroutineScope.launch {
-                    try {
-                        val wordList = viewModel.loadWordsFromAssets(context)
-                        wordListState.value = wordList
-                        coroutineLaunched.value = true
-                    } catch (e: Exception) {
-                        // Handle the exception appropriately, update UI to show an error message
-                        e.printStackTrace()
-                    }
+        if (!coroutineLaunched.value) {
+            coroutineScope.launch {
+                try {
+                    val wordList = viewModel.loadWordsFromAssets(context)
+                    wordListState.value = wordList
+                    coroutineLaunched.value = true
+                } catch (e: Exception) {
+                    // Handle the exception appropriately, update UI to show an error message
+                    e.printStackTrace()
                 }
             }
         }
