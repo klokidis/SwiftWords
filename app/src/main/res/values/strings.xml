@@ -14,4 +14,5 @@
     <string name="boyName">example</string>
     <string name="levels">Levels</string>
     <string name="pickTheme">pick color theme</string>
+    <string name="shuffle">Shuffle</string>
 </resources>

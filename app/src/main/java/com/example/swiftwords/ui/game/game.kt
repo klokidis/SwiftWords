@@ -122,6 +122,7 @@ fun Game(
     var lastMessage by rememberSaveable { mutableStateOf("Please enter an answer.") }
     val scroll = rememberScrollState()
     val soundViewModel: SoundViewModel = viewModel(factory = AppViewModelProvider.Factory)
+    var listOfLetters by rememberSaveable { mutableStateOf(setOfLetters.toList()) } // Mutable state for shuffled list
     val checkAnswer: () -> Unit = remember(setOfLetters) { // remember so it doesn't composition
         {
             isLoading = true
@@ -133,7 +134,7 @@ fun Game(
                 )
                 isLoading = false
                 textState = ""  // Reset textState after isCorrect is updated
-                when(isCorrect){
+                when (isCorrect) {
                     true -> soundViewModel.playCorrectSound()
                     else -> soundViewModel.playIncorrectSound()
                 }
@@ -204,7 +205,6 @@ fun Game(
                     verticalArrangement = Arrangement.Center,
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
-                    val listOfLetters = setOfLetters.toList()
 
                     RowOfLetters(
                         listOfLetters[0],
@@ -303,7 +303,7 @@ fun Game(
             Spacer(modifier = Modifier.weight(0.2f))
             if (checked() && isTimerRunning) {
                 CustomKeyboard(
-                    listOfLetters = setOfLetters.toList(),
+                    listOfLetters = listOfLetters,
                     colorCode,
                     onClick = { newText ->
                         textState =
@@ -337,6 +337,20 @@ fun Game(
                     contentDescription = "keyboard",
                 )
                 Spacer(modifier = Modifier.weight(1f))
+                IconButton(
+                    onClick = {
+                        listOfLetters = listOfLetters.shuffled()
+                    },
+                    modifier = Modifier
+                        .size(33.dp)
+                        .padding(end = 7.dp)
+                ) {
+                    Icon(
+                        imageVector = ImageVector.vectorResource(R.drawable.shuffle_24px),
+                        contentDescription = stringResource(R.string.shuffle)
+                    )
+
+                }
             }
         }
     }
