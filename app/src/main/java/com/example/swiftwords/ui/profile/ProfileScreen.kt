@@ -39,7 +39,7 @@ fun ProfileScreen(
     val painter = if(character){
         painterResource(id = R.drawable.cypher)
     }else{
-        painterResource(id = R.drawable.sage)
+        painterResource(id = R.drawable.cypher)
     }
     Column(
         modifier = Modifier
@@ -61,7 +61,7 @@ fun ProfileScreen(
         Spacer(modifier = Modifier.padding(4.dp))
         Text(
             text = name,
-            style = MaterialTheme.typography.titleSmall.copy(fontSize = 30.sp, letterSpacing = 1.sp)
+            style = MaterialTheme.typography.titleSmall.copy(fontSize = 35.sp, letterSpacing = 1.sp)
         )
         Spacer(modifier = Modifier.padding(20.dp))
         Scores(currentLevel, highScore, streak)
