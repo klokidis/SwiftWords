@@ -50,6 +50,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.CheckboxDefaults
 import androidx.compose.material3.Icon
@@ -372,7 +373,8 @@ fun Game(
         exitPressed = { onExitButtonPressed = true },
         dateNow = dateNow,
         dataDate = dataDate,
-        increaseStreak = increaseStreak
+        increaseStreak = increaseStreak,
+        colorCode = colorCode
     )
 }
 
@@ -659,6 +661,9 @@ fun DisplayResults(
     dateNow: String,
     dataDate: () -> String,
     increaseStreak: KFunction0<Unit>,
+    colorCode: Int,
+    boxColor: Color = DataSource().colorPairs[colorCode].darkColor,
+    isDarkTheme: Boolean = isSystemInDarkTheme(),
 ) {
     AnimatedVisibility(
         visible = isVisible,
@@ -673,6 +678,15 @@ fun DisplayResults(
     ) {
         val coroutineScope = rememberCoroutineScope()
         var buttonsEnabled by remember { mutableStateOf(false) }
+        val textColor by remember {
+            mutableStateOf(
+                if (isDarkTheme) {
+                    Color.White
+                } else {
+                    Color.Black
+                }
+            )
+        }
 
         // Launch a coroutine to enable the buttons after a delay
         LaunchedEffect(Unit) {
@@ -682,11 +696,14 @@ fun DisplayResults(
         Box(
             modifier = Modifier
                 .fillMaxSize()
-                .background(Color.Black.copy(alpha = 0.4f)),
+                .background(Color.Black.copy(alpha = 0.3f)),
         ) {
             Card(
                 modifier = Modifier
                     .align(Alignment.Center),
+                colors = CardDefaults.cardColors(
+                    MaterialTheme.colorScheme.secondary
+                )
             ) {
                 if (score() > highScore && !isMode) {
                     Column(
@@ -702,7 +719,8 @@ fun DisplayResults(
                         )
                         Text(
                             "New high score: " + score().toString(),
-                            style = MaterialTheme.typography.titleSmall
+                            style = MaterialTheme.typography.titleSmall,
+                            color = textColor
                         )
                         TextButton(
                             onClick = {
@@ -712,7 +730,11 @@ fun DisplayResults(
                             },
                             enabled = buttonsEnabled
                         ) {
-                            Text("Claim")
+                            Text(
+                                "Claim",
+                                style = MaterialTheme.typography.titleSmall,
+                                color = boxColor
+                            )
                         }
                     }
                 } else {
@@ -730,7 +752,8 @@ fun DisplayResults(
                             )
                             Text(
                                 "good job streak increased",
-                                style = MaterialTheme.typography.titleSmall
+                                style = MaterialTheme.typography.titleSmall,
+                                color = textColor
                             )
                             TextButton(
                                 onClick = {
@@ -738,7 +761,11 @@ fun DisplayResults(
                                 },
                                 enabled = buttonsEnabled
                             ) {
-                                Text("Claim")
+                                Text(
+                                    "Claim",
+                                    style = MaterialTheme.typography.titleSmall,
+                                    color = boxColor
+                                )
                             }
                         }
                     } else {
@@ -757,21 +784,24 @@ fun DisplayResults(
                                 score() >= 10 && !isMode -> {
                                     Text(
                                         "Congrats!! you passed with score: " + score().toString(),
-                                        style = MaterialTheme.typography.titleSmall
+                                        style = MaterialTheme.typography.titleSmall,
+                                        color = textColor
                                     )
                                 }
 
                                 !isMode -> {
                                     Text(
                                         "you failed :( with score: " + score().toString(),
-                                        style = MaterialTheme.typography.titleSmall
+                                        style = MaterialTheme.typography.titleSmall,
+                                        color = textColor
                                     )
                                 }
 
                                 else -> {
                                     Text(
                                         "nice try!! with score: " + score().toString(),
-                                        style = MaterialTheme.typography.titleSmall
+                                        style = MaterialTheme.typography.titleSmall,
+                                        color = textColor
                                     )
                                 }
                             }
@@ -791,7 +821,11 @@ fun DisplayResults(
                                     },
                                     enabled = buttonsEnabled
                                 ) {
-                                    Text("Exit")
+                                    Text(
+                                        "Exit",
+                                        style = MaterialTheme.typography.titleSmall,
+                                        color = boxColor
+                                    )
                                 }
                                 if (isMode) {
                                     TextButton(
@@ -804,7 +838,11 @@ fun DisplayResults(
                                         },
                                         enabled = buttonsEnabled
                                     ) {
-                                        Text("Play Again")
+                                        Text(
+                                            "Play Again",
+                                            style = MaterialTheme.typography.titleSmall,
+                                            color = boxColor
+                                        )
                                     }
                                 } else {
                                     TextButton(
@@ -816,7 +854,11 @@ fun DisplayResults(
                                         },
                                         enabled = buttonsEnabled
                                     ) {
-                                        Text("Try Again (-1 life)")
+                                        Text(
+                                            "Try Again (-1 life)",
+                                            style = MaterialTheme.typography.titleSmall,
+                                            color = boxColor
+                                        )
                                     }
                                     TextButton(
                                         onClick = {
@@ -829,7 +871,11 @@ fun DisplayResults(
                                         },
                                         enabled = score() >= 0 && buttonsEnabled
                                     ) {
-                                        Text("Next Level")
+                                        Text(
+                                            "Next Level",
+                                            style = MaterialTheme.typography.titleSmall,
+                                            color = boxColor
+                                        )
                                     }
                                 }
                             }
