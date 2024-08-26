@@ -620,7 +620,7 @@ fun LetterBox(
     ElevatedCard(
         modifier = Modifier
             .padding(5.dp)
-            .size(60.dp)
+            .size(63.dp)
             .shadow(
                 shadowDp, // Use the calculated shadow dp value
                 shape = RoundedCornerShape(15.dp),
@@ -636,7 +636,7 @@ fun LetterBox(
         ) {
             Text(
                 text = letter.toString(),
-                style = MaterialTheme.typography.titleSmall.copy(fontSize = 18.sp)
+                style = MaterialTheme.typography.titleSmall.copy(fontSize = 20.sp)
             )
         }
     }
