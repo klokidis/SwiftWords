@@ -123,6 +123,7 @@ class SwiftWordsMainViewModel : ViewModel() {
                 setOfLettersForMode = generateNewRandomLetters()
             )
         }
+        initialiseLists()
     }
 
     fun generateRandomLettersForBoth() {
