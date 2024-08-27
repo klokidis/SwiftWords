@@ -19,6 +19,8 @@ import java.util.Locale
 data class MainUiState(
     var setOfLettersForLevel: Set<Char> = setOf(),
     var setOfLettersForMode: Set<Char> = setOf(),
+    var listOfLettersForLevel: List<Char> = setOfLettersForLevel.toList(),
+    var listOfLettersForMode: List<Char> = setOfLettersForMode.toList(),
     val gameTime: Long = 40000L,
     val currentLevel: Int = 1,
     val isMode: Boolean = false,
@@ -44,6 +46,25 @@ class SwiftWordsMainViewModel : ViewModel() {
             words
         }
     }
+
+    fun shuffleLetters() {
+        _uiState.update { currentState ->
+            currentState.copy(
+                listOfLettersForLevel = currentState.listOfLettersForLevel.shuffled(),
+                listOfLettersForMode = currentState.listOfLettersForMode.shuffled()
+            )
+        }
+    }
+
+    private fun initialiseLists(){
+        _uiState.update { currentState ->
+            currentState.copy(
+                listOfLettersForMode = currentState.setOfLettersForMode.toList(),
+                listOfLettersForLevel = currentState.setOfLettersForLevel.toList()
+            )
+        }
+    }
+
 
     private fun updateDateAtHourChange() {
         viewModelScope.launch {
@@ -73,7 +94,7 @@ class SwiftWordsMainViewModel : ViewModel() {
         val formattedDate = dateFormat.format(calendar.time)
 
         // Update the UiState with the current date
-        _uiState.update{currentState ->
+        _uiState.update { currentState ->
             currentState.copy(
                 todayDate = formattedDate
             )
@@ -108,9 +129,10 @@ class SwiftWordsMainViewModel : ViewModel() {
         _uiState.update { currentState ->
             currentState.copy(
                 setOfLettersForLevel = generateNewRandomLetters(),
-                setOfLettersForMode = generateNewRandomLetters()
+                setOfLettersForMode = generateNewRandomLetters(),
             )
         }
+        initialiseLists()
     }
 
     private fun generateNewRandomLetters(): Set<Char> {

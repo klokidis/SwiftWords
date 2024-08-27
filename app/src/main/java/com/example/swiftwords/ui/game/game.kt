@@ -1,5 +1,6 @@
 package com.example.swiftwords.ui.game
 
+import android.util.Log
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.tween
@@ -112,6 +113,8 @@ fun Game(
     checked: () -> Boolean,
     changeChecked: KFunction0<Unit>,
     increaseStreak: KFunction0<Unit>,
+    listOfLetters: List<Char>,
+    shuffle: KFunction0<Unit>,
 ) {
     val gameUiState by viewModel.uiState.collectAsState()
     val isTimerRunning by remember { derivedStateOf { gameUiState.isTimerRunning } }
@@ -123,11 +126,11 @@ fun Game(
     var lastMessage by rememberSaveable { mutableStateOf("Please enter an answer.") }
     val scroll = rememberScrollState()
     val soundViewModel: SoundViewModel = viewModel(factory = AppViewModelProvider.Factory)
-    var listOfLetters by rememberSaveable { mutableStateOf(setOfLetters.toList()) } // Mutable state for shuffled list
     val checkAnswer: () -> Unit = remember(setOfLetters) { // remember so it doesn't composition
         {
             isLoading = true
             coroutineScope.launch {
+                Log.d("klok",setOfLetters.toString() + "  ")
                 isCorrect = viewModel.checkAnswer(
                     { textState },
                     wordList,
@@ -340,7 +343,8 @@ fun Game(
                 Spacer(modifier = Modifier.weight(1f))
                 IconButton(
                     onClick = {
-                        listOfLetters = listOfLetters.shuffled()
+                        shuffle()
+                        Log.d("klok",listOfLetters.toString() + "  ")
                     },
                     modifier = Modifier
                         .size(33.dp)

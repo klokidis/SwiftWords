@@ -232,6 +232,12 @@ fun SwiftWordsApp(
                             } else {
                                 mainUiState.setOfLettersForLevel
                             },
+                            listOfLetters = if (mainUiState.isMode) {
+                                mainUiState.listOfLettersForMode
+                            } else {
+                                mainUiState.listOfLettersForLevel
+                            },
+                            shuffle = viewModel::shuffleLetters,
                             highScore = data.highScore,
                             checked = { data.checked },
                             changeChecked = dataViewmodel::updateChecked
