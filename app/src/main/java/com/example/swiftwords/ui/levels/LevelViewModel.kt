@@ -14,7 +14,7 @@ data class UiState(
 )
 
 
-class LevelViewModel() : ViewModel() {
+class LevelViewModel : ViewModel() {
 
     private val _uiState = MutableStateFlow(UiState())
     val uiState: StateFlow<UiState> = _uiState.asStateFlow()
