@@ -95,7 +95,7 @@ fun BottomCard(
     onButtonCard: () -> Unit,
     color: Int?
 ) {
-    Box(modifier = Modifier.padding(start = 10.dp, end = 10.dp, top = 18.dp, bottom = 10.dp)) {
+    Box(modifier = Modifier.padding(start = 7.dp, end = 7.dp, top = 18.dp, bottom = 10.dp)) {
         ModesCards(
             imageRes = R.drawable.profile,
             textRes = R.string.levels,
