@@ -36,15 +36,6 @@ class GetDataViewModel(private val userRepository: UserRepository) : ViewModel()
                 initialValue = ItemDetailsUiState(isLoading = true)
             )
 
-    fun updateUserColor(newColor: Int) {
-        viewModelScope.launch {
-            val currentUser = getDataUiState.value.userDetails?.toUser()
-            if (currentUser != null) {
-                userRepository.updateUser(currentUser.copy(color = newColor))
-            }
-        }
-    }
-
     fun checkAndResetStreak() {
         viewModelScope.launch {
             val currentUser =

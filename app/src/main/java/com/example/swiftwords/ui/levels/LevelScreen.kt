@@ -54,8 +54,6 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.swiftwords.data.ColorPair
 import com.example.swiftwords.ui.AppViewModelProvider
 import com.example.swiftwords.ui.elements.CurrentLevel
-import com.example.swiftwords.data.GetDataViewModel
-import com.example.swiftwords.data.ItemDetailsUiState
 import com.example.swiftwords.ui.elements.Levels
 import java.text.SimpleDateFormat
 import java.util.Calendar
@@ -66,11 +64,10 @@ import kotlin.math.abs
 fun LevelScreen(
     dateNow: String,
     levelViewModel: LevelViewModel = viewModel(factory = AppViewModelProvider.Factory),
-    dataViewModel: GetDataViewModel,
-    dataUiState: ItemDetailsUiState,
     navigateToLevel: () -> Unit,
 ) {
     val levelUiState by levelViewModel.uiState.collectAsState()
+    val levelUiStateData by levelViewModel.uiStateData.collectAsState()
 
     Box(
         modifier = Modifier.fillMaxSize(),
@@ -83,7 +80,7 @@ fun LevelScreen(
             verticalArrangement = Arrangement.Top,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            dataUiState.userDetails?.let { userDetails ->
+            levelUiStateData.userDetails?.let { userDetails ->
                 itemsIndexed((userDetails.starterLevel..userDetails.endingLevel).toList()) { index, level ->
                     if (level > 0) {
                         val (leftPadding, rightPadding) = levelUiState.padding.getOrNull(index)
@@ -104,14 +101,14 @@ fun LevelScreen(
         }
 
         // TopBar for user details
-        dataUiState.userDetails?.let { userDetails ->
+        levelUiStateData.userDetails?.let { userDetails ->
             TopBar(
                 livesLeft = userDetails.lives,
                 streak = userDetails.streak,
                 streakDateData = userDetails.dailyDate,
                 dateNow = dateNow,
                 color = userDetails.color,
-                changeColorFun = dataViewModel::updateUserColor,
+                changeColorFun = levelViewModel::updateUserColor,
                 colors = levelUiState.colors
             )
         }
@@ -121,7 +118,7 @@ fun LevelScreen(
             modifier = Modifier.fillMaxSize(),
             contentAlignment = Alignment.BottomCenter
         ) {
-            dataUiState.userDetails?.let { userDetails ->
+            levelUiStateData.userDetails?.let { userDetails ->
                 BottomLevel(
                     onClick = navigateToLevel,
                     level = userDetails.currentLevel.toString(),
