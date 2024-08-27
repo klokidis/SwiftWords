@@ -14,7 +14,7 @@ import com.example.swiftwords.ui.levels.LevelViewModel
 object AppViewModelProvider {
     val Factory = viewModelFactory {
         initializer {
-            LevelViewModel(inventoryApplication().container.userRepository)
+            LevelViewModel()
         }
         initializer {
             SwiftWordsMainViewModel()

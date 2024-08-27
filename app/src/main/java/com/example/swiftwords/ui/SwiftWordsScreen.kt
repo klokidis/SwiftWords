@@ -175,6 +175,8 @@ fun SwiftWordsApp(
             composable(route = SwiftWordsScreen.Levels.name) {
                 LevelScreen(
                     dateNow = mainUiState.todayDate,
+                    dataViewModel = dataViewmodel,
+                    dataUiState = dataUiState,
                 ) {
                     viewModel.changeGameState(false)//tells the game this is not a game mode
                     viewModel.changeTime(40000L)
