@@ -130,7 +130,7 @@ fun Game(
         {
             isLoading = true
             coroutineScope.launch {
-                Log.d("klok",setOfLetters.toString() + "  ")
+                Log.d("klok", setOfLetters.toString() + "  ")
                 isCorrect = viewModel.checkAnswer(
                     { textState },
                     wordList,
@@ -321,22 +321,26 @@ fun Game(
             Spacer(modifier = Modifier.weight(1f))
             Row(
                 modifier = Modifier
-                    .padding(start = 3.dp)
+                    .padding(3.dp)
                     .fillMaxWidth(),
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.Center
 
             ) {
-                Checkbox(
-                    checked = checked(),
-                    onCheckedChange = {
-                        changeChecked()
-                    },
-                    colors = CheckboxDefaults.colors(
-                        checkedColor = DataSource().colorPairs[colorCode].darkColor,
+                Box(modifier = Modifier.size(50.dp)) {
+                    Checkbox(
+                        checked = checked(),
+                        onCheckedChange = {
+                            changeChecked()
+                        },
+                        modifier = Modifier.fillMaxSize(),
+                        colors = CheckboxDefaults.colors(
+                            checkedColor = DataSource().colorPairs[colorCode].darkColor,
+                        )
                     )
-                )
+                }
                 Icon(
+                    modifier = Modifier.size(35.dp),
                     imageVector = ImageVector.vectorResource(R.drawable.keyboard_24px),
                     contentDescription = "keyboard",
                 )
@@ -344,18 +348,18 @@ fun Game(
                 IconButton(
                     onClick = {
                         shuffle()
-                        Log.d("klok",listOfLetters.toString() + "  ")
+                        Log.d("klok", listOfLetters.toString() + "  ")
                     },
                     modifier = Modifier
-                        .size(33.dp)
-                        .padding(end = 7.dp)
+                        .size(38.dp)
                 ) {
                     Icon(
+                        modifier = Modifier.fillMaxSize(),
                         imageVector = ImageVector.vectorResource(R.drawable.shuffle_24px),
                         contentDescription = stringResource(R.string.shuffle)
                     )
-
                 }
+                Spacer(modifier = Modifier.padding(2.dp))
             }
         }
     }
@@ -516,7 +520,7 @@ fun CustomTextField(
         textStyle = TextStyle(
             textAlign = if (isChecked) TextAlign.Center else TextAlign.Start,
             fontFamily = FontFamily(Font(R.font.radiocanadabigregular)),
-            fontSize = 23.sp
+            fontSize = 28.sp
         ),
         colors = OutlinedTextFieldDefaults.colors(
             focusedContainerColor = MaterialTheme.colorScheme.secondary,
@@ -737,7 +741,11 @@ fun DisplayResults(
                             Text(
                                 "Claim",
                                 style = MaterialTheme.typography.titleSmall,
-                                color = boxColor
+                                color = if (buttonsEnabled) {
+                                    boxColor
+                                } else {
+                                    Color.Gray
+                                }
                             )
                         }
                     }
@@ -757,7 +765,7 @@ fun DisplayResults(
                             Text(
                                 "good job streak increased",
                                 style = MaterialTheme.typography.titleSmall,
-                                color = textColor
+                                color = textColor,
                             )
                             TextButton(
                                 onClick = {
@@ -768,7 +776,11 @@ fun DisplayResults(
                                 Text(
                                     "Claim",
                                     style = MaterialTheme.typography.titleSmall,
-                                    color = boxColor
+                                    color = if (buttonsEnabled) {
+                                        boxColor
+                                    } else {
+                                        Color.Gray
+                                    }
                                 )
                             }
                         }
@@ -828,7 +840,11 @@ fun DisplayResults(
                                     Text(
                                         "Exit",
                                         style = MaterialTheme.typography.titleSmall,
-                                        color = boxColor
+                                        color = if (buttonsEnabled) {
+                                            boxColor
+                                        } else {
+                                            Color.Gray
+                                        }
                                     )
                                 }
                                 if (isMode) {
@@ -845,7 +861,11 @@ fun DisplayResults(
                                         Text(
                                             "Play Again",
                                             style = MaterialTheme.typography.titleSmall,
-                                            color = boxColor
+                                            color = if (buttonsEnabled) {
+                                                boxColor
+                                            } else {
+                                                Color.Gray
+                                            }
                                         )
                                     }
                                 } else {
@@ -861,7 +881,11 @@ fun DisplayResults(
                                         Text(
                                             "Try Again (-1 life)",
                                             style = MaterialTheme.typography.titleSmall,
-                                            color = boxColor
+                                            color = if (buttonsEnabled) {
+                                                boxColor
+                                            } else {
+                                                Color.Gray
+                                            }
                                         )
                                     }
                                     TextButton(
@@ -878,7 +902,11 @@ fun DisplayResults(
                                         Text(
                                             "Next Level",
                                             style = MaterialTheme.typography.titleSmall,
-                                            color = boxColor
+                                            color = if (buttonsEnabled) {
+                                                boxColor
+                                            } else {
+                                                Color.Gray
+                                            }
                                         )
                                     }
                                 }
