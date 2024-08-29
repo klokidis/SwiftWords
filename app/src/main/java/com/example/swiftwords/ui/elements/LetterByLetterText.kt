@@ -65,7 +65,7 @@ private suspend fun animateText(
     var lastPlayed = -1 // Initialize with an invalid number
 
     for (i in text.indices) {
-        val pitch = 0.7f
+        val pitch = 0.8f
 
         if (i % 2 == 0) {
             var randomInt: Int

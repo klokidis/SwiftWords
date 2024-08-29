@@ -102,42 +102,7 @@ fun TextScores(content: String,score: String){
     }
 }
 /*
-@Composable
-fun CharacterChat() {
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(Color.Black.copy(alpha = 0.4f)),
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        Box(
-            contentAlignment = Alignment.BottomStart
-        ) {
-            Image(
-                painter = painterResource(
-                    id = R.drawable.done
-                ),
-                modifier = Modifier
-                    .size(400.dp),
-                contentDescription = null
-            )
-            Card(
-                modifier = Modifier
-                    .clip(MaterialTheme.shapes.medium)
-                    .padding(10.dp)
-                    .fillMaxWidth()
-                    .shadow(
-                        elevation = 2.dp,
-                        shape = RoundedCornerShape(16.dp)
-                    ),
-            ) {
-                LetterByLetterText("dsndjsan sadjsad sadjisajdia iasjdiajaids ijdsjadiasj asidjsadja doijsad djasd dsad jndjdsandjandkasjnd adsnjdnsjdnjas dasjndnasj  njdanasj  njdsanjd djand jdna")
-            }
-        }
-    }
 
-}
 
 @Composable
 fun LetterByLetterText(

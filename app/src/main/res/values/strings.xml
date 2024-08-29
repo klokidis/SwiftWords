@@ -15,4 +15,5 @@
     <string name="levels">Levels</string>
     <string name="pickTheme">pick color theme</string>
     <string name="shuffle">Shuffle</string>
+    <string name="click">Click anywhere to continue</string>
 </resources>
