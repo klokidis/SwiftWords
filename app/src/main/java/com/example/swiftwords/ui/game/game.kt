@@ -164,8 +164,7 @@ fun Game(
             verticalArrangement = Arrangement.Top,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Spacer(modifier = Modifier.padding(5.dp))
-
+            Spacer(modifier = Modifier.padding(2.dp))
             Row(
                 modifier = Modifier
                     .fillMaxWidth(),
@@ -244,7 +243,11 @@ fun Game(
                     )
                 }
             }
-            Spacer(modifier = Modifier.padding(10.dp))
+            if (!checked()) {
+                Spacer(modifier = Modifier.padding(10.dp))
+            } else {
+                Spacer(modifier = Modifier.weight(1f))
+            }
             Row(
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.Center
