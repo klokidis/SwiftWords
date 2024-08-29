@@ -15,22 +15,26 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.swiftwords.ui.AppViewModelProvider
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import kotlin.random.Random
 
 
 @Composable
 fun LetterByLetterText(
     text: String,
     modifier: Modifier = Modifier,
-    delay: Long = 50L,
+    delay: Long = 40L,
 ) {
+    val soundViewModel: SoundViewModel = viewModel(factory = AppViewModelProvider.Factory)
     var visibleText by rememberSaveable { mutableStateOf("") }
     val coroutineScope = rememberCoroutineScope()
 
     LaunchedEffect(Unit) {
         coroutineScope.launch {
-            animateText(text, delay) { newText ->
+            animateText(text, delay,soundViewModel) { newText ->
                 visibleText = newText
             }
         }
@@ -52,8 +56,35 @@ fun LetterByLetterText(
     }
 }
 
-private suspend fun animateText(text: String, timeDelay: Long, callback: (String) -> Unit) {
+private suspend fun animateText(
+    text: String,
+    timeDelay: Long,
+    soundViewModel: SoundViewModel,
+    callback: (String) -> Unit
+) {
+    var lastPlayed = -1 // Initialize with an invalid number
+
     for (i in text.indices) {
+        val pitch = 0.7f
+
+        if (i % 2 == 0) {
+            var randomInt: Int
+            do {
+                randomInt = Random.nextInt(1, 6)
+            } while (randomInt == lastPlayed || (randomInt == 5 && lastPlayed == 4) || (randomInt == 4 && lastPlayed == 5))
+
+            // Update the lastPlayed variable
+            lastPlayed = randomInt
+
+            // Play sound with the corresponding pitch
+            when (randomInt) {
+                1 -> soundViewModel.playV1(pitch)
+                2 -> soundViewModel.playV2(pitch)
+                3 -> soundViewModel.playV3(pitch)
+                4 -> soundViewModel.playV4(pitch)
+                5 -> soundViewModel.playV5(pitch)
+            }
+        }
         delay(timeDelay) // Delay between each letter
         callback(text.substring(0, i + 1))
     }

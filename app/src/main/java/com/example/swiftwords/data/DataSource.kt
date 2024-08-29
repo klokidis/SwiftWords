@@ -20,6 +20,35 @@ class DataSource {
         ColorPair(id = 10, lightColor = Color.White, darkColor = Color(0xFFC40000)),
         ColorPair(id = 11, lightColor = Color.White, darkColor = Color(0xFFE24615)),
     )
+    val letterToPitchMap: Map<Char, Float> = mapOf(
+        'a' to 1.2f,
+        'b' to 0.5f,
+        'c' to 0.7f,
+        'd' to 1.0f,
+        'e' to 2.2f,
+        'f' to 0.3f,
+        'g' to 0.1f,
+        'h' to 1.2f,
+        'i' to 1.5f,
+        'j' to 1.4f,
+        'k' to 1.5f,
+        'l' to 1.6f,
+        'm' to 1.7f,
+        'n' to 1.8f,
+        'o' to 1.9f,
+        'p' to 2.0f,
+        'q' to 0.6f,
+        'r' to 0.7f,
+        's' to 0.8f,
+        't' to 0.9f,
+        'u' to 1.0f,
+        'v' to 1.1f,
+        'w' to 1.2f,
+        'x' to 1.3f,
+        'y' to 1.4f,
+        'z' to 1.5f,
+        // Add more letters and their associated pitches as needed
+    )
 
     val paddingList: List<Pair<Dp, Dp>> = listOf(
         // Right padding increases, left stays at 0

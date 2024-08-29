@@ -11,7 +11,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.swiftwords.ui.AppViewModelProvider
 import com.example.swiftwords.data.GetDataViewModel
 import com.example.swiftwords.ui.SwiftWordsApp
-import com.example.swiftwords.ui.choose.ChooseCharacter
+import com.example.swiftwords.ui.elements.LetterByLetterText
 
 @Composable
 fun Loading(
@@ -26,7 +26,7 @@ fun Loading(
     // Handle different states based on extracted values
     when {
         isLoading -> LoadingView()
-        userId == 2 -> ChooseCharacter()
+        userId == 1 -> LetterByLetterText("Hello word this is my voice please improve it :* :3 uwu")
         else -> SwiftWordsApp(dataUiState, viewModel)
     }
 }
