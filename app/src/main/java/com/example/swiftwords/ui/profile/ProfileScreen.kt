@@ -37,9 +37,9 @@ fun ProfileScreen(
 ) {
     val scrollState = rememberScrollState()
     val painter = if(character){
-        painterResource(id = R.drawable.cypher)
+        painterResource(id = R.drawable.cypher)//true for f
     }else{
-        painterResource(id = R.drawable.cypher)
+        painterResource(id = R.drawable.cypher)//false for m
     }
     Column(
         modifier = Modifier

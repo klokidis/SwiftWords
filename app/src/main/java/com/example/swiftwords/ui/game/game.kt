@@ -208,7 +208,6 @@ fun Game(
                     verticalArrangement = Arrangement.Center,
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
-
                     RowOfLetters(
                         listOfLetters[0],
                         listOfLetters[1],
@@ -473,7 +472,6 @@ fun CustomButton(
     colorCode: Int,
     isDarkTheme: Boolean = isSystemInDarkTheme(),
 ) {
-
     val textColor = if (isDarkTheme) {
         DataSource().colorPairs[colorCode].darkColor.brighten()
     } else {

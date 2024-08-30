@@ -83,6 +83,24 @@ class GetDataViewModel(private val userRepository: UserRepository) : ViewModel()
         }
     }
 
+    fun updateName(name: String) {
+        viewModelScope.launch {
+            val currentUser = getDataUiState.value.userDetails?.toUser()
+            if (currentUser != null) {
+                userRepository.updateUser(currentUser.copy(nickname = name))
+            }
+        }
+    }
+
+    fun updateCharacter(character: Boolean) {
+        viewModelScope.launch {
+            val currentUser = getDataUiState.value.userDetails?.toUser()
+            if (currentUser != null) {
+                userRepository.updateUser(currentUser.copy(character = character))
+            }
+        }
+    }
+
     fun increaseCurrentLevel(score: Int) {
         viewModelScope.launch {
             val currentUser = getDataUiState.value.userDetails?.toUser() ?: return@launch

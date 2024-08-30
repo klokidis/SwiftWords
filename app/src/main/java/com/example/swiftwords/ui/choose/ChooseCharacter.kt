@@ -2,6 +2,8 @@ package com.example.swiftwords.ui.choose
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -15,30 +17,44 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.example.swiftwords.R
 import com.example.swiftwords.ui.AppViewModelProvider
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.swiftwords.data.GetDataViewModel
 import com.example.swiftwords.ui.elements.LetterByLetterText
+import kotlin.reflect.KFunction1
 
 @Composable
 fun StartingScreen(
@@ -46,9 +62,19 @@ fun StartingScreen(
     viewModel: StartingViewmodel = viewModel(factory = AppViewModelProvider.Factory)
 ) {
     val uiState by viewModel.uiState.collectAsState()
-    Column(modifier = Modifier
-        .fillMaxSize()
-        .clickable { viewModel.increaseState() }) {
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .clickable(
+                onClick = {
+                    if (uiState.dialogueState < 4 || uiState.dialogueState == 6) {
+                        viewModel.increaseState()
+                    }
+                },
+                indication = null, // Removes the click effect
+                interactionSource = remember { MutableInteractionSource() } // Required for the clickable modifier
+            )
+    ) {
         when (uiState.dialogueState) {
             1 -> {
                 CharacterChat(characterIsMale = true, text = stringResource(R.string.click))
@@ -59,7 +85,28 @@ fun StartingScreen(
             }
 
             3 -> {
+                CharacterChatTwo(text = stringResource(R.string.click))
+            }
 
+            4 -> {
+                ChooseCharacter(
+                    dataViewmodel::updateCharacter,
+                    uiState.character,
+                    viewModel::updateCharacter
+                ) { viewModel.increaseState() }
+            }
+
+            5 -> {
+                SetNickName(
+                    uiState.character,
+                    onSave = dataViewmodel::updateName,
+                    onCancel = { viewModel.decreaseState() },
+                    nextState = { viewModel.increaseState() },
+                )
+            }
+
+            6 -> {
+                CharacterChat(characterIsMale = false, text = stringResource(R.string.click))
             }
 
             else -> {
@@ -68,6 +115,7 @@ fun StartingScreen(
         }
     }
 }
+
 
 @Composable
 fun CharacterChat(characterIsMale: Boolean, text: String) {
@@ -104,6 +152,9 @@ fun CharacterChat(characterIsMale: Boolean, text: String) {
                         elevation = 2.dp,
                         shape = RoundedCornerShape(16.dp)
                     ),
+                colors = CardDefaults.cardColors(
+                    containerColor = MaterialTheme.colorScheme.secondary,
+                ),
             ) {
                 LetterByLetterText(text)
             }
@@ -111,11 +162,140 @@ fun CharacterChat(characterIsMale: Boolean, text: String) {
         Spacer(modifier = Modifier.weight(1f))
         Text(text = stringResource(id = R.string.click))
     }
-
 }
 
 @Composable
-fun ChooseCharacter() {
+fun SetNickName(
+    chose: Int,
+    onSave: KFunction1<String, Unit>,
+    onCancel: () -> Unit,
+    nextState: () -> Unit
+) {
+    var textState by rememberSaveable { mutableStateOf("") }
+    val painter = if (chose == 1) {
+        painterResource(id = R.drawable.cypher)
+    } else {
+        painterResource(id = R.drawable.sage)
+    }
+    val scrollState = rememberScrollState()
+
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .verticalScroll(scrollState)
+            .padding(15.dp),
+        verticalArrangement = Arrangement.Top,
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        Spacer(modifier = Modifier.weight(0.3f))
+        Image(
+            painter = painter,
+            contentDescription = null,
+            contentScale = ContentScale.Crop,
+            modifier = Modifier
+                .size(160.dp)
+                .clip(CircleShape)
+        )
+        Spacer(modifier = Modifier.padding(20.dp))
+        TextField(
+            value = textState,
+            onValueChange = { textState = it },
+            label = { Text("Enter your name") },
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(start = 20.dp, end = 20.dp),
+            singleLine = true,
+            keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
+            keyboardActions = KeyboardActions(
+                onDone = { }
+            ),
+
+            )
+        Spacer(modifier = Modifier.weight(1f))
+        Row(
+            modifier = Modifier.padding(10.dp),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.Center
+        ) {
+            OutlinedButton(onClick = {
+                onCancel()
+            }) {
+                Text("cancel")
+            }
+            Spacer(modifier = Modifier.weight(1f))
+            Button(
+                onClick = {
+                    if (textState.isNotBlank()) {
+                        onSave(textState.trim())
+                        nextState()
+                    }
+                },
+                enabled = textState.isNotBlank()
+            ) {
+                Text("save")
+            }
+        }
+    }
+}
+
+@Composable
+fun CharacterChatTwo(text: String) {
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(10.dp),
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        Spacer(modifier = Modifier.weight(1f))
+        Box(
+            contentAlignment = Alignment.BottomStart
+        ) {
+            Row(modifier = Modifier.fillMaxWidth()) {
+                Image(
+                    painter = painterResource(R.drawable.sage),
+                    modifier = Modifier
+                        .weight(1f)
+                        .padding(bottom = 40.dp),
+                    contentDescription = null
+                )
+                Image(
+                    painter = painterResource(R.drawable.gekko),
+                    modifier = Modifier
+                        .weight(1f)
+                        .padding(bottom = 40.dp),
+                    contentDescription = null
+                )
+            }
+            Card(
+                modifier = Modifier
+                    .clip(MaterialTheme.shapes.medium)
+                    .padding(10.dp)
+                    .fillMaxWidth()
+                    .shadow(
+                        elevation = 2.dp,
+                        shape = RoundedCornerShape(16.dp)
+                    ),
+                colors = CardDefaults.cardColors(
+                    containerColor = MaterialTheme.colorScheme.secondary,
+                ),
+            ) {
+                LetterByLetterText(text)
+            }
+        }
+        Spacer(modifier = Modifier.weight(1f))
+        Text(text = stringResource(id = R.string.click))
+    }
+}
+
+
+@Composable
+fun ChooseCharacter(
+    dataUpdate: (Boolean) -> Unit,
+    character: Int,
+    uiStateUpdate: KFunction1<Int, Unit>,
+    increaseState: () -> Unit,
+) {
     val scrollState = rememberScrollState()
     Column(
         modifier = Modifier
@@ -124,24 +304,43 @@ fun ChooseCharacter() {
         verticalArrangement = Arrangement.Top,
         horizontalAlignment = Alignment.Start,
     ) {
-        Spacer(modifier = Modifier.padding(20.dp))
+        Spacer(modifier = Modifier.padding(15.dp))
         Text(
             text = stringResource(id = R.string.choose),
-            style = MaterialTheme.typography.titleLarge,
+            style = MaterialTheme.typography.titleLarge.copy(fontSize = 45.sp),
             modifier = Modifier
                 .padding(start = 10.dp)
         )
-        Spacer(modifier = Modifier.padding(3.dp))
         Text(
             text = stringResource(id = R.string.choose2),
-            style = MaterialTheme.typography.titleLarge,
+            style = MaterialTheme.typography.titleLarge.copy(fontSize = 45.sp),
             modifier = Modifier.padding(start = 10.dp)
         )
-        Spacer(modifier = Modifier.padding(35.dp))
-        CompleteCard(R.drawable.sage, "sage", false)
-        Spacer(modifier = Modifier.padding(15.dp))
-        CompleteCard(R.drawable.gekko, "gekko", false)
+        Spacer(modifier = Modifier.padding(20.dp))
+        CompleteCard(R.drawable.sage, "sage", character == 0, uiStateUpdate, character = 0)
+        Spacer(modifier = Modifier.padding(10.dp))
+        CompleteCard(R.drawable.gekko, "gekko", character == 1, uiStateUpdate, character = 1)
         Spacer(modifier = Modifier.weight(1f))
+        Row(
+            modifier = Modifier
+                .padding(25.dp)
+                .fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.Center
+        ) {
+            Button(
+                onClick = {
+                    if (character != 2) {
+                        dataUpdate(character == 0) //true means f false mean m
+                        increaseState()
+                    }
+                },
+                modifier = Modifier.fillMaxWidth(0.4f),
+                enabled = character != 2
+            ) {
+                Text("Next")
+            }
+        }
     }
 }
 
@@ -149,15 +348,18 @@ fun ChooseCharacter() {
 fun CompleteCard(
     imageResourceId: Int,
     name: String,
-    selected: Boolean
+    selected: Boolean,
+    onClicked: KFunction1<Int, Unit>,
+    character: Int
 ) {
     Box(
         modifier = Modifier.height(dimensionResource(id = R.dimen.artist_box))
     ) {
         CharacterCard(
-            { },
+            onClicked,
             name,
-            selected
+            selected,
+            character
         )
         Box(
             modifier = Modifier
@@ -179,17 +381,23 @@ fun CompleteCard(
 }
 
 @Composable
-fun CharacterCard(onButtonCard: () -> Unit, name: String, selected: Boolean) {
+fun CharacterCard(
+    onButtonCard: KFunction1<Int, Unit>,
+    name: String,
+    selected: Boolean,
+    character: Int,
+    isDarkTheme: Boolean = isSystemInDarkTheme(),
+) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(10.dp)
-            .height(170.dp)
+            .padding(start = 10.dp, top = 30.dp, end = 10.dp)
+            .height(150.dp)
             .shadow(2.dp, shape = RoundedCornerShape(16.dp))
             .clip(MaterialTheme.shapes.medium)
             .clickable {
             },
-        onClick = onButtonCard,
+        onClick = { onButtonCard(character) },
         colors = CardDefaults.cardColors(
             containerColor = MaterialTheme.colorScheme.inverseOnSurface,
         ),
@@ -204,7 +412,7 @@ fun CharacterCard(onButtonCard: () -> Unit, name: String, selected: Boolean) {
                 .fillMaxHeight()
                 .padding(start = 10.dp)
         ) {
-            RadioButton(selected = selected, onClick = { })
+            RadioButton(selected = selected, onClick = { onButtonCard(character) })
             Text(
                 text = name,
                 modifier = Modifier
@@ -213,6 +421,11 @@ fun CharacterCard(onButtonCard: () -> Unit, name: String, selected: Boolean) {
                         end = 120.dp
                     ),
                 style = MaterialTheme.typography.bodyMedium,
+                color = if (isDarkTheme) {
+                    Color.White
+                } else {
+                    Color.Black
+                }
             )
         }
     }

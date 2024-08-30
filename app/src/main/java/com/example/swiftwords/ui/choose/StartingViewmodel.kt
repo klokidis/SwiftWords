@@ -9,6 +9,7 @@ import kotlinx.coroutines.flow.update
 
 data class UiState(
     val dialogueState: Int = 1,
+    val character: Int = 2,
 )
 
 class StartingViewmodel : ViewModel() {
@@ -24,5 +25,20 @@ class StartingViewmodel : ViewModel() {
         }
     }
 
+    fun updateCharacter(value: Int){
+        _uiState.update { currentState ->
+            currentState.copy(
+                character = value,
+            )
+        }
+    }
+
+    fun decreaseState(){
+        _uiState.update { currentState ->
+            currentState.copy(
+                dialogueState = currentState.dialogueState - 1,
+            )
+        }
+    }
 
 }

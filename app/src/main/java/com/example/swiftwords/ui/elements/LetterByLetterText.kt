@@ -1,5 +1,6 @@
 package com.example.swiftwords.ui.elements
 
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
@@ -13,6 +14,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -27,6 +29,7 @@ fun LetterByLetterText(
     text: String,
     modifier: Modifier = Modifier,
     delay: Long = 40L,
+    isDarkTheme: Boolean = isSystemInDarkTheme(),
 ) {
     val soundViewModel: SoundViewModel = viewModel(factory = AppViewModelProvider.Factory)
     var visibleText by rememberSaveable { mutableStateOf("") }
@@ -47,6 +50,11 @@ fun LetterByLetterText(
         Text(
             text = visibleText,
             style = MaterialTheme.typography.bodyMedium,
+            color = if (isDarkTheme) {
+                Color.White
+            } else {
+                Color.Black
+            },
             modifier = Modifier
                 .onGloballyPositioned {
                     lineWidth = it.size.width.dp
