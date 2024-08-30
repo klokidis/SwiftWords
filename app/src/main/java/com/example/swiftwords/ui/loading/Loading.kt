@@ -19,15 +19,11 @@ fun Loading(
 ) {
     val dataUiState by viewModel.getDataUiState.collectAsState()
 
-    // Extract the relevant UI state
-    val isLoading = remember(dataUiState.isLoading) { dataUiState.isLoading }
-    val userId = remember(dataUiState.userDetails?.id) { dataUiState.userDetails?.id }
-
     // Handle different states based on extracted values
     when {
-        isLoading -> LoadingView()
-        userId == 1 -> StartingScreen(dataViewmodel = viewModel)
-        else -> SwiftWordsApp(dataUiState, viewModel)
+        dataUiState.isLoading -> LoadingView()
+        dataUiState.userDetails?.initializeProfile == false -> SwiftWordsApp(dataUiState, viewModel)
+        else -> StartingScreen(dataViewmodel = viewModel)
     }
 }
 

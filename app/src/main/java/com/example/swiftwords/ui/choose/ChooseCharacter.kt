@@ -67,8 +67,12 @@ fun StartingScreen(
             .fillMaxSize()
             .clickable(
                 onClick = {
-                    if (uiState.dialogueState < 4 || uiState.dialogueState == 6) {
-                        viewModel.increaseState()
+                    if (uiState.dialogueState == 6) {
+                        dataViewmodel.updateInitialState()
+                    } else {
+                        if (uiState.dialogueState < 4) {
+                            viewModel.increaseState()
+                        }
                     }
                 },
                 indication = null, // Removes the click effect

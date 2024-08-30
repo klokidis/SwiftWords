@@ -7,6 +7,7 @@ import androidx.room.PrimaryKey
 data class User(
     @PrimaryKey
     val id: Int,
+    val initializeProfile: Boolean,
     val nickname: String, //to-do
     val character: Boolean,//0 for male 1 for female //to-do
     val currentLevel: Int,

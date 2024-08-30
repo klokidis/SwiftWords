@@ -11,6 +11,7 @@ data class UserUiState(
 
 data class UserDetails(
     val id: Int = 0,
+    val initializeProfile: Boolean = true,
     val nickname: String = "",
     val character: Boolean = false,//0 for male 1 for female
     val currentLevel: Int = 1,
@@ -28,6 +29,7 @@ data class UserDetails(
 
 fun UserDetails.toUser(): User = User(
     id = id,
+    initializeProfile= initializeProfile,
     nickname = nickname,
     character = character,//0 for male 1 for female
     currentLevel = currentLevel,
@@ -50,6 +52,7 @@ fun User.toUserUiState(isEntryValid: Boolean = false): UserUiState = UserUiState
 
 fun User.toUserDetails(): UserDetails = UserDetails(
     id = id,
+    initializeProfile = initializeProfile,
     nickname = nickname,
     character = character, //0 for male 1 for female
     currentLevel = currentLevel,
