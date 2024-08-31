@@ -1,11 +1,10 @@
 package com.example.swiftwords.ui.settings
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -30,38 +29,49 @@ fun SettingsPage(
     navigateOut: () -> Unit,
     data: ItemDetailsUiState,
 ) {
-    Box {
-        Column(
+    Column(modifier = Modifier.fillMaxWidth()) {
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.Start,
             modifier = Modifier
-                .fillMaxSize()
-                .padding(20.dp)
+                .fillMaxWidth()
+                .padding(top = 10.dp)
         ) {
-            Spacer(modifier = Modifier.padding(18.dp))
-            DataSource().settingsList.forEach { setting ->
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(bottom = 25.dp),
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.Start
-                ) {
-                    Text(
-                        text = setting,
-                        style = MaterialTheme.typography.titleSmall.copy(fontSize = 22.sp)
-                    )
-                }
+            IconButton(
+                onClick = { navigateOut() },
+                modifier = Modifier
+                    .padding(start = 5.dp)
+            ) {
+                Icon(
+                    imageVector = Icons.AutoMirrored.Filled.ArrowBack, // Use the appropriate icon
+                    contentDescription = stringResource(id = R.string.settings),
+                    modifier = Modifier.size(30.dp)
+                )
             }
-        }
-        IconButton(
-            onClick = { navigateOut() },
-            modifier = Modifier
-                .align(Alignment.TopStart).padding(start = 5.dp)
-        ) {
-            Icon(
-                imageVector = Icons.AutoMirrored.Filled.ArrowBack, // Use the appropriate icon
-                contentDescription = stringResource(id = R.string.settings),
-                modifier = Modifier.size(30.dp)
+            Spacer(modifier = Modifier.weight(0.65f))
+            Text(
+                text = "Setting",
+                style = MaterialTheme.typography.titleSmall.copy(fontSize = 35.sp)
             )
+            Spacer(modifier = Modifier.weight(1f))
+        }
+        Spacer(modifier = Modifier.padding(8.dp))
+        DataSource().settingsList.forEach { setting ->
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .clickable { }
+                    .size(60.dp)
+                    .padding(start = 15.dp),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.Start
+            ) {
+                Text(
+                    text = setting,
+                    style = MaterialTheme.typography.titleSmall.copy(fontSize = 25.sp)
+                )
+            }
+            Spacer(modifier = Modifier.padding(5.dp))
         }
     }
 }
