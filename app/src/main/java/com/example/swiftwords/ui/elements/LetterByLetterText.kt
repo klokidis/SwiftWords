@@ -17,6 +17,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.swiftwords.ui.AppViewModelProvider
 import kotlinx.coroutines.delay
@@ -49,7 +50,7 @@ fun LetterByLetterText(
 
         Text(
             text = visibleText,
-            style = MaterialTheme.typography.bodyMedium,
+            style = MaterialTheme.typography.bodyMedium.copy(fontSize = 25.sp),
             color = if (isDarkTheme) {
                 Color.White
             } else {

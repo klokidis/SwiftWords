@@ -81,7 +81,10 @@ fun StartingScreen(
     ) {
         when (uiState.dialogueState) {
             1 -> {
-                CharacterChat(characterIsMale = true, text = stringResource(R.string.click))
+                CharacterChat(
+                    characterIsMale = true,
+                    text = "jsdnjsndjsndjs ddasd ds dasd  adsa  dsa sdas das  dsdsadas"
+                )
             }
 
             2 -> {
@@ -110,7 +113,10 @@ fun StartingScreen(
             }
 
             6 -> {
-                CharacterChat(characterIsMale = false, text = stringResource(R.string.click))
+                CharacterChat(
+                    characterIsMale = uiState.character == 0,
+                    text = stringResource(R.string.click)
+                )
             }
 
             else -> {
@@ -211,7 +217,12 @@ fun SetNickName(
             singleLine = true,
             keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
             keyboardActions = KeyboardActions(
-                onDone = { }
+                onDone = {
+                    if (textState.isNotBlank()) {
+                        onSave(textState.trim())
+                        nextState()
+                    }
+                }
             ),
 
             )
@@ -324,7 +335,7 @@ fun ChooseCharacter(
         CompleteCard(R.drawable.sage, "sage", character == 0, uiStateUpdate, character = 0)
         Spacer(modifier = Modifier.padding(10.dp))
         CompleteCard(R.drawable.gekko, "gekko", character == 1, uiStateUpdate, character = 1)
-        Spacer(modifier = Modifier.weight(1f))
+        Spacer(modifier = Modifier.weight(0.5f))
         Row(
             modifier = Modifier
                 .padding(25.dp)
@@ -332,6 +343,7 @@ fun ChooseCharacter(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.Center
         ) {
+            Spacer(modifier = Modifier.weight(1f))
             Button(
                 onClick = {
                     if (character != 2) {
@@ -339,7 +351,6 @@ fun ChooseCharacter(
                         increaseState()
                     }
                 },
-                modifier = Modifier.fillMaxWidth(0.4f),
                 enabled = character != 2
             ) {
                 Text("Next")
