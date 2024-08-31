@@ -344,7 +344,7 @@ fun MenuColorPicker(color: Int, changeColorFun: (Int) -> Unit, colors: List<Colo
                         .clip(RoundedCornerShape(40.dp))
                         .border(
                             1.dp,
-                            colors[color].darkColor,
+                            animatedColorIconButton,
                             RoundedCornerShape(40.dp)
                         )
                         .height(40.dp)
