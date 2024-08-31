@@ -6,6 +6,11 @@ import androidx.compose.ui.unit.dp
 
 class DataSource {
 
+    val settingsList = listOf(
+        "Example",
+        "Test"
+    )
+
     val colorPairs = listOf(
         ColorPair(id = 0, lightColor = Color.White, darkColor = Color(0xFF092E5C)),
         ColorPair(id = 1, lightColor = Color.White, darkColor = Color(0xFF007FA5)),

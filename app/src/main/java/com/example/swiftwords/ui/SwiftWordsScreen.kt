@@ -211,8 +211,9 @@ fun SwiftWordsApp(
                         data.highScore,
                         data.nickname,
                         data.character,
-                        data.color
-                    ) { navController.navigate(SwiftWordsScreen.Settings.name) }
+                        data.color,
+                        navigate = { navController.navigate(SwiftWordsScreen.Settings.name) }
+                    )
                 }
             }
             composable(route = SwiftWordsScreen.Game.name) {
@@ -257,7 +258,9 @@ fun SwiftWordsApp(
                 }
             }
             composable(route = SwiftWordsScreen.Settings.name) {
-                SettingsPage(data = dataUiState, navigateOut = { navController.navigateUp() })
+                SettingsPage(
+                    data = dataUiState,
+                    navigateOut = { navController.navigateUp() })
             }
         }
     }

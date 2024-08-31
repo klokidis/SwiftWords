@@ -353,7 +353,7 @@ fun ChooseCharacter(
                 },
                 enabled = character != 2
             ) {
-                Text("Next")
+                Text("next")
             }
         }
     }

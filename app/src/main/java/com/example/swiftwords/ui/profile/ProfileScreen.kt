@@ -77,7 +77,7 @@ fun ProfileScreen(
                     letterSpacing = 1.sp
                 )
             )
-            Spacer(modifier = Modifier.padding(20.dp))
+            Spacer(modifier = Modifier.padding(15.dp))
             Scores(currentLevel, highScore, streak)
         }
         IconButton(
@@ -88,6 +88,7 @@ fun ProfileScreen(
             Icon(
                 imageVector = Icons.Default.Settings , // Use the appropriate icon
                 contentDescription = stringResource(id = R.string.settings),
+                modifier = Modifier.size(28.dp)
             )
         }
     }
@@ -102,11 +103,11 @@ fun Scores(currentLevel: Int, highScore: Int, streak: Int) {
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.Center
     ) {
-        TextScores("Current level", currentLevel.toString())
-        Spacer(modifier = Modifier.padding(15.dp))
+        TextScores("Level", currentLevel.toString())
+        Spacer(modifier = Modifier.padding(17.dp))
         TextScores("High Score", highScore.toString())
-        Spacer(modifier = Modifier.padding(15.dp))
-        TextScores("daily streak", streak.toString())
+        Spacer(modifier = Modifier.padding(17.dp))
+        TextScores("Streak", streak.toString())
     }
 }
 
@@ -118,11 +119,11 @@ fun TextScores(content: String,score: String){
     ) {
         Text(
             text = content,
-            style = MaterialTheme.typography.titleSmall.copy(fontSize = 16.sp)
+            style = MaterialTheme.typography.titleSmall.copy(fontSize = 22.sp)
         )
         Text(
             text = score,
-            style = MaterialTheme.typography.titleMedium.copy(fontSize = 20.sp)
+            style = MaterialTheme.typography.titleMedium.copy(fontSize = 22.sp)
         )
     }
 }
@@ -180,8 +181,7 @@ fun ProfilePreview() {
             2,
             "dimitris",
             true,
-            1,
-            {  }
-        )
+            1
+        ) { }
     }
 }
