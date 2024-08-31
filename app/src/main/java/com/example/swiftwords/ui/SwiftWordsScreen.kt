@@ -39,13 +39,15 @@ import com.example.swiftwords.ui.game.Game
 import com.example.swiftwords.ui.levels.LevelScreen
 import com.example.swiftwords.ui.modes.ModesScreen
 import com.example.swiftwords.ui.profile.ProfileScreen
+import com.example.swiftwords.ui.settings.SettingsPage
 import kotlinx.coroutines.launch
 
 enum class SwiftWordsScreen {
     Levels,
     Modes,
     Profile,
-    Game
+    Game,
+    Settings
 }
 
 @Composable
@@ -67,6 +69,7 @@ fun SwiftWordsApp(
             SwiftWordsScreen.Levels -> 0
             SwiftWordsScreen.Modes -> 1
             SwiftWordsScreen.Profile -> 2
+            SwiftWordsScreen.Settings -> 3
             else -> 0 // Default value
         }
 
@@ -100,7 +103,7 @@ fun SwiftWordsApp(
 
     Scaffold(
         bottomBar = {
-            if (currentScreen != SwiftWordsScreen.Game) {
+            if (currentScreen != SwiftWordsScreen.Game && currentScreen != SwiftWordsScreen.Settings) {
                 val barItems = listOf(
                     BarItem(
                         R.string.levels,
@@ -209,7 +212,7 @@ fun SwiftWordsApp(
                         data.nickname,
                         data.character,
                         data.color
-                    )
+                    ) { navController.navigate(SwiftWordsScreen.Settings.name) }
                 }
             }
             composable(route = SwiftWordsScreen.Game.name) {
@@ -252,6 +255,9 @@ fun SwiftWordsApp(
                         Text("Loading...")
                     }
                 }
+            }
+            composable(route = SwiftWordsScreen.Settings.name) {
+                SettingsPage(data = dataUiState, navigateOut = { navController.navigateUp() })
             }
         }
     }
