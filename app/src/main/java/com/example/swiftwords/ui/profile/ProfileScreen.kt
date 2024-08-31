@@ -99,7 +99,6 @@ fun Scores(currentLevel: Int, highScore: Int, streak: Int) {
     Row(
         modifier = Modifier
             .fillMaxWidth(),
-
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.Center
     ) {
