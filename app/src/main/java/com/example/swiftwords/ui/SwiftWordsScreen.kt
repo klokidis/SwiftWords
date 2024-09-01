@@ -177,8 +177,8 @@ fun SwiftWordsApp(
             navController = navController,
             startDestination = SwiftWordsScreen.Levels.name,
             modifier = Modifier.padding(paddingValues),
-            enterTransition = { fadeIn(animationSpec = tween(100)) },
-            exitTransition = { fadeOut(animationSpec = tween(100)) },
+            enterTransition = { fadeIn(animationSpec = tween(0)) },
+            exitTransition = { fadeOut(animationSpec = tween(0)) },
         ) {
             composable(route = SwiftWordsScreen.Levels.name) {
                 LevelScreen(
