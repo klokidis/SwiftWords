@@ -1,5 +1,8 @@
 package com.example.swiftwords.ui
 
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -173,7 +176,9 @@ fun SwiftWordsApp(
         NavHost(
             navController = navController,
             startDestination = SwiftWordsScreen.Levels.name,
-            modifier = Modifier.padding(paddingValues)
+            modifier = Modifier.padding(paddingValues),
+            enterTransition = { fadeIn(animationSpec = tween(100)) },
+            exitTransition = { fadeOut(animationSpec = tween(100)) },
         ) {
             composable(route = SwiftWordsScreen.Levels.name) {
                 LevelScreen(
