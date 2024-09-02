@@ -222,11 +222,38 @@ fun TopBar(
                     }
 
                     formattedDateNow != formattedStreakDate -> {
-                        painterResource(id = R.drawable.fire_ending)
+                        painterResource(
+                            id = when {
+                                streak < 5 -> R.drawable.fire_ending
+
+                                streak < 20 -> R.drawable.fire3_end
+
+                                streak < 30 -> R.drawable.fire4_end
+
+                                streak < 40 -> R.drawable.fire5_end
+
+                                streak >= 50 -> R.drawable.fire6_end
+
+                                else -> R.drawable.fire_ending
+                            }
+                        )
+
                     }
 
                     else -> {
-                        painterResource(id = R.drawable.fire_on)
+                        painterResource(
+                            id = when {
+                                streak < 5 -> R.drawable.fire_on
+
+                                streak < 20 -> R.drawable.fire3
+
+                                streak < 30 -> R.drawable.fire4
+
+                                streak < 40 -> R.drawable.fire5
+
+                                else -> R.drawable.fire6
+                            }
+                        )
                     }
                 },
                 modifier = Modifier.size(30.dp),
