@@ -36,30 +36,33 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.swiftwords.R
 import com.example.swiftwords.data.GetDataViewModel
-import com.example.swiftwords.data.ItemDetailsUiState
 import com.example.swiftwords.model.BarItem
+import com.example.swiftwords.ui.choose.StartingScreen
 import com.example.swiftwords.ui.game.Game
 import com.example.swiftwords.ui.levels.LevelScreen
+import com.example.swiftwords.ui.loading.LoadingView
 import com.example.swiftwords.ui.modes.ModesScreen
 import com.example.swiftwords.ui.profile.ProfileScreen
 import com.example.swiftwords.ui.settings.SettingsPage
 import kotlinx.coroutines.launch
 
 enum class SwiftWordsScreen {
+    Loading,
+    Choose,
     Levels,
     Modes,
     Profile,
     Game,
-    Settings
+    Settings,
 }
 
 @Composable
 fun SwiftWordsApp(
-    dataUiState: ItemDetailsUiState,
-    dataViewmodel: GetDataViewModel,
+    dataViewmodel: GetDataViewModel = viewModel(factory = AppViewModelProvider.Factory),
     viewModel: SwiftWordsMainViewModel = viewModel(factory = AppViewModelProvider.Factory),
     navController: NavHostController = rememberNavController()
 ) {
+    val dataUiState by dataViewmodel.getDataUiState.collectAsState()
     val backStackEntry by navController.currentBackStackEntryAsState()
     val mainUiState by viewModel.uiState.collectAsState()
     val currentScreen = SwiftWordsScreen.valueOf(
@@ -106,7 +109,12 @@ fun SwiftWordsApp(
 
     Scaffold(
         bottomBar = {
-            if (currentScreen != SwiftWordsScreen.Game && currentScreen != SwiftWordsScreen.Settings) {
+            if (
+                currentScreen != SwiftWordsScreen.Game
+                && currentScreen != SwiftWordsScreen.Settings
+                && currentScreen != SwiftWordsScreen.Choose
+                && currentScreen != SwiftWordsScreen.Loading
+            ) {
                 val barItems = listOf(
                     BarItem(
                         R.string.levels,
@@ -175,11 +183,25 @@ fun SwiftWordsApp(
     ) { paddingValues ->
         NavHost(
             navController = navController,
-            startDestination = SwiftWordsScreen.Levels.name,
+            startDestination = if (dataUiState.isLoading) {
+                SwiftWordsScreen.Loading.name
+            } else {
+                if (dataUiState.userDetails?.initializeProfile == true) {
+                    SwiftWordsScreen.Choose.name
+                } else {
+                    SwiftWordsScreen.Levels.name
+                }
+            },
             modifier = Modifier.padding(paddingValues),
             enterTransition = { fadeIn(animationSpec = tween(0)) },
             exitTransition = { fadeOut(animationSpec = tween(0)) },
         ) {
+            composable(route = SwiftWordsScreen.Loading.name) {
+                LoadingView()
+            }
+            composable(route = SwiftWordsScreen.Choose.name) {
+                StartingScreen(dataViewmodel = dataViewmodel)
+            }
             composable(route = SwiftWordsScreen.Levels.name) {
                 LevelScreen(
                     dateNow = mainUiState.todayDate,
