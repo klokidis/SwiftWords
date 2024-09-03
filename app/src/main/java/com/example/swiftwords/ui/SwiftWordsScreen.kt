@@ -63,8 +63,9 @@ fun SwiftWordsApp(
     navController: NavHostController = rememberNavController()
 ) {
     val dataUiState by dataViewmodel.getDataUiState.collectAsState()
-    val backStackEntry by navController.currentBackStackEntryAsState()
     val mainUiState by viewModel.uiState.collectAsState()
+
+    val backStackEntry by navController.currentBackStackEntryAsState()
     val currentScreen = SwiftWordsScreen.valueOf(
         backStackEntry?.destination?.route ?: SwiftWordsScreen.Levels.name
     )
