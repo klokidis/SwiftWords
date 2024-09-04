@@ -69,48 +69,43 @@ fun LevelScreen(
 ) {
     val levelUiState by levelViewModel.uiState.collectAsState()
 
-    Box(
-        modifier = Modifier.fillMaxSize(),
-        contentAlignment = Alignment.TopStart
+    LazyColumn(
+        modifier = Modifier
+            .fillMaxSize(),
+        verticalArrangement = Arrangement.Top,
+        horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        LazyColumn(
-            modifier = Modifier
-                .fillMaxSize(),
-            verticalArrangement = Arrangement.Top,
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            dataUiState.userDetails?.let { userDetails ->
-                itemsIndexed((userDetails.starterLevel..userDetails.endingLevel).toList()) { index, level ->
-                    if (level > 0) {
-                        val (leftPadding, rightPadding) = levelUiState.padding.getOrNull(index)
-                            ?: Pair(0.dp, 0.dp)
-                        LevelCard(
-                            number = level,
-                            rightPadding = rightPadding,
-                            leftPadding = leftPadding,
-                            thisLevel = level,
-                            currentLevel = userDetails.currentLevel,
-                            onClick = navigateToLevel,
-                            color = userDetails.color,
-                            colors = levelUiState.colors
-                        )
-                    }
+        dataUiState.userDetails?.let { userDetails ->
+            itemsIndexed((userDetails.starterLevel..userDetails.endingLevel).toList()) { index, level ->
+                if (level > 0) {
+                    val (leftPadding, rightPadding) = levelUiState.padding.getOrNull(index)
+                        ?: Pair(0.dp, 0.dp)
+                    LevelCard(
+                        number = level,
+                        rightPadding = rightPadding,
+                        leftPadding = leftPadding,
+                        thisLevel = level,
+                        currentLevel = userDetails.currentLevel,
+                        onClick = navigateToLevel,
+                        color = userDetails.color,
+                        colors = levelUiState.colors
+                    )
                 }
             }
         }
-        // BottomLevel for the current level
-        Box(
-            modifier = Modifier.fillMaxSize(),
-            contentAlignment = Alignment.BottomCenter
-        ) {
-            dataUiState.userDetails?.let { userDetails ->
-                BottomLevel(
-                    onClick = navigateToLevel,
-                    level = userDetails.currentLevel.toString(),
-                    color = userDetails.color,
-                    colors = levelUiState.colors
-                )
-            }
+    }
+    // BottomLevel for the current level
+    Box(
+        modifier = Modifier.fillMaxSize(),
+        contentAlignment = Alignment.BottomCenter
+    ) {
+        dataUiState.userDetails?.let { userDetails ->
+            BottomLevel(
+                onClick = navigateToLevel,
+                level = userDetails.currentLevel.toString(),
+                color = userDetails.color,
+                colors = levelUiState.colors
+            )
         }
     }
 }
@@ -134,7 +129,8 @@ fun LevelCard(
             .padding(
                 start = leftPadding,
                 end = rightPadding,
-                top = 50.dp
+                bottom = 30.dp,
+                top = 20.dp
             ),
     ) {
         when {
