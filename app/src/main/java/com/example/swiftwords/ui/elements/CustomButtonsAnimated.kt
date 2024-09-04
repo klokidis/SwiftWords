@@ -37,6 +37,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Color.Companion.Gray
 import androidx.compose.ui.input.pointer.pointerInteropFilter
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -356,9 +357,18 @@ fun ModesCards(
                 Image(
                     painter = painterResource(imageRes),
                     contentDescription = null,
-                    modifier = Modifier.height(110.dp)
+                    modifier = Modifier
+                        .height(95.dp)
+                        .padding(bottom = 10.dp),
+                    contentScale = ContentScale.FillHeight
                 )
-                Text(text = stringResource(textRes), style = MaterialTheme.typography.titleSmall.copy(fontSize = 20.sp, letterSpacing = 1.sp))
+                Text(
+                    text = stringResource(textRes),
+                    style = MaterialTheme.typography.titleSmall.copy(
+                        fontSize = 20.sp,
+                        letterSpacing = 1.sp
+                    )
+                )
             }
         }
     }
@@ -380,9 +390,9 @@ fun KeyCards(
     val coroutineScope = rememberCoroutineScope()
     ConstraintLayout {
         val (back, button) = createRefs()
-        val customWidth = if(imageRes == null && thisText == null){
-             60.dp
-        }else{
+        val customWidth = if (imageRes == null && thisText == null) {
+            60.dp
+        } else {
             75.dp
         }
 
@@ -419,7 +429,8 @@ fun KeyCards(
                     animatedY = 5.dp
                     delay(150L)
                     animatedY = 0.dp
-                }},
+                }
+            },
             modifier = Modifier
                 .fillMaxWidth()
                 .constrainAs(button) {
@@ -442,7 +453,11 @@ fun KeyCards(
                         MotionEvent.ACTION_DOWN -> {
                             coroutineScope.launch {
                                 animatedY = 5.dp
-                                onClick(thisWord.lowercase(Locale.ROOT)+thisLetter.lowercase(Locale.ROOT))
+                                onClick(
+                                    thisWord.lowercase(Locale.ROOT) + thisLetter.lowercase(
+                                        Locale.ROOT
+                                    )
+                                )
                                 delay(300L)
                                 animatedY = 0.dp
                             }
@@ -471,7 +486,7 @@ fun KeyCards(
                 modifier = Modifier
                     .fillMaxSize()
             ) {
-                if(imageRes==null) {
+                if (imageRes == null) {
                     Text(
                         text = thisText ?: thisLetter.toString(),
                         style = MaterialTheme.typography.titleSmall.copy(
@@ -479,11 +494,13 @@ fun KeyCards(
                             letterSpacing = 1.sp
                         )
                     )
-                }else{
+                } else {
                     Image(
                         painter = painterResource(imageRes),
                         contentDescription = null,
-                        modifier = Modifier.size(50.dp).padding(end = 3.dp)
+                        modifier = Modifier
+                            .size(50.dp)
+                            .padding(end = 3.dp)
                     )
                 }
             }

@@ -36,14 +36,14 @@ fun ModesScreen(
         ) {
             Row(modifier = Modifier.fillMaxSize()) {
                 ModeCard(
-                    imageRes = R.drawable.profile,
+                    imageRes = R.drawable.fast_mode,
                     textRes = R.string.fast,
                     onClick = { navigateFastGame() },
                     color = color,
                     modifier = Modifier.weight(1f) // Ensures the button fills available space
                 )
                 ModeCard(
-                    imageRes = R.drawable.profile,
+                    imageRes = R.drawable.unlimited_mode,
                     textRes = R.string.unlimited,
                     onClick = { navigateLongGame() },
                     color = color,
