@@ -179,7 +179,7 @@ fun TopBar(
         modifier = Modifier
             .fillMaxWidth(),
         color = MaterialTheme.colorScheme.background,
-        shadowElevation = 3.dp
+        shadowElevation = 3.5.dp
     ) {
         Row(
             modifier = Modifier
