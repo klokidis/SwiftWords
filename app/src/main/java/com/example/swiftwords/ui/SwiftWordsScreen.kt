@@ -35,11 +35,13 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.swiftwords.R
+import com.example.swiftwords.data.DataSource
 import com.example.swiftwords.data.GetDataViewModel
 import com.example.swiftwords.model.BarItem
 import com.example.swiftwords.ui.choose.StartingScreen
 import com.example.swiftwords.ui.game.Game
 import com.example.swiftwords.ui.levels.LevelScreen
+import com.example.swiftwords.ui.levels.TopBar
 import com.example.swiftwords.ui.loading.LoadingView
 import com.example.swiftwords.ui.modes.ModesScreen
 import com.example.swiftwords.ui.profile.ProfileScreen
@@ -107,7 +109,6 @@ fun SwiftWordsApp(
             }
         }
     }
-
     Scaffold(
         bottomBar = {
             if (
@@ -180,6 +181,21 @@ fun SwiftWordsApp(
                     }
                 }
             }
+        },
+        topBar = {
+            if(currentScreen == SwiftWordsScreen.Levels) {
+                dataUiState.userDetails?.let {
+                    TopBar(
+                        livesLeft = it.lives,
+                        streak = it.streak,
+                        streakDateData = it.dailyDate,
+                        dateNow = mainUiState.todayDate,
+                        color = it.color,
+                        changeColorFun = dataViewmodel::updateUserColor,
+                        colors = DataSource().colorPairs
+                    )
+                }
+            }
         }
     ) { paddingValues ->
         NavHost(
@@ -205,8 +221,6 @@ fun SwiftWordsApp(
             }
             composable(route = SwiftWordsScreen.Levels.name) {
                 LevelScreen(
-                    dateNow = mainUiState.todayDate,
-                    dataViewModel = dataViewmodel,
                     dataUiState = dataUiState,
                 ) {
                     viewModel.changeGameState(false)//tells the game this is not a game mode
