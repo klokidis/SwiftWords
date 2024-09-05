@@ -197,7 +197,8 @@ fun LevelScreen(
                             .fillMaxSize()
                             .rotate(rotationAngle), // Rotate the icon based on the current level position
                         imageVector = ImageVector.vectorResource(R.drawable.arrow), // Replace with your icon
-                        contentDescription = ""
+                        contentDescription = "",
+                        tint = Color.White
                     )
                 }
             }
