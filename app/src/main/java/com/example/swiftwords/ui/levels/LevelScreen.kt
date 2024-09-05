@@ -3,6 +3,10 @@ package com.example.swiftwords.ui.levels
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -12,6 +16,7 @@ import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -22,8 +27,12 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
@@ -33,14 +42,18 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
+import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.painterResource
@@ -56,6 +69,7 @@ import com.example.swiftwords.ui.AppViewModelProvider
 import com.example.swiftwords.ui.elements.CurrentLevel
 import com.example.swiftwords.data.ItemDetailsUiState
 import com.example.swiftwords.ui.elements.Levels
+import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Locale
@@ -69,7 +83,40 @@ fun LevelScreen(
 ) {
     val levelUiState by levelViewModel.uiState.collectAsState()
 
+    // LazyListState to manage the scroll state of the LazyColumn
+    val listState = rememberLazyListState()
+    val coroutineScope = rememberCoroutineScope()
+
+    // State to hold whether the current level is above or below the visible range
+    var isCurrentLevelAboveVisible by remember { mutableStateOf(false) }
+    var isCurrentLevelBelowVisible by remember { mutableStateOf(false) }
+
+    // Use LaunchedEffect to track scroll position but avoid recomposing unnecessarily
+    LaunchedEffect(listState) {
+        snapshotFlow { listState.layoutInfo }
+            .collect { layoutInfo ->
+                dataUiState.userDetails?.let { userDetails ->
+                    val currentLevelIndex = userDetails.currentLevel - userDetails.starterLevel
+
+                    // Update the state based on the position of the current level
+                    val firstVisibleIndex = layoutInfo.visibleItemsInfo.firstOrNull()?.index ?: 0
+                    val lastVisibleIndex = layoutInfo.visibleItemsInfo.lastOrNull()?.index ?: 0
+
+                    val isAbove = currentLevelIndex < firstVisibleIndex
+                    val isBelow = currentLevelIndex > lastVisibleIndex
+
+                    if (isCurrentLevelAboveVisible != isAbove) {
+                        isCurrentLevelAboveVisible = isAbove
+                    }
+                    if (isCurrentLevelBelowVisible != isBelow) {
+                        isCurrentLevelBelowVisible = isBelow
+                    }
+                }
+            }
+    }
+
     LazyColumn(
+        state = listState,
         modifier = Modifier
             .fillMaxSize(),
         verticalArrangement = Arrangement.Top,
@@ -94,6 +141,69 @@ fun LevelScreen(
             }
         }
     }
+
+    if (dataUiState.userDetails != null) {
+        // Animated visibility for button enter/exit animations
+        AnimatedVisibility(
+            visible = isCurrentLevelAboveVisible || isCurrentLevelBelowVisible,
+            enter = slideInVertically(
+                initialOffsetY = { it }, // Slide in from the bottom
+                animationSpec = tween(durationMillis = 400)
+            ) + fadeIn(animationSpec = tween(400)),
+            exit = slideOutVertically(
+                targetOffsetY = { it }, // Slide out to the bottom
+                animationSpec = tween(durationMillis = 300)
+            ) + fadeOut(animationSpec = tween(300))
+        ) {
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(bottom = 15.dp, end = 12.dp),
+                contentAlignment = Alignment.BottomEnd
+            ) {
+                val animatedColor by animateColorAsState(
+                    targetValue = levelUiState.colors[dataUiState.userDetails.color].darkColor,
+                    animationSpec = tween(durationMillis = 300),
+                    label = ""
+                )
+                Button(
+                    modifier = Modifier
+                        .size(50.dp),
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = animatedColor // Apply animated color as background
+                    ),
+                    shape = CircleShape,
+                    contentPadding = PaddingValues(10.dp), // Remove inner padding
+                    elevation = ButtonDefaults.buttonElevation(
+                        defaultElevation = 4.dp,
+                    ),
+                    onClick = {
+                        // Scroll to the current level when the button is clicked
+                        val indexToScroll =
+                            dataUiState.userDetails.currentLevel - dataUiState.userDetails.starterLevel
+                        coroutineScope.launch {
+                            listState.animateScrollToItem(if ((indexToScroll - 1) > 0) indexToScroll - 1 else indexToScroll)
+                        }
+                    }) {
+                    // Rotate the icon based on whether the current level is above or below the visible range
+                    val rotationAngle = if (isCurrentLevelAboveVisible) {
+                        90f
+                    } else {
+                        270f
+                    }
+
+                    Icon(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .rotate(rotationAngle), // Rotate the icon based on the current level position
+                        imageVector = ImageVector.vectorResource(R.drawable.arrow), // Replace with your icon
+                        contentDescription = ""
+                    )
+                }
+            }
+        }
+    }
+
     // BottomLevel for the current level
     Box(
         modifier = Modifier.fillMaxSize(),
