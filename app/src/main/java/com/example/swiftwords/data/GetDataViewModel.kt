@@ -124,6 +124,11 @@ class GetDataViewModel(private val userRepository: UserRepository) : ViewModel()
             val newCurrentLevel = currentUser.currentLevel + 1
             val newStarterLevel = newCurrentLevel - 2
             val newEndingLevel = newCurrentLevel + 26
+            val highScore = if (score > currentUser.highScore) {
+                score
+            }else{
+                currentUser.highScore
+            }
 
             val updatedUser = if (isLevelSpacing) {
                 val newStreak = when {
@@ -136,7 +141,8 @@ class GetDataViewModel(private val userRepository: UserRepository) : ViewModel()
                     endingLevel = newEndingLevel,
                     currentLevel = newCurrentLevel,
                     dailyDate = formattedDate,
-                    streak = newStreak
+                    streak = newStreak,
+                    highScore = highScore
                 )
             } else {
                 val newStreak = when {
@@ -147,12 +153,12 @@ class GetDataViewModel(private val userRepository: UserRepository) : ViewModel()
                 currentUser.copy(
                     currentLevel = newCurrentLevel,
                     dailyDate = formattedDate,
-                    streak = newStreak
+                    streak = newStreak,
+                    highScore = highScore
                 )
             }
 
             userRepository.updateUser(updatedUser)
-            checkHighScore(score)
         }
     }
 
