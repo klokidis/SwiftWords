@@ -123,7 +123,7 @@ class GetDataViewModel(private val userRepository: UserRepository) : ViewModel()
 
             val newCurrentLevel = currentUser.currentLevel + 1
             val newStarterLevel = newCurrentLevel - 2
-            val newEndingLevel = newCurrentLevel + 26
+            val newEndingLevel = newCurrentLevel + 20
             val highScore = if (score > currentUser.highScore) {
                 score
             }else{
