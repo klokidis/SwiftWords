@@ -179,11 +179,10 @@ fun LevelScreen(
                     ),
                     onClick = {
                         // Scroll to the current level when the button is clicked
-                        val indexToScroll =
-                            dataUiState.userDetails.currentLevel - dataUiState.userDetails.starterLevel
-                        coroutineScope.launch {
-                            listState.animateScrollToItem(if ((indexToScroll - 1) > 0) indexToScroll - 1 else indexToScroll)
-                        }
+                            coroutineScope.launch {
+                                val indexToScroll = dataUiState.userDetails.currentLevel - dataUiState.userDetails.starterLevel
+                                listState.scrollToItem(if ((indexToScroll - 1) > 0) indexToScroll - 1 else indexToScroll)
+                            }
                     }) {
                     // Rotate the icon based on whether the current level is above or below the visible range
                     val rotationAngle = if (isCurrentLevelAboveVisible) {
