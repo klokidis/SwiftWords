@@ -2,6 +2,7 @@ package com.example.swiftwords.data
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.map
@@ -35,6 +36,19 @@ class GetDataViewModel(private val userRepository: UserRepository) : ViewModel()
                 started = SharingStarted.WhileSubscribed(TIMEOUT_MILLIS),
                 initialValue = ItemDetailsUiState(isLoading = true)
             )
+
+    init {
+        viewModelScope.launch {
+            var checked = false
+            while (!checked) {
+                if (!getDataUiState.value.isLoading) {
+                    checkAndResetStreak()
+                    checked = true
+                }
+                delay(1000)
+            }
+        }
+    }
 
     fun updateUserColor(newColor: Int) {
         viewModelScope.launch {
