@@ -136,8 +136,10 @@ class SwiftWordsMainViewModel : ViewModel() {
         // Cancel the existing job if it's still active
         lettersChangingJob?.cancel()
 
-        lettersChangingJob = viewModelScope.launch {
-            runChangingLetters(run)
+        if(run) {
+            lettersChangingJob = viewModelScope.launch {
+                runChangingLetters(true)
+            }
         }
     }
 
