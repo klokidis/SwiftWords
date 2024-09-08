@@ -294,7 +294,7 @@ fun SwiftWordsApp(
                             changeChecked = dataViewmodel::updateChecked,
                             exitChangingMode = {
                                 viewModel.changingLetters(false)
-                            }
+                            },
                         )
                     }
                 } ?: run {
