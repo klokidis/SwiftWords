@@ -8,6 +8,13 @@ import com.example.swiftwords.R
 
 class SoundViewModel(application: Application) : AndroidViewModel(application) {
 
+
+    // Variable to control volume
+    private var volume: Float = 0.1f // Volume level between 0.0 and 1.0
+
+    // Variable to control volume
+    private var volumeVowels: Float = 1.7f // Volume level between 0.0 and 1.0
+
     private val correctSound: MediaPlayer by lazy {
         MediaPlayer.create(application, R.raw.jsfxr)
     }
@@ -38,11 +45,6 @@ class SoundViewModel(application: Application) : AndroidViewModel(application) {
         MediaPlayer.create(application, R.raw.v5)
     }
 
-    // Variable to control volume
-    private val volume: Float = 0.1f // Volume level between 0.0 and 1.0
-    // Variable to control volume
-    private val volumeVowels: Float = 1.7f // Volume level between 0.0 and 1.0
-
     fun playCorrectSound() {
         correctSound.seekTo(0)
         correctSound.setVolume(volume, volume)
@@ -56,9 +58,10 @@ class SoundViewModel(application: Application) : AndroidViewModel(application) {
     }
 
     fun playChangeSound() {
-        changeSound.seekTo(0)
-        changeSound.setVolume(volume, volume)
-        changeSound.start()
+        if(volume != 0f) {
+            changeSound.setVolume(volume, volume)
+            changeSound.start()
+        }
     }
 
     fun playBipSound(pitch: Float) {
@@ -66,6 +69,7 @@ class SoundViewModel(application: Application) : AndroidViewModel(application) {
         setPitch(bipSound, pitch)
         bipSound.start()
     }
+
     fun playV1(pitch: Float) {
         v1.setVolume(volumeVowels, volumeVowels)
         setPitch(v1, pitch)
@@ -83,11 +87,13 @@ class SoundViewModel(application: Application) : AndroidViewModel(application) {
         setPitch(v3, pitch)
         v3.start()
     }
+
     fun playV4(pitch: Float) {
         v4.setVolume(volumeVowels, volumeVowels)
         setPitch(v4, pitch)
         v4.start()
     }
+
     fun playV5(pitch: Float) {
         v5.setVolume(volumeVowels, volumeVowels)
         setPitch(v5, pitch)
@@ -100,10 +106,39 @@ class SoundViewModel(application: Application) : AndroidViewModel(application) {
         mediaPlayer.playbackParams = params
     }
 
+    private fun setVolume() {
+        incorrectSound.setVolume(volume, volume)
+        correctSound.setVolume(volume, volume)
+        changeSound.setVolume(volume, volume)
+        bipSound.setVolume(volume, volume)
+        v1.setVolume(volumeVowels, volumeVowels)
+        v2.setVolume(volumeVowels, volumeVowels)
+        v3.setVolume(volumeVowels, volumeVowels)
+        v4.setVolume(volumeVowels, volumeVowels)
+        v5.setVolume(volumeVowels, volumeVowels)
+    }
+
+    fun muteSounds() {
+        volume = 0f
+        volumeVowels = 0f
+        setVolume()
+    }
+
+    fun unMuteSounds() {
+        volume = 0.1f
+        volumeVowels = 1.7f
+        setVolume()
+    }
+
     override fun onCleared() {
         super.onCleared()
         correctSound.release()
         incorrectSound.release()
         bipSound.release()
+        v1.release()
+        v2.release()
+        v3.release()
+        v4.release()
+        v5.release()
     }
 }

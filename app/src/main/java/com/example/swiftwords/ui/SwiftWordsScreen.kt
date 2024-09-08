@@ -63,7 +63,7 @@ enum class SwiftWordsScreen {
 fun SwiftWordsApp(
     dataViewmodel: GetDataViewModel = viewModel(factory = AppViewModelProvider.Factory),
     viewModel: SwiftWordsMainViewModel = viewModel(factory = AppViewModelProvider.Factory),
-    soundViewModel: SoundViewModel = viewModel(factory = AppViewModelProvider.Factory),
+    soundViewModel: SoundViewModel,
     navController: NavHostController = rememberNavController()
 ) {
     val dataUiState by dataViewmodel.getDataUiState.collectAsState()
@@ -302,7 +302,8 @@ fun SwiftWordsApp(
                             exitChangingMode = {
                                 viewModel.changingLetters(false, soundViewModel::playChangeSound)
                             },
-                            launchChanging = viewModel::changingLetters
+                            launchChanging = viewModel::changingLetters,
+                            soundViewModel = soundViewModel
                         )
                     }
                 } ?: run {

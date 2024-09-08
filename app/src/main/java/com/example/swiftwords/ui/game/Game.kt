@@ -83,7 +83,6 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.swiftwords.R
 import com.example.swiftwords.data.ColorPair
 import com.example.swiftwords.data.DataSource
-import com.example.swiftwords.ui.AppViewModelProvider
 import com.example.swiftwords.ui.SwiftWordsMainViewModel
 import com.example.swiftwords.ui.elements.KeyCards
 import com.example.swiftwords.ui.elements.SoundViewModel
@@ -119,6 +118,7 @@ fun Game(
     shuffle: KFunction0<Unit>,
     exitChangingMode: () -> Unit,
     launchChanging: KFunction2<Boolean, () -> Unit, Unit>,
+    soundViewModel: SoundViewModel
 ) {
     val gameUiState by viewModel.uiState.collectAsState()
     val isTimerRunning by remember { derivedStateOf { gameUiState.isTimerRunning } }
@@ -129,7 +129,6 @@ fun Game(
     var onExitButtonPressed by rememberSaveable { mutableStateOf(false) }
     var lastMessage by rememberSaveable { mutableStateOf("Please enter an answer.") }
     val scroll = rememberScrollState()
-    val soundViewModel: SoundViewModel = viewModel(factory = AppViewModelProvider.Factory)
     val checkAnswer: () -> Unit = remember(setOfLetters) { // remember so it doesn't composition
         {
             isLoading = true
