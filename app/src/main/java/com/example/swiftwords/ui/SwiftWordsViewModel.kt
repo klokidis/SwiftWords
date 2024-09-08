@@ -26,7 +26,8 @@ data class MainUiState(
     val gameTime: Long = 40000L,
     val currentLevel: Int = 1,
     val isMode: Boolean = false,
-    val todayDate: String = ""
+    val todayDate: String = "",
+    val gameMode: Int = 0
 )
 
 class SwiftWordsMainViewModel : ViewModel() {
@@ -131,25 +132,40 @@ class SwiftWordsMainViewModel : ViewModel() {
         initialiseLists()
     }
 
+    fun changeGameMode(number : Int) {
+        _uiState.update { currentState ->
+            currentState.copy(
+                gameMode = number
+            )
+        }
+    }
 
-    fun changingLetters(run: Boolean) {
+    fun changingLetters(run: Boolean, playChangeSound: () -> Unit) {
         // Cancel the existing job if it's still active
         lettersChangingJob?.cancel()
 
-        if(run) {
+        if (run) {
             lettersChangingJob = viewModelScope.launch {
-                runChangingLetters(true)
+                runChangingLetters(true, playChangeSound)
             }
         }
     }
 
-    private suspend fun runChangingLetters(run: Boolean) {
-        while(run) {
-            generateRandomLettersForMode()
-            Log.d("klok", "runing")
+    private suspend fun runChangingLetters(run: Boolean, playChangeSound: () -> Unit) {
+        var elapsedTime = 0 // Initialize counter for elapsed time
+
+        while (run && elapsedTime < 40000) { // Continue only if less than 40 seconds
             delay(5000)
+            generateRandomLettersForMode()
+            playChangeSound()
+            Log.d("klok", "running")
+
+            elapsedTime += 5000 // Increment elapsed time by 5 seconds after each delay
         }
+
+        Log.d("klok", "Stopped after 40 seconds")
     }
+
 
     fun generateRandomLettersForBoth() {
         _uiState.update { currentState ->

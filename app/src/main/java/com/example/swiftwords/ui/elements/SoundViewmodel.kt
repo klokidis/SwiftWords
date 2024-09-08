@@ -15,6 +15,9 @@ class SoundViewModel(application: Application) : AndroidViewModel(application) {
     private val incorrectSound: MediaPlayer by lazy {
         MediaPlayer.create(application, R.raw.falsesound)
     }
+    private val changeSound: MediaPlayer by lazy {
+        MediaPlayer.create(application, R.raw.change)
+    }
 
     private val bipSound: MediaPlayer by lazy {
         MediaPlayer.create(application, R.raw.bip)
@@ -50,6 +53,12 @@ class SoundViewModel(application: Application) : AndroidViewModel(application) {
         incorrectSound.seekTo(0)
         incorrectSound.setVolume(volume, volume)
         incorrectSound.start()
+    }
+
+    fun playChangeSound() {
+        changeSound.seekTo(0)
+        changeSound.setVolume(volume, volume)
+        changeSound.start()
     }
 
     fun playBipSound(pitch: Float) {

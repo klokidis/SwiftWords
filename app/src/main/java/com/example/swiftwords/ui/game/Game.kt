@@ -93,6 +93,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlin.reflect.KFunction0
 import kotlin.reflect.KFunction1
+import kotlin.reflect.KFunction2
 import kotlin.reflect.KSuspendFunction1
 
 @Composable
@@ -103,6 +104,7 @@ fun Game(
     wordList: Set<String>,
     colorCode: Int,
     isMode: Boolean,
+    gameModeNumber: Int,
     increaseScore: KFunction1<Int, Unit>,
     viewModel: GameViewModel = viewModel(factory = GameViewModelFactory(newTime)),
     navigateUp: () -> Unit,
@@ -116,6 +118,7 @@ fun Game(
     listOfLetters: List<Char>,
     shuffle: KFunction0<Unit>,
     exitChangingMode: () -> Unit,
+    launchChanging: KFunction2<Boolean, () -> Unit, Unit>,
 ) {
     val gameUiState by viewModel.uiState.collectAsState()
     val isTimerRunning by remember { derivedStateOf { gameUiState.isTimerRunning } }
@@ -137,8 +140,8 @@ fun Game(
                     wordList,
                     setOfLetters
                 )
-                Log.d("klok str",wordList.toString())
-                Log.d("klok set",setOfLetters.toString())
+                Log.d("klok str", wordList.toString())
+                Log.d("klok set", setOfLetters.toString())
                 isLoading = false
                 textState = ""  // Reset textState after isCorrect is updated
                 when (isCorrect) {
@@ -150,7 +153,7 @@ fun Game(
     }
     DisposableEffect(Unit) { //update level even if user exist since he passed
         onDispose {
-            if(isMode){
+            if (isMode) {
                 exitChangingMode()
             }
             if (!onExitButtonPressed && gameUiState.score >= 1 && !isMode) {
@@ -199,7 +202,9 @@ fun Game(
                     )
                     TimerText(
                         modifier = Modifier.weight(1f),
-                        currentTime = { gameUiState.currentTime })
+                        currentTime = { gameUiState.currentTime },
+                        gameModeNumber = gameModeNumber
+                    )
                 } else {
                     Spacer(modifier = Modifier.weight(1f))
                 }
@@ -390,7 +395,10 @@ fun Game(
         dateNow = dateNow,
         dataDate = dataDate,
         increaseStreak = increaseStreak,
-        colorCode = colorCode
+        colorCode = colorCode,
+        launchChanging = launchChanging,
+        gameModeNumber = gameModeNumber,
+        soundViewModel = soundViewModel
     )
 }
 
@@ -559,12 +567,12 @@ fun RowOfLetters(
 
 
 @Composable
-fun TimerText(currentTime: () -> Long, modifier: Modifier) {
+fun TimerText(currentTime: () -> Long, modifier: Modifier, gameModeNumber: Int) {
     // Remember the score value to avoid unnecessary recompositions
     val formattedTime by remember(currentTime) {
         derivedStateOf {
             val time = currentTime()
-            if (time != 130000000L) { //meaning game mode with no time
+            if (gameModeNumber != 1) { //meaning game mode with no time
                 if (time > 1000L) {
                     time.toString().take(if (time < 10000L) 1 else 2)
                 } else {
@@ -679,6 +687,9 @@ fun DisplayResults(
     colorCode: Int,
     boxColor: Color = DataSource().colorPairs[colorCode].darkColor,
     isDarkTheme: Boolean = isSystemInDarkTheme(),
+    launchChanging: KFunction2<Boolean, () -> Unit, Unit>,
+    gameModeNumber: Int,
+    soundViewModel: SoundViewModel,
 ) {
     AnimatedVisibility(
         visible = isVisible,
@@ -861,6 +872,12 @@ fun DisplayResults(
                                             coroutineScope.launch {
                                                 viewModel.generateRandomLettersForBoth()
                                                 restart(time())
+                                            }
+                                            if(gameModeNumber == 2) {
+                                                launchChanging(
+                                                    true,
+                                                    soundViewModel::playChangeSound
+                                                )
                                             }
                                         },
                                         enabled = buttonsEnabled

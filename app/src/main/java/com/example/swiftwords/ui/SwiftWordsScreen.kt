@@ -39,6 +39,7 @@ import com.example.swiftwords.data.DataSource
 import com.example.swiftwords.data.GetDataViewModel
 import com.example.swiftwords.model.BarItem
 import com.example.swiftwords.ui.choose.StartingScreen
+import com.example.swiftwords.ui.elements.SoundViewModel
 import com.example.swiftwords.ui.game.Game
 import com.example.swiftwords.ui.levels.LevelScreen
 import com.example.swiftwords.ui.levels.TopBar
@@ -62,6 +63,7 @@ enum class SwiftWordsScreen {
 fun SwiftWordsApp(
     dataViewmodel: GetDataViewModel = viewModel(factory = AppViewModelProvider.Factory),
     viewModel: SwiftWordsMainViewModel = viewModel(factory = AppViewModelProvider.Factory),
+    soundViewModel: SoundViewModel = viewModel(factory = AppViewModelProvider.Factory),
     navController: NavHostController = rememberNavController()
 ) {
     val dataUiState by dataViewmodel.getDataUiState.collectAsState()
@@ -183,7 +185,7 @@ fun SwiftWordsApp(
             }
         },
         topBar = {
-            if(currentScreen == SwiftWordsScreen.Levels) {
+            if (currentScreen == SwiftWordsScreen.Levels) {
                 dataUiState.userDetails?.let {
                     TopBar(
                         livesLeft = it.lives,
@@ -232,19 +234,23 @@ fun SwiftWordsApp(
                 ModesScreen(
                     color = dataUiState.userDetails?.color,
                     navigateFastGame = {
+                        viewModel.changeGameMode(0)
                         viewModel.generateRandomLettersForMode()
                         viewModel.changeTime(20000L)
                         viewModel.changeGameState(true)//this is a game mode
                         navController.navigate(SwiftWordsScreen.Game.name)
                     },
                     navigateLongGame = {
+                        viewModel.changeGameMode(1)
                         viewModel.generateRandomLettersForMode()
                         viewModel.changeTime(130000000L) //130000000L means no time
                         viewModel.changeGameState(true) //this is a game mode
                         navController.navigate(SwiftWordsScreen.Game.name)
                     },
                     navigateChangingGame = {
-                        viewModel.changingLetters(true)
+                        viewModel.changeGameMode(2)
+                        viewModel.changeTime(40000L)
+                        viewModel.changingLetters(true, soundViewModel::playChangeSound)
                         viewModel.changeGameState(true) //this is a game mode
                         navController.navigate(SwiftWordsScreen.Game.name)
                     }
@@ -278,6 +284,7 @@ fun SwiftWordsApp(
                             checkHighScore = dataViewmodel::checkHighScore,
                             mainViewModel = viewModel,
                             isMode = mainUiState.isMode,
+                            gameModeNumber = mainUiState.gameMode,
                             setOfLetters = if (mainUiState.isMode) {
                                 mainUiState.setOfLettersForMode
                             } else {
@@ -293,8 +300,9 @@ fun SwiftWordsApp(
                             checked = { data.checked },
                             changeChecked = dataViewmodel::updateChecked,
                             exitChangingMode = {
-                                viewModel.changingLetters(false)
+                                viewModel.changingLetters(false, soundViewModel::playChangeSound)
                             },
+                            launchChanging = viewModel::changingLetters
                         )
                     }
                 } ?: run {
