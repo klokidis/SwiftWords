@@ -115,6 +115,7 @@ fun Game(
     increaseStreak: KFunction0<Unit>,
     listOfLetters: List<Char>,
     shuffle: KFunction0<Unit>,
+    exitChangingMode: () -> Unit,
 ) {
     val gameUiState by viewModel.uiState.collectAsState()
     val isTimerRunning by remember { derivedStateOf { gameUiState.isTimerRunning } }
@@ -136,6 +137,8 @@ fun Game(
                     wordList,
                     setOfLetters
                 )
+                Log.d("klok str",wordList.toString())
+                Log.d("klok set",setOfLetters.toString())
                 isLoading = false
                 textState = ""  // Reset textState after isCorrect is updated
                 when (isCorrect) {
@@ -147,6 +150,9 @@ fun Game(
     }
     DisposableEffect(Unit) { //update level even if user exist since he passed
         onDispose {
+            if(isMode){
+                exitChangingMode()
+            }
             if (!onExitButtonPressed && gameUiState.score >= 1 && !isMode) {
                 increaseScore(gameUiState.score)
                 mainViewModel.generateRandomLettersForBoth()

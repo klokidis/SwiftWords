@@ -242,6 +242,11 @@ fun SwiftWordsApp(
                         viewModel.changeTime(130000000L) //130000000L means no time
                         viewModel.changeGameState(true) //this is a game mode
                         navController.navigate(SwiftWordsScreen.Game.name)
+                    },
+                    navigateChangingGame = {
+                        viewModel.changingLetters(true)
+                        viewModel.changeGameState(true) //this is a game mode
+                        navController.navigate(SwiftWordsScreen.Game.name)
                     }
                 )
             }
@@ -286,7 +291,10 @@ fun SwiftWordsApp(
                             shuffle = viewModel::shuffleLetters,
                             highScore = data.highScore,
                             checked = { data.checked },
-                            changeChecked = dataViewmodel::updateChecked
+                            changeChecked = dataViewmodel::updateChecked,
+                            exitChangingMode = {
+                                viewModel.changingLetters(false)
+                            }
                         )
                     }
                 } ?: run {

@@ -21,7 +21,8 @@ import com.example.swiftwords.ui.elements.darken
 fun ModesScreen(
     navigateFastGame: () -> Unit,
     navigateLongGame: () -> Unit,
-    color: Int?
+    navigateChangingGame: () -> Unit,
+    color: Int?,
 ) {
     val scrollState = rememberScrollState()
     Box(
@@ -53,8 +54,8 @@ fun ModesScreen(
             Row(modifier = Modifier.fillMaxSize()) {
                 ModeCard(
                     imageRes = R.drawable.profile,
-                    textRes = R.string.app_name,
-                    onClick = { },
+                    textRes = R.string.shuffle,
+                    onClick = { navigateChangingGame() },
                     color = color,
                     modifier = Modifier.weight(1f) // Ensures the button fills available space
                 )

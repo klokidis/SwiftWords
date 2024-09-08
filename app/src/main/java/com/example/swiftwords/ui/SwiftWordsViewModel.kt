@@ -1,9 +1,11 @@
 package com.example.swiftwords.ui
 
 import android.content.Context
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -32,6 +34,9 @@ class SwiftWordsMainViewModel : ViewModel() {
     private val _uiState = MutableStateFlow(MainUiState())
     val uiState: StateFlow<MainUiState> = _uiState.asStateFlow()
 
+    // Declare a Job to track the coroutine
+    private var lettersChangingJob: Job? = null
+
     init {
         generateRandomLettersForBoth()
         updateDateAtHourChange()
@@ -56,7 +61,7 @@ class SwiftWordsMainViewModel : ViewModel() {
         }
     }
 
-    private fun initialiseLists(){
+    private fun initialiseLists() {
         _uiState.update { currentState ->
             currentState.copy(
                 listOfLettersForMode = currentState.setOfLettersForMode.toList(),
@@ -124,6 +129,24 @@ class SwiftWordsMainViewModel : ViewModel() {
             )
         }
         initialiseLists()
+    }
+
+
+    fun changingLetters(run: Boolean) {
+        // Cancel the existing job if it's still active
+        lettersChangingJob?.cancel()
+
+        lettersChangingJob = viewModelScope.launch {
+            runChangingLetters(run)
+        }
+    }
+
+    private suspend fun runChangingLetters(run: Boolean) {
+        while(run) {
+            generateRandomLettersForMode()
+            Log.d("klok", "runing")
+            delay(5000)
+        }
     }
 
     fun generateRandomLettersForBoth() {
