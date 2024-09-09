@@ -63,7 +63,7 @@ enum class SwiftWordsScreen {
 fun SwiftWordsApp(
     dataViewmodel: GetDataViewModel = viewModel(factory = AppViewModelProvider.Factory),
     viewModel: SwiftWordsMainViewModel = viewModel(factory = AppViewModelProvider.Factory),
-    soundViewModel: SoundViewModel,
+    soundViewModel: SoundViewModel=viewModel(factory = AppViewModelProvider.Factory),
     navController: NavHostController = rememberNavController()
 ) {
     val dataUiState by dataViewmodel.getDataUiState.collectAsState()
@@ -251,6 +251,12 @@ fun SwiftWordsApp(
                         viewModel.changeGameMode(2)
                         viewModel.changeTime(40000L)
                         viewModel.changingLetters(true, soundViewModel::playChangeSound)
+                        viewModel.changeGameState(true) //this is a game mode
+                        navController.navigate(SwiftWordsScreen.Game.name)
+                    },
+                    navigateConsequencesGame = {
+                        viewModel.changeGameMode(3)
+                        viewModel.changeTime(40000L)
                         viewModel.changeGameState(true) //this is a game mode
                         navController.navigate(SwiftWordsScreen.Game.name)
                     }

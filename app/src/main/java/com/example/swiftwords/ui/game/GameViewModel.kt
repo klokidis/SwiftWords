@@ -77,6 +77,22 @@ class GameViewModel(time: () -> Long) : ViewModel() {
         }
     }
 
+    fun addTime() {
+        _uiState.update { currentState ->
+            currentState.copy(
+                currentTime = currentState.currentTime + 2000
+            )
+        }
+    }
+
+    fun removeTime() {
+        _uiState.update { currentState ->
+            currentState.copy(
+                currentTime = currentState.currentTime - 1000
+            )
+        }
+    }
+
     private fun addWord(newWord: String) {
         _uiState.update { currentState ->
             currentState.copy(

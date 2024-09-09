@@ -23,6 +23,7 @@ fun ModesScreen(
     navigateLongGame: () -> Unit,
     navigateChangingGame: () -> Unit,
     color: Int?,
+    navigateConsequencesGame: () -> Unit,
 ) {
     val scrollState = rememberScrollState()
     Box(
@@ -61,8 +62,8 @@ fun ModesScreen(
                 )
                 ModeCard(
                     imageRes = R.drawable.profile,
-                    textRes = R.string.app_name,
-                    onClick = { },
+                    textRes = R.string.settings,
+                    onClick = { navigateConsequencesGame() },
                     color = color,
                     modifier = Modifier.weight(1f) // Ensures the button fills available space
                 )

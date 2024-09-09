@@ -144,8 +144,18 @@ fun Game(
                 isLoading = false
                 textState = ""  // Reset textState after isCorrect is updated
                 when (isCorrect) {
-                    true -> soundViewModel.playCorrectSound()
-                    else -> soundViewModel.playIncorrectSound()
+                    true -> {
+                        soundViewModel.playCorrectSound()
+                        if(gameModeNumber == 3){
+                            viewModel.addTime()
+                        }
+                    }
+                    else -> {
+                        soundViewModel.playIncorrectSound()
+                        if(gameModeNumber == 3){
+                            viewModel.removeTime()
+                        }
+                    }
                 }
             }
         }
