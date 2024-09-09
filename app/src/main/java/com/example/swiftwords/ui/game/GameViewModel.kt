@@ -42,7 +42,7 @@ class GameViewModel(time: () -> Long) : ViewModel() {
     }
 
     suspend fun checkAnswer(
-        answer:() -> String,
+        answer: () -> String,
         wordList: Set<String>,
         charArray: Set<Char>
     ): Boolean {
@@ -80,7 +80,11 @@ class GameViewModel(time: () -> Long) : ViewModel() {
     fun addTime() {
         _uiState.update { currentState ->
             currentState.copy(
-                currentTime = currentState.currentTime + 2000
+                currentTime = if ((currentState.currentTime + 2000) > currentState.totalTime) {
+                    currentState.totalTime
+                } else {
+                    currentState.currentTime + 2000
+                }
             )
         }
     }
