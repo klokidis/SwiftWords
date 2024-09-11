@@ -259,7 +259,13 @@ fun SwiftWordsApp(
                         viewModel.changeTime(40000L)
                         viewModel.changeGameState(true) //this is a game mode
                         navController.navigate(SwiftWordsScreen.Game.name)
-                    }
+                    },
+                    changeTime = viewModel::changeTime,
+                    navigateCustomGame = {
+                        viewModel.changeGameMode(4)
+                        viewModel.changeGameState(true) //this is a game mode
+                        navController.navigate(SwiftWordsScreen.Game.name)
+                    },
                 )
             }
             composable(route = SwiftWordsScreen.Profile.name) {

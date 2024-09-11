@@ -1,20 +1,42 @@
 package com.example.swiftwords.ui.modes
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.example.swiftwords.R
 import com.example.swiftwords.data.DataSource
 import com.example.swiftwords.ui.elements.ModesCards
 import com.example.swiftwords.ui.elements.darken
+import kotlin.reflect.KFunction1
 
 
 @Composable
@@ -24,8 +46,11 @@ fun ModesScreen(
     navigateChangingGame: () -> Unit,
     color: Int?,
     navigateConsequencesGame: () -> Unit,
+    navigateCustomGame: () -> Unit,
+    changeTime: KFunction1<Long, Unit>,
 ) {
     val scrollState = rememberScrollState()
+    var visible by remember { mutableStateOf(false) }
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -68,9 +93,10 @@ fun ModesScreen(
                     modifier = Modifier.weight(1f) // Ensures the button fills available space
                 )
             }
-            BottomCard({ }, color)
+            BottomCard(color) { visible = true }
         }
     }
+    PopUp(visible, Color.Yellow, Color.Black, navigateCustomGame, { visible = false },changeTime)
 }
 
 @Composable
@@ -94,8 +120,8 @@ fun ModeCard(
 
 @Composable
 fun BottomCard(
-    onButtonCard: () -> Unit,
-    color: Int?
+    color: Int?,
+    function: () -> Unit
 ) {
     Box(modifier = Modifier.padding(start = 7.dp, end = 7.dp, top = 18.dp, bottom = 10.dp)) {
         ModesCards(
@@ -103,8 +129,106 @@ fun BottomCard(
             textRes = R.string.levels,
             color = DataSource().colorPairs[color!!].darkColor,
             shadowColor = DataSource().colorPairs[color].darkColor.darken(),
-            onClick = onButtonCard,
+            onClick = function,
             size = 150.dp
         )
+    }
+}
+@Composable
+fun PopUp(
+    visible: Boolean,
+    textColor: Color,
+    boxColor: Color,
+    navigate: () -> Unit,
+    hide: () -> Unit,
+    changeTime: (Long) -> Unit
+) {
+    var expanded by remember { mutableStateOf(false) }
+    var selectedTime by remember { mutableStateOf<Long?>(null) }
+    val timeOptions = listOf(1000L, 5000L, 10000L, 30000L) // Example times in milliseconds
+
+    AnimatedVisibility(
+        visible = visible,
+        enter = fadeIn(initialAlpha = 0.2f),
+        exit = fadeOut(animationSpec = tween(durationMillis = 200))
+    ) {
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(Color.Black.copy(alpha = 0.3f)),
+        ) {
+            Card(
+                modifier = Modifier.align(Alignment.Center),
+                colors = CardDefaults.cardColors(MaterialTheme.colorScheme.secondary)
+            ) {
+                Column(
+                    modifier = Modifier.padding(10.dp),
+                    verticalArrangement = Arrangement.Center,
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    Image(
+                        painter = painterResource(id = R.drawable.sage),
+                        modifier = Modifier.size(100.dp),
+                        contentDescription = null
+                    )
+                    Text(
+                        "Custom Time",
+                        style = MaterialTheme.typography.titleSmall,
+                        color = textColor
+                    )
+
+                    // Dropdown Menu for Time Selection
+                    Box {
+                        TextButton(onClick = { expanded = true }) {
+                            Text(
+                                text = selectedTime?.toString() ?: "Select Time",
+                                color = boxColor
+                            )
+                        }
+                        DropdownMenu(
+                            expanded = expanded,
+                            onDismissRequest = { expanded = false }
+                        ) {
+                            timeOptions.forEach { time ->
+                                DropdownMenuItem(
+                                    onClick = {
+                                        selectedTime = time
+                                        expanded = false
+                                    },
+                                    text = { Text("$time ms") }
+                                )
+                            }
+                        }
+                    }
+
+                    Row {
+                        TextButton(
+                            onClick = { hide() }
+                        ) {
+                            Text(
+                                "Cancel",
+                                style = MaterialTheme.typography.titleSmall,
+                                color = boxColor
+                            )
+                        }
+                        TextButton(
+                            onClick = {
+                                selectedTime?.let {
+                                    changeTime(it) // Pass the selected time to the changeTime callback
+                                }
+                                hide()
+                                navigate()
+                            },
+                        ) {
+                            Text(
+                                "Confirm",
+                                style = MaterialTheme.typography.titleSmall,
+                                color = boxColor
+                            )
+                        }
+                    }
+                }
+            }
+        }
     }
 }
