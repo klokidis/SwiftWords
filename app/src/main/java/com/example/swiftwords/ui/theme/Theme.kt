@@ -107,7 +107,6 @@ fun SwiftWordsTheme(
     if (!view.isInEditMode) {
         SideEffect {
             val window = (view.context as Activity).window
-            window.statusBarColor = colorScheme.background.toArgb()
             window.navigationBarColor = if(darkTheme){ //changes the bottom navigation based on mode
                 Color(0xFF1e222b).toArgb()
             } else {

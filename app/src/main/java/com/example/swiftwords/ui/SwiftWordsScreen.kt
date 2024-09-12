@@ -16,6 +16,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.res.stringResource
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.safeContentPadding
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -184,6 +185,7 @@ fun SwiftWordsApp(
                 }
             }
         },
+        modifier = Modifier.safeContentPadding(),
         topBar = {
             if (currentScreen == SwiftWordsScreen.Levels) {
                 dataUiState.userDetails?.let {
