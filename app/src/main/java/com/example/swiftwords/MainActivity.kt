@@ -39,13 +39,13 @@ class MainActivity : ComponentActivity() {
     override fun onPause() {
         super.onPause()
         soundViewModel.muteSounds()
-        Log.d("klok","muted")
+        Log.d("klok2","muted")
     }
 
-    override fun onRestart() {
-        super.onRestart()
+    override fun onResume() {
+        super.onResume()
         soundViewModel.unMuteSounds()
-        Log.d("klok","unMuted")
+        Log.d("klok2","unMuted")
     }
 }
 
