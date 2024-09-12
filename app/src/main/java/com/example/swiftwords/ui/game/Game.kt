@@ -275,22 +275,22 @@ fun Game(
                     text = when {
                         isLoading -> lastMessage // Keep the same message while loading
                         isCorrect == true -> {
-                            lastMessage = "Correct"
+                            lastMessage = stringResource(R.string.correct)
                             lastMessage
                         }
 
                         isCorrect == false -> {
-                            lastMessage = "Incorrect"
+                            lastMessage = stringResource(R.string.incorrect)
                             lastMessage
                         }
 
                         else -> {
-                            lastMessage = "Enter an answer."
+                            lastMessage = stringResource(R.string.enter_answer)
                             lastMessage
                         }
                     },
                     style = MaterialTheme.typography.titleSmall.copy(
-                        fontSize = 16.sp,
+                        fontSize = 17.sp,
                         color = when (isCorrect) {
                             true -> Color(0xFF006D2F)  // Correct color
                             false -> Color(0xFF8D0C0C) // Incorrect color
@@ -364,7 +364,7 @@ fun Game(
                 Icon(
                     modifier = Modifier.size(35.dp),
                     imageVector = ImageVector.vectorResource(R.drawable.keyboard_24px),
-                    contentDescription = "keyboard",
+                    contentDescription = stringResource(R.string.keyboard),
                 )
                 Spacer(modifier = Modifier.weight(1f))
                 IconButton(
@@ -432,7 +432,7 @@ fun CustomKeyboard(
             CustomLetterClick(listOfLetters[2], colorCode, onLetterClicked = onClick, word = word)
             Spacer(modifier = Modifier.size(10.dp))
             CustomLetterClick(
-                thisText = "ENTER",
+                thisText = stringResource(R.string.enter),
                 letter = ' ',
                 colorCode = colorCode,
                 onLetterClicked = { onEnter() },
@@ -512,7 +512,7 @@ fun CustomButton(
             .height(50.dp)
     ) {
         Text(
-            text = "check",
+            text = stringResource(R.string.check),
             maxLines = 1,
             color = textColor
         )
@@ -610,7 +610,7 @@ fun TextScore(score: () -> Int) {
 
     // Only recomposes if scoreValue changes
     Text(
-        text = "score: $scoreValue",
+        text = stringResource(R.string.score) + " " + scoreValue,
         style = MaterialTheme.typography.titleSmall.copy(fontSize = 17.sp)
     )
 }
@@ -751,7 +751,7 @@ fun DisplayResults(
                             contentDescription = null
                         )
                         Text(
-                            "New high score: " + score().toString(),
+                            stringResource(R.string.high_score) + " " + score().toString(),
                             style = MaterialTheme.typography.titleSmall,
                             color = textColor
                         )
@@ -764,7 +764,7 @@ fun DisplayResults(
                             enabled = buttonsEnabled
                         ) {
                             Text(
-                                "Claim",
+                                stringResource(R.string.claim),
                                 style = MaterialTheme.typography.titleSmall,
                                 color = if (buttonsEnabled) {
                                     boxColor
@@ -788,7 +788,7 @@ fun DisplayResults(
                                 contentDescription = null
                             )
                             Text(
-                                "good job streak increased",
+                                stringResource(R.string.streak_increase),
                                 style = MaterialTheme.typography.titleSmall,
                                 color = textColor,
                             )
@@ -799,7 +799,7 @@ fun DisplayResults(
                                 enabled = buttonsEnabled
                             ) {
                                 Text(
-                                    "Claim",
+                                    stringResource(R.string.claim),
                                     style = MaterialTheme.typography.titleSmall,
                                     color = if (buttonsEnabled) {
                                         boxColor
@@ -824,7 +824,7 @@ fun DisplayResults(
                             when {
                                 score() >= 10 && !isMode -> {
                                     Text(
-                                        "Congrats!! you passed with score: " + score().toString(),
+                                        stringResource(R.string.pass) + " " + score().toString(),
                                         style = MaterialTheme.typography.titleSmall,
                                         color = textColor
                                     )
@@ -832,7 +832,7 @@ fun DisplayResults(
 
                                 !isMode -> {
                                     Text(
-                                        "you failed :( with score: " + score().toString(),
+                                        stringResource(R.string.fail) + " "+ score().toString(),
                                         style = MaterialTheme.typography.titleSmall,
                                         color = textColor
                                     )
@@ -840,7 +840,7 @@ fun DisplayResults(
 
                                 else -> {
                                     Text(
-                                        "nice try!! with score: " + score().toString(),
+                                        stringResource(R.string.nice_try) + " "+ score().toString(),
                                         style = MaterialTheme.typography.titleSmall,
                                         color = textColor
                                     )
@@ -863,7 +863,7 @@ fun DisplayResults(
                                     enabled = buttonsEnabled
                                 ) {
                                     Text(
-                                        "Exit",
+                                        stringResource(R.string.exit),
                                         style = MaterialTheme.typography.titleSmall,
                                         color = if (buttonsEnabled) {
                                             boxColor
@@ -887,7 +887,7 @@ fun DisplayResults(
                                         enabled = buttonsEnabled
                                     ) {
                                         Text(
-                                            "Play Again",
+                                            stringResource(R.string.play_again),
                                             style = MaterialTheme.typography.titleSmall,
                                             color = if (buttonsEnabled) {
                                                 boxColor
@@ -907,7 +907,7 @@ fun DisplayResults(
                                         enabled = buttonsEnabled
                                     ) {
                                         Text(
-                                            "Try Again (-1 life)",
+                                            stringResource(R.string.try_again),
                                             style = MaterialTheme.typography.titleSmall,
                                             color = if (buttonsEnabled) {
                                                 boxColor
@@ -928,7 +928,7 @@ fun DisplayResults(
                                         enabled = score() >= 0 && buttonsEnabled
                                     ) {
                                         Text(
-                                            "Next Level",
+                                            stringResource(R.string.next_level),
                                             style = MaterialTheme.typography.titleSmall,
                                             color = if (buttonsEnabled) {
                                                 boxColor

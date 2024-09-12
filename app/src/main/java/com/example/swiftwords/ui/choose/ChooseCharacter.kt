@@ -210,7 +210,7 @@ fun SetNickName(
         TextField(
             value = textState,
             onValueChange = { textState = it },
-            label = { Text("Enter your name") },
+            label = { Text(stringResource(R.string.give_name)) },
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(start = 20.dp, end = 20.dp),
@@ -235,7 +235,7 @@ fun SetNickName(
             OutlinedButton(onClick = {
                 onCancel()
             }) {
-                Text("cancel")
+                Text(stringResource(R.string.cancel))
             }
             Spacer(modifier = Modifier.weight(1f))
             Button(
@@ -247,7 +247,7 @@ fun SetNickName(
                 },
                 enabled = textState.isNotBlank()
             ) {
-                Text("save")
+                Text(stringResource(R.string.save))
             }
         }
     }
@@ -332,9 +332,9 @@ fun ChooseCharacter(
             modifier = Modifier.padding(start = 10.dp)
         )
         Spacer(modifier = Modifier.padding(20.dp))
-        CompleteCard(R.drawable.sage, "sage", character == 0, uiStateUpdate, character = 0)
+        CompleteCard(R.drawable.sage, stringResource(R.string.f_name), character == 0, uiStateUpdate, character = 0)
         Spacer(modifier = Modifier.padding(10.dp))
-        CompleteCard(R.drawable.gekko, "gekko", character == 1, uiStateUpdate, character = 1)
+        CompleteCard(R.drawable.gekko, stringResource(R.string.m_name), character == 1, uiStateUpdate, character = 1)
         Spacer(modifier = Modifier.weight(0.5f))
         Row(
             modifier = Modifier
@@ -353,7 +353,7 @@ fun ChooseCharacter(
                 },
                 enabled = character != 2
             ) {
-                Text("next")
+                Text(stringResource(R.string.next))
             }
         }
     }

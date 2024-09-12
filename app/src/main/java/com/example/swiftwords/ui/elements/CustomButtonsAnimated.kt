@@ -250,13 +250,13 @@ fun Levels(
             if (passed) {
                 Icon(
                     painter = painterResource(id = R.drawable.done_icon),
-                    contentDescription = "",
+                    contentDescription = null,
                     modifier = Modifier.size(40.dp)
                 )
             } else {
                 Icon(
                     painter = painterResource(id = R.drawable.outline_lock),
-                    contentDescription = "",
+                    contentDescription = null,
                     modifier = Modifier.size(30.dp)
                 )
             }

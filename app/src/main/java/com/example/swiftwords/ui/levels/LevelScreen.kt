@@ -179,10 +179,11 @@ fun LevelScreen(
                     ),
                     onClick = {
                         // Scroll to the current level when the button is clicked
-                            coroutineScope.launch {
-                                val indexToScroll = dataUiState.userDetails.currentLevel - dataUiState.userDetails.starterLevel
-                                listState.scrollToItem(if ((indexToScroll - 1) > 0) indexToScroll - 1 else indexToScroll)
-                            }
+                        coroutineScope.launch {
+                            val indexToScroll =
+                                dataUiState.userDetails.currentLevel - dataUiState.userDetails.starterLevel
+                            listState.scrollToItem(if ((indexToScroll - 1) > 0) indexToScroll - 1 else indexToScroll)
+                        }
                     }) {
                     // Rotate the icon based on whether the current level is above or below the visible range
                     val rotationAngle = if (isCurrentLevelAboveVisible) {
@@ -343,7 +344,7 @@ fun TopBar(
                     }
                 },
                 modifier = Modifier.size(30.dp),
-                contentDescription = "streak"
+                contentDescription = stringResource(R.string.streak)
             )
 
             Text(
@@ -366,7 +367,7 @@ fun TopBar(
             Image(
                 painter = painterResource(id = R.drawable.heart),
                 modifier = Modifier.size(28.dp),
-                contentDescription = "lives left"
+                contentDescription = stringResource(R.string.lives_left)
             )
             Text(
                 text = livesLeft.toString(),
@@ -516,7 +517,7 @@ fun BottomLevel(onClick: () -> Unit, level: String, color: Int, colors: List<Col
             contentAlignment = Alignment.Center
         ) {
             Text(
-                text = "Level: $level",
+                text = stringResource(R.string.level) + " " + level,
                 color = Color.White,
                 style = MaterialTheme.typography.titleSmall.copy(
                     fontSize = 22.sp,

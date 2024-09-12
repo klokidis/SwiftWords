@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Card
@@ -199,26 +200,31 @@ fun PopUp(
                         contentDescription = null
                     )
 
-                    Row {
+                    Row(
+                        modifier = Modifier.padding(top = 15.dp)
+                    ) {
                         // Dropdown Menu for Time Selection
                         Box {
                             TextButton(onClick = { expandedTime = true }) {
                                 Text(
-                                    text = selectedTime?.toString() ?: "Select Time",
+                                    text = selectedTime?.toString()?.take(2)
+                                        ?: stringResource(R.string.select_time),
                                     color = textColor
                                 )
                             }
                             DropdownMenu(
                                 expanded = expandedTime,
+                                modifier = Modifier.width(50.dp),
                                 onDismissRequest = { expandedTime = false }
                             ) {
                                 timeOptions.forEach { time ->
+                                    val firstTwoDigits = time.toString().take(2)
                                     DropdownMenuItem(
                                         onClick = {
                                             selectedTime = time
                                             expandedTime = false
                                         },
-                                        text = { Text("$time ms") }
+                                        text = { Text(firstTwoDigits) }
                                     )
                                 }
                             }
@@ -227,7 +233,8 @@ fun PopUp(
                         Box {
                             TextButton(onClick = { expandedMode = true }) {
                                 Text(
-                                    text = selectedModeVisible ?: "Select Mode",
+                                    text = selectedModeVisible
+                                        ?: stringResource(R.string.select_mode),
                                     color = textColor
                                 )
                             }
@@ -255,7 +262,7 @@ fun PopUp(
                             onClick = { hide() }
                         ) {
                             Text(
-                                "Cancel",
+                                stringResource(R.string.cancel),
                                 style = MaterialTheme.typography.titleSmall,
                                 color = textColor
                             )
@@ -272,7 +279,7 @@ fun PopUp(
                             enabled = selectedTime != null && selectedMode != null
                         ) {
                             Text(
-                                "Confirm",
+                                stringResource(R.string.confirm),
                                 style = MaterialTheme.typography.titleSmall,
                                 color = if (selectedTime == null || selectedMode == null) Color.Gray else textColor
                             )
