@@ -31,12 +31,15 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.example.swiftwords.R
 import com.example.swiftwords.data.DataSource
 import com.example.swiftwords.ui.elements.ModesCards
 import com.example.swiftwords.ui.elements.darken
+import kotlin.reflect.KFunction0
 import kotlin.reflect.KFunction1
+import kotlin.reflect.KFunction3
 
 
 @Composable
@@ -48,6 +51,9 @@ fun ModesScreen(
     navigateConsequencesGame: () -> Unit,
     navigateCustomGame: () -> Unit,
     changeTime: KFunction1<Long, Unit>,
+    changeGameMode: KFunction1<Int, Unit>,
+    startShuffle: KFunction3<Boolean, () -> Unit, Long, Unit>,
+    sound: KFunction0<Unit>,
 ) {
     val scrollState = rememberScrollState()
     var visible by remember { mutableStateOf(false) }
@@ -96,7 +102,7 @@ fun ModesScreen(
             BottomCard(color) { visible = true }
         }
     }
-    PopUp(visible, Color.Yellow, Color.Black, navigateCustomGame, { visible = false },changeTime)
+    PopUp(visible, Color.Yellow, Color.Black, navigateCustomGame, { visible = false }, changeTime,changeGameMode,startShuffle,sound)
 }
 
 @Composable
@@ -134,6 +140,7 @@ fun BottomCard(
         )
     }
 }
+
 @Composable
 fun PopUp(
     visible: Boolean,
@@ -141,11 +148,19 @@ fun PopUp(
     boxColor: Color,
     navigate: () -> Unit,
     hide: () -> Unit,
-    changeTime: (Long) -> Unit
+    changeTime: (Long) -> Unit,
+    changeGameMode: (Int) -> Unit,
+    startShuffle: KFunction3<Boolean, () -> Unit, Long, Unit>,
+    sound: () -> Unit
 ) {
-    var expanded by remember { mutableStateOf(false) }
+    var expandedTime by remember { mutableStateOf(false) }
+    var expandedMode by remember { mutableStateOf(false) }
     var selectedTime by remember { mutableStateOf<Long?>(null) }
+    var selectedModeVisible by remember { mutableStateOf<String?>(null) }
+    var selectedMode by remember { mutableStateOf<Int?>(null) }
     val timeOptions = listOf(1000L, 5000L, 10000L, 30000L) // Example times in milliseconds
+    val modeOptions = listOf(0, 1, 2) // Example times in milliseconds
+    val modeStringOptions = listOf(stringResource(R.string.unlimited), stringResource(R.string.shuffle), stringResource(R.string.settings))
 
     AnimatedVisibility(
         visible = visible,
@@ -171,36 +186,58 @@ fun PopUp(
                         modifier = Modifier.size(100.dp),
                         contentDescription = null
                     )
-                    Text(
-                        "Custom Time",
-                        style = MaterialTheme.typography.titleSmall,
-                        color = textColor
-                    )
 
-                    // Dropdown Menu for Time Selection
-                    Box {
-                        TextButton(onClick = { expanded = true }) {
-                            Text(
-                                text = selectedTime?.toString() ?: "Select Time",
-                                color = boxColor
-                            )
-                        }
-                        DropdownMenu(
-                            expanded = expanded,
-                            onDismissRequest = { expanded = false }
-                        ) {
-                            timeOptions.forEach { time ->
-                                DropdownMenuItem(
-                                    onClick = {
-                                        selectedTime = time
-                                        expanded = false
-                                    },
-                                    text = { Text("$time ms") }
+                    Row {
+                        // Dropdown Menu for Time Selection
+                        Box {
+                            TextButton(onClick = { expandedTime = true }) {
+                                Text(
+                                    text = selectedTime?.toString() ?: "Select Time",
+                                    color = boxColor
                                 )
+                            }
+                            DropdownMenu(
+                                expanded = expandedTime,
+                                onDismissRequest = { expandedTime = false }
+                            ) {
+                                timeOptions.forEach { time ->
+                                    DropdownMenuItem(
+                                        onClick = {
+                                            selectedTime = time
+                                            expandedTime = false
+                                        },
+                                        text = { Text("$time ms") }
+                                    )
+                                }
+                            }
+                        }
+
+                        Box {
+                            TextButton(onClick = { expandedMode = true }) {
+                                Text(
+                                    text = selectedModeVisible ?: "Select Mode",
+                                    color = boxColor
+                                )
+                            }
+                            DropdownMenu(
+                                expanded = expandedMode,
+                                onDismissRequest = { expandedMode = false }
+                            ) {
+                                modeOptions.forEach { mode ->
+                                    DropdownMenuItem(
+                                        onClick = {
+                                            selectedModeVisible = modeStringOptions[mode]
+                                            selectedMode = mode + 1
+                                            expandedMode = false
+                                        },
+                                        text = {
+                                            Text(modeStringOptions[mode])
+                                        }
+                                    )
+                                }
                             }
                         }
                     }
-
                     Row {
                         TextButton(
                             onClick = { hide() }
@@ -213,12 +250,14 @@ fun PopUp(
                         }
                         TextButton(
                             onClick = {
-                                selectedTime?.let {
-                                    changeTime(it) // Pass the selected time to the changeTime callback
-                                }
+                                changeTime(selectedTime!!)
+                                if(selectedMode == 1) changeTime(130000000L)
+                                selectedMode?.let { changeGameMode(it) }
                                 hide()
+                                if (selectedMode == 2) startShuffle(true,sound, selectedTime!!)
                                 navigate()
                             },
+                            enabled = selectedTime != null && selectedMode != null
                         ) {
                             Text(
                                 "Confirm",

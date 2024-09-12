@@ -63,7 +63,7 @@ enum class SwiftWordsScreen {
 fun SwiftWordsApp(
     dataViewmodel: GetDataViewModel = viewModel(factory = AppViewModelProvider.Factory),
     viewModel: SwiftWordsMainViewModel = viewModel(factory = AppViewModelProvider.Factory),
-    soundViewModel: SoundViewModel=viewModel(factory = AppViewModelProvider.Factory),
+    soundViewModel: SoundViewModel = viewModel(factory = AppViewModelProvider.Factory),
     navController: NavHostController = rememberNavController()
 ) {
     val dataUiState by dataViewmodel.getDataUiState.collectAsState()
@@ -250,7 +250,11 @@ fun SwiftWordsApp(
                     navigateChangingGame = {
                         viewModel.changeGameMode(2)
                         viewModel.changeTime(40000L)
-                        viewModel.changingLetters(true, soundViewModel::playChangeSound)
+                        viewModel.changingLetters(
+                            true,
+                            soundViewModel::playChangeSound,
+                            40000L
+                        )
                         viewModel.changeGameState(true) //this is a game mode
                         navController.navigate(SwiftWordsScreen.Game.name)
                     },
@@ -261,11 +265,13 @@ fun SwiftWordsApp(
                         navController.navigate(SwiftWordsScreen.Game.name)
                     },
                     changeTime = viewModel::changeTime,
+                    changeGameMode = viewModel::changeGameMode,
                     navigateCustomGame = {
-                        viewModel.changeGameMode(4)
                         viewModel.changeGameState(true) //this is a game mode
                         navController.navigate(SwiftWordsScreen.Game.name)
                     },
+                    sound = soundViewModel::playChangeSound,
+                    startShuffle = viewModel::changingLetters,
                 )
             }
             composable(route = SwiftWordsScreen.Profile.name) {
@@ -312,9 +318,19 @@ fun SwiftWordsApp(
                             checked = { data.checked },
                             changeChecked = dataViewmodel::updateChecked,
                             exitChangingMode = {
-                                viewModel.changingLetters(false, soundViewModel::playChangeSound)
+                                viewModel.changingLetters(
+                                    false,
+                                    soundViewModel::playChangeSound,
+                                    mainUiState.gameTime
+                                )
                             },
-                            launchChanging = viewModel::changingLetters,
+                            launchChanging = {
+                                viewModel.changingLetters(
+                                    true,
+                                    soundViewModel::playChangeSound,
+                                    mainUiState.gameTime
+                                )
+                            },
                             soundViewModel = soundViewModel
                         )
                     }

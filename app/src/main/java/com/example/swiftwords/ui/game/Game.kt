@@ -92,7 +92,6 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlin.reflect.KFunction0
 import kotlin.reflect.KFunction1
-import kotlin.reflect.KFunction2
 import kotlin.reflect.KSuspendFunction1
 
 @Composable
@@ -117,7 +116,7 @@ fun Game(
     listOfLetters: List<Char>,
     shuffle: KFunction0<Unit>,
     exitChangingMode: () -> Unit,
-    launchChanging: KFunction2<Boolean, () -> Unit, Unit>,
+    launchChanging: () -> Unit,
     soundViewModel: SoundViewModel
 ) {
     val gameUiState by viewModel.uiState.collectAsState()
@@ -146,13 +145,14 @@ fun Game(
                 when (isCorrect) {
                     true -> {
                         soundViewModel.playCorrectSound()
-                        if(gameModeNumber == 3){
+                        if (gameModeNumber == 3) {
                             viewModel.addTime()
                         }
                     }
+
                     else -> {
                         soundViewModel.playIncorrectSound()
-                        if(gameModeNumber == 3){
+                        if (gameModeNumber == 3) {
                             viewModel.removeTime()
                         }
                     }
@@ -406,8 +406,7 @@ fun Game(
         increaseStreak = increaseStreak,
         colorCode = colorCode,
         launchChanging = launchChanging,
-        gameModeNumber = gameModeNumber,
-        soundViewModel = soundViewModel
+        gameModeNumber = gameModeNumber
     )
 }
 
@@ -696,9 +695,8 @@ fun DisplayResults(
     colorCode: Int,
     boxColor: Color = DataSource().colorPairs[colorCode].darkColor,
     isDarkTheme: Boolean = isSystemInDarkTheme(),
-    launchChanging: KFunction2<Boolean, () -> Unit, Unit>,
+    launchChanging: () -> Unit,
     gameModeNumber: Int,
-    soundViewModel: SoundViewModel,
 ) {
     AnimatedVisibility(
         visible = isVisible,
@@ -882,11 +880,8 @@ fun DisplayResults(
                                                 viewModel.generateRandomLettersForBoth()
                                                 restart(time())
                                             }
-                                            if(gameModeNumber == 2) {
-                                                launchChanging(
-                                                    true,
-                                                    soundViewModel::playChangeSound
-                                                )
+                                            if (gameModeNumber == 2) {
+                                                launchChanging()
                                             }
                                         },
                                         enabled = buttonsEnabled

@@ -140,21 +140,25 @@ class SwiftWordsMainViewModel : ViewModel() {
         }
     }
 
-    fun changingLetters(run: Boolean, playChangeSound: () -> Unit) {
+    fun changingLetters(run: Boolean, playChangeSound: () -> Unit, gameTime: Long) {
         // Cancel the existing job if it's still active
         lettersChangingJob?.cancel()
 
         if (run) {
             lettersChangingJob = viewModelScope.launch {
-                runChangingLetters(true, playChangeSound)
+                runChangingLetters(true, playChangeSound,gameTime)
             }
         }
     }
 
-    private suspend fun runChangingLetters(run: Boolean, playChangeSound: () -> Unit) {
+    private suspend fun runChangingLetters(
+        run: Boolean,
+        playChangeSound: () -> Unit,
+        gameTime: Long
+    ) {
         var elapsedTime = 0 // Initialize counter for elapsed time
 
-        while (run && elapsedTime < 40000) { // Continue only if less than 40 seconds
+        while (run && elapsedTime < gameTime) { // Continue only if less than 40 seconds
             delay(5000)
             generateRandomLettersForMode()
             playChangeSound()
