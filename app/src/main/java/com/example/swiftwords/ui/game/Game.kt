@@ -373,7 +373,7 @@ fun Game(
                         Log.d("klok", listOfLetters.toString() + "  ")
                     },
                     modifier = Modifier
-                        .size(38.dp)
+                        .size(35.dp)
                 ) {
                     Icon(
                         modifier = Modifier.fillMaxSize(),
@@ -543,7 +543,7 @@ fun CustomTextField(
         textStyle = TextStyle(
             textAlign = if (isChecked) TextAlign.Center else TextAlign.Start,
             fontFamily = FontFamily(Font(R.font.radiocanadabigregular)),
-            fontSize = 28.sp
+            fontSize = 26.sp
         ),
         colors = OutlinedTextFieldDefaults.colors(
             focusedContainerColor = MaterialTheme.colorScheme.secondary,
@@ -653,7 +653,7 @@ fun LetterBox(
     ElevatedCard(
         modifier = Modifier
             .padding(5.dp)
-            .size(63.dp)
+            .size(60.dp)
             .shadow(
                 shadowDp, // Use the calculated shadow dp value
                 shape = RoundedCornerShape(15.dp),
@@ -832,7 +832,7 @@ fun DisplayResults(
 
                                 !isMode -> {
                                     Text(
-                                        stringResource(R.string.fail) + " "+ score().toString(),
+                                        stringResource(R.string.fail) + " " + score().toString(),
                                         style = MaterialTheme.typography.titleSmall,
                                         color = textColor
                                     )
@@ -840,7 +840,7 @@ fun DisplayResults(
 
                                 else -> {
                                     Text(
-                                        stringResource(R.string.nice_try) + " "+ score().toString(),
+                                        stringResource(R.string.nice_try) + " " + score().toString(),
                                         style = MaterialTheme.typography.titleSmall,
                                         color = textColor
                                     )
