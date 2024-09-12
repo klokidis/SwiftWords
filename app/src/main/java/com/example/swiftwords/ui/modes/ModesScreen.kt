@@ -102,7 +102,16 @@ fun ModesScreen(
             BottomCard(color) { visible = true }
         }
     }
-    PopUp(visible, Color.Yellow, Color.Black, navigateCustomGame, { visible = false }, changeTime,changeGameMode,startShuffle,sound)
+    PopUp(
+        visible,
+        DataSource().colorPairs[color!!].darkColor,
+        navigateCustomGame,
+        { visible = false },
+        changeTime,
+        changeGameMode,
+        startShuffle,
+        sound
+    )
 }
 
 @Composable
@@ -145,7 +154,6 @@ fun BottomCard(
 fun PopUp(
     visible: Boolean,
     textColor: Color,
-    boxColor: Color,
     navigate: () -> Unit,
     hide: () -> Unit,
     changeTime: (Long) -> Unit,
@@ -160,7 +168,11 @@ fun PopUp(
     var selectedMode by remember { mutableStateOf<Int?>(null) }
     val timeOptions = listOf(1000L, 5000L, 10000L, 30000L) // Example times in milliseconds
     val modeOptions = listOf(0, 1, 2) // Example times in milliseconds
-    val modeStringOptions = listOf(stringResource(R.string.unlimited), stringResource(R.string.shuffle), stringResource(R.string.settings))
+    val modeStringOptions = listOf(
+        stringResource(R.string.unlimited),
+        stringResource(R.string.shuffle),
+        stringResource(R.string.settings)
+    )
 
     AnimatedVisibility(
         visible = visible,
@@ -193,7 +205,7 @@ fun PopUp(
                             TextButton(onClick = { expandedTime = true }) {
                                 Text(
                                     text = selectedTime?.toString() ?: "Select Time",
-                                    color = boxColor
+                                    color = textColor
                                 )
                             }
                             DropdownMenu(
@@ -216,7 +228,7 @@ fun PopUp(
                             TextButton(onClick = { expandedMode = true }) {
                                 Text(
                                     text = selectedModeVisible ?: "Select Mode",
-                                    color = boxColor
+                                    color = textColor
                                 )
                             }
                             DropdownMenu(
@@ -245,16 +257,16 @@ fun PopUp(
                             Text(
                                 "Cancel",
                                 style = MaterialTheme.typography.titleSmall,
-                                color = boxColor
+                                color = textColor
                             )
                         }
                         TextButton(
                             onClick = {
                                 changeTime(selectedTime!!)
-                                if(selectedMode == 1) changeTime(130000000L)
+                                if (selectedMode == 1) changeTime(130000000L)
                                 selectedMode?.let { changeGameMode(it) }
                                 hide()
-                                if (selectedMode == 2) startShuffle(true,sound, selectedTime!!)
+                                if (selectedMode == 2) startShuffle(true, sound, selectedTime!!)
                                 navigate()
                             },
                             enabled = selectedTime != null && selectedMode != null
@@ -262,7 +274,7 @@ fun PopUp(
                             Text(
                                 "Confirm",
                                 style = MaterialTheme.typography.titleSmall,
-                                color = boxColor
+                                color = if (selectedTime == null || selectedMode == null) Color.Gray else textColor
                             )
                         }
                     }
