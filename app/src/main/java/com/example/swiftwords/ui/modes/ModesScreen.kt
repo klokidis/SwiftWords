@@ -189,7 +189,7 @@ fun PopUp(
                 colors = CardDefaults.cardColors(MaterialTheme.colorScheme.secondary)
             ) {
                 Column(
-                    modifier = Modifier.padding(10.dp),
+                    modifier = Modifier.padding(30.dp),
                     verticalArrangement = Arrangement.Center,
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
