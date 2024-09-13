@@ -8,6 +8,7 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.indication
 import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -274,7 +275,8 @@ fun ModesCards(
     color: Color,
     textColor: Color = Color.White,
     shadowColor: Color,
-    onClick: () -> Unit
+    onClick: () -> Unit,
+    isDarkTheme: Boolean = isSystemInDarkTheme(),
 ) {
     val cornerRadius = 16.dp // Adjust the corner radius as needed
 
@@ -368,7 +370,7 @@ fun ModesCards(
                         fontSize = 20.sp,
                         letterSpacing = 1.sp
                     ),
-                    color = Color.Black
+                    color = if (isDarkTheme) Color.Black else Color.White
                 )
             }
         }

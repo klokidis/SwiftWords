@@ -6,6 +6,7 @@ import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -55,6 +56,7 @@ fun ModesScreen(
     changeGameMode: KFunction1<Int, Unit>,
     startShuffle: KFunction3<Boolean, () -> Unit, Long, Unit>,
     sound: KFunction0<Unit>,
+    isDarkTheme: Boolean = isSystemInDarkTheme(),
 ) {
     val scrollState = rememberScrollState()
     var visible by remember { mutableStateOf(false) }
@@ -70,14 +72,14 @@ fun ModesScreen(
         ) {
             Row(modifier = Modifier.fillMaxSize()) {
                 ModeCard(
-                    imageRes = R.drawable.black_light,
+                    imageRes = if (isDarkTheme) R.drawable.black_light else R.drawable.white_light,
                     textRes = R.string.fast,
                     onClick = { navigateFastGame() },
                     color = color,
                     modifier = Modifier.weight(1f) // Ensures the button fills available space
                 )
                 ModeCard(
-                    imageRes = R.drawable.unlimited_mode,
+                    imageRes = if (isDarkTheme) R.drawable.black_unl else R.drawable.white_unl,
                     textRes = R.string.unlimited,
                     onClick = { navigateLongGame() },
                     color = color,
@@ -86,14 +88,14 @@ fun ModesScreen(
             }
             Row(modifier = Modifier.fillMaxSize()) {
                 ModeCard(
-                    imageRes = R.drawable.shuffle,
+                    imageRes = if (isDarkTheme) R.drawable.black_shuffle else R.drawable.white_shuffle,
                     textRes = R.string.shuffle,
                     onClick = { navigateChangingGame() },
                     color = color,
                     modifier = Modifier.weight(1f) // Ensures the button fills available space
                 )
                 ModeCard(
-                    imageRes = R.drawable.black_con,
+                    imageRes = if (isDarkTheme) R.drawable.black_con else R.drawable.white_con,
                     textRes = R.string.consequences,
                     onClick = { navigateConsequencesGame() },
                     color = color,
@@ -102,7 +104,7 @@ fun ModesScreen(
                         .padding(end = 5.dp) // Ensures the button fills available space
                 )
             }
-            BottomCard(color) { visible = true }
+            BottomCard(color, { visible = true })
         }
     }
     PopUp(
@@ -123,7 +125,7 @@ fun ModeCard(
     textRes: Int,
     onClick: () -> Unit,
     color: Int?,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     Box(modifier = modifier.padding(start = 7.dp, end = 7.dp, top = 18.dp)) {
         ModesCards(
@@ -139,11 +141,12 @@ fun ModeCard(
 @Composable
 fun BottomCard(
     color: Int?,
-    function: () -> Unit
+    function: () -> Unit,
+    isDarkTheme: Boolean = isSystemInDarkTheme(),
 ) {
     Box(modifier = Modifier.padding(start = 7.dp, end = 7.dp, top = 18.dp, bottom = 10.dp)) {
         ModesCards(
-            imageRes = R.drawable.custom,
+            imageRes = if (isDarkTheme) R.drawable.black_custom else R.drawable.white_custom,
             textRes = R.string.custom,
             color = DataSource().colorPairs[color!!].darkColor,
             shadowColor = DataSource().colorPairs[color].darkColor.darken(),
