@@ -93,11 +93,13 @@ fun ModesScreen(
                     modifier = Modifier.weight(1f) // Ensures the button fills available space
                 )
                 ModeCard(
-                    imageRes = R.drawable.cons6,
+                    imageRes = R.drawable.cons8,
                     textRes = R.string.settings,
                     onClick = { navigateConsequencesGame() },
                     color = color,
-                    modifier = Modifier.weight(1f).padding(end=5.dp) // Ensures the button fills available space
+                    modifier = Modifier
+                        .weight(1f)
+                        .padding(end = 5.dp) // Ensures the button fills available space
                 )
             }
             BottomCard(color) { visible = true }
