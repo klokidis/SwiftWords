@@ -86,18 +86,18 @@ fun ModesScreen(
             }
             Row(modifier = Modifier.fillMaxSize()) {
                 ModeCard(
-                    imageRes = R.drawable.profile,
+                    imageRes = R.drawable.shuffle,
                     textRes = R.string.shuffle,
                     onClick = { navigateChangingGame() },
                     color = color,
                     modifier = Modifier.weight(1f) // Ensures the button fills available space
                 )
                 ModeCard(
-                    imageRes = R.drawable.profile,
+                    imageRes = R.drawable.cons6,
                     textRes = R.string.settings,
                     onClick = { navigateConsequencesGame() },
                     color = color,
-                    modifier = Modifier.weight(1f) // Ensures the button fills available space
+                    modifier = Modifier.weight(1f).padding(end=5.dp) // Ensures the button fills available space
                 )
             }
             BottomCard(color) { visible = true }
