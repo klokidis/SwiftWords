@@ -300,7 +300,7 @@ fun Game(
                     )
                 )
                 Spacer(modifier = Modifier.padding(5.dp))
-                TextScore(currentPassingScore = calculatePassingScore(currentLevel),
+                TextScore(currentPassingScore = viewModel.calculatePassingScore(currentLevel),
                     score = { gameUiState.score })
             }
             Row(
@@ -394,6 +394,7 @@ fun Game(
         navigateUp,
         increaseScore,
         mainViewModel,
+        viewModel,
         isMode,
         highScore,
         checkHighScore,
@@ -686,6 +687,7 @@ fun DisplayResults(
     navigateUp: () -> Unit,
     increaseScore: KFunction1<Int, Unit>,
     viewModel: SwiftWordsMainViewModel,
+    gameViewModel: GameViewModel,
     isMode: Boolean,
     highScore: Int,
     checkHighScore: suspend (Int) -> Unit,
@@ -929,12 +931,12 @@ fun DisplayResults(
                                                 restart(time())
                                             }
                                         },
-                                        enabled = score() >= calculatePassingScore(currentLevel) && buttonsEnabled
+                                        enabled = score() >= gameViewModel.calculatePassingScore(currentLevel) && buttonsEnabled
                                     ) {
                                         Text(
                                             stringResource(R.string.next_level),
                                             style = MaterialTheme.typography.titleSmall,
-                                            color = if (buttonsEnabled && score() >= calculatePassingScore(currentLevel)) {
+                                            color = if (buttonsEnabled && score() >= gameViewModel.calculatePassingScore(currentLevel)) {
                                                 boxColor
                                             } else {
                                                 Color.Gray
@@ -948,25 +950,6 @@ fun DisplayResults(
                 }
             }
         }
-    }
-}
-
-fun calculatePassingScore(level: Int): Int {
-    return when {
-        level < 2 -> 5
-        level < 8 -> 7
-        level < 20 -> 10
-        level < 40 -> 11
-        level < 50 -> 13
-        level < 70 -> 15
-        level < 80 -> 17
-        level < 100 -> 18
-        level < 150 -> 20
-        level < 200 -> 22
-        level < 250 -> 23
-        level < 300 -> 27
-        level < 350 -> 28
-        else -> 30
     }
 }
 

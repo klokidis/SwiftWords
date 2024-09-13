@@ -66,6 +66,26 @@ class GameViewModel(time: () -> Long) : ViewModel() {
         }
     }
 
+
+    fun calculatePassingScore(level: Int): Int {
+        return when {
+            level < 2 -> 5
+            level < 8 -> 7
+            level < 20 -> 10
+            level < 40 -> 11
+            level < 50 -> 13
+            level < 70 -> 15
+            level < 80 -> 17
+            level < 100 -> 18
+            level < 150 -> 20
+            level < 200 -> 22
+            level < 250 -> 23
+            level < 300 -> 27
+            level < 350 -> 28
+            else -> 30
+        }
+    }
+
     private fun updateTime(newTime: Long) {
         _uiState.update { currentState ->
             currentState.copy(
