@@ -34,7 +34,7 @@
     <string name="claim">Claim</string>
     <string name="streak_increase">Streak increased!!</string>
     <string name="pass">"You passed with score: "</string>
-    <string name="fail">"Failed with score; "</string>
+    <string name="fail">"Failed with score: "</string>
     <string name="nice_try">"Nice try! With score: "</string>
     <string name="play_again">Play again</string>
     <string name="try_again">"Try again "</string>

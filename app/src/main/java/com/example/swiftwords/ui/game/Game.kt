@@ -934,7 +934,7 @@ fun DisplayResults(
                                         Text(
                                             stringResource(R.string.next_level),
                                             style = MaterialTheme.typography.titleSmall,
-                                            color = if (buttonsEnabled) {
+                                            color = if (buttonsEnabled && score() >= calculatePassingScore(currentLevel)) {
                                                 boxColor
                                             } else {
                                                 Color.Gray
