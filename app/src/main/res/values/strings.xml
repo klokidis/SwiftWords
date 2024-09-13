@@ -6,8 +6,8 @@
     <string name="game">Game</string>
     <string name="exit">Exit</string>
     <string name="textfield">text Field for answers</string>
-    <string name="fast">Fast Game</string>
-    <string name="unlimited">unlimited time</string>
+    <string name="fast">Quick</string>
+    <string name="unlimited">Unlimited</string>
     <string name="choose">Choose</string>
     <string name="choose2">Your Character</string>
     <string name="girlName">example</string>
@@ -46,6 +46,8 @@
     <string name="select_time">Select Seconds</string>
     <string name="select_mode">Select Mode</string>
     <string name="confirm">Confirm</string>
+    <string name="custom">Custom</string>
+    <string name="consequences">Consequences</string>
 
 
 </resources>

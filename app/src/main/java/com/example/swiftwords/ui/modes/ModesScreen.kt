@@ -70,7 +70,7 @@ fun ModesScreen(
         ) {
             Row(modifier = Modifier.fillMaxSize()) {
                 ModeCard(
-                    imageRes = R.drawable.fast_mode,
+                    imageRes = R.drawable.black_light,
                     textRes = R.string.fast,
                     onClick = { navigateFastGame() },
                     color = color,
@@ -93,8 +93,8 @@ fun ModesScreen(
                     modifier = Modifier.weight(1f) // Ensures the button fills available space
                 )
                 ModeCard(
-                    imageRes = R.drawable.cons8,
-                    textRes = R.string.settings,
+                    imageRes = R.drawable.black_con,
+                    textRes = R.string.consequences,
                     onClick = { navigateConsequencesGame() },
                     color = color,
                     modifier = Modifier
@@ -143,8 +143,8 @@ fun BottomCard(
 ) {
     Box(modifier = Modifier.padding(start = 7.dp, end = 7.dp, top = 18.dp, bottom = 10.dp)) {
         ModesCards(
-            imageRes = R.drawable.profile,
-            textRes = R.string.levels,
+            imageRes = R.drawable.custom,
+            textRes = R.string.custom,
             color = DataSource().colorPairs[color!!].darkColor,
             shadowColor = DataSource().colorPairs[color].darkColor.darken(),
             onClick = function,

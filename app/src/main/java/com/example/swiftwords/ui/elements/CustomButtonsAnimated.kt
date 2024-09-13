@@ -367,7 +367,8 @@ fun ModesCards(
                     style = MaterialTheme.typography.titleSmall.copy(
                         fontSize = 20.sp,
                         letterSpacing = 1.sp
-                    )
+                    ),
+                    color = Color.Black
                 )
             }
         }
