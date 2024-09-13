@@ -1,6 +1,7 @@
 package com.example.swiftwords.ui.game
 
 import android.util.Log
+import androidx.activity.compose.BackHandler
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.tween
@@ -57,7 +58,6 @@ import androidx.compose.material3.CheckboxDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.TextButton
-import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.derivedStateOf
@@ -160,16 +160,16 @@ fun Game(
             }
         }
     }
-    DisposableEffect(Unit) { //update level even if user exist since he passed
-        onDispose {
-            if (isMode) {
-                exitChangingMode()
-            }
-            if (!onExitButtonPressed && gameUiState.score >= 1 && !isMode) {
-                increaseScore(gameUiState.score)
-                mainViewModel.generateRandomLettersForBoth()
-            }
+    // Handle the back press
+    BackHandler {
+        if (isMode) {
+            exitChangingMode()
         }
+        if (!onExitButtonPressed && gameUiState.score >= 1 && !isMode) {
+            increaseScore(gameUiState.score)
+            mainViewModel.generateRandomLettersForBoth()
+        }
+        navigateUp()
     }
 
     Box(
