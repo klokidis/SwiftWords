@@ -117,7 +117,8 @@ fun Game(
     shuffle: KFunction0<Unit>,
     exitChangingMode: () -> Unit,
     launchChanging: () -> Unit,
-    soundViewModel: SoundViewModel
+    soundViewModel: SoundViewModel,
+    currentLevel: Int
 ) {
     val gameUiState by viewModel.uiState.collectAsState()
     val isTimerRunning by remember { derivedStateOf { gameUiState.isTimerRunning } }
@@ -299,7 +300,8 @@ fun Game(
                     )
                 )
                 Spacer(modifier = Modifier.padding(5.dp))
-                TextScore { gameUiState.score }
+                TextScore(currentPassingScore = calculatePassingScore(currentLevel),
+                    score = { gameUiState.score })
             }
             Row(
                 modifier = Modifier
@@ -406,7 +408,8 @@ fun Game(
         increaseStreak = increaseStreak,
         colorCode = colorCode,
         launchChanging = launchChanging,
-        gameModeNumber = gameModeNumber
+        gameModeNumber = gameModeNumber,
+        currentLevel = currentLevel
     )
 }
 
@@ -600,7 +603,7 @@ fun TimerText(currentTime: () -> Long, modifier: Modifier, gameModeNumber: Int) 
 }
 
 @Composable
-fun TextScore(score: () -> Int) {
+fun TextScore(score: () -> Int, currentPassingScore: Int) {
     // Remember the score value to avoid unnecessary recompositions
     val scoreValue by remember {
         derivedStateOf {
@@ -610,7 +613,7 @@ fun TextScore(score: () -> Int) {
 
     // Only recomposes if scoreValue changes
     Text(
-        text = stringResource(R.string.score) + " " + scoreValue,
+        text = stringResource(R.string.score) + " " + scoreValue + " / " + currentPassingScore.toString(),
         style = MaterialTheme.typography.titleSmall.copy(fontSize = 17.sp)
     )
 }
@@ -697,6 +700,7 @@ fun DisplayResults(
     isDarkTheme: Boolean = isSystemInDarkTheme(),
     launchChanging: () -> Unit,
     gameModeNumber: Int,
+    currentLevel: Int,
 ) {
     AnimatedVisibility(
         visible = isVisible,
@@ -925,7 +929,7 @@ fun DisplayResults(
                                                 restart(time())
                                             }
                                         },
-                                        enabled = score() >= 0 && buttonsEnabled
+                                        enabled = score() >= calculatePassingScore(currentLevel) && buttonsEnabled
                                     ) {
                                         Text(
                                             stringResource(R.string.next_level),
@@ -944,6 +948,25 @@ fun DisplayResults(
                 }
             }
         }
+    }
+}
+
+fun calculatePassingScore(level: Int): Int {
+    return when {
+        level < 2 -> 5
+        level < 8 -> 7
+        level < 20 -> 10
+        level < 40 -> 11
+        level < 50 -> 13
+        level < 70 -> 15
+        level < 80 -> 17
+        level < 100 -> 18
+        level < 150 -> 20
+        level < 200 -> 22
+        level < 250 -> 23
+        level < 300 -> 27
+        level < 350 -> 28
+        else -> 30
     }
 }
 

@@ -333,7 +333,8 @@ fun SwiftWordsApp(
                                     mainUiState.gameTime
                                 )
                             },
-                            soundViewModel = soundViewModel
+                            soundViewModel = soundViewModel,
+                            currentLevel = data.currentLevel
                         )
                     }
                 } ?: run {
