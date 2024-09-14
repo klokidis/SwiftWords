@@ -72,12 +72,12 @@ class GameViewModel(time: () -> Long) : ViewModel() {
             level < 2 -> 5
             level < 8 -> 7
             level < 20 -> 10
-            level < 40 -> 11
-            level < 50 -> 13
-            level < 70 -> 15
-            level < 80 -> 17
-            level < 100 -> 18
-            level < 150 -> 20
+            level < 40 -> 13
+            level < 50 -> 15
+            level < 60 -> 17
+            level < 70 -> 18
+            level < 90 -> 19
+            level < 130 -> 20
             level < 200 -> 22
             level < 250 -> 23
             level < 300 -> 27

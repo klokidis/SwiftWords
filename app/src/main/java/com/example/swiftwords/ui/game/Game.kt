@@ -270,7 +270,8 @@ fun Game(
             }
             Row(
                 verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.Center
+                horizontalArrangement = Arrangement.Center,
+                modifier = Modifier.padding(start = 10.dp)
             ) {
                 Text(
                     text = when {
