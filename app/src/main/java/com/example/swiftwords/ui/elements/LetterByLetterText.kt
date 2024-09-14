@@ -10,7 +10,6 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
@@ -21,7 +20,6 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.swiftwords.ui.AppViewModelProvider
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
 import kotlin.random.Random
 
 
@@ -34,13 +32,10 @@ fun LetterByLetterText(
 ) {
     val soundViewModel: SoundViewModel = viewModel(factory = AppViewModelProvider.Factory)
     var visibleText by rememberSaveable { mutableStateOf("") }
-    val coroutineScope = rememberCoroutineScope()
 
     LaunchedEffect(Unit) {
-        coroutineScope.launch {
-            animateText(text, delay,soundViewModel) { newText ->
-                visibleText = newText
-            }
+        animateText(text, delay, soundViewModel) { newText ->
+            visibleText = newText
         }
     }
 
