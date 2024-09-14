@@ -71,33 +71,43 @@ class SoundViewModel(application: Application) : AndroidViewModel(application) {
     }
 
     fun playV1(pitch: Float) {
-        v1.setVolume(volumeVowels, volumeVowels)
-        setPitch(v1, pitch)
-        v1.start()
+        if(volume != 0f) {
+            v1.setVolume(volumeVowels, volumeVowels)
+            setPitch(v1, pitch)
+            v1.start()
+        }
     }
 
     fun playV2(pitch: Float) {
-        v2.setVolume(volumeVowels, volumeVowels)
-        setPitch(v2, pitch)
-        v2.start()
+        if(volume != 0f) {
+            v2.setVolume(volumeVowels, volumeVowels)
+            setPitch(v2, pitch)
+            v2.start()
+        }
     }
 
     fun playV3(pitch: Float) {
-        v3.setVolume(volumeVowels, volumeVowels)
-        setPitch(v3, pitch)
-        v3.start()
+        if(volume != 0f) {
+            v3.setVolume(volumeVowels, volumeVowels)
+            setPitch(v3, pitch)
+            v3.start()
+        }
     }
 
     fun playV4(pitch: Float) {
-        v4.setVolume(volumeVowels, volumeVowels)
-        setPitch(v4, pitch)
-        v4.start()
+        if(volume != 0f) {
+            v4.setVolume(volumeVowels, volumeVowels)
+            setPitch(v4, pitch)
+            v4.start()
+        }
     }
 
     fun playV5(pitch: Float) {
-        v5.setVolume(volumeVowels, volumeVowels)
-        setPitch(v5, pitch)
-        v5.start()
+        if(volume != 0f) {
+            v5.setVolume(volumeVowels, volumeVowels)
+            setPitch(v5, pitch)
+            v5.start()
+        }
     }
 
     private fun setPitch(mediaPlayer: MediaPlayer, pitch: Float) {
@@ -126,7 +136,7 @@ class SoundViewModel(application: Application) : AndroidViewModel(application) {
 
     fun unMuteSounds() {
         volume = 0.1f
-        volumeVowels = 1.7f
+        volumeVowels = 1f
         setVolume()
     }
 

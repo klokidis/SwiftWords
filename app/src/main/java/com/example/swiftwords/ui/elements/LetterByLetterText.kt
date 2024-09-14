@@ -17,8 +17,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.viewmodel.compose.viewModel
-import com.example.swiftwords.ui.AppViewModelProvider
 import kotlinx.coroutines.delay
 import kotlin.random.Random
 
@@ -29,8 +27,8 @@ fun LetterByLetterText(
     modifier: Modifier = Modifier,
     delay: Long = 40L,
     isDarkTheme: Boolean = isSystemInDarkTheme(),
+    soundViewModel: SoundViewModel,
 ) {
-    val soundViewModel: SoundViewModel = viewModel(factory = AppViewModelProvider.Factory)
     var visibleText by rememberSaveable { mutableStateOf("") }
 
     LaunchedEffect(Unit) {

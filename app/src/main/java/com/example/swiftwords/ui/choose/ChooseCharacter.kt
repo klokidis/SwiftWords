@@ -54,12 +54,14 @@ import com.example.swiftwords.ui.AppViewModelProvider
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.swiftwords.data.GetDataViewModel
 import com.example.swiftwords.ui.elements.LetterByLetterText
+import com.example.swiftwords.ui.elements.SoundViewModel
 import kotlin.reflect.KFunction1
 
 @Composable
 fun StartingScreen(
     dataViewmodel: GetDataViewModel,
-    viewModel: StartingViewmodel = viewModel(factory = AppViewModelProvider.Factory)
+    viewModel: StartingViewmodel = viewModel(factory = AppViewModelProvider.Factory),
+    soundViewModel: SoundViewModel,
 ) {
     val uiState by viewModel.uiState.collectAsState()
     Column(
@@ -83,16 +85,20 @@ fun StartingScreen(
             1 -> {
                 CharacterChat(
                     characterIsMale = true,
-                    text = "jsdnjsndjsndjs ddasd ds dasd  adsa  dsa sdas das  dsdsadas"
+                    text = "jsdnjsndjsndjs ddasd ds dasd  adsa  dsa sdas das  dsdsadas",
+                    soundViewModel = soundViewModel
                 )
             }
 
             2 -> {
-                CharacterChat(characterIsMale = false, text = stringResource(R.string.click))
+                CharacterChat(
+                    characterIsMale = false, text = stringResource(R.string.click),
+                    soundViewModel = soundViewModel
+                )
             }
 
             3 -> {
-                CharacterChatTwo(text = stringResource(R.string.click))
+                CharacterChatTwo(text = stringResource(R.string.click),soundViewModel)
             }
 
             4 -> {
@@ -115,7 +121,8 @@ fun StartingScreen(
             6 -> {
                 CharacterChat(
                     characterIsMale = uiState.character == 0,
-                    text = stringResource(R.string.click)
+                    text = stringResource(R.string.click),
+                    soundViewModel = soundViewModel
                 )
             }
 
@@ -128,7 +135,7 @@ fun StartingScreen(
 
 
 @Composable
-fun CharacterChat(characterIsMale: Boolean, text: String) {
+fun CharacterChat(characterIsMale: Boolean, text: String, soundViewModel: SoundViewModel) {
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -166,7 +173,7 @@ fun CharacterChat(characterIsMale: Boolean, text: String) {
                     containerColor = MaterialTheme.colorScheme.secondary,
                 ),
             ) {
-                LetterByLetterText(text)
+                LetterByLetterText(text, soundViewModel = soundViewModel)
             }
         }
         Spacer(modifier = Modifier.weight(1f))
@@ -254,7 +261,7 @@ fun SetNickName(
 }
 
 @Composable
-fun CharacterChatTwo(text: String) {
+fun CharacterChatTwo(text: String,soundViewModel: SoundViewModel) {
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -295,7 +302,7 @@ fun CharacterChatTwo(text: String) {
                     containerColor = MaterialTheme.colorScheme.secondary,
                 ),
             ) {
-                LetterByLetterText(text)
+                LetterByLetterText(text, soundViewModel = soundViewModel)
             }
         }
         Spacer(modifier = Modifier.weight(1f))
@@ -332,9 +339,21 @@ fun ChooseCharacter(
             modifier = Modifier.padding(start = 10.dp)
         )
         Spacer(modifier = Modifier.padding(20.dp))
-        CompleteCard(R.drawable.sage, stringResource(R.string.f_name), character == 0, uiStateUpdate, character = 0)
+        CompleteCard(
+            R.drawable.sage,
+            stringResource(R.string.f_name),
+            character == 0,
+            uiStateUpdate,
+            character = 0
+        )
         Spacer(modifier = Modifier.padding(10.dp))
-        CompleteCard(R.drawable.gekko, stringResource(R.string.m_name), character == 1, uiStateUpdate, character = 1)
+        CompleteCard(
+            R.drawable.gekko,
+            stringResource(R.string.m_name),
+            character == 1,
+            uiStateUpdate,
+            character = 1
+        )
         Spacer(modifier = Modifier.weight(0.5f))
         Row(
             modifier = Modifier

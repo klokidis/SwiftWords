@@ -221,7 +221,7 @@ fun SwiftWordsApp(
                 LoadingView()
             }
             composable(route = SwiftWordsScreen.Choose.name) {
-                StartingScreen(dataViewmodel = dataViewmodel)
+                StartingScreen(dataViewmodel = dataViewmodel, soundViewModel = soundViewModel)
             }
             composable(route = SwiftWordsScreen.Levels.name) {
                 LevelScreen(
