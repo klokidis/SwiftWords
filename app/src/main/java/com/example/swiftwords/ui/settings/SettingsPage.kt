@@ -1,14 +1,13 @@
-package com.example.swiftwords.ui.settings
-
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.Icon
@@ -30,34 +29,40 @@ fun SettingsPage(
     navigateOut: () -> Unit,
     data: ItemDetailsUiState,
 ) {
-    Column(modifier = Modifier.fillMaxSize()) {
-        Row(
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.Start,
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(top = 10.dp)
-        ) {
-            IconButton(
-                onClick = { navigateOut() },
+    LazyColumn(
+        modifier = Modifier
+            .fillMaxSize(),
+    ) {
+        item {
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.Start,
                 modifier = Modifier
-                    .padding(start = 5.dp)
+                    .fillMaxWidth()
+                    .padding(top = 10.dp)
             ) {
-                Icon(
-                    imageVector = Icons.AutoMirrored.Filled.ArrowBack, // Use the appropriate icon
-                    contentDescription = stringResource(id = R.string.settings),
-                    modifier = Modifier.size(30.dp)
+                IconButton(
+                    onClick = { navigateOut() },
+                    modifier = Modifier
+                        .padding(start = 5.dp)
+                ) {
+                    Icon(
+                        imageVector = Icons.AutoMirrored.Filled.ArrowBack, // Use the appropriate icon
+                        contentDescription = stringResource(id = R.string.settings),
+                        modifier = Modifier.size(30.dp)
+                    )
+                }
+                Spacer(modifier = Modifier.weight(0.65f))
+                Text(
+                    text = "Setting",
+                    style = MaterialTheme.typography.titleSmall.copy(fontSize = 35.sp)
                 )
+                Spacer(modifier = Modifier.weight(1f))
             }
-            Spacer(modifier = Modifier.weight(0.65f))
-            Text(
-                text = "Setting",
-                style = MaterialTheme.typography.titleSmall.copy(fontSize = 35.sp)
-            )
-            Spacer(modifier = Modifier.weight(1f))
+            Spacer(modifier = Modifier.padding(8.dp))
         }
-        Spacer(modifier = Modifier.padding(8.dp))
-        DataSource().settingsList.forEach { setting ->
+
+        items(DataSource().settingsList) { setting ->
             Row(
                 modifier = Modifier
                     .fillMaxWidth()

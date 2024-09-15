@@ -1,5 +1,6 @@
 package com.example.swiftwords.ui
 
+import SettingsPage
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
@@ -47,7 +48,6 @@ import com.example.swiftwords.ui.levels.TopBar
 import com.example.swiftwords.ui.loading.LoadingView
 import com.example.swiftwords.ui.modes.ModesScreen
 import com.example.swiftwords.ui.profile.ProfileScreen
-import com.example.swiftwords.ui.settings.SettingsPage
 import kotlinx.coroutines.launch
 
 enum class SwiftWordsScreen {
@@ -350,7 +350,8 @@ fun SwiftWordsApp(
             composable(route = SwiftWordsScreen.Settings.name) {
                 SettingsPage(
                     data = dataUiState,
-                    navigateOut = { navController.navigateUp() })
+                    navigateOut = { navController.navigateUp() }
+                )
             }
         }
     }

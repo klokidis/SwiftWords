@@ -8,6 +8,19 @@ class DataSource {
 
     val settingsList = listOf(
         "Example",
+        "Test",
+        "Test",
+        "Test",
+        "Test",
+        "Test",
+        "Test",
+        "Test",
+        "Test",
+        "Test",
+        "Test",
+        "Test",
+        "Test",
+        "Test",
         "Test"
     )
 
