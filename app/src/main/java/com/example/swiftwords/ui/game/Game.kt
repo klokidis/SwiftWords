@@ -301,8 +301,11 @@ fun Game(
                     )
                 )
                 Spacer(modifier = Modifier.padding(5.dp))
-                TextScore(currentPassingScore = viewModel.calculatePassingScore(currentLevel),
-                    score = { gameUiState.score })
+                TextScore(
+                    currentPassingScore = viewModel.calculatePassingScore(currentLevel),
+                    score = { gameUiState.score },
+                    isMode = isMode
+                )
             }
             Row(
                 modifier = Modifier
@@ -373,7 +376,6 @@ fun Game(
                 IconButton(
                     onClick = {
                         shuffle()
-                        Log.d("klok", listOfLetters.toString() + "  ")
                     },
                     modifier = Modifier
                         .size(35.dp)
@@ -605,7 +607,7 @@ fun TimerText(currentTime: () -> Long, modifier: Modifier, gameModeNumber: Int) 
 }
 
 @Composable
-fun TextScore(score: () -> Int, currentPassingScore: Int) {
+fun TextScore(score: () -> Int, currentPassingScore: Int, isMode: Boolean) {
     // Remember the score value to avoid unnecessary recompositions
     val scoreValue by remember {
         derivedStateOf {
@@ -615,7 +617,11 @@ fun TextScore(score: () -> Int, currentPassingScore: Int) {
 
     // Only recomposes if scoreValue changes
     Text(
-        text = stringResource(R.string.score) + " " + scoreValue + " / " + currentPassingScore.toString(),
+        text = if (!isMode) {
+            stringResource(R.string.score) + " " + scoreValue + " / " + currentPassingScore.toString()
+        } else {
+            stringResource(R.string.score) + " " + scoreValue
+        },
         style = MaterialTheme.typography.titleSmall.copy(fontSize = 17.sp)
     )
 }
@@ -932,12 +938,17 @@ fun DisplayResults(
                                                 restart(time())
                                             }
                                         },
-                                        enabled = score() >= gameViewModel.calculatePassingScore(currentLevel) && buttonsEnabled
+                                        enabled = score() >= gameViewModel.calculatePassingScore(
+                                            currentLevel
+                                        ) && buttonsEnabled
                                     ) {
                                         Text(
                                             stringResource(R.string.next_level),
                                             style = MaterialTheme.typography.titleSmall,
-                                            color = if (buttonsEnabled && score() >= gameViewModel.calculatePassingScore(currentLevel)) {
+                                            color = if (buttonsEnabled && score() >= gameViewModel.calculatePassingScore(
+                                                    currentLevel
+                                                )
+                                            ) {
                                                 boxColor
                                             } else {
                                                 Color.Gray
