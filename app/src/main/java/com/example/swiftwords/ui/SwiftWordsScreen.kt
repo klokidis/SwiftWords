@@ -4,9 +4,14 @@ import SettingsPage
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
+import androidx.compose.foundation.background
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.material3.Icon
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
@@ -18,6 +23,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.res.stringResource
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeDrawingPadding
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -26,9 +32,11 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.vectorResource
+import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
@@ -42,6 +50,7 @@ import com.example.swiftwords.data.GetDataViewModel
 import com.example.swiftwords.model.BarItem
 import com.example.swiftwords.ui.choose.StartingScreen
 import com.example.swiftwords.ui.elements.SoundViewModel
+import com.example.swiftwords.ui.elements.darken
 import com.example.swiftwords.ui.game.Game
 import com.example.swiftwords.ui.levels.LevelScreen
 import com.example.swiftwords.ui.levels.TopBar
@@ -137,50 +146,67 @@ fun SwiftWordsApp(
                         R.drawable.profile
                     )
                 )
-                NavigationBar {
-                    barItems.forEachIndexed { index, item ->
-                        NavigationBarItem(
-                            onClick = {
-                                if (selectedItemIndex != index) {
-                                    when (index) {
-                                        0 -> navController.navigate(SwiftWordsScreen.Levels.name) {
-                                            popUpTo(navController.graph.findStartDestination().id) {
-                                                saveState = true
-                                            }
-                                            launchSingleTop = true
-                                            restoreState = true
-                                        }
-
-                                        1 -> navController.navigate(SwiftWordsScreen.Modes.name) {
-                                            popUpTo(navController.graph.findStartDestination().id) {
-                                                saveState = true
-                                            }
-                                            launchSingleTop = true
-                                            restoreState = true
-                                        }
-
-                                        2 -> navController.navigate(SwiftWordsScreen.Profile.name) {
-                                            popUpTo(navController.graph.findStartDestination().id) {
-                                                saveState = true
-                                            }
-                                            launchSingleTop = true
-                                            restoreState = true
-                                        }
-                                    }
-                                    selectedItemIndex = index
+                // Wrapper for the NavigationBar to add top line and shadow
+                Column {
+                    Spacer(
+                        modifier = Modifier
+                            .background(
+                                if (isSystemInDarkTheme()) {
+                                    Color.DarkGray.darken(0.6f)
+                                } else {
+                                    Color(0xFFE8E8E8)
                                 }
-                            },
-                            selected = selectedItemIndex == index,
-                            label = { Text(text = stringResource(item.title)) },
-                            icon = {
-                                Icon(
-                                    imageVector = if (index == selectedItemIndex) ImageVector.vectorResource(
-                                        id = item.imageSelected
-                                    ) else ImageVector.vectorResource(id = item.imageUnSelected),
-                                    contentDescription = stringResource(id = item.title)
-                                )
-                            }
-                        )
+                            )
+                            .fillMaxWidth()
+                            .height(1.5.dp)
+                    )
+                    NavigationBar(
+                        containerColor = MaterialTheme.colorScheme.background, // Override the background color
+                    ) {
+                        barItems.forEachIndexed { index, item ->
+                            NavigationBarItem(
+                                onClick = {
+                                    if (selectedItemIndex != index) {
+                                        when (index) {
+                                            0 -> navController.navigate(SwiftWordsScreen.Levels.name) {
+                                                popUpTo(navController.graph.findStartDestination().id) {
+                                                    saveState = true
+                                                }
+                                                launchSingleTop = true
+                                                restoreState = true
+                                            }
+
+                                            1 -> navController.navigate(SwiftWordsScreen.Modes.name) {
+                                                popUpTo(navController.graph.findStartDestination().id) {
+                                                    saveState = true
+                                                }
+                                                launchSingleTop = true
+                                                restoreState = true
+                                            }
+
+                                            2 -> navController.navigate(SwiftWordsScreen.Profile.name) {
+                                                popUpTo(navController.graph.findStartDestination().id) {
+                                                    saveState = true
+                                                }
+                                                launchSingleTop = true
+                                                restoreState = true
+                                            }
+                                        }
+                                        selectedItemIndex = index
+                                    }
+                                },
+                                selected = selectedItemIndex == index,
+                                label = { Text(text = stringResource(item.title)) },
+                                icon = {
+                                    Icon(
+                                        imageVector = if (index == selectedItemIndex) ImageVector.vectorResource(
+                                            id = item.imageSelected
+                                        ) else ImageVector.vectorResource(id = item.imageUnSelected),
+                                        contentDescription = stringResource(id = item.title)
+                                    )
+                                }
+                            )
+                        }
                     }
                 }
             }
