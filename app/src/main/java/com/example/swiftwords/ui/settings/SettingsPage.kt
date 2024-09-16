@@ -1,5 +1,6 @@
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -29,55 +30,54 @@ fun SettingsPage(
     navigateOut: () -> Unit,
     data: ItemDetailsUiState,
 ) {
-    LazyColumn(
-        modifier = Modifier
-            .fillMaxSize(),
+    Column(
+        modifier = Modifier.fillMaxSize()
     ) {
-        item {
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.Start,
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.Start,
+            modifier = Modifier
+                .fillMaxWidth()
+        ) {
+            IconButton(
+                onClick = { navigateOut() },
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(top = 10.dp)
+                    .padding(start = 5.dp)
             ) {
-                IconButton(
-                    onClick = { navigateOut() },
+                Icon(
+                    imageVector = Icons.AutoMirrored.Filled.ArrowBack, // Use the appropriate icon
+                    contentDescription = stringResource(id = R.string.settings),
+                    modifier = Modifier.size(30.dp)
+                )
+            }
+            Spacer(modifier = Modifier.weight(0.65f))
+            Text(
+                text = "Setting",
+                style = MaterialTheme.typography.titleSmall.copy(fontSize = 35.sp)
+            )
+            Spacer(modifier = Modifier.weight(1f))
+        }
+        LazyColumn(
+            modifier = Modifier
+                .fillMaxSize(),
+        ) {
+            items(DataSource().settingsList) { setting ->
+                Row(
                     modifier = Modifier
-                        .padding(start = 5.dp)
+                        .fillMaxWidth()
+                        .clickable { }
+                        .size(60.dp)
+                        .padding(start = 15.dp),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.Start
                 ) {
-                    Icon(
-                        imageVector = Icons.AutoMirrored.Filled.ArrowBack, // Use the appropriate icon
-                        contentDescription = stringResource(id = R.string.settings),
-                        modifier = Modifier.size(30.dp)
+                    Text(
+                        text = setting,
+                        style = MaterialTheme.typography.titleSmall.copy(fontSize = 25.sp)
                     )
                 }
-                Spacer(modifier = Modifier.weight(0.65f))
-                Text(
-                    text = "Setting",
-                    style = MaterialTheme.typography.titleSmall.copy(fontSize = 35.sp)
-                )
-                Spacer(modifier = Modifier.weight(1f))
+                Spacer(modifier = Modifier.padding(5.dp))
             }
-            Spacer(modifier = Modifier.padding(8.dp))
-        }
-
-        items(DataSource().settingsList) { setting ->
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .clickable { }
-                    .size(60.dp)
-                    .padding(start = 15.dp),
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.Start
-            ) {
-                Text(
-                    text = setting,
-                    style = MaterialTheme.typography.titleSmall.copy(fontSize = 25.sp)
-                )
-            }
-            Spacer(modifier = Modifier.padding(5.dp))
         }
     }
 }
