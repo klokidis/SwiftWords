@@ -310,7 +310,6 @@ fun SwiftWordsApp(
                         data.highScore,
                         data.nickname,
                         data.character,
-                        data.color,
                         navigate = { navController.navigate(SwiftWordsScreen.Settings.name) }
                     )
                 }

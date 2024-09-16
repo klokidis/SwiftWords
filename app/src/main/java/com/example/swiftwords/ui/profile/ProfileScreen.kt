@@ -39,7 +39,6 @@ fun ProfileScreen(
     highScore: Int,
     name: String,
     character: Boolean,
-    color: Int,
     navigate: () -> Unit
 ) {
     val scrollState = rememberScrollState()
@@ -50,7 +49,7 @@ fun ProfileScreen(
     }
     Box(
         modifier = Modifier
-            .fillMaxSize()
+            .fillMaxSize(),
     ) {
         Column(
             modifier = Modifier
@@ -74,10 +73,10 @@ fun ProfileScreen(
                 text = name,
                 style = MaterialTheme.typography.titleSmall.copy(
                     fontSize = 35.sp,
-                    letterSpacing = 1.sp
+                    letterSpacing = 1.5.sp
                 )
             )
-            Spacer(modifier = Modifier.padding(15.dp))
+            Spacer(modifier = Modifier.padding(14.dp))
             Scores(currentLevel, highScore, streak)
         }
         IconButton(
@@ -98,7 +97,8 @@ fun ProfileScreen(
 fun Scores(currentLevel: Int, highScore: Int, streak: Int) {
     Row(
         modifier = Modifier
-            .fillMaxWidth(),
+            .fillMaxWidth()
+            .padding(start = 15.dp),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.Center
     ) {
@@ -118,57 +118,14 @@ fun TextScores(content: String,score: String){
     ) {
         Text(
             text = content,
-            style = MaterialTheme.typography.titleSmall.copy(fontSize = 22.sp)
+            style = MaterialTheme.typography.titleSmall.copy(fontSize = 24.sp)
         )
         Text(
             text = score,
-            style = MaterialTheme.typography.titleMedium.copy(fontSize = 22.sp)
+            style = MaterialTheme.typography.titleMedium.copy(fontSize = 26.sp)
         )
     }
 }
-/*
-
-
-@Composable
-fun LetterByLetterText(
-    text: String,
-    modifier: Modifier = Modifier,
-    textStyle: TextStyle = TextStyle.Default
-) {
-    var visibleText by rememberSaveable { mutableStateOf("") }
-    val coroutineScope = rememberCoroutineScope()
-
-    LaunchedEffect(Unit) {
-        coroutineScope.launch {
-            animateText(text) { newText ->
-                visibleText = newText
-            }
-        }
-    }
-
-    // Display the text with wrapping
-    Column(modifier = modifier.padding(10.dp)) {
-        var lineWidth by remember{ mutableStateOf(0.dp) } //CHANGE TO VIEWMODEL
-
-        Text(
-            text = visibleText,
-            style = textStyle,
-            modifier = Modifier
-                .onGloballyPositioned {
-                    lineWidth = it.size.width.dp
-                }
-                .padding(end = 4.dp) // Extra padding to ensure text doesn't wrap too tightly
-        )
-    }
-}
-
-private suspend fun animateText(text: String, callback: (String) -> Unit) {
-    for (i in text.indices) {
-        delay(50) // Delay between each letter
-        callback(text.substring(0, i + 1))
-    }
-}
-*/
 
 @Preview(showBackground = true)
 @Composable
@@ -179,8 +136,7 @@ fun ProfilePreview() {
             1,
             2,
             "dimitris",
-            true,
-            1
+            true
         ) { }
     }
 }
