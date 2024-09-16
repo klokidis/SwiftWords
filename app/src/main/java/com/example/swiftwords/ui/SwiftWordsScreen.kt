@@ -158,7 +158,7 @@ fun SwiftWordsApp(
                                 }
                             )
                             .fillMaxWidth()
-                            .height(1.5.dp)
+                            .height(2.dp)
                     )
                     NavigationBar(
                         containerColor = MaterialTheme.colorScheme.background, // Override the background color

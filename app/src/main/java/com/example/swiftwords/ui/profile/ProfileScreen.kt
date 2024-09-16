@@ -98,7 +98,7 @@ fun Scores(currentLevel: Int, highScore: Int, streak: Int) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(start = 15.dp),
+            .padding(start = 10.dp),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.Center
     ) {
