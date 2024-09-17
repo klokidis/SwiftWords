@@ -7,8 +7,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.Icon
@@ -22,7 +20,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.swiftwords.R
-import com.example.swiftwords.data.DataSource
 import com.example.swiftwords.data.ItemDetailsUiState
 
 @Composable
@@ -57,27 +54,26 @@ fun SettingsPage(
             )
             Spacer(modifier = Modifier.weight(1f))
         }
-        LazyColumn(
+        Column(
             modifier = Modifier
                 .fillMaxSize(),
         ) {
-            items(DataSource().settingsList) { setting ->
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .clickable { }
-                        .size(60.dp)
-                        .padding(start = 15.dp),
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.Start
-                ) {
-                    Text(
-                        text = setting,
-                        style = MaterialTheme.typography.titleSmall.copy(fontSize = 25.sp)
-                    )
-                }
-                Spacer(modifier = Modifier.padding(5.dp))
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .clickable { }
+                    .size(60.dp)
+                    .padding(start = 15.dp),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.Start
+            ) {
+                Text(
+                    text = stringResource(R.string.settings),
+                    style = MaterialTheme.typography.titleSmall.copy(fontSize = 25.sp)
+                )
             }
+            Spacer(modifier = Modifier.padding(5.dp))
         }
+
     }
 }

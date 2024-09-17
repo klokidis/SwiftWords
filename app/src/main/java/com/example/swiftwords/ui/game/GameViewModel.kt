@@ -103,7 +103,7 @@ class GameViewModel(time: () -> Long) : ViewModel() {
                 currentTime = if ((currentState.currentTime + 2000) > currentState.totalTime) {
                     currentState.totalTime
                 } else {
-                    currentState.currentTime + 2000
+                    currentState.currentTime + 1500
                 }
             )
         }
@@ -112,7 +112,7 @@ class GameViewModel(time: () -> Long) : ViewModel() {
     fun removeTime() {
         _uiState.update { currentState ->
             currentState.copy(
-                currentTime = currentState.currentTime - 1000
+                currentTime = currentState.currentTime - 2000
             )
         }
     }
