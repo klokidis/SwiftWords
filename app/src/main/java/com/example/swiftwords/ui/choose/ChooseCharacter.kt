@@ -62,6 +62,7 @@ fun StartingScreen(
     dataViewmodel: GetDataViewModel,
     viewModel: StartingViewmodel = viewModel(factory = AppViewModelProvider.Factory),
     soundViewModel: SoundViewModel,
+    nickName: String,
 ) {
     val uiState by viewModel.uiState.collectAsState()
     Column(
@@ -98,7 +99,7 @@ fun StartingScreen(
             }
 
             3 -> {
-                CharacterChatTwo(text = stringResource(R.string.click),soundViewModel)
+                CharacterChatTwo(text = stringResource(R.string.click), soundViewModel)
             }
 
             4 -> {
@@ -111,7 +112,8 @@ fun StartingScreen(
 
             5 -> {
                 SetNickName(
-                    uiState.character,
+                    nickName = nickName,
+                    chose = uiState.character,
                     onSave = dataViewmodel::updateName,
                     onCancel = { viewModel.decreaseState() },
                     nextState = { viewModel.increaseState() },
@@ -186,9 +188,10 @@ fun SetNickName(
     chose: Int,
     onSave: KFunction1<String, Unit>,
     onCancel: () -> Unit,
-    nextState: () -> Unit
+    nextState: () -> Unit,
+    nickName: String
 ) {
-    var textState by rememberSaveable { mutableStateOf("") }
+    var textState by rememberSaveable { mutableStateOf(nickName) }
     val painter = if (chose == 1) {
         painterResource(id = R.drawable.cypher)
     } else {
@@ -261,7 +264,7 @@ fun SetNickName(
 }
 
 @Composable
-fun CharacterChatTwo(text: String,soundViewModel: SoundViewModel) {
+fun CharacterChatTwo(text: String, soundViewModel: SoundViewModel) {
     Column(
         modifier = Modifier
             .fillMaxSize()

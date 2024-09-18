@@ -247,7 +247,13 @@ fun SwiftWordsApp(
                 LoadingView()
             }
             composable(route = SwiftWordsScreen.Choose.name) {
-                StartingScreen(dataViewmodel = dataViewmodel, soundViewModel = soundViewModel)
+                dataUiState.userDetails?.let { data ->
+                    StartingScreen(
+                        dataViewmodel = dataViewmodel,
+                        soundViewModel = soundViewModel,
+                        nickName = data.nickname
+                    )
+                }
             }
             composable(route = SwiftWordsScreen.Levels.name) {
                 LevelScreen(
@@ -377,7 +383,8 @@ fun SwiftWordsApp(
                     updateTime = dataViewmodel::updateTime,
                     changeCharacter = dataViewmodel::updateCharacter,
                     data = dataUiState,
-                    navigateOut = { navController.navigateUp() }
+                    navigateOut = { navController.navigateUp() },
+                    introduction = dataViewmodel::updateInitialState
                 )
             }
         }

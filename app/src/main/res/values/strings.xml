@@ -56,6 +56,7 @@
     <string name="change_character">Character</string>
     <string name="male">Male</string>
     <string name="female">Female</string>
+    <string name="introdacton">Introduction</string>
 
 
 </resources>

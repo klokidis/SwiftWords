@@ -41,6 +41,7 @@ fun SettingsPage(
     data: ItemDetailsUiState,
     updateTime: KFunction1<Long, Unit>,
     changeCharacter: KFunction1<Boolean, Unit>,
+    introduction: KFunction1<Boolean, Unit>,
 ) {
     val scrollState = rememberScrollState()
     Column(
@@ -77,7 +78,7 @@ fun SettingsPage(
         ) {
             Spacer(modifier = Modifier.padding(10.dp))
             data.userDetails?.let {
-                OneSettingMenu(
+                OneSettingMenuLong(
                     stringResource(R.string.level_time),
                     listOf(35000L, 40000L, 50000L, 60000L, 70000L),
                     updateTime,
@@ -93,6 +94,8 @@ fun SettingsPage(
                     it.character
                 )
             }
+            Spacer(modifier = Modifier.padding(5.dp))
+            OneSettingSimple(stringResource(R.string.introdacton), introduction)
         }
 
     }
@@ -136,7 +139,7 @@ fun OneSettingMenuStrings(
 }
 
 @Composable
-fun OneSettingMenu(
+fun OneSettingMenuLong(
     text: String,
     options: List<Long>,
     updateTime: (Long) -> Unit,
