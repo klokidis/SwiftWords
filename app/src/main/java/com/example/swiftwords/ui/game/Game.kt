@@ -192,7 +192,13 @@ fun Game(
             ) {
                 IconButton(
                     onClick = {
-                        exitChangingMode()
+                        if (isMode) {
+                            exitChangingMode()
+                        }
+                        if (!onExitButtonPressed && gameUiState.score >= 1 && !isMode) {
+                            increaseScore(gameUiState.score)
+                            mainViewModel.generateRandomLettersForBoth()
+                        }
                         navigateUp()
                     },
                     modifier = Modifier
