@@ -30,7 +30,8 @@
     <string name="enter">Enter</string>
     <string name="check">Check</string>
     <string name="score">Score: </string>
-    <string name="high_score">New high score:</string>
+    <string name="high_score">High score</string>
+    <string name="new_high_score">New high score:</string>
     <string name="claim">Claim</string>
     <string name="streak_increase">Streak increased!!</string>
     <string name="pass">"You passed with score: "</string>
@@ -42,6 +43,7 @@
     <string name="streak">Streak</string>
     <string name="lives_left">lives left</string>
     <string name="level">Level:</string>
+    <string name="level_profile">Level</string>
     <string name="select_item">Select item</string>
     <string name="select_time">Select Seconds</string>
     <string name="select_mode">Select Mode</string>

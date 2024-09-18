@@ -54,8 +54,7 @@ fun ProfileScreen(
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .verticalScroll(scrollState)
-                .padding(15.dp),
+                .verticalScroll(scrollState),
             verticalArrangement = Arrangement.Top,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
@@ -64,6 +63,7 @@ fun ProfileScreen(
                 contentDescription = null,
                 contentScale = ContentScale.Crop,
                 modifier = Modifier
+                    .padding(top = 15.dp)
                     .size(160.dp)
                     .clip(CircleShape)
                 //.border(2.dp, DataSource().colorPairs[color].darkColor, CircleShape)//optional
@@ -102,11 +102,11 @@ fun Scores(currentLevel: Int, highScore: Int, streak: Int) {
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.Center
     ) {
-        TextScores("Level", currentLevel.toString())
+        TextScores(stringResource(R.string.level_profile), currentLevel.toString())
         Spacer(modifier = Modifier.padding(17.dp))
-        TextScores("High Score", highScore.toString())
+        TextScores(stringResource(R.string.high_score), highScore.toString())
         Spacer(modifier = Modifier.padding(17.dp))
-        TextScores("Streak", streak.toString())
+        TextScores(stringResource(R.string.streak), streak.toString())
     }
 }
 

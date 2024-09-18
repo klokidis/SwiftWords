@@ -764,7 +764,7 @@ fun DisplayResults(
                             contentDescription = null
                         )
                         Text(
-                            stringResource(R.string.high_score) + " " + score().toString(),
+                            stringResource(R.string.new_high_score) + " " + score().toString(),
                             style = MaterialTheme.typography.titleSmall,
                             color = textColor
                         )
