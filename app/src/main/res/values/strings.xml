@@ -52,6 +52,10 @@
     <string name="consequences">Consequences</string>
     <string name="level_time">Level time</string>
     <string name="seconds">Seconds</string>
+    <string name="edit">Edit profile</string>
+    <string name="change_character">Character</string>
+    <string name="male">Male</string>
+    <string name="female">Female</string>
 
 
 </resources>

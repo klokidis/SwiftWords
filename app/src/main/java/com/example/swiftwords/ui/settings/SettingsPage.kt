@@ -28,6 +28,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.swiftwords.R
@@ -39,6 +40,7 @@ fun SettingsPage(
     navigateOut: () -> Unit,
     data: ItemDetailsUiState,
     updateTime: KFunction1<Long, Unit>,
+    changeCharacter: KFunction1<Boolean, Unit>,
 ) {
     val scrollState = rememberScrollState()
     Column(
@@ -83,20 +85,95 @@ fun SettingsPage(
                 )
             }
             Spacer(modifier = Modifier.padding(5.dp))
+            data.userDetails?.let {
+                OneSettingMenuStrings(
+                    stringResource(R.string.change_character),
+                    listOf(stringResource(R.string.female), stringResource(R.string.male)),
+                    changeCharacter,
+                    it.character
+                )
+            }
         }
 
     }
 }
 
 @Composable
-fun OneSettingMenu(text: String, options: List<Long>, updateTime: (Long) -> Unit, levelTime: Long) {
-    var expanded by remember { mutableStateOf(false) }
+fun OneSettingSimple(text: String, onClick: KFunction1<Boolean, Unit>) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .clickable { expanded = true }
+            .clickable { onClick(true) }
             .size(60.dp)
             .padding(start = 15.dp, end = 15.dp),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.Start
+    ) {
+        Text(
+            text = text,
+            style = MaterialTheme.typography.titleSmall.copy(fontSize = 25.sp)
+        )
+    }
+}
+
+
+@Composable
+fun OneSettingMenuStrings(
+    text: String,
+    options: List<String>,
+    updateCharacter: (Boolean) -> Unit,
+    isFemale: Boolean
+) {
+    SettingMenu(
+        text = text,
+        selectedOption = if (isFemale) stringResource(R.string.female) else stringResource(R.string.male),
+        options = options,
+        onOptionSelected = { updateCharacter(it == "Female") },
+        displayOption = { it },
+        displaySelected = { it }
+
+    )
+}
+
+@Composable
+fun OneSettingMenu(
+    text: String,
+    options: List<Long>,
+    updateTime: (Long) -> Unit,
+    levelTime: Long
+) {
+    SettingMenu(
+        text = text,
+        selectedOption = levelTime,
+        options = options,
+        onOptionSelected = updateTime,
+        displayOption = { time -> time.toString().take(2) }, // Only display the number in the menu
+        displaySelected = { time ->
+            time.toString().take(2) + " " + stringResource(R.string.seconds)
+        }, // Display with "seconds" only for the selected value
+        width = 50.dp
+    )
+}
+
+@Composable
+fun <T> SettingMenu(
+    text: String,
+    selectedOption: T,
+    options: List<T>,
+    onOptionSelected: (T) -> Unit,
+    displayOption: (T) -> String,
+    displaySelected: @Composable (T) -> String,
+    modifier: Modifier = Modifier,
+    width: Dp = 100.dp
+) {
+    var expanded by remember { mutableStateOf(false) }
+
+    Row(
+        modifier = modifier
+            .fillMaxWidth()
+            .clickable { expanded = true }
+            .size(60.dp)
+            .padding(horizontal = 15.dp),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.Start
     ) {
@@ -108,25 +185,24 @@ fun OneSettingMenu(text: String, options: List<Long>, updateTime: (Long) -> Unit
         Box {
             TextButton(onClick = { expanded = true }) {
                 Text(
-                    text = levelTime.toString().take(2) + " " + stringResource(R.string.seconds),
+                    text = displaySelected(selectedOption), // Show the selected value with the "seconds"
                     style = MaterialTheme.typography.titleSmall.copy(fontSize = 20.sp)
                 )
             }
             DropdownMenu(
                 expanded = expanded,
-                modifier = Modifier.width(50.dp),
+                modifier = Modifier.width(width),
                 onDismissRequest = { expanded = false }
             ) {
-                options.forEach { time ->
-                    val firstTwoDigits = time.toString().take(2)
+                options.forEach { option ->
                     DropdownMenuItem(
                         onClick = {
-                            updateTime(time)
+                            onOptionSelected(option)
                             expanded = false
                         },
                         text = {
                             Text(
-                                firstTwoDigits,
+                                displayOption(option), // Show options without "seconds"
                                 style = MaterialTheme.typography.titleSmall.copy(fontSize = 17.sp)
                             )
                         }

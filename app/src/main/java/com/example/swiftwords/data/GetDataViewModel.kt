@@ -68,11 +68,11 @@ class GetDataViewModel(private val userRepository: UserRepository) : ViewModel()
         }
     }
 
-    fun updateInitialState() {
+    fun updateInitialState(value: Boolean = false) {
         viewModelScope.launch {
             val currentUser = getDataUiState.value.userDetails?.toUser()
             if (currentUser != null) {
-                userRepository.updateUser(currentUser.copy(initializeProfile = false))
+                userRepository.updateUser(currentUser.copy(initializeProfile = value))
             }
         }
     }
@@ -149,7 +149,7 @@ class GetDataViewModel(private val userRepository: UserRepository) : ViewModel()
             val newEndingLevel = newCurrentLevel + 20
             val highScore = if (score > currentUser.highScore) {
                 score
-            }else{
+            } else {
                 currentUser.highScore
             }
 

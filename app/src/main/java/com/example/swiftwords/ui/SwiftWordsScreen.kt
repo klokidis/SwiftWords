@@ -375,6 +375,7 @@ fun SwiftWordsApp(
             composable(route = SwiftWordsScreen.Settings.name) {
                 SettingsPage(
                     updateTime = dataViewmodel::updateTime,
+                    changeCharacter = dataViewmodel::updateCharacter,
                     data = dataUiState,
                     navigateOut = { navController.navigateUp() }
                 )

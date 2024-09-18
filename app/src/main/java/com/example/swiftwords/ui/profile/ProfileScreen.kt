@@ -45,7 +45,7 @@ fun ProfileScreen(
     val painter = if(character){
         painterResource(id = R.drawable.cypher)//true for f
     }else{
-        painterResource(id = R.drawable.cypher)//false for m
+        painterResource(id = R.drawable.controller)//false for m
     }
     Box(
         modifier = Modifier
