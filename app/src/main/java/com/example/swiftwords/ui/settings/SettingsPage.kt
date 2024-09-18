@@ -9,6 +9,8 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.DropdownMenu
@@ -38,6 +40,7 @@ fun SettingsPage(
     data: ItemDetailsUiState,
     updateTime: KFunction1<Long, Unit>,
 ) {
+    val scrollState = rememberScrollState()
     Column(
         modifier = Modifier.fillMaxSize()
     ) {
@@ -67,8 +70,10 @@ fun SettingsPage(
         }
         Column(
             modifier = Modifier
-                .fillMaxSize(),
+                .fillMaxSize()
+                .verticalScroll(scrollState)
         ) {
+            Spacer(modifier = Modifier.padding(10.dp))
             data.userDetails?.let {
                 OneSettingMenu(
                     stringResource(R.string.level_time),
