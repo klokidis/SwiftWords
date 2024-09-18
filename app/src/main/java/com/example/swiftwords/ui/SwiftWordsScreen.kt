@@ -212,21 +212,6 @@ fun SwiftWordsApp(
             }
         },
         modifier = Modifier.safeDrawingPadding(),
-        topBar = {
-            if (currentScreen == SwiftWordsScreen.Levels) {
-                dataUiState.userDetails?.let {
-                    TopBar(
-                        livesLeft = it.lives,
-                        streak = it.streak,
-                        streakDateData = it.dailyDate,
-                        dateNow = mainUiState.todayDate,
-                        color = it.color,
-                        changeColorFun = dataViewmodel::updateUserColor,
-                        colors = DataSource().colorPairs
-                    )
-                }
-            }
-        }
     ) { paddingValues ->
         NavHost(
             navController = navController,
@@ -251,6 +236,8 @@ fun SwiftWordsApp(
             }
             composable(route = SwiftWordsScreen.Levels.name) {
                 LevelScreen(
+                    dateNow = mainUiState.todayDate,
+                    dataViewModel = dataViewmodel,
                     dataUiState = dataUiState,
                 ) {
                     viewModel.changeGameState(false)//tells the game this is not a game mode
