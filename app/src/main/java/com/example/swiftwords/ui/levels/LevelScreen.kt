@@ -65,7 +65,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.swiftwords.data.ColorPair
-import com.example.swiftwords.data.GetDataViewModel
 import com.example.swiftwords.ui.AppViewModelProvider
 import com.example.swiftwords.ui.elements.CurrentLevel
 import com.example.swiftwords.data.ItemDetailsUiState
@@ -78,9 +77,7 @@ import kotlin.math.abs
 
 @Composable
 fun LevelScreen(
-    dateNow: String,
     levelViewModel: LevelViewModel = viewModel(factory = AppViewModelProvider.Factory),
-    dataViewModel: GetDataViewModel,
     dataUiState: ItemDetailsUiState,
     navigateToLevel: () -> Unit,
 ) {
@@ -206,19 +203,6 @@ fun LevelScreen(
                 }
             }
         }
-    }
-
-    // the tob bar is here instead of surface bc of navigation animation
-    dataUiState.userDetails?.let { userDetails ->
-        TopBar(
-            livesLeft = userDetails.lives,
-            streak = userDetails.streak,
-            streakDateData = userDetails.dailyDate,
-            dateNow = dateNow,
-            color = userDetails.color,
-            changeColorFun = dataViewModel::updateUserColor,
-            colors = levelUiState.colors
-        )
     }
 
     // BottomLevel for the current level
