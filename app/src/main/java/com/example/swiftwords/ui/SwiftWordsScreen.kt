@@ -45,7 +45,6 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.swiftwords.R
-import com.example.swiftwords.data.DataSource
 import com.example.swiftwords.data.GetDataViewModel
 import com.example.swiftwords.model.BarItem
 import com.example.swiftwords.ui.choose.StartingScreen
@@ -53,7 +52,6 @@ import com.example.swiftwords.ui.elements.SoundViewModel
 import com.example.swiftwords.ui.elements.darken
 import com.example.swiftwords.ui.game.Game
 import com.example.swiftwords.ui.levels.LevelScreen
-import com.example.swiftwords.ui.levels.TopBar
 import com.example.swiftwords.ui.loading.LoadingView
 import com.example.swiftwords.ui.modes.ModesScreen
 import com.example.swiftwords.ui.profile.ProfileScreen
