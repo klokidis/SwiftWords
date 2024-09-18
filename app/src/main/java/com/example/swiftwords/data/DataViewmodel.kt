@@ -25,6 +25,7 @@ data class UserDetails(
     val starterLevel: Int = 1,
     val endingLevel: Int = 20,
     val checked: Boolean = false,
+    val levelTime: Long = 40000,
 )
 
 fun UserDetails.toUser(): User = User(
@@ -42,7 +43,8 @@ fun UserDetails.toUser(): User = User(
     color = color,
     starterLevel = starterLevel,
     endingLevel = endingLevel,
-    checked = checked
+    checked = checked,
+    levelTime = levelTime
 )
 
 
@@ -64,7 +66,8 @@ fun User.toUserDetails(): UserDetails = UserDetails(
     color = color,
     starterLevel = starterLevel,
     endingLevel = endingLevel,
-    checked = checked
+    checked = checked,
+    levelTime = levelTime
 )
 
 class DataViewmodel(private val userRepository: UserRepository) : ViewModel() {

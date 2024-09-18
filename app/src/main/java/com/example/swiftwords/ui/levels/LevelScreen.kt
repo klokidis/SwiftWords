@@ -83,7 +83,7 @@ fun LevelScreen(
 ) {
     val levelUiState by levelViewModel.uiState.collectAsState()
 
-    // LazyListState to manage the scroll state of the LazyColumn
+    // listState to manage the scroll state of the LazyColumn
     val listState = rememberLazyListState()
     val coroutineScope = rememberCoroutineScope()
 
@@ -196,7 +196,7 @@ fun LevelScreen(
                         modifier = Modifier
                             .fillMaxSize()
                             .rotate(rotationAngle), // Rotate the icon based on the current level position
-                        imageVector = ImageVector.vectorResource(R.drawable.arrow), // Replace with your icon
+                        imageVector = ImageVector.vectorResource(R.drawable.arrow),
                         contentDescription = "",
                         tint = Color.White
                     )

@@ -48,6 +48,8 @@
     <string name="confirm">Confirm</string>
     <string name="custom">Custom</string>
     <string name="consequences">Consequences</string>
+    <string name="level_time">Level time</string>
+    <string name="seconds">Seconds</string>
 
 
 </resources>

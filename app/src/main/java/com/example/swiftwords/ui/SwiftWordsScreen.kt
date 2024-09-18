@@ -254,7 +254,7 @@ fun SwiftWordsApp(
                     dataUiState = dataUiState,
                 ) {
                     viewModel.changeGameState(false)//tells the game this is not a game mode
-                    viewModel.changeTime(40000L)
+                    dataUiState.userDetails?.let { it1 -> viewModel.changeTime(it1.levelTime) }
                     navController.navigate(SwiftWordsScreen.Game.name)
                 }
             }
@@ -374,6 +374,7 @@ fun SwiftWordsApp(
             }
             composable(route = SwiftWordsScreen.Settings.name) {
                 SettingsPage(
+                    updateTime = dataViewmodel::updateTime,
                     data = dataUiState,
                     navigateOut = { navController.navigateUp() }
                 )

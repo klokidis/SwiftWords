@@ -165,20 +165,20 @@ fun PopUp(
     changeTime: (Long) -> Unit,
     changeGameMode: (Int) -> Unit,
     startShuffle: KFunction3<Boolean, () -> Unit, Long, Unit>,
-    sound: () -> Unit
-) {
+    sound: () -> Unit,
+    modeStringOptions: List<String> = listOf(
+        stringResource(R.string.shuffle),
+        stringResource(R.string.settings)
+    ),
+    modeOptions: List<Int> = listOf(0, 1),
+    timeOptions: List<Long> =
+        listOf(20000L, 30000L, 40000L, 50000L, 60000L, 70000L),
+    ) {
     var expandedTime by remember { mutableStateOf(false) }
     var expandedMode by remember { mutableStateOf(false) }
     var selectedTime by remember { mutableStateOf<Long?>(null) }
     var selectedModeVisible by remember { mutableStateOf<String?>(null) }
     var selectedMode by remember { mutableStateOf<Int?>(null) }
-    val timeOptions = listOf(1000L, 5000L, 10000L, 30000L) // Example times in milliseconds
-    val modeOptions = listOf(0, 1, 2) // Example times in milliseconds
-    val modeStringOptions = listOf(
-        stringResource(R.string.unlimited),
-        stringResource(R.string.shuffle),
-        stringResource(R.string.settings)
-    )
 
     AnimatedVisibility(
         visible = visible,
@@ -251,7 +251,7 @@ fun PopUp(
                                     DropdownMenuItem(
                                         onClick = {
                                             selectedModeVisible = modeStringOptions[mode]
-                                            selectedMode = mode + 1
+                                            selectedMode = mode + 2
                                             expandedMode = false
                                         },
                                         text = {
@@ -275,7 +275,6 @@ fun PopUp(
                         TextButton(
                             onClick = {
                                 changeTime(selectedTime!!)
-                                if (selectedMode == 1) changeTime(130000000L)
                                 selectedMode?.let { changeGameMode(it) }
                                 hide()
                                 if (selectedMode == 2) startShuffle(true, sound, selectedTime!!)

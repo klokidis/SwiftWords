@@ -59,6 +59,15 @@ class GetDataViewModel(private val userRepository: UserRepository) : ViewModel()
         }
     }
 
+    fun updateTime(newTime: Long) {
+        viewModelScope.launch {
+            val currentUser = getDataUiState.value.userDetails?.toUser()
+            if (currentUser != null) {
+                userRepository.updateUser(currentUser.copy(levelTime = newTime))
+            }
+        }
+    }
+
     fun updateInitialState() {
         viewModelScope.launch {
             val currentUser = getDataUiState.value.userDetails?.toUser()
