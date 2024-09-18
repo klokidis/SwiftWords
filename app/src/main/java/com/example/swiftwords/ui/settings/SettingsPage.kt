@@ -94,7 +94,7 @@ fun OneSettingMenu(text: String, options: List<Long>, updateTime: (Long) -> Unit
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .clickable { }
+            .clickable { expanded = true }
             .size(60.dp)
             .padding(start = 15.dp, end = 15.dp),
         verticalAlignment = Alignment.CenterVertically,

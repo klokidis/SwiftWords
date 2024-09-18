@@ -191,7 +191,10 @@ fun Game(
                 horizontalArrangement = Arrangement.Center
             ) {
                 IconButton(
-                    onClick = navigateUp,
+                    onClick = {
+                        exitChangingMode()
+                        navigateUp()
+                    },
                     modifier = Modifier
                         .size(33.dp)
                         .padding(start = 7.dp)
