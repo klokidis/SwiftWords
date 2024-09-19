@@ -146,14 +146,14 @@ fun Game(
                 when (isCorrect) {
                     true -> {
                         soundViewModel.playCorrectSound()
-                        if (gameModeNumber == 3) {
+                        if (gameModeNumber == 3 && isMode) {
                             viewModel.addTime()
                         }
                     }
 
                     else -> {
                         soundViewModel.playIncorrectSound()
-                        if (gameModeNumber == 3) {
+                        if (gameModeNumber == 3 && isMode) {
                             viewModel.removeTime()
                         }
                     }
