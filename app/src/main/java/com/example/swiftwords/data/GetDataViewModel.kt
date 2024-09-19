@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
@@ -24,12 +25,9 @@ class GetDataViewModel(private val userRepository: UserRepository) : ViewModel()
 
     val getDataUiState: StateFlow<ItemDetailsUiState> =
         userRepository.getUserStream()
+            .filterNotNull()
             .map { user ->
-                if (user == null) {
-                    ItemDetailsUiState(isLoading = true)
-                } else {
-                    ItemDetailsUiState(userDetails = user.toUserDetails(), isLoading = false)
-                }
+                ItemDetailsUiState(userDetails = user.toUserDetails(), isLoading = false)
             }
             .stateIn(
                 scope = viewModelScope,
