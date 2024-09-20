@@ -45,8 +45,9 @@
     <string name="level">Level:</string>
     <string name="level_profile">Level</string>
     <string name="select_item">Select item</string>
-    <string name="select_time">Select Seconds</string>
-    <string name="select_mode">Select Mode</string>
+    <string name="select">Select</string>
+    <string name="select_time">Seconds</string>
+    <string name="select_mode">Mode</string>
     <string name="confirm">Confirm</string>
     <string name="custom">Custom</string>
     <string name="consequences">Consequences</string>
@@ -57,6 +58,7 @@
     <string name="male">Male</string>
     <string name="female">Female</string>
     <string name="introdacton">Introduction</string>
+    <string name="edit_name">Change name</string>
 
 
 </resources>

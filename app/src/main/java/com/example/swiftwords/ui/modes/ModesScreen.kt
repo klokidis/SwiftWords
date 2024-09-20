@@ -168,7 +168,7 @@ fun PopUp(
     sound: () -> Unit,
     modeStringOptions: List<String> = listOf(
         stringResource(R.string.shuffle),
-        stringResource(R.string.settings)
+        stringResource(R.string.consequences)
     ),
     modeOptions: List<Int> = listOf(0, 1),
     timeOptions: List<Long> =
@@ -204,7 +204,6 @@ fun PopUp(
                         modifier = Modifier.size(100.dp),
                         contentDescription = null
                     )
-
                     Row(
                         modifier = Modifier.padding(top = 15.dp)
                     ) {
