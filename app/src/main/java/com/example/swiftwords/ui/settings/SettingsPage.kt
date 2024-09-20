@@ -2,6 +2,7 @@ package com.example.swiftwords.ui.settings
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -13,10 +14,13 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.DropdownMenu
@@ -37,11 +41,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.swiftwords.R
+import com.example.swiftwords.data.DataSource
 import com.example.swiftwords.data.ItemDetailsUiState
 import kotlin.reflect.KFunction1
 
@@ -54,6 +60,7 @@ fun SettingsPage(
     introduction: KFunction1<Boolean, Unit>,
     changeName: KFunction1<String, Unit>,
 ) {
+    val color by remember { mutableStateOf(DataSource().colorPairs[data.userDetails?.color!!].darkColor) }
     val scrollState = rememberScrollState()
     var displayEdit by rememberSaveable { mutableStateOf(false) }
     var newName by remember { mutableStateOf(data.userDetails?.let { TextFieldValue(it.nickname) }) }
@@ -99,7 +106,8 @@ fun SettingsPage(
                         stringResource(R.string.level_time),
                         listOf(35000L, 40000L, 50000L, 60000L, 70000L),
                         updateTime,
-                        it.levelTime
+                        it.levelTime,
+                        color
                     )
                 }
                 Spacer(modifier = Modifier.padding(5.dp))
@@ -108,7 +116,8 @@ fun SettingsPage(
                         stringResource(R.string.change_character),
                         listOf(stringResource(R.string.female), stringResource(R.string.male)),
                         changeCharacter,
-                        it.character
+                        it.character,
+                        color
                     )
                 }
                 Spacer(modifier = Modifier.padding(5.dp))
@@ -122,70 +131,104 @@ fun SettingsPage(
         }
     }
     if (displayEdit) {
-        Box(
+        NewNamePopUp(
+            newName = newName,
+            onNameChange = { newName = it },
+            onSave = {
+                if ((newName?.text?.length ?: 0) in 2..10) {
+                    newName?.let { changeName(it.text) } // Save the new name
+                    displayEdit = false // Close the dialog
+                }
+            },
+            onCancel = { displayEdit = false },
+            color = color
+        )
+    }
+}
+
+@Composable
+fun NewNamePopUp(
+    newName: TextFieldValue?,
+    onNameChange: (TextFieldValue) -> Unit,
+    onSave: () -> Unit,
+    onCancel: () -> Unit,
+    color: Color,
+    isDarkTheme: Boolean = isSystemInDarkTheme(),
+) {
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(Color.Black.copy(alpha = 0.3f)),
+    ) {
+        Card(
             modifier = Modifier
-                .fillMaxSize()
-                .background(Color.Black.copy(alpha = 0.3f)),
+                .align(Alignment.Center)
+                .padding(20.dp),
+            colors = CardDefaults.cardColors(
+                MaterialTheme.colorScheme.secondary
+            )
         ) {
-            Card(
+            Column(
                 modifier = Modifier
-                    .align(Alignment.Center)
-                    .padding(20.dp),
-                colors = CardDefaults.cardColors(
-                    MaterialTheme.colorScheme.secondary
-                )
+                    .padding(16.dp),
+                verticalArrangement = Arrangement.Center,
+                horizontalAlignment = Alignment.CenterHorizontally,
             ) {
-                Column(
-                    modifier = Modifier
-                        .padding(16.dp),
-                    verticalArrangement = Arrangement.Center,
-                    horizontalAlignment = Alignment.CenterHorizontally
-                ) {
-                    Text(
-                        text = "Enter New Name",
-                        style = MaterialTheme.typography.titleSmall.copy(fontSize = 25.sp)
+                Text(
+                    text = "Enter New Name",
+                    style = MaterialTheme.typography.titleSmall.copy(fontSize = 25.sp),
+                    color = if (isDarkTheme) Color.White else Color.Black
+                )
+
+                Spacer(modifier = Modifier.padding(8.dp))
+
+                newName?.let { name ->
+                    OutlinedTextField(
+                        value = name,
+                        onValueChange = onNameChange,
+                        label = { Text("New Name") },
+                        modifier = Modifier.fillMaxWidth(),
+                        singleLine = true,
+                        keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
+                        keyboardActions = KeyboardActions(
+                            onDone = { onSave() }
+                        ),
                     )
+                }
 
-                    Spacer(modifier = Modifier.padding(8.dp))
-
-                    newName?.let { name ->
-                        OutlinedTextField(
-                            value = name,
-                            onValueChange = { newName = name },
-                            label = { Text("New Name") },
-                            modifier = Modifier.fillMaxWidth()
-                        )
-                    }
-
-                    Spacer(modifier = Modifier.padding(8.dp))
-                    Row(
-                        verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.Center
+                Spacer(modifier = Modifier.padding(8.dp))
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.Center
+                ) {
+                    Spacer(modifier = Modifier.weight(1f))
+                    Button(
+                        onClick = onCancel,
+                        colors = ButtonDefaults.buttonColors(containerColor = color)
                     ) {
-                        Spacer(modifier = Modifier.weight(1f))
-                        Button(
-                            onClick = {
-                                displayEdit = false // Close the dialog
-                            },
-                        ) {
-                            Text("Cancel")
-                        }
-                        Spacer(modifier = Modifier.weight(1f))
-                        Button(
-                            onClick = {
-                                newName?.let { changeName(it.text) } // Save the new name
-                                displayEdit = false // Close the dialog
-                            },
-                        ) {
-                            Text("Save")
-                        }
-                        Spacer(modifier = Modifier.weight(1f))
+                        Text("Cancel", color = Color.White)
                     }
+                    Spacer(modifier = Modifier.weight(1f))
+                    Button(
+                        onClick = onSave,
+                        enabled = ((newName?.text?.length ?: 0) in 2..10),
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = if ((newName?.text?.length ?: 0) in 2..10) {
+                                color
+                            } else {
+                                Color.LightGray
+                            }
+                        )
+                    ) {
+                        Text("Save", color = Color.White)
+                    }
+                    Spacer(modifier = Modifier.weight(1f))
                 }
             }
         }
     }
 }
+
 
 @Composable
 fun OneSettingSimple(text: String, onClick: KFunction1<Boolean, Unit>) {
@@ -229,7 +272,8 @@ fun OneSettingMenuStrings(
     text: String,
     options: List<String>,
     updateCharacter: (Boolean) -> Unit,
-    isFemale: Boolean
+    isFemale: Boolean,
+    color: Color
 ) {
     SettingMenu(
         text = text,
@@ -237,8 +281,8 @@ fun OneSettingMenuStrings(
         options = options,
         onOptionSelected = { updateCharacter(it == "Female") },
         displayOption = { it },
-        displaySelected = { it }
-
+        displaySelected = { it },
+        color = color
     )
 }
 
@@ -247,7 +291,8 @@ fun OneSettingMenuLong(
     text: String,
     options: List<Long>,
     updateTime: (Long) -> Unit,
-    levelTime: Long
+    levelTime: Long,
+    color: Color
 ) {
     SettingMenu(
         text = text,
@@ -260,7 +305,8 @@ fun OneSettingMenuLong(
         displaySelected = { time ->
             time.toString().take(2) + " " + stringResource(R.string.seconds)
         }, // Display with "seconds" only for the selected value
-        width = 50.dp
+        width = 50.dp,
+        color = color
     )
 }
 
@@ -273,7 +319,8 @@ fun <T> SettingMenu(
     displayOption: (T) -> String,
     displaySelected: @Composable (T) -> String,
     modifier: Modifier = Modifier,
-    width: Dp = 100.dp
+    width: Dp = 100.dp,
+    color: Color
 ) {
     var expanded by remember { mutableStateOf(false) }
 
@@ -295,7 +342,8 @@ fun <T> SettingMenu(
             TextButton(onClick = { expanded = true }) {
                 Text(
                     text = displaySelected(selectedOption), // Show the selected value with the "seconds"
-                    style = MaterialTheme.typography.titleSmall.copy(fontSize = 20.sp)
+                    style = MaterialTheme.typography.titleSmall.copy(fontSize = 20.sp),
+                    color = color
                 )
             }
             DropdownMenu(
