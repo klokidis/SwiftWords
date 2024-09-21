@@ -215,7 +215,7 @@ fun SwiftWordsApp(
         modifier = Modifier.safeDrawingPadding(),
         topBar = {
             if (currentScreen == SwiftWordsScreen.Levels) {
-                dataUiState.userDetails?.let {
+                dataUiState.userDetails.let {
                     TopBar(
                         livesLeft = it.lives,
                         streak = it.streak,
@@ -234,7 +234,7 @@ fun SwiftWordsApp(
             startDestination = if (dataUiState.isLoading) {
                 SwiftWordsScreen.Loading.name
             } else {
-                if (dataUiState.userDetails?.initializeProfile == true) {
+                if (dataUiState.userDetails.initializeProfile) {
                     SwiftWordsScreen.Choose.name
                 } else {
                     SwiftWordsScreen.Levels.name
@@ -248,26 +248,24 @@ fun SwiftWordsApp(
                 LoadingView()
             }
             composable(route = SwiftWordsScreen.Choose.name) {
-                dataUiState.userDetails?.let { data ->
-                    StartingScreen(
-                        dataViewmodel = dataViewmodel,
-                        soundViewModel = soundViewModel,
-                        nickName = data.nickname
-                    )
-                }
+                StartingScreen(
+                    dataViewmodel = dataViewmodel,
+                    soundViewModel = soundViewModel,
+                    nickName = dataUiState.userDetails.nickname
+                )
             }
             composable(route = SwiftWordsScreen.Levels.name) {
                 LevelScreen(
                     dataUiState = dataUiState,
                 ) {
                     viewModel.changeGameState(false)//tells the game this is not a game mode
-                    dataUiState.userDetails?.let { it1 -> viewModel.changeTime(it1.levelTime) }
+                    dataUiState.userDetails.let { it1 -> viewModel.changeTime(it1.levelTime) }
                     navController.navigate(SwiftWordsScreen.Game.name)
                 }
             }
             composable(route = SwiftWordsScreen.Modes.name) {
                 ModesScreen(
-                    color = dataUiState.userDetails?.color,
+                    color = dataUiState.userDetails.color,
                     navigateFastGame = {
                         viewModel.changeGameMode(0)
                         viewModel.generateRandomLettersForMode()
@@ -310,7 +308,7 @@ fun SwiftWordsApp(
                 )
             }
             composable(route = SwiftWordsScreen.Profile.name) {
-                dataUiState.userDetails?.let { data ->
+                dataUiState.userDetails.let { data ->
                     ProfileScreen(
                         data.currentLevel,
                         data.streak,
@@ -323,7 +321,7 @@ fun SwiftWordsApp(
             }
             composable(route = SwiftWordsScreen.Game.name) {
                 wordListState.value?.let { wordList ->
-                    dataUiState.userDetails?.let { data ->
+                    dataUiState.userDetails.let { data ->
                         Game(
                             increaseStreak = dataViewmodel::increaseStreak,
                             dateNow = mainUiState.todayDate,

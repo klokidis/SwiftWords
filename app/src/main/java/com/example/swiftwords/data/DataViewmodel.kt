@@ -18,7 +18,7 @@ data class UserDetails(
     val streak: Int = 0,
     val highScore: Int = 1,
     val dailyDate: String = "",
-    val lives: Int = 5,
+    val lives: Int = 2,
     val lifeDate: String = "",//add set of char level
     val setOfLetters: String = "",
     val color: Int = 0,

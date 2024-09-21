@@ -17,7 +17,7 @@ import java.util.Calendar
 import java.util.Locale
 
 data class ItemDetailsUiState(
-    val userDetails: UserDetails? = null,
+    val userDetails: UserDetails = UserDetails(),
     val isLoading: Boolean = true
 )
 
@@ -50,35 +50,29 @@ class GetDataViewModel(private val userRepository: UserRepository) : ViewModel()
 
     fun updateUserColor(newColor: Int) {
         viewModelScope.launch {
-            val currentUser = getDataUiState.value.userDetails?.toUser()
-            if (currentUser != null) {
-                userRepository.updateUser(currentUser.copy(color = newColor))
-            }
+            val currentUser = getDataUiState.value.userDetails.toUser()
+            userRepository.updateUser(currentUser.copy(color = newColor))
         }
     }
 
     fun updateTime(newTime: Long) {
         viewModelScope.launch {
-            val currentUser = getDataUiState.value.userDetails?.toUser()
-            if (currentUser != null) {
-                userRepository.updateUser(currentUser.copy(levelTime = newTime))
-            }
+            val currentUser = getDataUiState.value.userDetails.toUser()
+            userRepository.updateUser(currentUser.copy(levelTime = newTime))
         }
     }
 
     fun updateInitialState(value: Boolean = false) {
         viewModelScope.launch {
-            val currentUser = getDataUiState.value.userDetails?.toUser()
-            if (currentUser != null) {
-                userRepository.updateUser(currentUser.copy(initializeProfile = value))
-            }
+            val currentUser = getDataUiState.value.userDetails.toUser()
+            userRepository.updateUser(currentUser.copy(initializeProfile = value))
         }
     }
 
     fun checkAndResetStreak() {
         viewModelScope.launch {
             val currentUser =
-                getDataUiState.value.userDetails?.toUser() ?: return@launch //if null returns
+                getDataUiState.value.userDetails.toUser() //if null returns
 
             val dateFormat = DateTimeFormatter.ofPattern("dd/MM/yyyy")
 
@@ -106,34 +100,28 @@ class GetDataViewModel(private val userRepository: UserRepository) : ViewModel()
 
     fun updateChecked() {
         viewModelScope.launch {
-            val currentUser = getDataUiState.value.userDetails?.toUser()
-            if (currentUser != null) {
-                userRepository.updateUser(currentUser.copy(checked = !currentUser.checked))
-            }
+            val currentUser = getDataUiState.value.userDetails.toUser()
+            userRepository.updateUser(currentUser.copy(checked = !currentUser.checked))
         }
     }
 
     fun updateName(name: String) {
         viewModelScope.launch {
-            val currentUser = getDataUiState.value.userDetails?.toUser()
-            if (currentUser != null) {
-                userRepository.updateUser(currentUser.copy(nickname = name))
-            }
+            val currentUser = getDataUiState.value.userDetails.toUser()
+            userRepository.updateUser(currentUser.copy(nickname = name))
         }
     }
 
     fun updateCharacter(character: Boolean) {
         viewModelScope.launch {
-            val currentUser = getDataUiState.value.userDetails?.toUser()
-            if (currentUser != null) {
-                userRepository.updateUser(currentUser.copy(character = character))
-            }
+            val currentUser = getDataUiState.value.userDetails.toUser()
+            userRepository.updateUser(currentUser.copy(character = character))
         }
     }
 
     fun increaseCurrentLevel(score: Int) {
         viewModelScope.launch {
-            val currentUser = getDataUiState.value.userDetails?.toUser() ?: return@launch
+            val currentUser = getDataUiState.value.userDetails.toUser()
 
             val calendar = Calendar.getInstance()
             val dateFormat = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
@@ -185,7 +173,7 @@ class GetDataViewModel(private val userRepository: UserRepository) : ViewModel()
 
     fun increaseStreak() {
         viewModelScope.launch {
-            val currentUser = getDataUiState.value.userDetails?.toUser() ?: return@launch
+            val currentUser = getDataUiState.value.userDetails.toUser()
 
             val calendar = Calendar.getInstance()
             val dateFormat = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
@@ -210,11 +198,9 @@ class GetDataViewModel(private val userRepository: UserRepository) : ViewModel()
 
     suspend fun checkHighScore(thisScore: Int) {
         viewModelScope.launch {
-            val currentUser = getDataUiState.value.userDetails?.toUser()
-            if (currentUser != null) {
-                if (thisScore > currentUser.highScore) {
-                    userRepository.updateUser(currentUser.copy(highScore = thisScore))
-                }
+            val currentUser = getDataUiState.value.userDetails.toUser()
+            if (thisScore > currentUser.highScore) {
+                userRepository.updateUser(currentUser.copy(highScore = thisScore))
             }
         }
     }
