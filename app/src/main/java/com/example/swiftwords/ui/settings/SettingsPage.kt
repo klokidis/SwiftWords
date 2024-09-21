@@ -178,7 +178,7 @@ fun NewNamePopUp(
                 horizontalAlignment = Alignment.CenterHorizontally,
             ) {
                 Text(
-                    text = "Enter New Name",
+                    text = stringResource(R.string.enter_new_name),
                     style = MaterialTheme.typography.titleSmall.copy(fontSize = 25.sp),
                     color = if (isDarkTheme) Color.White else Color.Black
                 )
@@ -189,7 +189,7 @@ fun NewNamePopUp(
                     OutlinedTextField(
                         value = name,
                         onValueChange = onNameChange,
-                        label = { Text("New Name") },
+                        label = { Text(stringResource(R.string.new_name)) },
                         modifier = Modifier.fillMaxWidth(),
                         singleLine = true,
                         keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
@@ -209,7 +209,7 @@ fun NewNamePopUp(
                         onClick = onCancel,
                         colors = ButtonDefaults.buttonColors(containerColor = color)
                     ) {
-                        Text("Cancel", color = Color.White)
+                        Text(stringResource(R.string.cancel), color = Color.White)
                     }
                     Spacer(modifier = Modifier.weight(1f))
                     Button(
@@ -223,7 +223,7 @@ fun NewNamePopUp(
                             }
                         )
                     ) {
-                        Text("Save", color = Color.White)
+                        Text(stringResource(R.string.save), color = Color.White)
                     }
                     Spacer(modifier = Modifier.weight(1f))
                 }
