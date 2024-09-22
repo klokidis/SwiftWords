@@ -1,5 +1,3 @@
-
-
 package com.example.swiftwords
 
 import android.app.Application

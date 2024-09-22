@@ -259,7 +259,7 @@ fun SwiftWordsApp(
                     dataUiState = dataUiState,
                 ) {
                     viewModel.changeGameState(false)//tells the game this is not a game mode
-                    dataUiState.userDetails.let { it1 -> viewModel.changeTime(it1.levelTime) }
+                    viewModel.changeTime(dataUiState.userDetails.levelTime)
                     navController.navigate(SwiftWordsScreen.Game.name)
                 }
             }
@@ -282,7 +282,7 @@ fun SwiftWordsApp(
                     },
                     navigateChangingGame = {
                         viewModel.changeGameMode(2)
-                        viewModel.changeTime(40000L)
+                        viewModel.changeTime(dataUiState.userDetails.levelTime)
                         viewModel.changingLetters(
                             true,
                             soundViewModel::playChangeSound,
@@ -293,7 +293,7 @@ fun SwiftWordsApp(
                     },
                     navigateConsequencesGame = {
                         viewModel.changeGameMode(3)
-                        viewModel.changeTime(40000L)
+                        viewModel.changeTime(dataUiState.userDetails.levelTime)
                         viewModel.changeGameState(true) //this is a game mode
                         navController.navigate(SwiftWordsScreen.Game.name)
                     },
