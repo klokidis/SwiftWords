@@ -71,8 +71,7 @@ class GetDataViewModel(private val userRepository: UserRepository) : ViewModel()
 
     fun checkAndResetStreak() {
         viewModelScope.launch {
-            val currentUser =
-                getDataUiState.value.userDetails.toUser() //if null returns
+            val currentUser = getDataUiState.value.userDetails.toUser()
 
             val dateFormat = DateTimeFormatter.ofPattern("dd/MM/yyyy")
 

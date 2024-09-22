@@ -95,12 +95,12 @@ fun SwiftWordsApp(
             else -> 0 // Default value
         }
 
-        if (selectedItemIndex != newIndex) {//for navigating back with back phone arrow
+        if (selectedItemIndex != newIndex) { //for navigating back with back phone arrow
             selectedItemIndex = newIndex
         }
     }
 
-    LaunchedEffect(mainUiState.todayDate) {
+    LaunchedEffect(mainUiState.todayDate) { //every hour check the streak
         dataViewmodel.checkAndResetStreak()
     }
 
@@ -109,7 +109,7 @@ fun SwiftWordsApp(
     val coroutineLaunched = rememberSaveable { mutableStateOf(false) }
     val context = LocalContext.current // Get context from LocalContext
     LaunchedEffect(Unit) {
-        if (!coroutineLaunched.value) {
+        if (!coroutineLaunched.value) { //retrieve the word list from file on launch
             coroutineScope.launch {
                 try {
                     val wordList = viewModel.loadWordsFromAssets(context)
