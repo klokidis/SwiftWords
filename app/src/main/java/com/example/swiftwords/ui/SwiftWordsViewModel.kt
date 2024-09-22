@@ -40,7 +40,7 @@ class SwiftWordsMainViewModel : ViewModel() {
 
     init {
         generateRandomLettersForBoth()
-        updateDateAtHourChange()
+        updateDateAtMidnight()
     }
 
     suspend fun loadWordsFromAssets(context: Context): Set<String> {
@@ -72,23 +72,24 @@ class SwiftWordsMainViewModel : ViewModel() {
     }
 
 
-    private fun updateDateAtHourChange() {
+    private fun updateDateAtMidnight() {
         viewModelScope.launch {
             while (isActive) {
                 getDate()  // Update the date
 
-                // Calculate the delay until the start of the next hour
+                // Get the current time and calculate the time remaining until midnight
                 val currentTime = Calendar.getInstance()
-                val nextHour = (currentTime.clone() as Calendar).apply {
-                    add(Calendar.HOUR_OF_DAY, 1)  // Move to the next hour
+                val nextMidnight = (currentTime.clone() as Calendar).apply {
+                    add(Calendar.DAY_OF_YEAR, 1)  // Move to the next day
+                    set(Calendar.HOUR_OF_DAY, 0)
                     set(Calendar.MINUTE, 0)
                     set(Calendar.SECOND, 0)
                     set(Calendar.MILLISECOND, 0)
                 }
 
-                val delayUntilNextHour = nextHour.timeInMillis - currentTime.timeInMillis
+                val delayUntilMidnight = nextMidnight.timeInMillis - currentTime.timeInMillis
 
-                delay(delayUntilNextHour)  // Wait until the next hour
+                delay(delayUntilMidnight)  // Wait until midnight
             }
         }
     }
