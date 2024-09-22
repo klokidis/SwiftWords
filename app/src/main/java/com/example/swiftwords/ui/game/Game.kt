@@ -1093,6 +1093,6 @@ fun CanvasText(currentTime: () -> Long) {
             .fillMaxWidth()
             .wrapContentHeight(),
         textAlign = TextAlign.Center,
-        style = MaterialTheme.typography.titleSmall.copy(fontSize = 43.sp)
+        style = MaterialTheme.typography.titleSmall.copy(fontSize = 45.sp)
     )
 }
