@@ -89,7 +89,6 @@ fun SwiftWordsApp(
             SwiftWordsScreen.Levels -> 0
             SwiftWordsScreen.Modes -> 1
             SwiftWordsScreen.Profile -> 2
-            SwiftWordsScreen.Settings -> 3
             else -> 0 // Default value
         }
 
