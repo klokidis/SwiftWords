@@ -3,15 +3,33 @@ package com.example.swiftwords.ui.elements
 import android.app.Application
 import android.content.Context
 import android.media.AudioManager
-import android.media.MediaPlayer
-import android.media.PlaybackParams
+import android.media.SoundPool
 import androidx.lifecycle.AndroidViewModel
 import com.example.swiftwords.R
 
 class SoundViewModel(application: Application) : AndroidViewModel(application) {
 
-
     private val audioManager = application.getSystemService(Context.AUDIO_SERVICE) as AudioManager
+    private val soundPool: SoundPool = SoundPool.Builder()
+        .setMaxStreams(5)
+        .build()
+    private val soundIds = mutableMapOf<String, Int>()
+
+    private var mainVolume = 1f
+
+    init {
+
+        // Load sounds into the SoundPool
+        soundIds["correct"] = soundPool.load(application, R.raw.jsfxr, 1)
+        soundIds["incorrect"] = soundPool.load(application, R.raw.falsesound, 1)
+        soundIds["change"] = soundPool.load(application, R.raw.change, 1)
+        soundIds["bip"] = soundPool.load(application, R.raw.bip, 1)
+        soundIds["v1"] = soundPool.load(application, R.raw.v1, 1)
+        soundIds["v2"] = soundPool.load(application, R.raw.v2, 1)
+        soundIds["v3"] = soundPool.load(application, R.raw.v3, 1)
+        soundIds["v4"] = soundPool.load(application, R.raw.v4, 1)
+        soundIds["v5"] = soundPool.load(application, R.raw.v5, 1)
+    }
 
     // Use the system media volume
     private fun getSystemVolume(): Float {
@@ -19,183 +37,84 @@ class SoundViewModel(application: Application) : AndroidViewModel(application) {
         val currentVolume = audioManager.getStreamVolume(AudioManager.STREAM_MUSIC)
         return currentVolume / maxVolume.toFloat()
     }
-    var mainVolume = 1f
-
-    private val correctSound: MediaPlayer by lazy {
-        MediaPlayer.create(application, R.raw.jsfxr)
-    }
-
-    private val incorrectSound: MediaPlayer by lazy {
-        MediaPlayer.create(application, R.raw.falsesound)
-    }
-    private val changeSound: MediaPlayer by lazy {
-        MediaPlayer.create(application, R.raw.change)
-    }
-
-    private val bipSound: MediaPlayer by lazy {
-        MediaPlayer.create(application, R.raw.bip)
-    }
-    private val v1: MediaPlayer by lazy {
-        MediaPlayer.create(application, R.raw.v1)
-    }
-    private val v2: MediaPlayer by lazy {
-        MediaPlayer.create(application, R.raw.v2)
-    }
-    private val v3: MediaPlayer by lazy {
-        MediaPlayer.create(application, R.raw.v3)
-    }
-    private val v4: MediaPlayer by lazy {
-        MediaPlayer.create(application, R.raw.v4)
-    }
-    private val v5: MediaPlayer by lazy {
-        MediaPlayer.create(application, R.raw.v5)
-    }
 
     fun playCorrectSound() {
-        val systemVolume = getSystemVolume()
-
-        // Check if volume is 0 before playing sound
-        if (systemVolume > 0f && mainVolume!=0f) {
-            correctSound.seekTo(0)
-            correctSound.setVolume(systemVolume, systemVolume)
-            correctSound.start()
-        } else {
-            correctSound.pause()  // Stop playback immediately if volume is 0
+        val volume = getCurrentVolume()
+        if (volume > 0f && mainVolume != 0f) {
+            soundPool.play(soundIds["correct"]!!, volume, volume, 1, 0, 1f)
         }
     }
 
     fun playIncorrectSound() {
-        val systemVolume = getSystemVolume()
-        if (systemVolume > 0f && mainVolume != 0f) {
-            incorrectSound.seekTo(0)
-            incorrectSound.setVolume(systemVolume, systemVolume)
-            incorrectSound.start()
-        } else {
-            incorrectSound.pause()
+        val volume = getCurrentVolume()
+        if (volume > 0f && mainVolume != 0f) {
+            soundPool.play(soundIds["incorrect"]!!, volume, volume, 1, 0, 1f)
         }
     }
 
     fun playChangeSound() {
-        val systemVolume = getSystemVolume()
-        if (systemVolume > 0f && mainVolume != 0f) {
-            changeSound.seekTo(0)
-            changeSound.setVolume(systemVolume, systemVolume)
-            changeSound.start()
-        } else {
-            changeSound.pause()
+        val volume = getCurrentVolume()
+        if (volume > 0f && mainVolume != 0f) {
+            soundPool.play(soundIds["change"]!!, volume, volume, 1, 0, 1f)
         }
     }
 
     fun playBipSound(pitch: Float) {
-        val systemVolume = getSystemVolume()
-        if (systemVolume > 0f && mainVolume != 0f) {
-            bipSound.seekTo(0)
-            bipSound.setVolume(systemVolume, systemVolume)
-            setPitch(bipSound, pitch)
-            bipSound.start()
-        } else {
-            bipSound.pause()
+        val volume = getCurrentVolume()
+        if (volume > 0f && mainVolume != 0f) {
+            soundPool.play(soundIds["bip"]!!, volume, volume, 1, 0, pitch)
         }
     }
 
     fun playV1(pitch: Float) {
-        val systemVolume = getSystemVolume()
-        if (systemVolume > 0f && mainVolume != 0f) {
-            v1.seekTo(0)
-            v1.setVolume(systemVolume, systemVolume)
-            setPitch(v1, pitch)
-            v1.start()
-        } else {
-            v1.pause()
+        val volume = getCurrentVolume()
+        if (volume > 0f && mainVolume != 0f) {
+            soundPool.play(soundIds["v1"]!!, volume, volume, 1, 0, pitch)
         }
     }
 
     fun playV2(pitch: Float) {
-        val systemVolume = getSystemVolume()
-        if (systemVolume > 0f && mainVolume != 0f) {
-            v2.seekTo(0)
-            v2.setVolume(systemVolume, systemVolume)
-            setPitch(v2, pitch)
-            v2.start()
-        } else {
-            v2.pause()
+        val volume = getCurrentVolume()
+        if (volume > 0f && mainVolume != 0f) {
+            soundPool.play(soundIds["v2"]!!, volume, volume, 1, 0, pitch)
         }
     }
 
     fun playV3(pitch: Float) {
-        val systemVolume = getSystemVolume()
-        if (systemVolume > 0f && mainVolume != 0f) {
-            v3.seekTo(0)
-            v3.setVolume(systemVolume, systemVolume)
-            setPitch(v3, pitch)
-            v3.start()
-        } else {
-            v3.pause()
+        val volume = getCurrentVolume()
+        if (volume > 0f && mainVolume != 0f) {
+            soundPool.play(soundIds["v3"]!!, volume, volume, 1, 0, pitch)
         }
     }
 
     fun playV4(pitch: Float) {
-        val systemVolume = getSystemVolume()
-        if (systemVolume > 0f && mainVolume != 0f) {
-            v4.seekTo(0)
-            v4.setVolume(systemVolume, systemVolume)
-            setPitch(v4, pitch)
-            v4.start()
-        } else {
-            v4.pause()
+        val volume = getCurrentVolume()
+        if (volume > 0f && mainVolume != 0f) {
+            soundPool.play(soundIds["v4"]!!, volume, volume, 1, 0, pitch)
         }
     }
 
     fun playV5(pitch: Float) {
-        val systemVolume = getSystemVolume()
-        if (systemVolume > 0f && mainVolume != 0f) {
-            v5.seekTo(0)
-            v5.setVolume(systemVolume, systemVolume)
-            setPitch(v5, pitch)
-            v5.start()
-        } else {
-            v5.pause()
+        val volume = getCurrentVolume()
+        if (volume > 0f && mainVolume != 0f) {
+            soundPool.play(soundIds["v5"]!!, volume, volume, 1, 0, pitch)
         }
     }
 
-    private fun setPitch(mediaPlayer: MediaPlayer, pitch: Float) {
-        val params = PlaybackParams()
-        params.pitch = pitch
-        mediaPlayer.playbackParams = params
-    }
-
-    private fun setVolume() {
-        val volume = getSystemVolume()
-        incorrectSound.setVolume(volume, volume)
-        correctSound.setVolume(volume, volume)
-        changeSound.setVolume(volume, volume)
-        bipSound.setVolume(volume, volume)
-        v1.setVolume(volume, volume)
-        v2.setVolume(volume, volume)
-        v3.setVolume(volume, volume)
-        v4.setVolume(volume, volume)
-        v5.setVolume(volume, volume)
+    private fun getCurrentVolume(): Float {
+        return getSystemVolume() * mainVolume
     }
 
     fun muteSounds() {
         mainVolume = 0f
-        setVolume()
     }
 
     fun unMuteSounds() {
         mainVolume = 1f
-        setVolume()
     }
 
     override fun onCleared() {
         super.onCleared()
-        correctSound.release()
-        incorrectSound.release()
-        bipSound.release()
-        v1.release()
-        v2.release()
-        v3.release()
-        v4.release()
-        v5.release()
+        soundPool.release()
     }
 }
