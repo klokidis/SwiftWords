@@ -11,6 +11,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.lifecycle.ViewModelProvider
 import com.example.swiftwords.ui.SwiftWordsApp
 import com.example.swiftwords.ui.elements.SoundViewModel
@@ -21,8 +22,9 @@ class MainActivity : ComponentActivity() {
     private lateinit var soundViewModel: SoundViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        enableEdgeToEdge()
         super.onCreate(savedInstanceState)
+        installSplashScreen()
+        enableEdgeToEdge()
         soundViewModel = ViewModelProvider(this)[SoundViewModel::class.java]
         setContent {
             SwiftWordsTheme {
