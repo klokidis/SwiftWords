@@ -92,10 +92,10 @@ fun LevelScreen(
     var isCurrentLevelBelowVisible by remember { mutableStateOf(false) }
 
     // Use LaunchedEffect to track scroll position but avoid recomposing unnecessarily
-    LaunchedEffect(listState, dataUiState.userDetails?.currentLevel) {
+    LaunchedEffect(listState, dataUiState.userDetails.currentLevel) {
         snapshotFlow { listState.layoutInfo }
             .collect { layoutInfo ->
-                dataUiState.userDetails?.let { userDetails ->
+                dataUiState.userDetails.let { userDetails ->
                     val currentLevelIndex = userDetails.currentLevel - userDetails.starterLevel
 
                     // Update the state based on the position of the current level
@@ -122,85 +122,81 @@ fun LevelScreen(
         verticalArrangement = Arrangement.Top,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        dataUiState.userDetails?.let { userDetails ->
-            itemsIndexed((userDetails.starterLevel..userDetails.endingLevel).toList()) { index, level ->
-                if (level > 0) {
-                    val (leftPadding, rightPadding) = levelUiState.padding.getOrNull(index)
-                        ?: Pair(0.dp, 0.dp)
-                    LevelCard(
-                        number = level,
-                        rightPadding = rightPadding,
-                        leftPadding = leftPadding,
-                        thisLevel = level,
-                        currentLevel = userDetails.currentLevel,
-                        onClick = navigateToLevel,
-                        color = userDetails.color,
-                        colors = levelUiState.colors
-                    )
-                }
+        itemsIndexed((dataUiState.userDetails.starterLevel..dataUiState.userDetails.endingLevel).toList()) { index, level ->
+            if (level > 0) {
+                val (leftPadding, rightPadding) = levelUiState.padding.getOrNull(index)
+                    ?: Pair(0.dp, 0.dp)
+                LevelCard(
+                    number = level,
+                    rightPadding = rightPadding,
+                    leftPadding = leftPadding,
+                    thisLevel = level,
+                    currentLevel = dataUiState.userDetails.currentLevel,
+                    onClick = navigateToLevel,
+                    color = dataUiState.userDetails.color,
+                    colors = levelUiState.colors
+                )
             }
+
         }
     }
 
-    if (dataUiState.userDetails != null) {
-        // Animated visibility for button enter/exit animations
-        AnimatedVisibility(
-            visible = isCurrentLevelAboveVisible || isCurrentLevelBelowVisible,
-            enter = slideInVertically(
-                initialOffsetY = { it }, // Slide in from the bottom
-                animationSpec = tween(durationMillis = 400)
-            ) + fadeIn(animationSpec = tween(400)),
-            exit = slideOutVertically(
-                targetOffsetY = { it }, // Slide out to the bottom
-                animationSpec = tween(durationMillis = 300)
-            ) + fadeOut(animationSpec = tween(300))
+    AnimatedVisibility(
+        visible = isCurrentLevelAboveVisible || isCurrentLevelBelowVisible,
+        enter = slideInVertically(
+            initialOffsetY = { it }, // Slide in from the bottom
+            animationSpec = tween(durationMillis = 400)
+        ) + fadeIn(animationSpec = tween(400)),
+        exit = slideOutVertically(
+            targetOffsetY = { it }, // Slide out to the bottom
+            animationSpec = tween(durationMillis = 300)
+        ) + fadeOut(animationSpec = tween(300))
+    ) {
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(bottom = 15.dp, end = 12.dp),
+            contentAlignment = Alignment.BottomEnd
         ) {
-            Box(
+            val animatedColor by animateColorAsState(
+                targetValue = levelUiState.colors[dataUiState.userDetails.color].darkColor,
+                animationSpec = tween(durationMillis = 300),
+                label = ""
+            )
+            Button(
                 modifier = Modifier
-                    .fillMaxSize()
-                    .padding(bottom = 15.dp, end = 12.dp),
-                contentAlignment = Alignment.BottomEnd
-            ) {
-                val animatedColor by animateColorAsState(
-                    targetValue = levelUiState.colors[dataUiState.userDetails.color].darkColor,
-                    animationSpec = tween(durationMillis = 300),
-                    label = ""
-                )
-                Button(
-                    modifier = Modifier
-                        .size(50.dp),
-                    colors = ButtonDefaults.buttonColors(
-                        containerColor = animatedColor // Apply animated color as background
-                    ),
-                    shape = CircleShape,
-                    contentPadding = PaddingValues(10.dp), // Remove inner padding
-                    elevation = ButtonDefaults.buttonElevation(
-                        defaultElevation = 4.dp,
-                    ),
-                    onClick = {
-                        // Scroll to the current level when the button is clicked
-                        coroutineScope.launch {
-                            val indexToScroll =
-                                dataUiState.userDetails.currentLevel - dataUiState.userDetails.starterLevel
-                            listState.scrollToItem(if ((indexToScroll - 1) > 0) indexToScroll - 1 else indexToScroll)
-                        }
-                    }) {
-                    // Rotate the icon based on whether the current level is above or below the visible range
-                    val rotationAngle = if (isCurrentLevelAboveVisible) {
-                        90f
-                    } else {
-                        270f
+                    .size(50.dp),
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = animatedColor // Apply animated color as background
+                ),
+                shape = CircleShape,
+                contentPadding = PaddingValues(10.dp), // Remove inner padding
+                elevation = ButtonDefaults.buttonElevation(
+                    defaultElevation = 4.dp,
+                ),
+                onClick = {
+                    // Scroll to the current level when the button is clicked
+                    coroutineScope.launch {
+                        val indexToScroll =
+                            dataUiState.userDetails.currentLevel - dataUiState.userDetails.starterLevel
+                        listState.scrollToItem(if ((indexToScroll - 1) > 0) indexToScroll - 1 else indexToScroll)
                     }
-
-                    Icon(
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .rotate(rotationAngle), // Rotate the icon based on the current level position
-                        imageVector = ImageVector.vectorResource(R.drawable.arrow),
-                        contentDescription = "",
-                        tint = Color.White
-                    )
+                }) {
+                // Rotate the icon based on whether the current level is above or below the visible range
+                val rotationAngle = if (isCurrentLevelAboveVisible) {
+                    90f
+                } else {
+                    270f
                 }
+
+                Icon(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .rotate(rotationAngle), // Rotate the icon based on the current level position
+                    imageVector = ImageVector.vectorResource(R.drawable.arrow),
+                    contentDescription = "",
+                    tint = Color.White
+                )
             }
         }
     }
@@ -210,14 +206,13 @@ fun LevelScreen(
         modifier = Modifier.fillMaxSize(),
         contentAlignment = Alignment.BottomCenter
     ) {
-        dataUiState.userDetails?.let { userDetails ->
-            BottomLevel(
-                onClick = navigateToLevel,
-                level = userDetails.currentLevel.toString(),
-                color = userDetails.color,
-                colors = levelUiState.colors
-            )
-        }
+        BottomLevel(
+            onClick = navigateToLevel,
+            level = dataUiState.userDetails.currentLevel.toString(),
+            color = dataUiState.userDetails.color,
+            colors = levelUiState.colors
+        )
+
     }
 }
 

@@ -228,7 +228,7 @@ fun SetNickName(
             keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
             keyboardActions = KeyboardActions(
                 onDone = {
-                    if (textState.isNotBlank() && ((textState.length) in 2..9)) {
+                    if (textState.isNotBlank() && ((textState.length) in 2..15)) {
                         onSave(textState.trim())
                         nextState()
                     }
@@ -249,12 +249,12 @@ fun SetNickName(
             Spacer(modifier = Modifier.weight(1f))
             Button(
                 onClick = {
-                    if (textState.isNotBlank() && ((textState.length) in 2..9)) {
+                    if (textState.isNotBlank() && ((textState.length) in 2..15)) {
                         onSave(textState.trim())
                         nextState()
                     }
                 },
-                enabled = textState.isNotBlank()
+                enabled = textState.isNotBlank() && ((textState.length) in 2..15)
             ) {
                 Text(stringResource(R.string.save))
             }

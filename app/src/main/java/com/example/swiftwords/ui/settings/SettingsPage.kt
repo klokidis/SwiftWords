@@ -61,10 +61,10 @@ fun SettingsPage(
     introduction: KFunction1<Boolean, Unit>,
     changeName: KFunction1<String, Unit>,
 ) {
-    val color by remember { mutableStateOf(DataSource().colorPairs[data.userDetails?.color!!].darkColor) }
+    val color by remember { mutableStateOf(DataSource().colorPairs[data.userDetails.color].darkColor) }
     val scrollState = rememberScrollState()
     var displayEdit by rememberSaveable { mutableStateOf(false) }
-    var newName by remember { mutableStateOf(data.userDetails?.let { TextFieldValue(it.nickname) }) }
+    var newName by remember { mutableStateOf(TextFieldValue(data.userDetails.nickname)) }
 
     Box(
         modifier = Modifier.fillMaxSize()
@@ -102,25 +102,21 @@ fun SettingsPage(
                     .verticalScroll(scrollState)
             ) {
                 Spacer(modifier = Modifier.padding(10.dp))
-                data.userDetails?.let {
-                    OneSettingMenuLong(
-                        stringResource(R.string.level_time),
-                        listOf(35000L, 40000L, 50000L, 60000L, 70000L),
-                        updateTime,
-                        it.levelTime,
-                        color
-                    )
-                }
+                OneSettingMenuLong(
+                    stringResource(R.string.level_time),
+                    listOf(35000L, 40000L, 50000L, 60000L, 70000L),
+                    updateTime,
+                    data.userDetails.levelTime,
+                    color
+                )
                 Spacer(modifier = Modifier.padding(5.dp))
-                data.userDetails?.let {
-                    OneSettingMenuStrings(
-                        stringResource(R.string.change_character),
-                        listOf(stringResource(R.string.female), stringResource(R.string.male)),
-                        changeCharacter,
-                        it.character,
-                        color
-                    )
-                }
+                OneSettingMenuStrings(
+                    stringResource(R.string.change_character),
+                    listOf(stringResource(R.string.female), stringResource(R.string.male)),
+                    changeCharacter,
+                    data.userDetails.character,
+                    color
+                )
                 Spacer(modifier = Modifier.padding(5.dp))
                 OneSettingSimple(stringResource(R.string.introdacton), introduction)
                 Spacer(modifier = Modifier.padding(5.dp))
@@ -136,8 +132,8 @@ fun SettingsPage(
             newName = newName,
             onNameChange = { newName = it },
             onSave = {
-                if ((newName?.text?.length ?: 0) in 2..10) {
-                    newName?.let { changeName(it.text) } // Save the new name
+                if ((newName.text.length) in 2..15) {
+                    changeName(newName.text) // Save the new name
                     displayEdit = false // Close the dialog
                 }
             },
@@ -149,7 +145,7 @@ fun SettingsPage(
 
 @Composable
 fun NewNamePopUp(
-    newName: TextFieldValue?,
+    newName: TextFieldValue,
     onNameChange: (TextFieldValue) -> Unit,
     onSave: () -> Unit,
     onCancel: () -> Unit,
@@ -185,19 +181,17 @@ fun NewNamePopUp(
 
                 Spacer(modifier = Modifier.padding(8.dp))
 
-                newName?.let { name ->
-                    OutlinedTextField(
-                        value = name,
-                        onValueChange = onNameChange,
-                        label = { Text(stringResource(R.string.new_name)) },
-                        modifier = Modifier.fillMaxWidth(),
-                        singleLine = true,
-                        keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
-                        keyboardActions = KeyboardActions(
-                            onDone = { onSave() }
-                        ),
-                    )
-                }
+                OutlinedTextField(
+                    value = newName,
+                    onValueChange = onNameChange,
+                    label = { Text(stringResource(R.string.new_name)) },
+                    modifier = Modifier.fillMaxWidth(),
+                    singleLine = true,
+                    keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
+                    keyboardActions = KeyboardActions(
+                        onDone = { onSave() }
+                    ),
+                )
 
                 Spacer(modifier = Modifier.padding(8.dp))
                 Row(
@@ -214,9 +208,9 @@ fun NewNamePopUp(
                     Spacer(modifier = Modifier.weight(1f))
                     Button(
                         onClick = onSave,
-                        enabled = ((newName?.text?.length ?: 0) in 2..10),
+                        enabled = ((newName.text.length ) in 2..15),
                         colors = ButtonDefaults.buttonColors(
-                            containerColor = if ((newName?.text?.length ?: 0) in 2..10) {
+                            containerColor = if ((newName.text.length) in 2..15) {
                                 color
                             } else {
                                 Color.LightGray
