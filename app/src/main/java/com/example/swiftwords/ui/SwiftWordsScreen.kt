@@ -29,7 +29,6 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -58,7 +57,6 @@ import com.example.swiftwords.ui.loading.LoadingView
 import com.example.swiftwords.ui.modes.ModesScreen
 import com.example.swiftwords.ui.profile.ProfileScreen
 import com.example.swiftwords.ui.settings.SettingsPage
-import kotlinx.coroutines.launch
 
 enum class SwiftWordsScreen {
     Loading,
@@ -103,22 +101,18 @@ fun SwiftWordsApp(
     LaunchedEffect(mainUiState.todayDate) { //every hour check the streak
         dataViewmodel.checkAndResetStreak()
     }
-
     val wordListState = rememberSaveable { mutableStateOf<Set<String>?>(null) }
-    val coroutineScope = rememberCoroutineScope()
     val coroutineLaunched = rememberSaveable { mutableStateOf(false) }
     val context = LocalContext.current // Get context from LocalContext
-    LaunchedEffect(Unit) {
-        if (!coroutineLaunched.value) { //retrieve the word list from file on launch
-            coroutineScope.launch {
-                try {
-                    val wordList = viewModel.loadWordsFromAssets(context)
-                    wordListState.value = wordList
-                    coroutineLaunched.value = true
-                } catch (e: Exception) {
-                    // Handle the exception appropriately, update UI to show an error message
-                    e.printStackTrace()
-                }
+    LaunchedEffect(coroutineLaunched.value) {
+        if (!coroutineLaunched.value) {//retrieve the word list from file on launch
+            try {
+                val wordList = viewModel.loadWordsFromAssets(context)
+                wordListState.value = wordList
+                coroutineLaunched.value = true
+            } catch (e: Exception) {
+                // Handle the exception appropriately, update UI to show an error message
+                e.printStackTrace()
             }
         }
     }
