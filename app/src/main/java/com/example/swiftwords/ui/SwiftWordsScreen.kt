@@ -1,6 +1,5 @@
 package com.example.swiftwords.ui
 
-
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
@@ -47,6 +46,7 @@ import com.example.swiftwords.R
 import com.example.swiftwords.data.DataSource
 import com.example.swiftwords.data.GetDataViewModel
 import com.example.swiftwords.model.BarItem
+import com.example.swiftwords.notifications.scheduleDailyNotification
 import com.example.swiftwords.ui.choose.StartingScreen
 import com.example.swiftwords.ui.elements.SoundViewModel
 import com.example.swiftwords.ui.elements.darken
@@ -115,6 +115,13 @@ fun SwiftWordsApp(
             }
         }
     }
+
+    LaunchedEffect(dataUiState.isLoading){ //schedule notification if data is loaded
+        if(!dataUiState.isLoading){
+            scheduleDailyNotification(context,dataUiState.userDetails)
+        }
+    }
+
     Scaffold(
         bottomBar = {
             if (
