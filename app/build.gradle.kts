@@ -67,6 +67,7 @@ dependencies {
     //layout
     implementation(libs.androidx.constraintlayout)
     implementation(libs.androidx.constraintlayout.compose)
+    implementation(libs.androidx.work.runtime.ktx) //for notification
     //end layout
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
