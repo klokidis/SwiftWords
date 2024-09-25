@@ -100,6 +100,7 @@ fun SwiftWordsApp(
     LaunchedEffect(mainUiState.todayDate) { //every hour check the streak
         dataViewmodel.checkAndResetStreak()
     }
+
     val wordListState = rememberSaveable { mutableStateOf<Set<String>?>(null) }
     val coroutineLaunched = rememberSaveable { mutableStateOf(false) }
     val context = LocalContext.current // Get context from LocalContext
@@ -113,12 +114,6 @@ fun SwiftWordsApp(
                 // Handle the exception appropriately, update UI to show an error message
                 e.printStackTrace()
             }
-        }
-    }
-
-    LaunchedEffect(dataUiState.isLoading){ //schedule notification if data is loaded
-        if(!dataUiState.isLoading){
-            scheduleDailyNotification(context,dataUiState.userDetails)
         }
     }
 
