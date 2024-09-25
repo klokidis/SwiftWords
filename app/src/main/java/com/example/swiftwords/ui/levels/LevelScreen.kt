@@ -91,7 +91,7 @@ fun LevelScreen(
     var isCurrentLevelAboveVisible by remember { mutableStateOf(false) }
     var isCurrentLevelBelowVisible by remember { mutableStateOf(false) }
 
-    // Use LaunchedEffect to track scroll position but avoid recomposing unnecessarily
+    // LaunchedEffect to track scroll position but avoid recomposing unnecessarily
     LaunchedEffect(listState, dataUiState.userDetails.currentLevel) {
         snapshotFlow { listState.layoutInfo }
             .collect { layoutInfo ->
