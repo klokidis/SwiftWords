@@ -72,12 +72,28 @@ fun StartingScreen(
     nickName: String,
 ) {
     val uiState by viewModel.uiState.collectAsState()
+
+    val context = LocalContext.current
+    var permissionGranted by remember { mutableStateOf(isNotificationPermissionGranted(context)) }
+    // Launcher to request the notification permission
+    val requestPermissionLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.RequestPermission()
+    ) { isGranted: Boolean ->
+        permissionGranted = isGranted
+    }
+
     Column(
         modifier = Modifier
             .fillMaxSize()
             .clickable(
                 onClick = {
                     if (uiState.dialogueState == 6) {
+                        if(!permissionGranted){
+                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                                // Request permission on Android 13+
+                                requestPermissionLauncher.launch("android.permission.POST_NOTIFICATIONS")
+                            }
+                        }
                         dataViewmodel.updateInitialState()
                     } else {
                         if (uiState.dialogueState < 4) {
@@ -100,7 +116,8 @@ fun StartingScreen(
 
             2 -> {
                 CharacterChat(
-                    characterIsMale = false, text = stringResource(R.string.click),
+                    characterIsMale = false,
+                    text = stringResource(R.string.click),
                     soundViewModel = soundViewModel
                 )
             }
@@ -485,38 +502,5 @@ fun isNotificationPermissionGranted(context: Context): Boolean {
     } else {
         // No permission needed on versions below Android 13
         true
-    }
-}
-
-@Composable
-fun RequestNotificationPermission() {
-    val context = LocalContext.current
-    var permissionGranted by remember { mutableStateOf(isNotificationPermissionGranted(context)) }
-
-    // Launcher to request the notification permission
-    val requestPermissionLauncher = rememberLauncherForActivityResult(
-        contract = ActivityResultContracts.RequestPermission()
-    ) { isGranted: Boolean ->
-        permissionGranted = isGranted
-    }
-
-    // UI part
-    Column(
-        modifier = Modifier.fillMaxSize(),
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        if (permissionGranted) {
-            Text(text = "Notification permission is granted!")
-        } else {
-            Button(onClick = {
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                    // Request permission on Android 13+
-                    requestPermissionLauncher.launch("android.permission.POST_NOTIFICATIONS")
-                }
-            }) {
-                Text(text = "Request Notification Permission")
-            }
-        }
     }
 }
