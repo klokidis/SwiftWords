@@ -132,8 +132,8 @@ fun SettingsPage(
             newName = newName,
             onNameChange = { newName = it },
             onSave = {
-                if ((newName.text.length) in 2..15) {
-                    changeName(newName.text.trim()) // Save the new name
+                if ((newName.text.trim().length) in 2..15) {
+                    changeName(newName.text.trim( )) // Save the new name
                     displayEdit = false // Close the dialog
                 }
             },
