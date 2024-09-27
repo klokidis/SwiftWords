@@ -22,8 +22,7 @@ data class ItemDetailsUiState(
     val isLoading: Boolean = true
 )
 
-class GetDataViewModel(private val userRepository: UserRepository) :
-    ViewModel() {
+class GetDataViewModel(private val userRepository: UserRepository) : ViewModel() {
 
     val getDataUiState: StateFlow<ItemDetailsUiState> =
         userRepository.getUserStream()

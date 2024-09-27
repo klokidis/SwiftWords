@@ -889,6 +889,7 @@ fun DisplayResults(
                                         exitPressed()
                                         if (score() >= 1 && !isMode) {
                                             increaseScore(score())
+                                            scheduleDailyNotification(context, character)
                                             viewModel.generateRandomLettersForBoth()
                                         }
                                         navigateUp()
