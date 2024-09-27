@@ -8,7 +8,7 @@ import androidx.work.WorkManager
 import java.util.Calendar
 import java.util.concurrent.TimeUnit
 
-fun scheduleDailyNotification(context: Context, lastDatePlayed: String, character: Boolean) {
+fun scheduleDailyNotification(context: Context, character: Boolean) {
     // Get the current time
     val currentTime = Calendar.getInstance()
 
@@ -39,7 +39,6 @@ fun scheduleDailyNotification(context: Context, lastDatePlayed: String, characte
 
     // Prepare UserDetails data to pass to Worker
     val userData = Data.Builder()
-        .putString("nickname", lastDatePlayed)
         .putBoolean("streak", character)
         .build()
 

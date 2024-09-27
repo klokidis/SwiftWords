@@ -1,5 +1,6 @@
 package com.example.swiftwords.ui.game
 
+import android.content.Context
 import android.util.Log
 import androidx.activity.compose.BackHandler
 import androidx.compose.animation.AnimatedVisibility
@@ -68,6 +69,7 @@ import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.onSizeChanged
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
@@ -83,6 +85,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.swiftwords.R
 import com.example.swiftwords.data.ColorPair
 import com.example.swiftwords.data.DataSource
+import com.example.swiftwords.notifications.scheduleDailyNotification
 import com.example.swiftwords.ui.SwiftWordsMainViewModel
 import com.example.swiftwords.ui.elements.KeyCards
 import com.example.swiftwords.ui.elements.SoundViewModel
@@ -118,7 +121,8 @@ fun Game(
     exitChangingMode: () -> Unit,
     launchChanging: () -> Unit,
     soundViewModel: SoundViewModel,
-    currentLevel: Int
+    currentLevel: Int,
+    character: Boolean
 ) {
     val gameUiState by viewModel.uiState.collectAsState()
     val isTimerRunning by remember { derivedStateOf { gameUiState.isTimerRunning } }
@@ -129,6 +133,7 @@ fun Game(
     var onExitButtonPressed by rememberSaveable { mutableStateOf(false) }
     var lastMessage by rememberSaveable { mutableStateOf("Please enter an answer.") }
     val scroll = rememberScrollState()
+    val context = LocalContext.current
     val checkAnswer: () -> Unit = remember(setOfLetters) { // remember so it doesn't composition
         {
             isLoading = true
@@ -168,6 +173,7 @@ fun Game(
         }
         if (!onExitButtonPressed && gameUiState.score >= 1 && !isMode) {
             increaseScore(gameUiState.score)
+            scheduleDailyNotification(context, character)
             mainViewModel.generateRandomLettersForBoth()
         }
         navigateUp()
@@ -198,6 +204,7 @@ fun Game(
                         if (!onExitButtonPressed && gameUiState.score >= 1 && !isMode) {
                             increaseScore(gameUiState.score)
                             mainViewModel.generateRandomLettersForBoth()
+                            scheduleDailyNotification(context, character)
                         }
                         navigateUp()
                     },
@@ -422,7 +429,9 @@ fun Game(
         colorCode = colorCode,
         launchChanging = launchChanging,
         gameModeNumber = gameModeNumber,
-        currentLevel = currentLevel
+        currentLevel = currentLevel,
+        context = context,
+        character = character,
     )
 }
 
@@ -719,6 +728,8 @@ fun DisplayResults(
     launchChanging: () -> Unit,
     gameModeNumber: Int,
     currentLevel: Int,
+    character: Boolean,
+    context: Context,
 ) {
     AnimatedVisibility(
         visible = isVisible,
@@ -942,6 +953,7 @@ fun DisplayResults(
                                         onClick = {
                                             increaseScore(score())
                                             restartGame()
+                                            scheduleDailyNotification(context, character)
                                             coroutineScope.launch {
                                                 viewModel.generateRandomLettersForBoth()
                                                 restart(time())

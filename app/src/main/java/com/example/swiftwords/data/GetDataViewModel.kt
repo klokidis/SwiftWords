@@ -1,9 +1,8 @@
 package com.example.swiftwords.data
 
-import android.content.Context
+
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.swiftwords.notifications.scheduleDailyNotification
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -23,7 +22,7 @@ data class ItemDetailsUiState(
     val isLoading: Boolean = true
 )
 
-class GetDataViewModel(private val userRepository: UserRepository, private val context: Context) :
+class GetDataViewModel(private val userRepository: UserRepository) :
     ViewModel() {
 
     val getDataUiState: StateFlow<ItemDetailsUiState> =
@@ -171,7 +170,6 @@ class GetDataViewModel(private val userRepository: UserRepository, private val c
             }
 
             userRepository.updateUser(updatedUser)
-            scheduleDailyNotification(context, formattedDate,currentUser.character)
         }
     }
 
@@ -197,7 +195,6 @@ class GetDataViewModel(private val userRepository: UserRepository, private val c
                     streak = newStreak
                 )
             )
-            scheduleDailyNotification(context, formattedDate,currentUser.character)
         }
     }
 

@@ -29,7 +29,6 @@ object AppViewModelProvider {
         initializer {
             GetDataViewModel(
                 inventoryApplication().container.userRepository,
-                inventoryApplication().applicationContext
             )
         }
         initializer {
