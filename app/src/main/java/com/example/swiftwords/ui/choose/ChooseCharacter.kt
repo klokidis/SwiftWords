@@ -88,7 +88,7 @@ fun StartingScreen(
             .clickable(
                 onClick = {
                     if (uiState.dialogueState == 6) {
-                        if(!permissionGranted){
+                        if (!permissionGranted) {
                             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
                                 // Request permission on Android 13+
                                 requestPermissionLauncher.launch("android.permission.POST_NOTIFICATIONS")
@@ -252,7 +252,7 @@ fun SetNickName(
             keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
             keyboardActions = KeyboardActions(
                 onDone = {
-                    if (textState.isNotBlank() && ((textState.length) in 2..15)) {
+                    if (textState.isNotBlank() && ((textState.trim().length) in 2..15)) {
                         onSave(textState.trim())
                         nextState()
                     }

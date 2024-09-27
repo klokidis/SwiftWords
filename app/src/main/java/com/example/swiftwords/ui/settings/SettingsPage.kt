@@ -133,7 +133,7 @@ fun SettingsPage(
             onNameChange = { newName = it },
             onSave = {
                 if ((newName.text.length) in 2..15) {
-                    changeName(newName.text) // Save the new name
+                    changeName(newName.text.trim()) // Save the new name
                     displayEdit = false // Close the dialog
                 }
             },
@@ -208,9 +208,9 @@ fun NewNamePopUp(
                     Spacer(modifier = Modifier.weight(1f))
                     Button(
                         onClick = onSave,
-                        enabled = ((newName.text.length ) in 2..15),
+                        enabled = newName.text.isNotEmpty() && (newName.text.trim().length) in 2..15,
                         colors = ButtonDefaults.buttonColors(
-                            containerColor = if ((newName.text.length) in 2..15) {
+                            containerColor = if (newName.text.isNotEmpty() && (newName.text.trim().length) in 2..15) {
                                 color
                             } else {
                                 Color.LightGray
