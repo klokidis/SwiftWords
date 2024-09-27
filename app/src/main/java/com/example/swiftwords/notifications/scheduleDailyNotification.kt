@@ -45,7 +45,7 @@ fun scheduleDailyNotification(context: Context, lastDatePlayed: String, characte
 
     // Create a OneTimeWorkRequest to trigger the notification after the delay
     val workRequest = OneTimeWorkRequestBuilder<DailyNotificationWorker>()
-        .setInitialDelay(delay, TimeUnit.MILLISECONDS) // Delay until 7 PM
+        .setInitialDelay(delay, TimeUnit.MILLISECONDS)
         .setInputData(userData) // Pass data to Worker
         .build()
 
