@@ -46,7 +46,6 @@ import com.example.swiftwords.R
 import com.example.swiftwords.data.DataSource
 import com.example.swiftwords.data.GetDataViewModel
 import com.example.swiftwords.model.BarItem
-import com.example.swiftwords.notifications.scheduleDailyNotification
 import com.example.swiftwords.ui.choose.StartingScreen
 import com.example.swiftwords.ui.elements.SoundViewModel
 import com.example.swiftwords.ui.elements.darken
@@ -277,6 +276,7 @@ fun SwiftWordsApp(
                     },
                     navigateChangingGame = {
                         viewModel.changeGameMode(2)
+                        viewModel.generateRandomLettersForMode()
                         viewModel.changeTime(dataUiState.userDetails.levelTime)
                         viewModel.changingLetters(
                             true,
@@ -288,6 +288,7 @@ fun SwiftWordsApp(
                     },
                     navigateConsequencesGame = {
                         viewModel.changeGameMode(3)
+                        viewModel.generateRandomLettersForMode()
                         viewModel.changeTime(dataUiState.userDetails.levelTime)
                         viewModel.changeGameState(true) //this is a game mode
                         navController.navigate(SwiftWordsScreen.Game.name)
@@ -296,6 +297,7 @@ fun SwiftWordsApp(
                     changeGameMode = viewModel::changeGameMode,
                     navigateCustomGame = {
                         viewModel.changeGameState(true) //this is a game mode
+                        viewModel.generateRandomLettersForMode()
                         navController.navigate(SwiftWordsScreen.Game.name)
                     },
                     sound = soundViewModel::playChangeSound,
