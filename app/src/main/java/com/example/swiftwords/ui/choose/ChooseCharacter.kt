@@ -273,12 +273,12 @@ fun SetNickName(
             Spacer(modifier = Modifier.weight(1f))
             Button(
                 onClick = {
-                    if (textState.isNotBlank() && ((textState.length) in 2..15)) {
+                    if (textState.isNotBlank() && ((textState.trim().length) in 2..15)) {
                         onSave(textState.trim())
                         nextState()
                     }
                 },
-                enabled = textState.isNotBlank() && ((textState.length) in 2..15)
+                enabled = textState.isNotBlank() && ((textState.trim().length) in 2..15)
             ) {
                 Text(stringResource(R.string.save))
             }

@@ -69,7 +69,7 @@ class GameViewModel(time: () -> Long) : ViewModel() {
 
     fun calculatePassingScore(level: Int): Int {
         return when {
-            level < 2 -> 5
+            level < 1 -> 5
             level < 8 -> 7
             level < 20 -> 10
             level < 40 -> 13
