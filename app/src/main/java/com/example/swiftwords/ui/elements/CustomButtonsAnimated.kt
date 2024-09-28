@@ -35,6 +35,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Color.Companion.Gray
 import androidx.compose.ui.input.pointer.pointerInteropFilter
@@ -104,7 +105,9 @@ fun CurrentLevel(
                     translationY = shadowSize
                 }
                 .clip(CircleShape)
-                .background(animatedShadowColor)
+                .drawBehind {
+                    drawCircle(animatedShadowColor)
+                }
         )
 
         Button(
@@ -140,10 +143,13 @@ fun CurrentLevel(
                         }
                     }
                     true
+                }
+                .drawBehind {
+                    drawCircle(animatedColor)
                 },
             contentPadding = PaddingValues(0.dp),
             colors = ButtonDefaults.buttonColors(
-                containerColor = animatedColor,
+                containerColor = Color.Transparent, // Set to transparent because we are using drawBehind
                 contentColor = textColor
             ),
             shape = CircleShape
@@ -156,6 +162,7 @@ fun CurrentLevel(
         }
     }
 }
+
 
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
@@ -204,7 +211,9 @@ fun Levels(
                     translationY = shadowSize
                 }
                 .clip(CircleShape)
-                .background(animatedShadowColor)
+                .drawBehind {
+                    drawCircle(animatedShadowColor)
+                }
         )
 
         Button(
@@ -240,10 +249,13 @@ fun Levels(
 
                     }
                     true
+                }
+                .drawBehind {
+                    drawCircle(animatedColor)
                 },
             contentPadding = PaddingValues(0.dp),
             colors = ButtonDefaults.buttonColors(
-                containerColor = animatedColor,
+                containerColor = Color.Transparent,
                 contentColor = textColor
             ),
             shape = CircleShape

@@ -10,7 +10,6 @@ import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.isSystemInDarkTheme
@@ -55,8 +54,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.draw.rotate
+import androidx.compose.ui.geometry.CornerRadius
 import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.layout
 import androidx.compose.ui.res.painterResource
@@ -454,17 +456,22 @@ fun MenuColorPicker(color: Int, changeColorFun: (Int) -> Unit, colors: List<Colo
             AnimatedVisibility(visible = isExpanded) {
                 Row(
                     modifier = Modifier
-                        .padding(start = 4.dp)
-                        .clip(RoundedCornerShape(40.dp))
-                        .border(
-                            1.dp,
-                            animatedColorIconButton,
-                            RoundedCornerShape(40.dp)
-                        )
+                        .padding(start = 5.dp)
+                        .clip(RoundedCornerShape(50.dp))
                         .height(40.dp)
-                        .wrapContentSize(),
+                        .wrapContentSize()
+                        .drawBehind {
+                            // Draw the border
+                            drawRoundRect(
+                                color = animatedColorIconButton,
+                                size = Size(size.width, size.height),
+                                cornerRadius = CornerRadius(40.dp.toPx(), 40.dp.toPx()),
+                                style = Stroke(width = 1.5.dp.toPx())
+                            )
+                        }
+                        .padding(top = 7.dp, bottom = 7.dp)
                 ) {
-                    Row(modifier = Modifier.horizontalScroll(scrollState)) {
+                    Row(modifier = Modifier.horizontalScroll(scrollState).padding(start = 2.dp, end = 2.dp)) {
                         colors.forEach { thisColor ->
                             // Animate size for the background color circle
                             val animatedSize by animateDpAsState(
@@ -486,19 +493,6 @@ fun MenuColorPicker(color: Int, changeColorFun: (Int) -> Unit, colors: List<Colo
                                     .size(26.dp)
                                     .clip(RoundedCornerShape(26.dp))
                             ) {
-                                /*
-                                Box(
-                                    modifier = Modifier
-                                        .size(animatedSize)
-                                        .align(Alignment.Center)
-                                        .clip(RoundedCornerShape(26.dp))
-                                        .background(thisColor.lightColor)
-                                        .clickable {
-                                            selectedColor = thisColor.id // Update selected color
-                                            changeColorFun(thisColor.id)
-                                        }
-                                )
-                                 */
                                 ColorBox(
                                     animatedSize = { animatedSize },
                                     animatedSizeSelected = { animatedSizeSelected },
@@ -588,7 +582,7 @@ fun BottomLevel(onClick: () -> Unit, level: String, color: Int, colors: List<Col
     ) {
         Box(
             modifier = Modifier
-                .background(animatedColor)
+                .drawBehind { drawRoundRect(animatedColor) }
                 .fillMaxSize(),
             contentAlignment = Alignment.Center
         ) {
