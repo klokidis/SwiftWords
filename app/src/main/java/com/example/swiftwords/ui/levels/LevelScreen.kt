@@ -522,7 +522,8 @@ fun ColorBox(
     thisColor: ColorPair,
     changeColorFun: (Int) -> Unit,
     modifier: Modifier,
-    animatedSizeSelected: () -> Dp,) {
+    animatedSizeSelected: () -> Dp,
+) {
     Box(
         modifier = modifier
             .layout { measurable, _ ->
