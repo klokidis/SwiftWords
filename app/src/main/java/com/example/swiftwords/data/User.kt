@@ -17,7 +17,7 @@ data class User(
     val lives: Int, //to-do
     val lifeDate: String, //to-do
     val setOfLetters: String,
-    val color : Int,
+    val color: Int,
     val starterLevel: Int,
     val endingLevel: Int,
     val checked: Boolean,

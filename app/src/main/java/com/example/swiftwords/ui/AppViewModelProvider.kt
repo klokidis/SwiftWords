@@ -27,9 +27,7 @@ object AppViewModelProvider {
             DataViewmodel(inventoryApplication().container.userRepository)
         }
         initializer {
-            GetDataViewModel(
-                inventoryApplication().container.userRepository,
-            )
+            GetDataViewModel(inventoryApplication().container.userRepository)
         }
         initializer {
             SoundViewModel(inventoryApplication())

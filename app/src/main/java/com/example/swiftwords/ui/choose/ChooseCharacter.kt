@@ -108,22 +108,26 @@ fun StartingScreen(
         when (uiState.dialogueState) {
             1 -> {
                 CharacterChat(
-                    characterIsMale = true,
-                    text = "jsdnjsndjsndjs ddasd ds dasd  adsa  dsa sdas das  dsdsadas",
+                    characterIsMale = false,
+                    text = "Hello There welcome to swift words a very good game hehe",
                     soundViewModel = soundViewModel
                 )
             }
 
             2 -> {
                 CharacterChat(
-                    characterIsMale = false,
-                    text = stringResource(R.string.click),
+                    characterIsMale = true,
+                    text = "In a world where technology advances at the speed of light, it's fascinating to think about how far we've come in such a short time. Not so long ago, mobile phones were clunky devices used strictly for calls, but now they're sophisticated pieces of hardware that connect us to information, entertainment, and one another in ways we couldn't have imagined. Every day, new apps are being developed that push the boundaries of what's possible, making life more convenient and enriching our daily experiences.",
                     soundViewModel = soundViewModel
                 )
             }
 
             3 -> {
-                CharacterChatTwo(text = stringResource(R.string.click), soundViewModel)
+                CharacterChatTwo(
+                    text = "Hey there! Get ready to test your vocabulary and have a blast with Swift Words, the game of champions!",
+                    characterIsMale = false,
+                    soundViewModel
+                )
             }
 
             4 -> {
@@ -146,8 +150,8 @@ fun StartingScreen(
 
             6 -> {
                 CharacterChat(
-                    characterIsMale = uiState.character == 0,
-                    text = stringResource(R.string.click),
+                    characterIsMale = uiState.character != 0,
+                    text = "Welcome aboard! Swift Words is here to challenge your wit and keep you entertained for hours!",
                     soundViewModel = soundViewModel
                 )
             }
@@ -176,9 +180,9 @@ fun CharacterChat(characterIsMale: Boolean, text: String, soundViewModel: SoundV
             Image(
                 painter = painterResource(
                     id = if (characterIsMale) {
-                        R.drawable.sage
-                    } else {
                         R.drawable.gekko
+                    } else {
+                        R.drawable.sage
                     }
                 ),
                 modifier = Modifier
@@ -199,7 +203,11 @@ fun CharacterChat(characterIsMale: Boolean, text: String, soundViewModel: SoundV
                     containerColor = MaterialTheme.colorScheme.secondary,
                 ),
             ) {
-                LetterByLetterText(text, soundViewModel = soundViewModel)
+                LetterByLetterText(
+                    text,
+                    characterIsMale = characterIsMale,
+                    soundViewModel = soundViewModel
+                )
             }
         }
         Spacer(modifier = Modifier.weight(1f))
@@ -287,7 +295,7 @@ fun SetNickName(
 }
 
 @Composable
-fun CharacterChatTwo(text: String, soundViewModel: SoundViewModel) {
+fun CharacterChatTwo(text: String, characterIsMale: Boolean, soundViewModel: SoundViewModel) {
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -328,7 +336,11 @@ fun CharacterChatTwo(text: String, soundViewModel: SoundViewModel) {
                     containerColor = MaterialTheme.colorScheme.secondary,
                 ),
             ) {
-                LetterByLetterText(text, soundViewModel = soundViewModel)
+                LetterByLetterText(
+                    text,
+                    soundViewModel = soundViewModel,
+                    characterIsMale = characterIsMale
+                )
             }
         }
         Spacer(modifier = Modifier.weight(1f))
