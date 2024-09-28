@@ -2,6 +2,7 @@ package com.example.swiftwords.ui.levels
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.animateColorAsState
+import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
@@ -37,7 +38,6 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -53,12 +53,16 @@ import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.draw.rotate
+import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.layout.layout
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
+import androidx.compose.ui.unit.Constraints
 import androidx.compose.ui.unit.Dp
 import com.example.swiftwords.R
 import androidx.compose.ui.unit.dp
@@ -413,39 +417,40 @@ fun areDatesMoreThanOneDaysApart(date1: String, date2: String): Boolean {
 fun MenuColorPicker(color: Int, changeColorFun: (Int) -> Unit, colors: List<ColorPair>) {
     var isExpanded by remember { mutableStateOf(false) }
     val scrollState = rememberScrollState()
+
     val animatedColorIconButton by animateColorAsState(
         if (isExpanded) colors[color].darkColor else MaterialTheme.colorScheme.background,
         animationSpec = tween(durationMillis = 300),
         label = ""
     )
 
-    Box(
-        modifier = Modifier
-            .wrapContentSize()
-    ) {
+    Box(modifier = Modifier.wrapContentSize()) {
         Row(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.Center
         ) {
             IconButton(
                 onClick = { isExpanded = !isExpanded },
-                colors = IconButtonDefaults.iconButtonColors(
-                    containerColor = animatedColorIconButton
-                )
+                modifier = Modifier.drawBehind {
+                    drawCircle(
+                        color = animatedColorIconButton,
+                        radius = size.minDimension / 3 + 10, // Set the radius to half of the smaller dimension to make a perfect circle
+                        center = Offset(size.width / 2, size.height / 2) // Center the circle
+                    )
+                }
             ) {
                 Icon(
-                    modifier = Modifier
-                        .size(30.dp),
-                    imageVector =
-                    if (isExpanded) {
+                    modifier = Modifier.size(30.dp),
+                    imageVector = if (isExpanded) {
                         ImageVector.vectorResource(R.drawable.format_paint_24px)
                     } else {
                         ImageVector.vectorResource(R.drawable.format_paint_24px_noexp)
                     },
                     contentDescription = stringResource(R.string.pickTheme),
-                    tint = if (isExpanded) MaterialTheme.colorScheme.surface else colors[color].darkColor// Change icon color when expanded
+                    tint = if (isExpanded) MaterialTheme.colorScheme.surface else colors[color].darkColor
                 )
             }
+
             AnimatedVisibility(visible = isExpanded) {
                 Row(
                     modifier = Modifier
@@ -460,25 +465,49 @@ fun MenuColorPicker(color: Int, changeColorFun: (Int) -> Unit, colors: List<Colo
                         .wrapContentSize(),
                 ) {
                     Row(modifier = Modifier.horizontalScroll(scrollState)) {
-                        colors.forEach { color ->
+                        colors.forEach { thisColor ->
+                            // Animate size for the background color circle
+                            val animatedSize by animateDpAsState(
+                                targetValue = if (color == thisColor.id) 0.dp else 26.dp,
+                                animationSpec = tween(durationMillis = 500),
+                                label = ""
+                            )
+
+                            // Animate size for the foreground dark color circle
+                            val animatedSizeSelected by animateDpAsState(
+                                targetValue = if (color == thisColor.id) 26.dp else 16.dp,
+                                animationSpec = tween(durationMillis = 700),
+                                label = ""
+                            )
+
+                            Spacer(modifier = Modifier.padding(5.dp))
                             Box(
                                 modifier = Modifier
-                                    .padding(start = 10.dp, end = 10.dp)
                                     .size(26.dp)
                                     .clip(RoundedCornerShape(26.dp))
-                                    .background(color.lightColor)
-                                    .clickable {
-                                        changeColorFun(color.id)
-                                    }
                             ) {
+                                /*
                                 Box(
                                     modifier = Modifier
+                                        .size(animatedSize)
                                         .align(Alignment.Center)
-                                        .size(16.dp)
-                                        .clip(RoundedCornerShape(20.dp))
-                                        .background(color.darkColor)
+                                        .clip(RoundedCornerShape(26.dp))
+                                        .background(thisColor.lightColor)
+                                        .clickable {
+                                            selectedColor = thisColor.id // Update selected color
+                                            changeColorFun(thisColor.id)
+                                        }
+                                )
+                                 */
+                                ColorBox(
+                                    animatedSize = { animatedSize },
+                                    animatedSizeSelected = { animatedSizeSelected },
+                                    thisColor = thisColor,
+                                    changeColorFun = changeColorFun,
+                                    modifier = Modifier.align(Alignment.Center) // Center the entire box
                                 )
                             }
+                            Spacer(modifier = Modifier.padding(5.dp))
                         }
                     }
                 }
@@ -487,6 +516,57 @@ fun MenuColorPicker(color: Int, changeColorFun: (Int) -> Unit, colors: List<Colo
     }
 }
 
+@Composable
+fun ColorBox(
+    animatedSize: () -> Dp,
+    thisColor: ColorPair,
+    changeColorFun: (Int) -> Unit,
+    modifier: Modifier,
+    animatedSizeSelected: () -> Dp,) {
+    Box(
+        modifier = modifier
+            .layout { measurable, _ ->
+                val sizePx = animatedSize()
+                    .roundToPx()
+                    .coerceAtLeast(0)
+
+                val constraints = Constraints.fixed(
+                    width = sizePx,
+                    height = sizePx,
+                )
+
+                val placeable = measurable.measure(constraints)
+                layout(sizePx, sizePx) {
+                    placeable.place(0, 0)
+                }
+            }
+            .clip(RoundedCornerShape(26.dp))
+            .background(thisColor.lightColor)
+            .clickable {
+                changeColorFun(thisColor.id)
+            }
+    )
+    Box(
+        modifier = modifier
+            .layout { measurable, _ ->
+                val sizePx = animatedSizeSelected()
+                    .roundToPx()
+                    .coerceAtLeast(0)
+
+                val constraints = Constraints.fixed(
+                    width = sizePx,
+                    height = sizePx,
+                )
+
+                val placeable = measurable.measure(constraints)
+                layout(sizePx, sizePx) {
+                    placeable.place(0, 0)
+                }
+            }
+            .clip(RoundedCornerShape(26.dp))
+            .background(thisColor.darkColor)
+    )
+}
 
 @Composable
 fun BottomLevel(onClick: () -> Unit, level: String, color: Int, colors: List<ColorPair>) {
