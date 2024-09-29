@@ -171,15 +171,15 @@ fun LevelScreen(
             )
             Button(
                 modifier = Modifier
-                    .size(50.dp),
+                    .size(50.dp)
+                    .drawBehind {
+                        drawCircle(animatedColor)
+                    },
                 colors = ButtonDefaults.buttonColors(
-                    containerColor = animatedColor // Apply animated color as background
+                    containerColor = Color.Transparent //Transparent for animation color
                 ),
                 shape = CircleShape,
-                contentPadding = PaddingValues(10.dp), // Remove inner padding
-                elevation = ButtonDefaults.buttonElevation(
-                    defaultElevation = 4.dp,
-                ),
+                contentPadding = PaddingValues(10.dp),
                 onClick = {
                     // Scroll to the current level when the button is clicked
                     coroutineScope.launch {
