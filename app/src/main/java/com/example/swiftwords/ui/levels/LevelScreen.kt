@@ -575,6 +575,7 @@ fun BottomLevel(onClick: () -> Unit, level: String, color: Int, colors: List<Col
             .padding(15.dp)
             .height(50.dp)
             .fillMaxWidth(0.6f),
+        shape = RoundedCornerShape(24.dp),
         elevation = CardDefaults.cardElevation(
             defaultElevation = 4.dp,
         ),
