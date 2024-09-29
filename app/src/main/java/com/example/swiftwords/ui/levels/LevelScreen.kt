@@ -416,7 +416,10 @@ fun areDatesMoreThanOneDaysApart(date1: String, date2: String): Boolean {
 }
 
 @Composable
-fun MenuColorPicker(color: Int, changeColorFun: (Int) -> Unit, colors: List<ColorPair>) {
+fun MenuColorPicker(
+    color: Int,
+    changeColorFun: (Int) -> Unit, colors: List<ColorPair>
+) {
     var isExpanded by remember { mutableStateOf(false) }
     val scrollState = rememberScrollState()
 
@@ -471,7 +474,11 @@ fun MenuColorPicker(color: Int, changeColorFun: (Int) -> Unit, colors: List<Colo
                         }
                         .padding(top = 7.dp, bottom = 7.dp)
                 ) {
-                    Row(modifier = Modifier.horizontalScroll(scrollState).padding(start = 2.dp, end = 2.dp)) {
+                    Row(
+                        modifier = Modifier
+                            .horizontalScroll(scrollState)
+                            .padding(start = 2.dp, end = 2.dp)
+                    ) {
                         colors.forEach { thisColor ->
                             // Animate size for the background color circle
                             val animatedSizeSelected by animateDpAsState(
@@ -517,6 +524,7 @@ fun ColorBox(
     changeColorFun: (Int) -> Unit,
     modifier: Modifier,
     animatedSizeSelected: () -> Dp,
+    isDarkTheme: Boolean = isSystemInDarkTheme(),
 ) {
     Box(
         modifier = modifier
@@ -536,7 +544,9 @@ fun ColorBox(
                 }
             }
             .clip(RoundedCornerShape(26.dp))
-            .background(thisColor.lightColor)
+            .background(
+                if (isDarkTheme) Color.White else Color(0xFF0D1114)
+            )
             .clickable {
                 changeColorFun(thisColor.id)
             }
