@@ -474,15 +474,15 @@ fun MenuColorPicker(color: Int, changeColorFun: (Int) -> Unit, colors: List<Colo
                     Row(modifier = Modifier.horizontalScroll(scrollState).padding(start = 2.dp, end = 2.dp)) {
                         colors.forEach { thisColor ->
                             // Animate size for the background color circle
-                            val animatedSize by animateDpAsState(
-                                targetValue = if (color == thisColor.id) 0.dp else 26.dp,
+                            val animatedSizeSelected by animateDpAsState(
+                                targetValue = if (color == thisColor.id) 17.dp else 26.dp,
                                 animationSpec = tween(durationMillis = 500),
                                 label = ""
                             )
 
                             // Animate size for the foreground dark color circle
-                            val animatedSizeSelected by animateDpAsState(
-                                targetValue = if (color == thisColor.id) 26.dp else 16.dp,
+                            val animatedSize by animateDpAsState(
+                                targetValue = if (color == thisColor.id) 26.dp else 12.dp,
                                 animationSpec = tween(durationMillis = 700),
                                 label = ""
                             )
