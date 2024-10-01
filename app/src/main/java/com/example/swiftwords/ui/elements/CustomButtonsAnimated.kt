@@ -156,7 +156,7 @@ fun CurrentLevel(
         ) {
             Text(
                 text = text,
-                style = MaterialTheme.typography.titleMedium,
+                style = MaterialTheme.typography.titleMedium.copy(fontSize = 35.sp),
                 modifier = Modifier.padding(bottom = 6.dp)
             )
         }
