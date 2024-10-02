@@ -8,7 +8,7 @@ import androidx.work.WorkManager
 import java.util.Calendar
 import java.util.concurrent.TimeUnit
 
-fun scheduleDailyNotification(context: Context, character: Boolean) {
+fun scheduleDailyNotification(context: Context, streakLevel: Int) {
     // Get the current time
     val currentTime = Calendar.getInstance()
 
@@ -39,7 +39,7 @@ fun scheduleDailyNotification(context: Context, character: Boolean) {
 
     // Prepare UserDetails data to pass to Worker
     val userData = Data.Builder()
-        .putBoolean("streak", character)
+        .putInt("streak", streakLevel)
         .build()
 
     // Create a OneTimeWorkRequest to trigger the notification after the delay

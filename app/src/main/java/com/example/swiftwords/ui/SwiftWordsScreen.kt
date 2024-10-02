@@ -362,7 +362,8 @@ fun SwiftWordsApp(
                             },
                             soundViewModel = soundViewModel,
                             currentLevel = data.currentLevel,
-                            character = data.character
+                            character = data.character,
+                            streakLevel = data.streak
                         )
                     }
                 } ?: run {

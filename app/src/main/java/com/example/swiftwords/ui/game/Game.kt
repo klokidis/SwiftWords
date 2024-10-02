@@ -122,7 +122,8 @@ fun Game(
     launchChanging: () -> Unit,
     soundViewModel: SoundViewModel,
     currentLevel: Int,
-    character: Boolean
+    character: Boolean,
+    streakLevel: Int
 ) {
     val gameUiState by viewModel.uiState.collectAsState()
     val isTimerRunning by remember { derivedStateOf { gameUiState.isTimerRunning } }
@@ -173,7 +174,7 @@ fun Game(
         }
         if (!onExitButtonPressed && gameUiState.score >= 1 && !isMode) {
             increaseScore(gameUiState.score)
-            scheduleDailyNotification(context, character)
+            scheduleDailyNotification(context, streakLevel)
             mainViewModel.generateRandomLettersForBoth()
         }
         navigateUp()
@@ -204,7 +205,7 @@ fun Game(
                         if (!onExitButtonPressed && gameUiState.score >= 1 && !isMode) {
                             increaseScore(gameUiState.score)
                             mainViewModel.generateRandomLettersForBoth()
-                            scheduleDailyNotification(context, character)
+                            scheduleDailyNotification(context, streakLevel)
                         }
                         navigateUp()
                     },
@@ -431,7 +432,7 @@ fun Game(
         gameModeNumber = gameModeNumber,
         currentLevel = currentLevel,
         context = context,
-        character = character,
+        streakLevel = streakLevel,
     )
 }
 
@@ -728,7 +729,7 @@ fun DisplayResults(
     launchChanging: () -> Unit,
     gameModeNumber: Int,
     currentLevel: Int,
-    character: Boolean,
+    streakLevel: Int,
     context: Context,
 ) {
     AnimatedVisibility(
@@ -889,7 +890,7 @@ fun DisplayResults(
                                         exitPressed()
                                         if (score() >= 1 && !isMode) {
                                             increaseScore(score())
-                                            scheduleDailyNotification(context, character)
+                                            scheduleDailyNotification(context, streakLevel)
                                             viewModel.generateRandomLettersForBoth()
                                         }
                                         navigateUp()
@@ -954,7 +955,7 @@ fun DisplayResults(
                                         onClick = {
                                             increaseScore(score())
                                             restartGame()
-                                            scheduleDailyNotification(context, character)
+                                            scheduleDailyNotification(context, streakLevel)
                                             coroutineScope.launch {
                                                 viewModel.generateRandomLettersForBoth()
                                                 restart(time())

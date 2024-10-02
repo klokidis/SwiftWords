@@ -11,17 +11,18 @@ class DailyNotificationWorker(
 
     override fun doWork(): Result {
         // Retrieve user data passed from the schedule function
-        val nickname = inputData.getString("nickname") ?: "User"
-        val streak = inputData.getBoolean("streak", false)
+        //val nickname = inputData.getString("nickname") ?: "User"
+        val streak = inputData.getInt("streak", 1)
 
         // Customize the notification with the user data
-        val content = "Hey $nickname! Your streak is $streak days and your high score is ."
+        val content = "Don't forget Streaky!! "
 
         // Show the notification with the user details
         showNotification(
             applicationContext,
-            "Daily Reminder",
-            content
+            "Reminder",
+            content,
+            streak
         )
         return Result.success()
     }
