@@ -1,6 +1,9 @@
 package com.example.swiftwords.notifications
 
+import android.Manifest
 import android.content.Context
+import android.content.pm.PackageManager
+import androidx.core.content.ContextCompat
 import androidx.work.Data
 import androidx.work.ExistingWorkPolicy
 import androidx.work.OneTimeWorkRequestBuilder
@@ -9,6 +12,15 @@ import java.util.Calendar
 import java.util.concurrent.TimeUnit
 
 fun scheduleDailyNotification(context: Context, streakLevel: Int) {
+    // Check if the notification permission is granted (Android 13+)
+    if (ContextCompat.checkSelfPermission(
+            context, Manifest.permission.POST_NOTIFICATIONS
+        ) != PackageManager.PERMISSION_GRANTED
+    ) {
+        // If permission is not granted, do not show the notification
+        return
+    }
+
     // Get the current time
     val currentTime = Calendar.getInstance()
 
