@@ -79,7 +79,7 @@ fun SwiftWordsApp(
 
     val backStackEntry by navController.currentBackStackEntryAsState()
     val currentScreen = SwiftWordsScreen.valueOf(
-        backStackEntry?.destination?.route ?: SwiftWordsScreen.Levels.name
+        backStackEntry?.destination?.route ?: SwiftWordsScreen.Loading.name
     )
     var selectedItemIndex by rememberSaveable { mutableIntStateOf(0) }
 
