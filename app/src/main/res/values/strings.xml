@@ -61,6 +61,8 @@
     <string name="female">Female</string>
     <string name="introdacton">Introduction</string>
     <string name="edit_name">Change name</string>
-
+    <string name="dialog1">Hello, world! Welcome to swift words :)</string>
+    <string name="dialog2">A word game where you must find as many words as you can before the time runs out!</string>
+    <string name="dialog3">Meet Streaky, your adorable pet! Remember to feed him words daily, or he will lose his spark :c</string>
 
 </resources>

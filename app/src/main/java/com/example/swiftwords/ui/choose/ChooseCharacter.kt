@@ -107,26 +107,30 @@ fun StartingScreen(
     ) {
         when (uiState.dialogueState) {
             1 -> {
-                CharacterChat(
+                CharacterChatTwo(
+                    text = stringResource(R.string.dialog1),
                     characterIsMale = false,
-                    text = "Hello There welcome to swift words a very good game hehe",
-                    soundViewModel = soundViewModel
+                    soundViewModel,
+                    characterOne = R.drawable.gekko,
+                    characterTwo = R.drawable.sage
                 )
             }
 
             2 -> {
                 CharacterChat(
                     characterIsMale = true,
-                    text = "In a world where technology advances at the speed of light, it's fascinating to think about how far we've come in such a short time. Not so long ago, mobile phones were clunky devices used strictly for calls, but now they're sophisticated pieces of hardware that connect us to information, entertainment, and one another in ways we couldn't have imagined. Every day, new apps are being developed that push the boundaries of what's possible, making life more convenient and enriching our daily experiences.",
+                    text = stringResource(R.string.dialog2),
                     soundViewModel = soundViewModel
                 )
             }
 
             3 -> {
                 CharacterChatTwo(
-                    text = "Hey there! Get ready to test your vocabulary and have a blast with Swift Words, the game of champions!",
+                    text = stringResource(R.string.dialog3),
                     characterIsMale = false,
-                    soundViewModel
+                    soundViewModel,
+                    characterOne = R.drawable.fire_on,
+                    characterTwo = R.drawable.sage
                 )
             }
 
@@ -295,7 +299,13 @@ fun SetNickName(
 }
 
 @Composable
-fun CharacterChatTwo(text: String, characterIsMale: Boolean, soundViewModel: SoundViewModel) {
+fun CharacterChatTwo(
+    text: String,
+    characterIsMale: Boolean,
+    soundViewModel: SoundViewModel,
+    characterOne: Int,
+    characterTwo: Int
+) {
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -307,16 +317,20 @@ fun CharacterChatTwo(text: String, characterIsMale: Boolean, soundViewModel: Sou
         Box(
             contentAlignment = Alignment.BottomStart
         ) {
-            Row(modifier = Modifier.fillMaxWidth()) {
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.Center
+            ) {
                 Image(
-                    painter = painterResource(R.drawable.sage),
+                    painter = painterResource(characterOne),
                     modifier = Modifier
                         .weight(1f)
                         .padding(bottom = 40.dp),
                     contentDescription = null
                 )
                 Image(
-                    painter = painterResource(R.drawable.gekko),
+                    painter = painterResource(characterTwo),
                     modifier = Modifier
                         .weight(1f)
                         .padding(bottom = 40.dp),
