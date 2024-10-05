@@ -155,7 +155,7 @@ fun StartingScreen(
             6 -> {
                 CharacterChat(
                     characterIsMale = uiState.character != 0,
-                    text = "Welcome aboard! Swift Words is here to challenge your wit and keep you entertained for hours!",
+                    text =stringResource(R.string.dialog4),
                     soundViewModel = soundViewModel
                 )
             }
