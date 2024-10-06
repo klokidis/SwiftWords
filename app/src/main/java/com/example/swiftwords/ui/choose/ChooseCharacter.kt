@@ -155,7 +155,7 @@ fun StartingScreen(
             6 -> {
                 CharacterChat(
                     characterIsMale = uiState.character != 0,
-                    text =stringResource(R.string.dialog4),
+                    text = stringResource(R.string.dialog4),
                     soundViewModel = soundViewModel
                 )
             }
@@ -190,9 +190,10 @@ fun CharacterChat(characterIsMale: Boolean, text: String, soundViewModel: SoundV
                     }
                 ),
                 modifier = Modifier
-                    .size(500.dp)
+                    .size(600.dp)
                     .padding(bottom = 40.dp),
-                contentDescription = null
+                contentDescription = null,
+                contentScale = ContentScale.FillHeight
             )
             Card(
                 modifier = Modifier
@@ -318,9 +319,11 @@ fun CharacterChatTwo(
             contentAlignment = Alignment.BottomStart
         ) {
             Row(
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(bottom = 25.dp),
                 verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.Center
+                horizontalArrangement = Arrangement.Center,
             ) {
                 Image(
                     painter = painterResource(characterOne),
