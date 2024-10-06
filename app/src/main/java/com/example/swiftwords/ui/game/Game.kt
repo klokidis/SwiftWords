@@ -169,6 +169,7 @@ fun Game(
     }
     // Handle the back press
     BackHandler {
+        navigateUp()
         if (isMode) {
             exitChangingMode()
         }
@@ -177,7 +178,7 @@ fun Game(
             scheduleDailyNotification(context, streakLevel)
             mainViewModel.generateRandomLettersForBoth()
         }
-        navigateUp()
+        viewModel.stopClockOnExit()
     }
 
     Box(
@@ -199,6 +200,7 @@ fun Game(
             ) {
                 IconButton(
                     onClick = {
+                        navigateUp()
                         if (isMode) {
                             exitChangingMode()
                         }
@@ -207,7 +209,7 @@ fun Game(
                             mainViewModel.generateRandomLettersForBoth()
                             scheduleDailyNotification(context, streakLevel)
                         }
-                        navigateUp()
+                        viewModel.stopClockOnExit()
                     },
                     modifier = Modifier
                         .size(33.dp)
@@ -433,6 +435,7 @@ fun Game(
         currentLevel = currentLevel,
         context = context,
         streakLevel = streakLevel,
+        stopClockOnExit= viewModel::stopClockOnExit
     )
 }
 
@@ -708,7 +711,7 @@ fun LetterBox(
 @Composable
 fun DisplayResults(
     score: () -> Int,
-    restart: KSuspendFunction1<Long, Unit>,
+    restart: KFunction1<Long, Unit>,
     time: () -> Long,
     navigateUp: () -> Unit,
     increaseScore: KFunction1<Int, Unit>,
@@ -731,6 +734,7 @@ fun DisplayResults(
     currentLevel: Int,
     streakLevel: Int,
     context: Context,
+    stopClockOnExit: KFunction0<Unit>,
 ) {
     AnimatedVisibility(
         visible = isVisible,
@@ -887,13 +891,14 @@ fun DisplayResults(
                             ) {
                                 TextButton(
                                     onClick = {
+                                        navigateUp()
                                         exitPressed()
                                         if (score() >= 1 && !isMode) {
                                             increaseScore(score())
                                             scheduleDailyNotification(context, streakLevel)
                                             viewModel.generateRandomLettersForBoth()
                                         }
-                                        navigateUp()
+                                        stopClockOnExit()
                                     },
                                     enabled = buttonsEnabled
                                 ) {

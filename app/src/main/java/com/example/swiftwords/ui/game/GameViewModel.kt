@@ -100,7 +100,7 @@ class GameViewModel(time: () -> Long) : ViewModel() {
     fun addTime() {
         _uiState.update { currentState ->
             currentState.copy(
-                currentTime = if ((currentState.currentTime + 2000) > currentState.totalTime) {
+                currentTime = if ((currentState.currentTime + 1500) > currentState.totalTime) {
                     currentState.totalTime
                 } else {
                     currentState.currentTime + 1500
@@ -112,7 +112,7 @@ class GameViewModel(time: () -> Long) : ViewModel() {
     fun removeTime() {
         _uiState.update { currentState ->
             currentState.copy(
-                currentTime = currentState.currentTime - 2000
+                currentTime = currentState.currentTime - 1500
             )
         }
     }
@@ -125,7 +125,7 @@ class GameViewModel(time: () -> Long) : ViewModel() {
         }
     }
 
-    suspend fun restartGame(newTime: Long) {
+    fun restartGame(newTime: Long) {
         // Cancel the existing job if it's still active
         clockJob?.cancel()
 
@@ -160,6 +160,17 @@ class GameViewModel(time: () -> Long) : ViewModel() {
             currentState.copy(
                 isTimerRunning = false
             )
+        }
+    }
+
+    fun stopClockOnExit() { //stops the clock so it doesn't run on background
+        viewModelScope.launch {
+            delay(2000L) //delay 2 seconds so it doesn't appear instant
+            _uiState.update { currentState ->
+                currentState.copy(
+                    isTimerRunning = false
+                )
+            }
         }
     }
 
