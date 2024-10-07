@@ -20,8 +20,6 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.DropdownMenu
@@ -133,7 +131,7 @@ fun SettingsPage(
             onNameChange = { newName = it },
             onSave = {
                 if ((newName.text.trim().length) in 2..15) {
-                    changeName(newName.text.trim( )) // Save the new name
+                    changeName(newName.text.trim()) // Save the new name
                     displayEdit = false // Close the dialog
                 }
             },
@@ -199,25 +197,24 @@ fun NewNamePopUp(
                     horizontalArrangement = Arrangement.Center
                 ) {
                     Spacer(modifier = Modifier.weight(1f))
-                    Button(
+                    TextButton(
                         onClick = onCancel,
-                        colors = ButtonDefaults.buttonColors(containerColor = color)
                     ) {
-                        Text(stringResource(R.string.cancel), color = Color.White)
+                        Text(stringResource(R.string.cancel), color = color)
                     }
                     Spacer(modifier = Modifier.weight(1f))
-                    Button(
+                    TextButton(
                         onClick = onSave,
                         enabled = newName.text.isNotEmpty() && (newName.text.trim().length) in 2..15,
-                        colors = ButtonDefaults.buttonColors(
-                            containerColor = if (newName.text.isNotEmpty() && (newName.text.trim().length) in 2..15) {
+                    ) {
+                        Text(
+                            stringResource(R.string.save),
+                            color = if (newName.text.isNotEmpty() && (newName.text.trim().length) in 2..15) {
                                 color
                             } else {
                                 Color.LightGray
                             }
                         )
-                    ) {
-                        Text(stringResource(R.string.save), color = Color.White)
                     }
                     Spacer(modifier = Modifier.weight(1f))
                 }
