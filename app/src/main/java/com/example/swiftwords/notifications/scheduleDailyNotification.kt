@@ -26,13 +26,13 @@ fun scheduleDailyNotification(context: Context, streakLevel: Int) {
     // get the time
     val notificationTime = Calendar.getInstance()
 
-    // Check if the current time is after 7 PM
-    if (currentTime.get(Calendar.HOUR_OF_DAY) > 19 ||
-        (currentTime.get(Calendar.HOUR_OF_DAY) == 19 && currentTime.get(Calendar.MINUTE) > 0)
+    // Check if the current time is after 5 PM
+    if (currentTime.get(Calendar.HOUR_OF_DAY) > 17 ||
+        (currentTime.get(Calendar.HOUR_OF_DAY) == 17 && currentTime.get(Calendar.MINUTE) > 0)
     ) {
-        // Set the notification time to 7 PM the next day
+        // Set the notification time to 5 PM the next day
         notificationTime.add(Calendar.DAY_OF_YEAR, 1)
-        notificationTime.set(Calendar.HOUR_OF_DAY, 19)
+        notificationTime.set(Calendar.HOUR_OF_DAY, 17)
         notificationTime.set(Calendar.MINUTE, 0)
         notificationTime.set(Calendar.SECOND, 0)
     } else {
@@ -43,9 +43,9 @@ fun scheduleDailyNotification(context: Context, streakLevel: Int) {
     // Calculate the delay
     var delay = notificationTime.timeInMillis - currentTime.timeInMillis
 
-    // If the delay is negative, so schedule it for 7 PM the next day?
+    // If the delay is negative, so schedule it for 5 PM the next day?
     if (delay < 0) {
-        notificationTime.add(Calendar.DAY_OF_YEAR, 1) // Schedule for tomorrow 7 PM
+        notificationTime.add(Calendar.DAY_OF_YEAR, 1) // Schedule for tomorrow 5 PM
         delay = notificationTime.timeInMillis - currentTime.timeInMillis
     }
 
