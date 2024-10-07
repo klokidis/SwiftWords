@@ -48,6 +48,7 @@ import androidx.compose.ui.unit.sp
 import com.example.swiftwords.R
 import com.example.swiftwords.data.DataSource
 import com.example.swiftwords.data.ItemDetailsUiState
+import com.example.swiftwords.ui.elements.brighten
 import kotlin.reflect.KFunction1
 
 @Composable
@@ -212,7 +213,7 @@ fun NewNamePopUp(
                             color = if (newName.text.isNotEmpty() && (newName.text.trim().length) in 2..15) {
                                 color
                             } else {
-                                Color.LightGray
+                                Color.DarkGray.brighten()
                             }
                         )
                     }
