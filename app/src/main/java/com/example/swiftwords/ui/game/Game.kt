@@ -1,7 +1,6 @@
 package com.example.swiftwords.ui.game
 
 import android.content.Context
-import android.util.Log
 import androidx.activity.compose.BackHandler
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.animateColorAsState
@@ -139,14 +138,11 @@ fun Game(
         {
             isLoading = true
             coroutineScope.launch {
-                Log.d("klok", setOfLetters.toString() + "  ")
                 isCorrect = viewModel.checkAnswer(
                     { textState },
                     wordList,
                     setOfLetters
                 )
-                Log.d("klok str", wordList.toString())
-                Log.d("klok set", setOfLetters.toString())
                 isLoading = false
                 textState = ""  // Reset textState after isCorrect is updated
                 when (isCorrect) {

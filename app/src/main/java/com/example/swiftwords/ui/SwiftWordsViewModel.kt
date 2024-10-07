@@ -1,7 +1,6 @@
 package com.example.swiftwords.ui
 
 import android.content.Context
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.Dispatchers
@@ -163,12 +162,9 @@ class SwiftWordsMainViewModel : ViewModel() {
             delay(5000)
             generateRandomLettersForMode()
             playChangeSound()
-            Log.d("klok", "running")
 
             elapsedTime += 5000 // Increment elapsed time by 5 seconds after each delay
         }
-
-        Log.d("klok", "Stopped after 40 seconds")
     }
 
 
