@@ -349,7 +349,7 @@ fun TopBar(
             )
 
             Text(
-                text = when {
+                text = when { // this for faster change since data takes a sec to change
                     areDatesMoreThanOneDaysApart(formattedStreakDate, formattedDateNow) -> {
                         "0"
                     }

@@ -341,24 +341,28 @@ fun <T> SettingMenu(
                     color = color
                 )
             }
-            DropdownMenu(
-                expanded = expanded,
-                modifier = Modifier.width(width),
-                onDismissRequest = { expanded = false }
+            MaterialTheme(
+                shapes = MaterialTheme.shapes.copy(extraSmall = RoundedCornerShape(16.dp))
             ) {
-                options.forEach { option ->
-                    DropdownMenuItem(
-                        onClick = {
-                            onOptionSelected(option)
-                            expanded = false
-                        },
-                        text = {
-                            Text(
-                                displayOption(option), // Show options without "seconds"
-                                style = MaterialTheme.typography.titleSmall.copy(fontSize = 17.sp)
-                            )
-                        }
-                    )
+                DropdownMenu(
+                    expanded = expanded,
+                    modifier = Modifier.width(width),
+                    onDismissRequest = { expanded = false }
+                ) {
+                    options.forEach { option ->
+                        DropdownMenuItem(
+                            onClick = {
+                                onOptionSelected(option)
+                                expanded = false
+                            },
+                            text = {
+                                Text(
+                                    displayOption(option), // Show options without "seconds"
+                                    style = MaterialTheme.typography.titleSmall.copy(fontSize = 17.sp)
+                                )
+                            }
+                        )
+                    }
                 }
             }
         }
