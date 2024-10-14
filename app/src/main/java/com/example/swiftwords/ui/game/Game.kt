@@ -131,7 +131,6 @@ fun Game(
     var isCorrect by rememberSaveable { mutableStateOf<Boolean?>(null) }
     var isLoading by rememberSaveable { mutableStateOf(false) }
     var onExitButtonPressed by rememberSaveable { mutableStateOf(false) }
-    var lastMessage by rememberSaveable { mutableStateOf("Please enter an answer.") }
     val scroll = rememberScrollState()
     val context = LocalContext.current
     val checkAnswer: () -> Unit = remember(setOfLetters) { // remember so it doesn't composition
@@ -188,140 +187,54 @@ fun Game(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Spacer(modifier = Modifier.padding(2.dp))
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth(),
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.Center
-            ) {
-                IconButton(
-                    onClick = {
-                        navigateUp()
-                        if (isMode) {
-                            exitChangingMode()
-                        }
-                        if (!onExitButtonPressed && gameUiState.score >= 1 && !isMode) {
-                            increaseScore(gameUiState.score)
-                            mainViewModel.generateRandomLettersForBoth()
-                            scheduleDailyNotification(context, streakLevel)
-                        }
-                        viewModel.stopClockOnExit()
-                    },
-                    modifier = Modifier
-                        .size(33.dp)
-                        .padding(start = 7.dp)
-                ) {
-                    Icon(
-                        imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                        contentDescription = stringResource(R.string.exit),
-                        modifier = Modifier.size(33.dp)
-                    )
-                }
-                // most values pass as () -> type to fix the unnecessary recomposition of the ui
-                if (!checked()) {
-                    Timer(
-                        { gameUiState.value },
-                        colorCode,
-                        modifier = Modifier
-                            .fillMaxWidth(0.9f)
-                    )
-                    TimerText(
-                        modifier = Modifier.weight(1f),
-                        currentTime = { gameUiState.currentTime },
-                        gameModeNumber = gameModeNumber
-                    )
-                } else {
-                    Spacer(modifier = Modifier.weight(1f))
-                }
-            }
+            UpperLevelUi(
+                navigateUp,
+                isMode,
+                exitChangingMode,
+                onExitButtonPressed,
+                { gameUiState.score },
+                { gameUiState.value },
+                { gameUiState.currentTime },
+                increaseScore,
+                mainViewModel,
+                context,
+                streakLevel,
+                viewModel,
+                checked,
+                colorCode,
+                gameModeNumber
+            )
+
             if (!checked()) {
                 Spacer(modifier = Modifier.padding(10.dp))
             } else {
                 Spacer(modifier = Modifier.weight(1f))
             }
-            if (!checked()) {
-                Column(
-                    verticalArrangement = Arrangement.Center,
-                    horizontalAlignment = Alignment.CenterHorizontally
-                ) {
-                    RowOfLetters(
-                        listOfLetters[0],
-                        listOfLetters[1],
-                        listOfLetters[2],
-                        colorCode
-                    ) { isCorrect }
-                    RowOfLetters(
-                        listOfLetters[3],
-                        listOfLetters[4],
-                        listOfLetters[5],
-                        colorCode
-                    ) { isCorrect }
-                    RowOfLetters(
-                        listOfLetters[6],
-                        listOfLetters[7],
-                        listOfLetters[8],
-                        colorCode
-                    ) { isCorrect }
-                }
-            } else {
-                Box(
-                    contentAlignment = Alignment.Center,
-                    modifier = Modifier
-                        .fillMaxSize(1f)
-                        .padding(bottom = 5.dp)
-                ) {
-                    TimerCircular(
-                        value = { gameUiState.value },
-                        currentTime = { gameUiState.currentTime },
-                        activeBarColor = DataSource().colorPairs[colorCode].darkColor,
-                        modifier = Modifier.size(230.dp)
-                    )
-                }
-            }
+
+            MiddleLevelUi(
+                checked,
+                listOfLetters,
+                colorCode,
+                { isCorrect }, //fixing recomposition
+                { gameUiState.value },
+                { gameUiState.currentTime },
+            )
+
             if (!checked()) {
                 Spacer(modifier = Modifier.padding(10.dp))
             } else {
                 Spacer(modifier = Modifier.weight(1f))
             }
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.Center,
-                modifier = Modifier.padding(start = 10.dp)
-            ) {
-                Text(
-                    text = when {
-                        isLoading -> lastMessage // Keep the same message while loading
-                        isCorrect == true -> {
-                            lastMessage = stringResource(R.string.correct)
-                            lastMessage
-                        }
 
-                        isCorrect == false -> {
-                            lastMessage = stringResource(R.string.incorrect)
-                            lastMessage
-                        }
+            OutPutMessage(
+                isLoading,
+                { isCorrect },
+                viewModel::calculatePassingScore,
+                currentLevel,
+                { gameUiState.score },
+                isMode
+            )
 
-                        else -> {
-                            lastMessage = stringResource(R.string.enter_answer)
-                            lastMessage
-                        }
-                    },
-                    style = MaterialTheme.typography.titleSmall.copy(
-                        fontSize = 17.sp,
-                        color = when (isCorrect) {
-                            true -> Color(0xFF006D2F)  // Correct color
-                            false -> Color(0xFF8D0C0C) // Incorrect color
-                            else -> Color.Unspecified  // Default color when isCorrect is null
-                        }
-                    )
-                )
-                Spacer(modifier = Modifier.padding(5.dp))
-                TextScore(
-                    currentPassingScore = viewModel.calculatePassingScore(currentLevel),
-                    score = { gameUiState.score },
-                    isMode = isMode
-                )
-            }
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -362,47 +275,13 @@ fun Game(
                 )
             }
             Spacer(modifier = Modifier.weight(1f))
-            Row(
-                modifier = Modifier
-                    .padding(3.dp)
-                    .fillMaxWidth(),
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.Center
 
-            ) {
-                Box(modifier = Modifier.size(50.dp)) {
-                    Checkbox(
-                        checked = checked(),
-                        onCheckedChange = {
-                            changeChecked()
-                        },
-                        modifier = Modifier.fillMaxSize(),
-                        colors = CheckboxDefaults.colors(
-                            checkedColor = DataSource().colorPairs[colorCode].darkColor,
-                        )
-                    )
-                }
-                Icon(
-                    modifier = Modifier.size(35.dp),
-                    imageVector = ImageVector.vectorResource(R.drawable.keyboard_24px),
-                    contentDescription = stringResource(R.string.keyboard),
-                )
-                Spacer(modifier = Modifier.weight(1f))
-                IconButton(
-                    onClick = {
-                        shuffle()
-                    },
-                    modifier = Modifier
-                        .size(35.dp)
-                ) {
-                    Icon(
-                        modifier = Modifier.fillMaxSize(),
-                        imageVector = ImageVector.vectorResource(R.drawable.shuffle_24px),
-                        contentDescription = stringResource(R.string.shuffle)
-                    )
-                }
-                Spacer(modifier = Modifier.padding(2.dp))
-            }
+            BottomButtons(
+                checked,
+                changeChecked,
+                colorCode,
+                shuffle
+            )
         }
     }
     DisplayResults(
@@ -431,8 +310,228 @@ fun Game(
         currentLevel = currentLevel,
         context = context,
         streakLevel = streakLevel,
-        stopClockOnExit= viewModel::stopClockOnExit
+        stopClockOnExit = viewModel::stopClockOnExit
     )
+}
+
+@Composable
+private fun BottomButtons(
+    checked: () -> Boolean,
+    changeChecked: KFunction0<Unit>,
+    colorCode: Int,
+    shuffle: KFunction0<Unit>
+) {
+    Row(
+        modifier = Modifier
+            .padding(3.dp)
+            .fillMaxWidth(),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.Center
+
+    ) {
+        Box(modifier = Modifier.size(50.dp)) {
+            Checkbox(
+                checked = checked(),
+                onCheckedChange = {
+                    changeChecked()
+                },
+                modifier = Modifier.fillMaxSize(),
+                colors = CheckboxDefaults.colors(
+                    checkedColor = DataSource().colorPairs[colorCode].darkColor,
+                )
+            )
+        }
+        Icon(
+            modifier = Modifier.size(35.dp),
+            imageVector = ImageVector.vectorResource(R.drawable.keyboard_24px),
+            contentDescription = stringResource(R.string.keyboard),
+        )
+        Spacer(modifier = Modifier.weight(1f))
+        IconButton(
+            onClick = {
+                shuffle()
+            },
+            modifier = Modifier
+                .size(35.dp)
+        ) {
+            Icon(
+                modifier = Modifier.fillMaxSize(),
+                imageVector = ImageVector.vectorResource(R.drawable.shuffle_24px),
+                contentDescription = stringResource(R.string.shuffle)
+            )
+        }
+        Spacer(modifier = Modifier.padding(2.dp))
+    }
+}
+
+@Composable
+private fun OutPutMessage(
+    isLoading: Boolean,
+    isCorrect: () -> Boolean?,
+    calculatePassingScore: KFunction1<Int, Int>,
+    currentLevel: Int,
+    score: () -> Int,
+    isMode: Boolean
+) {
+    var lastMessage by rememberSaveable { mutableStateOf("Please enter an answer.") }
+    Row(
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.Center,
+        modifier = Modifier.padding(start = 10.dp)
+    ) {
+        Text(
+            text = when {
+                isLoading -> lastMessage // Keep the same message while loading
+                isCorrect() == true -> {
+                    lastMessage = stringResource(R.string.correct)
+                    lastMessage
+                }
+
+                isCorrect() == false -> {
+                    lastMessage = stringResource(R.string.incorrect)
+                    lastMessage
+                }
+
+                else -> {
+                    lastMessage = stringResource(R.string.enter_answer)
+                    lastMessage
+                }
+            },
+            style = MaterialTheme.typography.titleSmall.copy(
+                fontSize = 17.sp,
+                color = when (isCorrect()) {
+                    true -> Color(0xFF006D2F)  // Correct color
+                    false -> Color(0xFF8D0C0C) // Incorrect color
+                    else -> Color.Unspecified  // Default color when isCorrect is null
+                }
+            )
+        )
+        Spacer(modifier = Modifier.padding(5.dp))
+        TextScore(
+            currentPassingScore = calculatePassingScore(currentLevel),
+            score = score,
+            isMode = isMode
+        )
+    }
+}
+
+@Composable
+private fun MiddleLevelUi(
+    checked: () -> Boolean,
+    listOfLetters: List<Char>,
+    colorCode: Int,
+    isCorrect: () -> Boolean?,
+    value: () -> Float,
+    currentTime: () -> Long
+) {
+    if (!checked()) {
+        Column(
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            RowOfLetters(
+                listOfLetters[0],
+                listOfLetters[1],
+                listOfLetters[2],
+                colorCode,
+                isCorrect
+            )
+            RowOfLetters(
+                listOfLetters[3],
+                listOfLetters[4],
+                listOfLetters[5],
+                colorCode,
+                isCorrect
+            )
+            RowOfLetters(
+                listOfLetters[6],
+                listOfLetters[7],
+                listOfLetters[8],
+                colorCode,
+                isCorrect
+            )
+        }
+    } else {
+        Box(
+            contentAlignment = Alignment.Center,
+            modifier = Modifier
+                .fillMaxSize(1f)
+                .padding(bottom = 5.dp)
+        ) {
+            TimerCircular(
+                value = value,
+                currentTime = currentTime,
+                activeBarColor = DataSource().colorPairs[colorCode].darkColor,
+                modifier = Modifier.size(230.dp)
+            )
+        }
+    }
+}
+
+@Composable
+private fun UpperLevelUi(
+    navigateUp: () -> Unit,
+    isMode: Boolean,
+    exitChangingMode: () -> Unit,
+    onExitButtonPressed: Boolean,
+    score: () -> Int,
+    value: () -> Float,
+    currentTime: () -> Long,
+    increaseScore: KFunction1<Int, Unit>,
+    mainViewModel: SwiftWordsMainViewModel,
+    context: Context,
+    streakLevel: Int,
+    viewModel: GameViewModel,
+    checked: () -> Boolean,
+    colorCode: Int,
+    gameModeNumber: Int
+) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth(),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.Center
+    ) {
+        IconButton(
+            onClick = {
+                navigateUp()
+                if (isMode) {
+                    exitChangingMode()
+                }
+                if (!onExitButtonPressed && score() >= 1 && !isMode) {
+                    increaseScore(score())
+                    mainViewModel.generateRandomLettersForBoth()
+                    scheduleDailyNotification(context, streakLevel)
+                }
+                viewModel.stopClockOnExit()
+            },
+            modifier = Modifier
+                .size(33.dp)
+                .padding(start = 7.dp)
+        ) {
+            Icon(
+                imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                contentDescription = stringResource(R.string.exit),
+                modifier = Modifier.size(33.dp)
+            )
+        }
+        // most values pass as () -> type to fix the unnecessary recomposition of the ui
+        if (!checked()) {
+            Timer(
+                value,
+                colorCode,
+                modifier = Modifier
+                    .fillMaxWidth(0.9f)
+            )
+            TimerText(
+                modifier = Modifier.weight(1f),
+                currentTime = currentTime,
+                gameModeNumber = gameModeNumber
+            )
+        } else {
+            Spacer(modifier = Modifier.weight(1f))
+        }
+    }
 }
 
 @Composable
