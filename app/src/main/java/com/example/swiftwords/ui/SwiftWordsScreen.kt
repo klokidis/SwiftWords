@@ -96,7 +96,7 @@ fun SwiftWordsApp(
         }
     }
 
-    LaunchedEffect(mainUiState.todayDate) { //every hour check the streak
+    LaunchedEffect(mainUiState.todayDate) { //every 12am check the streak
         dataViewmodel.checkAndResetStreak()
     }
 

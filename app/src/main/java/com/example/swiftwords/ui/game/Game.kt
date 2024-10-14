@@ -127,7 +127,7 @@ fun Game(
     val gameUiState by viewModel.uiState.collectAsState()
     val isTimerRunning by remember { derivedStateOf { gameUiState.isTimerRunning } }
     val coroutineScope = rememberCoroutineScope()
-    var textState by rememberSaveable { mutableStateOf("") }
+    var inputTextState by rememberSaveable { mutableStateOf("") }
     var isCorrect by rememberSaveable { mutableStateOf<Boolean?>(null) }
     var isLoading by rememberSaveable { mutableStateOf(false) }
     var onExitButtonPressed by rememberSaveable { mutableStateOf(false) }
@@ -138,12 +138,12 @@ fun Game(
             isLoading = true
             coroutineScope.launch {
                 isCorrect = viewModel.checkAnswer(
-                    { textState },
+                    { inputTextState },
                     wordList,
                     setOfLetters
                 )
                 isLoading = false
-                textState = ""  // Reset textState after isCorrect is updated
+                inputTextState = ""  // Reset textState after isCorrect is updated
                 when (isCorrect) {
                     true -> {
                         soundViewModel.playCorrectSound()
@@ -243,8 +243,8 @@ fun Game(
                 horizontalArrangement = Arrangement.Center
             ) {
                 CustomTextField(
-                    { textState },
-                    { newText -> textState = newText },
+                    { inputTextState },
+                    { newText -> inputTextState = newText },
                     checkAnswer,
                     { isTimerRunning },
                     modifier = Modifier.weight(1f),
@@ -266,12 +266,12 @@ fun Game(
                     listOfLetters = listOfLetters,
                     colorCode,
                     onClick = { newText ->
-                        textState =
+                        inputTextState =
                             newText.toString()
                     },
-                    word = textState,
+                    word = inputTextState,
                     onEnter = checkAnswer,
-                    onRemove = { textState = textState.dropLast(1) }
+                    onRemove = { inputTextState = inputTextState.dropLast(1) }
                 )
             }
             Spacer(modifier = Modifier.weight(1f))
@@ -297,7 +297,7 @@ fun Game(
         checkHighScore,
         isVisible = !isTimerRunning,
         restartGame = {
-            textState = ""
+            inputTextState = ""
             isCorrect = null
         },
         exitPressed = { onExitButtonPressed = true },
