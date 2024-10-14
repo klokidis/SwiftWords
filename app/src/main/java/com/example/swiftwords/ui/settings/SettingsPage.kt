@@ -47,23 +47,25 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.swiftwords.R
 import com.example.swiftwords.data.DataSource
-import com.example.swiftwords.data.ItemDetailsUiState
 import com.example.swiftwords.ui.elements.brighten
 import kotlin.reflect.KFunction1
 
 @Composable
 fun SettingsPage(
     navigateOut: () -> Unit,
-    data: ItemDetailsUiState,
     updateTime: KFunction1<Long, Unit>,
     changeCharacter: KFunction1<Boolean, Unit>,
     introduction: KFunction1<Boolean, Unit>,
     changeName: KFunction1<String, Unit>,
+    dataColor: Int,
+    nickname: String,
+    character: Boolean,
+    levelTime: Long,
 ) {
-    val color by remember { mutableStateOf(DataSource().colorPairs[data.userDetails.color].darkColor) }
+    val color by remember { mutableStateOf(DataSource().colorPairs[dataColor].darkColor) }
     val scrollState = rememberScrollState()
     var displayEdit by rememberSaveable { mutableStateOf(false) }
-    var newName by remember { mutableStateOf(TextFieldValue(data.userDetails.nickname)) }
+    var newName by remember { mutableStateOf(TextFieldValue(nickname)) }
 
     Box(
         modifier = Modifier.fillMaxSize()
@@ -105,7 +107,7 @@ fun SettingsPage(
                     stringResource(R.string.level_time),
                     listOf(35000L, 40000L, 50000L, 60000L, 70000L),
                     updateTime,
-                    data.userDetails.levelTime,
+                    levelTime,
                     color
                 )
                 Spacer(modifier = Modifier.padding(5.dp))
@@ -113,7 +115,7 @@ fun SettingsPage(
                     stringResource(R.string.change_character),
                     listOf(stringResource(R.string.female), stringResource(R.string.male)),
                     changeCharacter,
-                    data.userDetails.character,
+                    character,
                     color
                 )
                 Spacer(modifier = Modifier.padding(5.dp))

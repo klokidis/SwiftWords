@@ -85,9 +85,7 @@ import com.example.swiftwords.R
 import com.example.swiftwords.data.ColorPair
 import com.example.swiftwords.data.DataSource
 import com.example.swiftwords.notifications.scheduleDailyNotification
-import com.example.swiftwords.ui.SwiftWordsMainViewModel
 import com.example.swiftwords.ui.elements.KeyCards
-import com.example.swiftwords.ui.elements.SoundViewModel
 import com.example.swiftwords.ui.elements.brighten
 import com.example.swiftwords.ui.elements.darken
 import kotlinx.coroutines.delay
@@ -108,7 +106,6 @@ fun Game(
     increaseScore: KFunction1<Int, Unit>,
     viewModel: GameViewModel = viewModel(factory = GameViewModelFactory(newTime)),
     navigateUp: () -> Unit,
-    mainViewModel: SwiftWordsMainViewModel,
     checkHighScore: KSuspendFunction1<Int, Unit>,
     setOfLetters: Set<Char>,
     highScore: Int,
@@ -119,10 +116,12 @@ fun Game(
     shuffle: KFunction0<Unit>,
     exitChangingMode: () -> Unit,
     launchChanging: () -> Unit,
-    soundViewModel: SoundViewModel,
     currentLevel: Int,
     character: Boolean,
-    streakLevel: Int
+    streakLevel: Int,
+    playCorrectSound: KFunction0<Unit>,
+    playIncorrectSound: KFunction0<Unit>,
+    generateRandomLettersForBoth: KFunction0<Unit>
 ) {
     val gameUiState by viewModel.uiState.collectAsState()
     val isTimerRunning by remember { derivedStateOf { gameUiState.isTimerRunning } }
@@ -146,14 +145,14 @@ fun Game(
                 inputTextState = ""  // Reset textState after isCorrect is updated
                 when (isCorrect) {
                     true -> {
-                        soundViewModel.playCorrectSound()
+                        playCorrectSound()
                         if (gameModeNumber == 3 && isMode) {
                             viewModel.addTime()
                         }
                     }
 
                     else -> {
-                        soundViewModel.playIncorrectSound()
+                        playIncorrectSound()
                         if (gameModeNumber == 3 && isMode) {
                             viewModel.removeTime()
                         }
@@ -171,7 +170,7 @@ fun Game(
         if (!onExitButtonPressed && gameUiState.score >= 1 && !isMode) {
             increaseScore(gameUiState.score)
             scheduleDailyNotification(context, streakLevel)
-            mainViewModel.generateRandomLettersForBoth()
+            generateRandomLettersForBoth()
         }
         viewModel.stopClockOnExit()
     }
@@ -196,7 +195,7 @@ fun Game(
                 { gameUiState.value },
                 { gameUiState.currentTime },
                 increaseScore,
-                mainViewModel,
+                generateRandomLettersForBoth,
                 context,
                 streakLevel,
                 viewModel,
@@ -290,11 +289,11 @@ fun Game(
         newTime,
         navigateUp,
         increaseScore,
-        mainViewModel,
-        viewModel,
-        isMode,
-        highScore,
-        checkHighScore,
+        generateRandomLettersForBoth = generateRandomLettersForBoth,
+        calculatePassingScore = viewModel::calculatePassingScore,
+        isMode = isMode,
+        highScore = highScore,
+        checkHighScore = checkHighScore,
         isVisible = !isTimerRunning,
         restartGame = {
             inputTextState = ""
@@ -478,7 +477,7 @@ private fun UpperLevelUi(
     value: () -> Float,
     currentTime: () -> Long,
     increaseScore: KFunction1<Int, Unit>,
-    mainViewModel: SwiftWordsMainViewModel,
+    generateRandomLettersForBoth: KFunction0<Unit>,
     context: Context,
     streakLevel: Int,
     viewModel: GameViewModel,
@@ -500,7 +499,7 @@ private fun UpperLevelUi(
                 }
                 if (!onExitButtonPressed && score() >= 1 && !isMode) {
                     increaseScore(score())
-                    mainViewModel.generateRandomLettersForBoth()
+                    generateRandomLettersForBoth()
                     scheduleDailyNotification(context, streakLevel)
                 }
                 viewModel.stopClockOnExit()
@@ -811,8 +810,6 @@ fun DisplayResults(
     time: () -> Long,
     navigateUp: () -> Unit,
     increaseScore: KFunction1<Int, Unit>,
-    viewModel: SwiftWordsMainViewModel,
-    gameViewModel: GameViewModel,
     isMode: Boolean,
     highScore: Int,
     checkHighScore: suspend (Int) -> Unit,
@@ -831,6 +828,8 @@ fun DisplayResults(
     streakLevel: Int,
     context: Context,
     stopClockOnExit: KFunction0<Unit>,
+    generateRandomLettersForBoth: KFunction0<Unit>,
+    calculatePassingScore: KFunction1<Int, Int>,
 ) {
     AnimatedVisibility(
         visible = isVisible,
@@ -992,7 +991,7 @@ fun DisplayResults(
                                         if (score() >= 1 && !isMode) {
                                             increaseScore(score())
                                             scheduleDailyNotification(context, streakLevel)
-                                            viewModel.generateRandomLettersForBoth()
+                                            generateRandomLettersForBoth()
                                         }
                                         stopClockOnExit()
                                     },
@@ -1013,7 +1012,7 @@ fun DisplayResults(
                                         onClick = {
                                             restartGame()
                                             coroutineScope.launch {
-                                                viewModel.generateRandomLettersForBoth()
+                                               generateRandomLettersForBoth()
                                                 restart(time())
                                             }
                                             if (gameModeNumber == 2) {
@@ -1058,18 +1057,18 @@ fun DisplayResults(
                                             restartGame()
                                             scheduleDailyNotification(context, streakLevel)
                                             coroutineScope.launch {
-                                                viewModel.generateRandomLettersForBoth()
+                                                generateRandomLettersForBoth()
                                                 restart(time())
                                             }
                                         },
-                                        enabled = score() >= gameViewModel.calculatePassingScore(
+                                        enabled = score() >= calculatePassingScore(
                                             currentLevel
                                         ) && buttonsEnabled
                                     ) {
                                         Text(
                                             stringResource(R.string.next_level),
                                             style = MaterialTheme.typography.titleSmall,
-                                            color = if (buttonsEnabled && score() >= gameViewModel.calculatePassingScore(
+                                            color = if (buttonsEnabled && score() >= calculatePassingScore(
                                                     currentLevel
                                                 )
                                             ) {

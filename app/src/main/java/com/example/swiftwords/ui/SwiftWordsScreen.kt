@@ -243,8 +243,10 @@ fun SwiftWordsApp(
             }
             composable(route = SwiftWordsScreen.Choose.name) {
                 StartingScreen(
-                    dataViewmodel = dataViewmodel,
-                    soundViewModel = soundViewModel,
+                    updateInitialState = dataViewmodel::updateInitialState,
+                    updateName = dataViewmodel::updateName,
+                    updateCharacter = dataViewmodel::updateCharacter,
+                    playLetterSound = soundViewModel::playLetterSound,
                     nickName = dataUiState.userDetails.nickname
                 )
             }
@@ -320,32 +322,31 @@ fun SwiftWordsApp(
                 wordListState.value?.let { wordList ->
                     dataUiState.userDetails.let { data ->
                         Game(
-                            increaseStreak = dataViewmodel::increaseStreak,
                             dateNow = mainUiState.todayDate,
                             dataDate = { data.dailyDate },
                             newTime = { mainUiState.gameTime },
                             wordList = wordList,
-                            navigateUp = { navController.navigateUp() },
                             colorCode = data.color,
-                            increaseScore = dataViewmodel::increaseCurrentLevel,
-                            checkHighScore = dataViewmodel::checkHighScore,
-                            mainViewModel = viewModel,
                             isMode = mainUiState.isMode,
                             gameModeNumber = mainUiState.gameMode,
+                            increaseScore = dataViewmodel::increaseCurrentLevel,
+                            navigateUp = { navController.navigateUp() },
+                            checkHighScore = dataViewmodel::checkHighScore,
                             setOfLetters = if (mainUiState.isMode) {
                                 mainUiState.setOfLettersForMode
                             } else {
                                 mainUiState.setOfLettersForLevel
                             },
+                            highScore = data.highScore,
+                            checked = { data.checked },
+                            changeChecked = dataViewmodel::updateChecked,
+                            increaseStreak = dataViewmodel::increaseStreak,
                             listOfLetters = if (mainUiState.isMode) {
                                 mainUiState.listOfLettersForMode
                             } else {
                                 mainUiState.listOfLettersForLevel
                             },
                             shuffle = viewModel::shuffleLetters,
-                            highScore = data.highScore,
-                            checked = { data.checked },
-                            changeChecked = dataViewmodel::updateChecked,
                             exitChangingMode = {
                                 viewModel.changingLetters(
                                     false,
@@ -360,10 +361,12 @@ fun SwiftWordsApp(
                                     mainUiState.gameTime
                                 )
                             },
-                            soundViewModel = soundViewModel,
                             currentLevel = data.currentLevel,
                             character = data.character,
-                            streakLevel = data.streak
+                            streakLevel = data.streak,
+                            playCorrectSound = soundViewModel::playCorrectSound,
+                            playIncorrectSound = soundViewModel::playIncorrectSound,
+                            generateRandomLettersForBoth = viewModel::generateRandomLettersForBoth
                         )
                     }
                 } ?: run {
@@ -381,7 +384,10 @@ fun SwiftWordsApp(
                     updateTime = dataViewmodel::updateTime,
                     changeCharacter = dataViewmodel::updateCharacter,
                     changeName = dataViewmodel::updateName,
-                    data = dataUiState,
+                    dataColor = dataUiState.userDetails.color,
+                    nickname = dataUiState.userDetails.nickname,
+                    character = dataUiState.userDetails.character,
+                    levelTime = dataUiState.userDetails.levelTime,
                     navigateOut = { navController.navigateUp() },
                     introduction = dataViewmodel::updateInitialState
                 )

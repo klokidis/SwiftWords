@@ -59,17 +59,18 @@ import androidx.core.content.PermissionChecker
 import com.example.swiftwords.R
 import com.example.swiftwords.ui.AppViewModelProvider
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.example.swiftwords.data.GetDataViewModel
 import com.example.swiftwords.ui.elements.LetterByLetterText
-import com.example.swiftwords.ui.elements.SoundViewModel
 import kotlin.reflect.KFunction1
+import kotlin.reflect.KFunction2
 
 @Composable
 fun StartingScreen(
-    dataViewmodel: GetDataViewModel,
     viewModel: StartingViewmodel = viewModel(factory = AppViewModelProvider.Factory),
-    soundViewModel: SoundViewModel,
     nickName: String,
+    updateInitialState: KFunction1<Boolean, Unit>,
+    updateName: KFunction1<String, Unit>,
+    updateCharacter: KFunction1<Boolean, Unit>,
+    playLetterSound: KFunction2<Char, Float, Unit>,
 ) {
     val uiState by viewModel.uiState.collectAsState()
 
@@ -94,7 +95,7 @@ fun StartingScreen(
                                 requestPermissionLauncher.launch("android.permission.POST_NOTIFICATIONS")
                             }
                         }
-                        dataViewmodel.updateInitialState()
+                        updateInitialState(false)
                     } else {
                         if (uiState.dialogueState < 4) {
                             viewModel.increaseState()
@@ -110,7 +111,7 @@ fun StartingScreen(
                 CharacterChatTwo(
                     text = stringResource(R.string.dialog1),
                     characterIsMale = false,
-                    soundViewModel,
+                    playLetterSound,
                     characterOne = R.drawable.gekko,
                     characterTwo = R.drawable.sage
                 )
@@ -120,7 +121,7 @@ fun StartingScreen(
                 CharacterChat(
                     characterIsMale = true,
                     text = stringResource(R.string.dialog2),
-                    soundViewModel = soundViewModel
+                    playLetterSound = playLetterSound
                 )
             }
 
@@ -128,7 +129,7 @@ fun StartingScreen(
                 CharacterChatTwo(
                     text = stringResource(R.string.dialog3),
                     characterIsMale = false,
-                    soundViewModel,
+                    playLetterSound,
                     characterOne = R.drawable.fire_on,
                     characterTwo = R.drawable.sage
                 )
@@ -136,7 +137,7 @@ fun StartingScreen(
 
             4 -> {
                 ChooseCharacter(
-                    dataViewmodel::updateCharacter,
+                    updateCharacter,
                     uiState.character,
                     viewModel::updateCharacter
                 ) { viewModel.increaseState() }
@@ -146,7 +147,7 @@ fun StartingScreen(
                 SetNickName(
                     nickName = nickName,
                     chose = uiState.character,
-                    onSave = dataViewmodel::updateName,
+                    onSave = updateName,
                     onCancel = { viewModel.decreaseState() },
                     nextState = { viewModel.increaseState() },
                 )
@@ -156,7 +157,7 @@ fun StartingScreen(
                 CharacterChat(
                     characterIsMale = uiState.character != 0,
                     text = stringResource(R.string.dialog4),
-                    soundViewModel = soundViewModel
+                    playLetterSound = playLetterSound
                 )
             }
 
@@ -169,7 +170,7 @@ fun StartingScreen(
 
 
 @Composable
-fun CharacterChat(characterIsMale: Boolean, text: String, soundViewModel: SoundViewModel) {
+fun CharacterChat(characterIsMale: Boolean, text: String, playLetterSound: KFunction2<Char, Float, Unit>) {
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -211,7 +212,7 @@ fun CharacterChat(characterIsMale: Boolean, text: String, soundViewModel: SoundV
                 LetterByLetterText(
                     text,
                     characterIsMale = characterIsMale,
-                    soundViewModel = soundViewModel
+                    playLetterSound = playLetterSound
                 )
             }
         }
@@ -303,7 +304,7 @@ fun SetNickName(
 fun CharacterChatTwo(
     text: String,
     characterIsMale: Boolean,
-    soundViewModel: SoundViewModel,
+    playLetterSound: KFunction2<Char, Float, Unit>,
     characterOne: Int,
     characterTwo: Int
 ) {
@@ -355,7 +356,7 @@ fun CharacterChatTwo(
             ) {
                 LetterByLetterText(
                     text,
-                    soundViewModel = soundViewModel,
+                    playLetterSound = playLetterSound,
                     characterIsMale = characterIsMale
                 )
             }

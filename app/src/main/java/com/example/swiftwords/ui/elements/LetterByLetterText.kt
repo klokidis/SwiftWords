@@ -19,6 +19,7 @@ import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import kotlinx.coroutines.delay
+import kotlin.reflect.KFunction2
 
 
 @Composable
@@ -26,14 +27,14 @@ fun LetterByLetterText(
     text: String,
     modifier: Modifier = Modifier,
     delay: Long = 40L,
-    isDarkTheme: Boolean = isSystemInDarkTheme(),
-    soundViewModel: SoundViewModel,
     characterIsMale: Boolean,
+    playLetterSound: KFunction2<Char, Float, Unit>,
+    isDarkTheme: Boolean = isSystemInDarkTheme(),
 ) {
     var visibleText by rememberSaveable { mutableStateOf("") }
 
     LaunchedEffect(Unit) {
-        animateText(text, delay, characterIsMale, soundViewModel) { newText ->
+        animateText(text, delay, characterIsMale, playLetterSound) { newText ->
             visibleText = newText
         }
     }
@@ -63,7 +64,7 @@ private suspend fun animateText(
     text: String,
     timeDelay: Long,
     characterIsMale: Boolean,
-    soundViewModel: SoundViewModel,
+    playLetterSound: KFunction2<Char, Float, Unit>,
     callback: (String) -> Unit
 ) {
 
@@ -77,7 +78,7 @@ private suspend fun animateText(
         Log.d("kloki", currentLetter.toString())
 
         if (i % 2 == 0) {
-            soundViewModel.playLetterSound(currentLetter, pitch)
+            playLetterSound(currentLetter, pitch)
         }
         // Delay between each letter
         delay(timeDelay)
