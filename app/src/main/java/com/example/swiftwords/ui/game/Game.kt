@@ -1,6 +1,5 @@
 package com.example.swiftwords.ui.game
 
-import android.content.Context
 import androidx.activity.compose.BackHandler
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.animateColorAsState
@@ -196,7 +195,6 @@ fun Game(
                 { gameUiState.currentTime },
                 increaseScore,
                 generateRandomLettersForBoth,
-                context,
                 streakLevel,
                 viewModel,
                 checked,
@@ -307,7 +305,6 @@ fun Game(
         launchChanging = launchChanging,
         gameModeNumber = gameModeNumber,
         currentLevel = currentLevel,
-        context = context,
         streakLevel = streakLevel,
         stopClockOnExit = viewModel::stopClockOnExit
     )
@@ -478,13 +475,13 @@ private fun UpperLevelUi(
     currentTime: () -> Long,
     increaseScore: KFunction1<Int, Unit>,
     generateRandomLettersForBoth: KFunction0<Unit>,
-    context: Context,
     streakLevel: Int,
     viewModel: GameViewModel,
     checked: () -> Boolean,
     colorCode: Int,
     gameModeNumber: Int
 ) {
+    val context = LocalContext.current
     Row(
         modifier = Modifier
             .fillMaxWidth(),
@@ -826,11 +823,11 @@ fun DisplayResults(
     gameModeNumber: Int,
     currentLevel: Int,
     streakLevel: Int,
-    context: Context,
     stopClockOnExit: KFunction0<Unit>,
     generateRandomLettersForBoth: KFunction0<Unit>,
     calculatePassingScore: KFunction1<Int, Int>,
 ) {
+    val context = LocalContext.current
     AnimatedVisibility(
         visible = isVisible,
         enter = fadeIn(
