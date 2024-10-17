@@ -178,6 +178,19 @@ class SwiftWordsMainViewModel : ViewModel() {
         initialiseLists()
     }
 
+    fun generateRandomLettersForBothOnExit() { //has a delay so the new words don't appear before exiting screen
+        viewModelScope.launch {
+            delay(500)
+            _uiState.update { currentState ->
+                currentState.copy(
+                    setOfLettersForLevel = generateNewRandomLetters(),
+                    setOfLettersForMode = generateNewRandomLetters(),
+                )
+            }
+            initialiseLists()
+        }
+    }
+
     private fun generateNewRandomLetters(): Set<Char> {
         val vowels = mutableListOf('A', 'E', 'I', 'O')
         val consonants = ('A'..'Z').filter { it !in vowels }.toMutableList()

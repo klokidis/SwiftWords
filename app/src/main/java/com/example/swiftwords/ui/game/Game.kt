@@ -120,7 +120,8 @@ fun Game(
     streakLevel: Int,
     playCorrectSound: KFunction0<Unit>,
     playIncorrectSound: KFunction0<Unit>,
-    generateRandomLettersForBoth: KFunction0<Unit>
+    generateRandomLettersForBothOnExit: KFunction0<Unit>,
+    generateRandomLettersForMode: KFunction0<Unit>
 ) {
     val gameUiState by viewModel.uiState.collectAsState()
     val isTimerRunning by remember { derivedStateOf { gameUiState.isTimerRunning } }
@@ -169,7 +170,7 @@ fun Game(
         if (!onExitButtonPressed && gameUiState.score >= 1 && !isMode) {
             increaseScore(gameUiState.score)
             scheduleDailyNotification(context, streakLevel)
-            generateRandomLettersForBoth()
+            generateRandomLettersForBothOnExit()
         }
         viewModel.stopClockOnExit()
     }
@@ -194,7 +195,7 @@ fun Game(
                 { gameUiState.value },
                 { gameUiState.currentTime },
                 increaseScore,
-                generateRandomLettersForBoth,
+                generateRandomLettersForBothOnExit,
                 streakLevel,
                 viewModel,
                 checked,
@@ -287,7 +288,8 @@ fun Game(
         newTime,
         navigateUp,
         increaseScore,
-        generateRandomLettersForBoth = generateRandomLettersForBoth,
+        generateRandomLettersForBoth = generateRandomLettersForBothOnExit,
+        generateRandomLettersForMode = generateRandomLettersForMode,
         calculatePassingScore = viewModel::calculatePassingScore,
         isMode = isMode,
         highScore = highScore,
@@ -825,6 +827,7 @@ fun DisplayResults(
     streakLevel: Int,
     stopClockOnExit: KFunction0<Unit>,
     generateRandomLettersForBoth: KFunction0<Unit>,
+    generateRandomLettersForMode: KFunction0<Unit>,
     calculatePassingScore: KFunction1<Int, Int>,
 ) {
     val context = LocalContext.current
@@ -1009,7 +1012,7 @@ fun DisplayResults(
                                         onClick = {
                                             restartGame()
                                             coroutineScope.launch {
-                                               generateRandomLettersForBoth()
+                                                generateRandomLettersForMode()
                                                 restart(time())
                                             }
                                             if (gameModeNumber == 2) {

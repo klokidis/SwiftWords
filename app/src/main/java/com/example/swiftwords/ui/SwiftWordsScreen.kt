@@ -366,7 +366,8 @@ fun SwiftWordsApp(
                             streakLevel = data.streak,
                             playCorrectSound = soundViewModel::playCorrectSound,
                             playIncorrectSound = soundViewModel::playIncorrectSound,
-                            generateRandomLettersForBoth = viewModel::generateRandomLettersForBoth
+                            generateRandomLettersForMode = viewModel::generateRandomLettersForMode,
+                            generateRandomLettersForBothOnExit = viewModel::generateRandomLettersForBothOnExit
                         )
                     }
                 } ?: run {
