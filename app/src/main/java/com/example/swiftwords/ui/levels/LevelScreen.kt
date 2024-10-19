@@ -358,6 +358,7 @@ fun TopBar(
                         streak.toString()
                     }
                 },
+                maxLines = 1, // Restrict to a single line to fix overflow when menu opens
                 modifier = Modifier
                     .padding(start = 3.dp, bottom = 3.dp),
                 style = MaterialTheme.typography.titleMedium.copy(fontSize = 24.sp)
