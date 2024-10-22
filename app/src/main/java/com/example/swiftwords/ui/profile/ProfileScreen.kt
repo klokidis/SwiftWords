@@ -8,7 +8,6 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
@@ -77,7 +76,7 @@ fun ProfileScreen(
                     letterSpacing = 1.5.sp
                 )
             )
-            Spacer(modifier = Modifier.padding(10.dp))
+            Spacer(modifier = Modifier.padding(13.dp))
             Scores(currentLevel, highScore, streak)
         }
         IconButton(
@@ -117,12 +116,11 @@ fun TextScores(content: String, score: String) {
     ) {
         Text(
             text = score,
-            style = MaterialTheme.typography.titleSmall.copy(fontSize = 30.sp),
-            modifier = Modifier.offset(y = 6.dp)
+            style = MaterialTheme.typography.titleSmall.copy(fontSize = 25.sp)
         )
         Text(
             text = content,
-            style = MaterialTheme.typography.titleSmall.copy(fontSize = 20.sp)
+            style = MaterialTheme.typography.titleSmall.copy(fontSize = 25.sp)
         )
     }
 }
