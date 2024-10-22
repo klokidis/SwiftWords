@@ -116,11 +116,11 @@ fun TextScores(content: String, score: String) {
     ) {
         Text(
             text = score,
-            style = MaterialTheme.typography.titleSmall.copy(fontSize = 25.sp)
+            style = MaterialTheme.typography.titleSmall.copy(fontSize = 30.sp)
         )
         Text(
             text = content,
-            style = MaterialTheme.typography.titleSmall.copy(fontSize = 25.sp)
+            style = MaterialTheme.typography.titleSmall.copy(fontSize = 20.sp)
         )
     }
 }
