@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
@@ -42,9 +43,9 @@ fun ProfileScreen(
     navigate: () -> Unit
 ) {
     val scrollState = rememberScrollState()
-    val painter = if(character){
+    val painter = if (character) {
         painterResource(id = R.drawable.cypher)//true for f
-    }else{
+    } else {
         painterResource(id = R.drawable.controller)//false for m
     }
     Box(
@@ -76,7 +77,7 @@ fun ProfileScreen(
                     letterSpacing = 1.5.sp
                 )
             )
-            Spacer(modifier = Modifier.padding(14.dp))
+            Spacer(modifier = Modifier.padding(10.dp))
             Scores(currentLevel, highScore, streak)
         }
         IconButton(
@@ -85,7 +86,7 @@ fun ProfileScreen(
                 .align(Alignment.TopEnd)
         ) {
             Icon(
-                imageVector = Icons.Default.Settings , // Use the appropriate icon
+                imageVector = Icons.Default.Settings, // Use the appropriate icon
                 contentDescription = stringResource(id = R.string.settings),
                 modifier = Modifier.size(28.dp)
             )
@@ -100,29 +101,28 @@ fun Scores(currentLevel: Int, highScore: Int, streak: Int) {
             .fillMaxWidth()
             .padding(start = 7.dp),
         verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.Center
+        horizontalArrangement = Arrangement.SpaceEvenly
     ) {
         TextScores(stringResource(R.string.level_profile), currentLevel.toString())
-        Spacer(modifier = Modifier.padding(17.dp))
         TextScores(stringResource(R.string.high_score), highScore.toString())
-        Spacer(modifier = Modifier.padding(17.dp))
         TextScores(stringResource(R.string.streak), streak.toString())
     }
 }
 
 @Composable
-fun TextScores(content: String,score: String){
+fun TextScores(content: String, score: String) {
     Column(
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Text(
-            text = content,
-            style = MaterialTheme.typography.titleSmall.copy(fontSize = 24.sp)
+            text = score,
+            style = MaterialTheme.typography.titleSmall.copy(fontSize = 30.sp),
+            modifier = Modifier.offset(y = 6.dp)
         )
         Text(
-            text = score,
-            style = MaterialTheme.typography.titleMedium.copy(fontSize = 26.sp)
+            text = content,
+            style = MaterialTheme.typography.titleSmall.copy(fontSize = 20.sp)
         )
     }
 }
