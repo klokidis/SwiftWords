@@ -31,9 +31,9 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -112,8 +112,8 @@ fun StartingScreen(
                     text = stringResource(R.string.dialog1),
                     characterIsMale = false,
                     playLetterSound,
-                    characterOne = R.drawable.gekko,
-                    characterTwo = R.drawable.sage
+                    characterOne = R.drawable.image0,
+                    characterTwo = R.drawable.girl_v1
                 )
             }
 
@@ -131,7 +131,7 @@ fun StartingScreen(
                     characterIsMale = false,
                     playLetterSound,
                     characterOne = R.drawable.fire_on,
-                    characterTwo = R.drawable.sage
+                    characterTwo = R.drawable.girl_v1
                 )
             }
 
@@ -185,9 +185,9 @@ fun CharacterChat(characterIsMale: Boolean, text: String, playLetterSound: KFunc
             Image(
                 painter = painterResource(
                     id = if (characterIsMale) {
-                        R.drawable.gekko
+                        R.drawable.image0
                     } else {
-                        R.drawable.sage
+                        R.drawable.girl_v1
                     }
                 ),
                 modifier = Modifier
@@ -231,9 +231,9 @@ fun SetNickName(
 ) {
     var textState by rememberSaveable { mutableStateOf(nickName) }
     val painter = if (chose == 1) {
-        painterResource(id = R.drawable.cypher)
+        painterResource(id = R.drawable.image0)
     } else {
-        painterResource(id = R.drawable.sage)
+        painterResource(id = R.drawable.girl_v1)
     }
     val scrollState = rememberScrollState()
 
@@ -255,7 +255,7 @@ fun SetNickName(
                 .clip(CircleShape)
         )
         Spacer(modifier = Modifier.padding(20.dp))
-        TextField(
+        OutlinedTextField(
             value = textState,
             onValueChange = { textState = it },
             label = { Text(stringResource(R.string.give_name)) },
@@ -272,6 +272,7 @@ fun SetNickName(
                     }
                 }
             ),
+            shape = RoundedCornerShape(20.dp)
         )
         Spacer(modifier = Modifier.weight(1f))
         Row(
@@ -396,7 +397,7 @@ fun ChooseCharacter(
         )
         Spacer(modifier = Modifier.padding(20.dp))
         CompleteCard(
-            R.drawable.sage,
+            R.drawable.girl_v1,
             stringResource(R.string.f_name),
             character == 0,
             uiStateUpdate,
@@ -404,7 +405,7 @@ fun ChooseCharacter(
         )
         Spacer(modifier = Modifier.padding(10.dp))
         CompleteCard(
-            R.drawable.gekko,
+            R.drawable.image0,
             stringResource(R.string.m_name),
             character == 1,
             uiStateUpdate,
