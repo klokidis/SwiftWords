@@ -133,12 +133,11 @@ fun SettingsPage(
             newName = newName,
             onNameChange = { newName = it },
             onSave = {
-                if ((newName.text.trim().length) in 2..15) {
-                    changeName(newName.text.trim()) // Save the new name
-                    displayEdit = false // Close the dialog
-                }
+                changeName(newName.text.trim()) // Save the new name
+                displayEdit = false // Close the dialog
             },
             onCancel = { displayEdit = false },
+            isError = (newName.text.isBlank() || (newName.text.trim().length) !in 2..15),
             color = color
         )
     }
@@ -150,6 +149,7 @@ fun NewNamePopUp(
     onNameChange: (TextFieldValue) -> Unit,
     onSave: () -> Unit,
     onCancel: () -> Unit,
+    isError: Boolean,
     color: Color,
     isDarkTheme: Boolean = isSystemInDarkTheme(),
 ) {
@@ -190,8 +190,13 @@ fun NewNamePopUp(
                     singleLine = true,
                     keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
                     keyboardActions = KeyboardActions(
-                        onDone = { onSave() }
+                        onDone = {
+                            if (!isError) {
+                                onSave()
+                            }
+                        }
                     ),
+                    isError = isError
                 )
 
                 Spacer(modifier = Modifier.padding(8.dp))
@@ -208,11 +213,11 @@ fun NewNamePopUp(
                     Spacer(modifier = Modifier.weight(1f))
                     TextButton(
                         onClick = onSave,
-                        enabled = newName.text.isNotEmpty() && (newName.text.trim().length) in 2..15,
+                        enabled = !isError,
                     ) {
                         Text(
                             stringResource(R.string.save),
-                            color = if (newName.text.isNotEmpty() && (newName.text.trim().length) in 2..15) {
+                            color = if (!isError) {
                                 color
                             } else {
                                 Color.DarkGray.brighten()
