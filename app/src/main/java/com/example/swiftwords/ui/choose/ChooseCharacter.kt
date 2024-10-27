@@ -229,6 +229,7 @@ fun SetNickName(
     nextState: () -> Unit,
     nickName: String
 ) {
+    var isError by remember { mutableStateOf(false) }
     var textState by rememberSaveable { mutableStateOf(nickName) }
     val painter = if (chose == 1) {
         painterResource(id = R.drawable.image0)
@@ -257,7 +258,10 @@ fun SetNickName(
         Spacer(modifier = Modifier.padding(20.dp))
         OutlinedTextField(
             value = textState,
-            onValueChange = { textState = it },
+            onValueChange = {
+                textState = it
+                isError = textState.isBlank() || textState.trim().length !in 2..15
+            },
             label = { Text(stringResource(R.string.give_name)) },
             modifier = Modifier
                 .fillMaxWidth()
@@ -266,12 +270,13 @@ fun SetNickName(
             keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
             keyboardActions = KeyboardActions(
                 onDone = {
-                    if (textState.isNotBlank() && ((textState.trim().length) in 2..15)) {
+                    if (!isError) {
                         onSave(textState.trim())
                         nextState()
                     }
                 }
             ),
+            isError = isError,
             shape = RoundedCornerShape(20.dp)
         )
         Spacer(modifier = Modifier.weight(1f))
@@ -288,12 +293,12 @@ fun SetNickName(
             Spacer(modifier = Modifier.weight(1f))
             Button(
                 onClick = {
-                    if (textState.isNotBlank() && ((textState.trim().length) in 2..15)) {
+                    if (!isError) {
                         onSave(textState.trim())
                         nextState()
                     }
                 },
-                enabled = textState.isNotBlank() && ((textState.trim().length) in 2..15)
+                enabled = !isError
             ) {
                 Text(stringResource(R.string.save))
             }
