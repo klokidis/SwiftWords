@@ -131,7 +131,7 @@ fun StartingScreen(
                     characterIsMale = false,
                     playLetterSound,
                     characterOne = R.drawable.fire_on,
-                    characterTwo = R.drawable.girl_v1
+                    characterTwo = R.drawable.transparent
                 )
             }
 
@@ -187,7 +187,7 @@ fun CharacterChat(characterIsMale: Boolean, text: String, playLetterSound: KFunc
                     id = if (characterIsMale) {
                         R.drawable.image0
                     } else {
-                        R.drawable.girl_v1
+                        R.drawable.transparent
                     }
                 ),
                 modifier = Modifier
