@@ -112,8 +112,8 @@ fun StartingScreen(
                     text = stringResource(R.string.dialog1),
                     characterIsMale = false,
                     playLetterSound,
-                    characterOne = R.drawable.image0,
-                    characterTwo = R.drawable.girl_v1
+                    characterOne = R.drawable.f1,
+                    characterTwo = R.drawable.transparent
                 )
             }
 
@@ -131,7 +131,7 @@ fun StartingScreen(
                     characterIsMale = false,
                     playLetterSound,
                     characterOne = R.drawable.fire_on,
-                    characterTwo = R.drawable.transparent
+                    characterTwo = R.drawable.f1
                 )
             }
 
@@ -185,7 +185,7 @@ fun CharacterChat(characterIsMale: Boolean, text: String, playLetterSound: KFunc
             Image(
                 painter = painterResource(
                     id = if (characterIsMale) {
-                        R.drawable.image0
+                        R.drawable.f1
                     } else {
                         R.drawable.transparent
                     }

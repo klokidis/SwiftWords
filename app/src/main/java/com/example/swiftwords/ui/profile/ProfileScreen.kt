@@ -43,9 +43,9 @@ fun ProfileScreen(
 ) {
     val scrollState = rememberScrollState()
     val painter = if (character) {
-        painterResource(id = R.drawable.cypher)//true for f
+        painterResource(id = R.drawable.f1_short)//true for f
     } else {
-        painterResource(id = R.drawable.controller)//false for m
+        painterResource(id = R.drawable.f1_short)//false for m
     }
     Box(
         modifier = Modifier
