@@ -168,7 +168,7 @@ class SwiftWordsMainViewModel : ViewModel() {
     }
 
 
-    fun generateRandomLettersForBoth() {
+    private fun generateRandomLettersForBoth() {
         _uiState.update { currentState ->
             currentState.copy(
                 setOfLettersForLevel = generateNewRandomLetters(),
