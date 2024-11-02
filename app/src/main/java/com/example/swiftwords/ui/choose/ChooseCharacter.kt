@@ -229,8 +229,8 @@ fun SetNickName(
     nextState: () -> Unit,
     nickName: String
 ) {
-    var isError by remember { mutableStateOf(true) }
     var textState by rememberSaveable { mutableStateOf(nickName) }
+    var isError by remember { mutableStateOf(textState.isBlank() || textState.trim().length !in 2..15) }
     val painter = if (chose == 1) {
         painterResource(id = R.drawable.image0)
     } else {
