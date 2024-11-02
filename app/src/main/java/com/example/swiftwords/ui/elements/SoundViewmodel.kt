@@ -23,7 +23,6 @@ class SoundViewModel(application: Application) : AndroidViewModel(application) {
         soundIds["correct"] = soundPool.load(application, R.raw.jsfxr, 1)
         soundIds["incorrect"] = soundPool.load(application, R.raw.falsesound, 1)
         soundIds["change"] = soundPool.load(application, R.raw.change, 1)
-        soundIds["bip"] = soundPool.load(application, R.raw.bip, 1)
 
         // Load letter sounds (A-Z) directly using R.raw
         soundIds["a"] = soundPool.load(application, R.raw.a, 1)
@@ -88,13 +87,6 @@ class SoundViewModel(application: Application) : AndroidViewModel(application) {
         val volume = getCurrentVolume()
         if (volume > 0f && mainVolume != 0f) {
             soundPool.play(soundIds["change"]!!, volume, volume, 1, 0, 1f)
-        }
-    }
-
-    fun playBipSound(pitch: Float) {
-        val volume = getCurrentVolume()
-        if (volume > 0f && mainVolume != 0f) {
-            soundPool.play(soundIds["bip"]!!, volume, volume, 1, 0, pitch)
         }
     }
 
