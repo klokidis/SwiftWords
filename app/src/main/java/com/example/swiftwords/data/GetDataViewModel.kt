@@ -197,7 +197,7 @@ class GetDataViewModel(private val userRepository: UserRepository) : ViewModel()
         }
     }
 
-    suspend fun checkHighScore(thisScore: Int) {
+    fun checkHighScore(thisScore: Int) {
         viewModelScope.launch {
             val currentUser = getDataUiState.value.userDetails.toUser()
             if (thisScore > currentUser.highScore) {

@@ -362,7 +362,6 @@ fun SwiftWordsApp(
                                 )
                             },
                             currentLevel = data.currentLevel,
-                            character = data.character,
                             streakLevel = data.streak,
                             playCorrectSound = soundViewModel::playCorrectSound,
                             playIncorrectSound = soundViewModel::playIncorrectSound,

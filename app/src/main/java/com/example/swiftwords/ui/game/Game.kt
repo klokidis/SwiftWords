@@ -91,7 +91,6 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlin.reflect.KFunction0
 import kotlin.reflect.KFunction1
-import kotlin.reflect.KSuspendFunction1
 
 @Composable
 fun Game(
@@ -105,7 +104,7 @@ fun Game(
     increaseScore: KFunction1<Int, Unit>,
     viewModel: GameViewModel = viewModel(factory = GameViewModelFactory(newTime)),
     navigateUp: () -> Unit,
-    checkHighScore: KSuspendFunction1<Int, Unit>,
+    checkHighScore: KFunction1<Int, Unit>,
     setOfLetters: Set<Char>,
     highScore: Int,
     checked: () -> Boolean,
@@ -116,7 +115,6 @@ fun Game(
     exitChangingMode: () -> Unit,
     launchChanging: () -> Unit,
     currentLevel: Int,
-    character: Boolean,
     streakLevel: Int,
     playCorrectSound: KFunction0<Unit>,
     playIncorrectSound: KFunction0<Unit>,
@@ -811,7 +809,7 @@ fun DisplayResults(
     increaseScore: KFunction1<Int, Unit>,
     isMode: Boolean,
     highScore: Int,
-    checkHighScore: suspend (Int) -> Unit,
+    checkHighScore: KFunction1<Int, Unit>,
     isVisible: Boolean,
     restartGame: () -> Unit,
     exitPressed: () -> Unit,
@@ -890,9 +888,7 @@ fun DisplayResults(
                         )
                         TextButton(
                             onClick = {
-                                coroutineScope.launch {
-                                    checkHighScore(score())
-                                }
+                                checkHighScore(score())
                             },
                             enabled = buttonsEnabled
                         ) {
