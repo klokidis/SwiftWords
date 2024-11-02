@@ -229,7 +229,7 @@ fun SetNickName(
     nextState: () -> Unit,
     nickName: String
 ) {
-    var isError by remember { mutableStateOf(false) }
+    var isError by remember { mutableStateOf(true) }
     var textState by rememberSaveable { mutableStateOf(nickName) }
     val painter = if (chose == 1) {
         painterResource(id = R.drawable.image0)
@@ -276,7 +276,7 @@ fun SetNickName(
                     }
                 }
             ),
-            isError = isError,
+            isError = textState.trim().length > 15,
             shape = RoundedCornerShape(20.dp)
         )
         Spacer(modifier = Modifier.weight(1f))
