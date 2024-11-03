@@ -7,7 +7,6 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
-import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -19,7 +18,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -45,10 +43,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
@@ -170,7 +166,11 @@ fun StartingScreen(
 
 
 @Composable
-fun CharacterChat(characterIsMale: Boolean, text: String, playLetterSound: KFunction2<Char, Float, Unit>) {
+fun CharacterChat(
+    characterIsMale: Boolean,
+    text: String,
+    playLetterSound: KFunction2<Char, Float, Unit>
+) {
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -400,18 +400,15 @@ fun ChooseCharacter(
             style = MaterialTheme.typography.titleLarge.copy(fontSize = 45.sp),
             modifier = Modifier.padding(start = 10.dp)
         )
-        Spacer(modifier = Modifier.padding(20.dp))
-        CompleteCard(
+        CharacterCard(
             R.drawable.f1,
-            stringResource(R.string.f_name),
             character == 0,
             uiStateUpdate,
             character = 0
         )
-        Spacer(modifier = Modifier.padding(10.dp))
-        CompleteCard(
+        Spacer(modifier = Modifier.padding(5.dp))
+        CharacterCard(
             R.drawable.male,
-            stringResource(R.string.m_name),
             character == 1,
             uiStateUpdate,
             character = 1
@@ -441,88 +438,47 @@ fun ChooseCharacter(
 }
 
 @Composable
-fun CompleteCard(
+fun CharacterCard(
     imageResourceId: Int,
-    name: String,
     selected: Boolean,
     onClicked: KFunction1<Int, Unit>,
-    character: Int
-) {
-    Box(
-        modifier = Modifier.height(dimensionResource(id = R.dimen.artist_box))
-    ) {
-        CharacterCard(
-            onClicked,
-            name,
-            selected,
-            character
-        )
-        Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(200.dp)
-                .padding(end = 30.dp, bottom = 19.dp),
-            contentAlignment = Alignment.TopEnd
-        ) {
-            Image(
-                painter = painterResource(imageResourceId),
-                contentDescription = null, //no need
-                modifier = Modifier
-                    .fillMaxHeight()
-                    .width(150.dp),
-                contentScale = ContentScale.Fit
-            )
-        }
-    }
-}
-
-@Composable
-fun CharacterCard(
-    onButtonCard: KFunction1<Int, Unit>,
-    name: String,
-    selected: Boolean,
     character: Int,
-    isDarkTheme: Boolean = isSystemInDarkTheme(),
 ) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
             .padding(start = 10.dp, top = 30.dp, end = 10.dp)
-            .height(150.dp)
-            .shadow(2.dp, shape = RoundedCornerShape(16.dp))
+            .height(250.dp)
             .clip(MaterialTheme.shapes.medium)
-            .clickable {
-            },
-        onClick = { onButtonCard(character) },
+            .clickable(
+                onClick = {
+                    onClicked(character)
+                },
+                indication = null, // Removes the click effect
+                interactionSource = remember { MutableInteractionSource() }, // Required for the clickable modifier
+            ),
         colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.inverseOnSurface,
+            containerColor = MaterialTheme.colorScheme.background,
         ),
-        elevation = CardDefaults.cardElevation(
-            defaultElevation = 5.dp,
-        )
     ) {
         Row(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.Center,
             modifier = Modifier
                 .fillMaxHeight()
+                .fillMaxWidth()
                 .padding(start = 10.dp)
         ) {
-            RadioButton(selected = selected, onClick = { onButtonCard(character) })
-            Text(
-                text = name,
+            RadioButton(selected = selected, onClick = { onClicked(character) })
+            Spacer(modifier = Modifier.weight(1f))
+            Image(
+                painter = painterResource(imageResourceId),
+                contentDescription = null, //no need
                 modifier = Modifier
-                    .padding(
-                        start = 10.dp,
-                        end = 120.dp
-                    ),
-                style = MaterialTheme.typography.bodyMedium,
-                color = if (isDarkTheme) {
-                    Color.White
-                } else {
-                    Color.Black
-                }
+                    .fillMaxHeight(),
+                contentScale = ContentScale.Fit
             )
+            Spacer(modifier = Modifier.weight(1f))
         }
     }
 }
