@@ -388,7 +388,7 @@ fun ChooseCharacter(
         verticalArrangement = Arrangement.Top,
         horizontalAlignment = Alignment.Start,
     ) {
-        Spacer(modifier = Modifier.padding(15.dp))
+        Spacer(modifier = Modifier.weight(0.5f))
         Text(
             text = stringResource(id = R.string.choose),
             style = MaterialTheme.typography.titleLarge.copy(fontSize = 45.sp),
@@ -400,23 +400,24 @@ fun ChooseCharacter(
             style = MaterialTheme.typography.titleLarge.copy(fontSize = 45.sp),
             modifier = Modifier.padding(start = 10.dp)
         )
+        Spacer(modifier = Modifier.weight(1f))
         CharacterCard(
             R.drawable.f1,
             character == 0,
             uiStateUpdate,
             character = 0
         )
-        Spacer(modifier = Modifier.padding(5.dp))
+        Spacer(modifier = Modifier.padding(10.dp))
         CharacterCard(
             R.drawable.male,
             character == 1,
             uiStateUpdate,
             character = 1
         )
-        Spacer(modifier = Modifier.weight(0.5f))
+        Spacer(modifier = Modifier.weight(1f))
         Row(
             modifier = Modifier
-                .padding(25.dp)
+                .padding(end = 25.dp)
                 .fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.Center
@@ -447,7 +448,7 @@ fun CharacterCard(
     Card(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(start = 10.dp, top = 30.dp, end = 10.dp)
+            .padding(start = 10.dp, end = 10.dp, bottom = 5.dp)
             .height(250.dp)
             .clip(MaterialTheme.shapes.medium)
             .clickable(
