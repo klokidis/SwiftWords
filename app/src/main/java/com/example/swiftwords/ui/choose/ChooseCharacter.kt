@@ -15,7 +15,6 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
@@ -388,7 +387,7 @@ fun ChooseCharacter(
         verticalArrangement = Arrangement.Top,
         horizontalAlignment = Alignment.Start,
     ) {
-        Spacer(modifier = Modifier.weight(0.5f))
+        Spacer(modifier = Modifier.padding(5.dp))
         Text(
             text = stringResource(id = R.string.choose),
             style = MaterialTheme.typography.titleLarge.copy(fontSize = 45.sp),
@@ -400,21 +399,23 @@ fun ChooseCharacter(
             style = MaterialTheme.typography.titleLarge.copy(fontSize = 45.sp),
             modifier = Modifier.padding(start = 10.dp)
         )
-        Spacer(modifier = Modifier.weight(1f))
+        Spacer(modifier = Modifier.padding(top = 10.dp))
         CharacterCard(
             R.drawable.f1,
             character == 0,
             uiStateUpdate,
-            character = 0
+            character = 0,
+            Modifier.weight(1f)
         )
         Spacer(modifier = Modifier.padding(10.dp))
         CharacterCard(
             R.drawable.male,
             character == 1,
             uiStateUpdate,
-            character = 1
+            character = 1,
+            Modifier.weight(1f)
         )
-        Spacer(modifier = Modifier.weight(1f))
+        Spacer(modifier = Modifier.padding(top = 10.dp))
         Row(
             modifier = Modifier
                 .padding(end = 25.dp)
@@ -444,12 +445,12 @@ fun CharacterCard(
     selected: Boolean,
     onClicked: KFunction1<Int, Unit>,
     character: Int,
+    modifier: Modifier
 ) {
     Card(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth()
             .padding(start = 10.dp, end = 10.dp, bottom = 5.dp)
-            .height(250.dp)
             .clip(MaterialTheme.shapes.medium)
             .clickable(
                 onClick = {
