@@ -2,7 +2,7 @@ package com.example.swiftwords.ui.theme
 
 import androidx.compose.ui.graphics.Color
 
-val primaryLight = Color(0xFF415F91)
+val primaryLight = Color(0xFF4D4088)
 val onPrimaryLight = Color(0xFFFFFFFF)
 val primaryContainerLight = Color(0xFFD6E3FF)
 val onPrimaryContainerLight = Color(0xFF001B3E)
@@ -32,7 +32,7 @@ val inverseOnSurfaceLight = Color(0xFFF0F0F7)
 val inversePrimaryLight = Color(0xFFAAC7FF)
 
 
-val primaryDark = Color(0xFFAAC7FF)
+val primaryDark = Color(0xFFBCAAFF)
 val onPrimaryDark = Color(0xFF092a53)
 val primaryContainerDark = Color(0xFF284777)
 val onPrimaryContainerDark = Color(0xFFD6E3FF)

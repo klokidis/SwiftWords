@@ -231,9 +231,9 @@ fun SetNickName(
     var textState by rememberSaveable { mutableStateOf(nickName) }
     var isError by remember { mutableStateOf(textState.isBlank() || textState.trim().length !in 2..15) }
     val painter = if (chose == 1) {
-        painterResource(id = R.drawable.f1)
-    } else {
         painterResource(id = R.drawable.male)
+    } else {
+        painterResource(id = R.drawable.f1_short)
     }
     val scrollState = rememberScrollState()
 
