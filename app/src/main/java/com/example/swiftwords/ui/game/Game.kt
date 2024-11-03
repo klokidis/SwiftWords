@@ -116,6 +116,7 @@ fun Game(
     launchChanging: () -> Unit,
     currentLevel: Int,
     streakLevel: Int,
+    characterIsFemale: Boolean,
     playCorrectSound: KFunction0<Unit>,
     playIncorrectSound: KFunction0<Unit>,
     generateRandomLettersForBothOnExit: KFunction0<Unit>,
@@ -306,7 +307,8 @@ fun Game(
         gameModeNumber = gameModeNumber,
         currentLevel = currentLevel,
         streakLevel = streakLevel,
-        stopClockOnExit = viewModel::stopClockOnExit
+        stopClockOnExit = viewModel::stopClockOnExit,
+        characterIsFemale = characterIsFemale
     )
 }
 
@@ -823,6 +825,7 @@ fun DisplayResults(
     gameModeNumber: Int,
     currentLevel: Int,
     streakLevel: Int,
+    characterIsFemale: Boolean,
     stopClockOnExit: KFunction0<Unit>,
     generateRandomLettersForBoth: KFunction0<Unit>,
     generateRandomLettersForMode: KFunction0<Unit>,
@@ -877,7 +880,7 @@ fun DisplayResults(
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
                         Image(
-                            painter = painterResource(id = R.drawable.sage),
+                            painter = painterResource(id = if (characterIsFemale) R.drawable.f1 else R.drawable.male),
                             modifier = Modifier.size(220.dp),
                             contentDescription = null
                         )
@@ -912,7 +915,7 @@ fun DisplayResults(
                             horizontalAlignment = Alignment.CenterHorizontally
                         ) {
                             Image(
-                                painter = painterResource(id = R.drawable.sage),
+                                painter = painterResource(id = if (characterIsFemale) R.drawable.f1 else R.drawable.male),
                                 modifier = Modifier.size(220.dp),
                                 contentDescription = null
                             )
@@ -946,7 +949,7 @@ fun DisplayResults(
                             horizontalAlignment = Alignment.CenterHorizontally
                         ) {
                             Image(
-                                painter = painterResource(id = R.drawable.sage),
+                                painter = painterResource(id = if (characterIsFemale) R.drawable.f1 else R.drawable.male),
                                 modifier = Modifier.size(220.dp),
                                 contentDescription = null
                             )

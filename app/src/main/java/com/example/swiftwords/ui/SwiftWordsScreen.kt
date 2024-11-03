@@ -303,6 +303,7 @@ fun SwiftWordsApp(
                         navController.navigate(SwiftWordsScreen.Game.name)
                     },
                     sound = soundViewModel::playChangeSound,
+                    characterIsFemale = dataUiState.userDetails.character,
                     startShuffle = viewModel::changingLetters,
                 )
             }
@@ -363,6 +364,7 @@ fun SwiftWordsApp(
                             },
                             currentLevel = data.currentLevel,
                             streakLevel = data.streak,
+                            characterIsFemale = data.character,
                             playCorrectSound = soundViewModel::playCorrectSound,
                             playIncorrectSound = soundViewModel::playIncorrectSound,
                             generateRandomLettersForMode = viewModel::generateRandomLettersForMode,

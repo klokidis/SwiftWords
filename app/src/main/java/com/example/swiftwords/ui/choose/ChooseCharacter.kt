@@ -112,8 +112,8 @@ fun StartingScreen(
                     text = stringResource(R.string.dialog1),
                     characterIsMale = false,
                     playLetterSound,
-                    characterOne = R.drawable.f1,
-                    characterTwo = R.drawable.transparent
+                    characterOne = R.drawable.male,
+                    characterTwo = R.drawable.f1
                 )
             }
 
@@ -185,9 +185,9 @@ fun CharacterChat(characterIsMale: Boolean, text: String, playLetterSound: KFunc
             Image(
                 painter = painterResource(
                     id = if (characterIsMale) {
-                        R.drawable.f1
+                        R.drawable.male
                     } else {
-                        R.drawable.transparent
+                        R.drawable.f1
                     }
                 ),
                 modifier = Modifier
@@ -232,9 +232,9 @@ fun SetNickName(
     var textState by rememberSaveable { mutableStateOf(nickName) }
     var isError by remember { mutableStateOf(textState.isBlank() || textState.trim().length !in 2..15) }
     val painter = if (chose == 1) {
-        painterResource(id = R.drawable.image0)
+        painterResource(id = R.drawable.f1)
     } else {
-        painterResource(id = R.drawable.girl_v1)
+        painterResource(id = R.drawable.male)
     }
     val scrollState = rememberScrollState()
 
@@ -402,7 +402,7 @@ fun ChooseCharacter(
         )
         Spacer(modifier = Modifier.padding(20.dp))
         CompleteCard(
-            R.drawable.girl_v1,
+            R.drawable.f1,
             stringResource(R.string.f_name),
             character == 0,
             uiStateUpdate,
@@ -410,7 +410,7 @@ fun ChooseCharacter(
         )
         Spacer(modifier = Modifier.padding(10.dp))
         CompleteCard(
-            R.drawable.image0,
+            R.drawable.male,
             stringResource(R.string.m_name),
             character == 1,
             uiStateUpdate,

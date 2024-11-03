@@ -56,6 +56,7 @@ fun ModesScreen(
     changeGameMode: KFunction1<Int, Unit>,
     startShuffle: KFunction3<Boolean, () -> Unit, Long, Unit>,
     sound: KFunction0<Unit>,
+    characterIsFemale: Boolean,
     isDarkTheme: Boolean = isSystemInDarkTheme(),
 ) {
     val scrollState = rememberScrollState()
@@ -112,6 +113,7 @@ fun ModesScreen(
         DataSource().colorPairs[color!!].darkColor,
         navigateCustomGame,
         { visible = false },
+        characterIsFemale,
         changeTime,
         changeGameMode,
         startShuffle,
@@ -162,6 +164,7 @@ fun PopUp(
     textColor: Color,
     navigate: () -> Unit,
     hide: () -> Unit,
+    characterIsFemale: Boolean,
     changeTime: (Long) -> Unit,
     changeGameMode: (Int) -> Unit,
     startShuffle: KFunction3<Boolean, () -> Unit, Long, Unit>,
@@ -173,7 +176,7 @@ fun PopUp(
     modeOptions: List<Int> = listOf(0, 1),
     timeOptions: List<Long> =
         listOf(20000L, 30000L, 40000L, 50000L, 60000L, 70000L),
-    ) {
+) {
     var expandedTime by remember { mutableStateOf(false) }
     var expandedMode by remember { mutableStateOf(false) }
     var selectedTime by remember { mutableStateOf<Long?>(null) }
@@ -200,7 +203,7 @@ fun PopUp(
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     Image(
-                        painter = painterResource(id = R.drawable.sage),
+                        painter = painterResource(id = if (characterIsFemale) R.drawable.f1 else R.drawable.male),
                         modifier = Modifier.size(100.dp),
                         contentDescription = null
                     )
