@@ -1,6 +1,5 @@
 package com.example.swiftwords.ui.elements
 
-import android.util.Log
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
@@ -67,15 +66,13 @@ private suspend fun animateText(
     playLetterSound: KFunction2<Char, Float, Unit>,
     callback: (String) -> Unit
 ) {
-
-    for (i in text.indices) {
+    for (i in text.indices) { // returns 0..length-1
         val currentLetter = text[i]
         val pitch = if (characterIsMale) {
             1.3f
         } else {
             2f
         }
-        Log.d("kloki", currentLetter.toString())
 
         if (i % 2 == 0) {
             playLetterSound(currentLetter, pitch)
