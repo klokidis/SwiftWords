@@ -107,8 +107,8 @@ fun StartingScreen(
                     text = stringResource(R.string.dialog1),
                     characterIsMale = false,
                     playLetterSound,
-                    characterOne = R.drawable.male,
-                    characterTwo = R.drawable.f1
+                    characterOne = R.drawable.male_full_body,
+                    characterTwo = R.drawable.female_full_body
                 )
             }
 
@@ -126,7 +126,7 @@ fun StartingScreen(
                     characterIsMale = false,
                     playLetterSound,
                     characterOne = R.drawable.fire_on,
-                    characterTwo = R.drawable.f1
+                    characterTwo = R.drawable.female_full_body
                 )
             }
 
@@ -184,9 +184,9 @@ fun CharacterChat(
             Image(
                 painter = painterResource(
                     id = if (characterIsMale) {
-                        R.drawable.male
+                        R.drawable.male_full_body
                     } else {
-                        R.drawable.f1
+                        R.drawable.female_full_body
                     }
                 ),
                 modifier = Modifier
@@ -231,9 +231,9 @@ fun SetNickName(
     var textState by rememberSaveable { mutableStateOf(nickName) }
     var isError by remember { mutableStateOf(textState.isBlank() || textState.trim().length !in 2..15) }
     val painter = if (chose == 1) {
-        painterResource(id = R.drawable.male)
+        painterResource(id = R.drawable.male_icon)
     } else {
-        painterResource(id = R.drawable.f1_short)
+        painterResource(id = R.drawable.female_icon)
     }
     val scrollState = rememberScrollState()
 
@@ -401,7 +401,7 @@ fun ChooseCharacter(
         )
         Spacer(modifier = Modifier.padding(top = 10.dp))
         CharacterCard(
-            R.drawable.f1,
+            R.drawable.female_full_body,
             character == 0,
             uiStateUpdate,
             character = 0,
@@ -409,7 +409,7 @@ fun ChooseCharacter(
         )
         Spacer(modifier = Modifier.padding(10.dp))
         CharacterCard(
-            R.drawable.male,
+            R.drawable.male_full_body,
             character == 1,
             uiStateUpdate,
             character = 1,

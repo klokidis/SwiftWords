@@ -880,13 +880,14 @@ fun DisplayResults(
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
                         Image(
-                            painter = painterResource(id = if (characterIsFemale) R.drawable.f1 else R.drawable.male),
-                            modifier = Modifier.size(220.dp),
+                            painter = painterResource(id = if (characterIsFemale) R.drawable.female_half else R.drawable.male_half),
+                            modifier = Modifier.size(260.dp),
                             contentDescription = null
                         )
+                        Spacer(modifier = Modifier.padding(5.dp))
                         Text(
                             stringResource(R.string.new_high_score) + " " + score().toString(),
-                            style = MaterialTheme.typography.titleSmall,
+                            style = MaterialTheme.typography.titleSmall.copy(fontSize = 18.sp),
                             color = textColor
                         )
                         TextButton(
@@ -897,7 +898,7 @@ fun DisplayResults(
                         ) {
                             Text(
                                 stringResource(R.string.claim),
-                                style = MaterialTheme.typography.titleSmall,
+                                style = MaterialTheme.typography.titleSmall.copy(fontSize = 18.sp),
                                 color = if (buttonsEnabled) {
                                     boxColor
                                 } else {
@@ -915,13 +916,14 @@ fun DisplayResults(
                             horizontalAlignment = Alignment.CenterHorizontally
                         ) {
                             Image(
-                                painter = painterResource(id = if (characterIsFemale) R.drawable.f1 else R.drawable.male),
-                                modifier = Modifier.size(220.dp),
+                                painter = painterResource(id = if (characterIsFemale) R.drawable.female_half else R.drawable.male_half),
+                                modifier = Modifier.size(260.dp),
                                 contentDescription = null
                             )
+                            Spacer(modifier = Modifier.padding(5.dp))
                             Text(
                                 stringResource(R.string.streak_increase),
-                                style = MaterialTheme.typography.titleSmall,
+                                style = MaterialTheme.typography.titleSmall.copy(fontSize = 18.sp),
                                 color = textColor,
                             )
                             TextButton(
@@ -932,7 +934,7 @@ fun DisplayResults(
                             ) {
                                 Text(
                                     stringResource(R.string.claim),
-                                    style = MaterialTheme.typography.titleSmall,
+                                    style = MaterialTheme.typography.titleSmall.copy(fontSize = 18.sp),
                                     color = if (buttonsEnabled) {
                                         boxColor
                                     } else {
@@ -949,15 +951,16 @@ fun DisplayResults(
                             horizontalAlignment = Alignment.CenterHorizontally
                         ) {
                             Image(
-                                painter = painterResource(id = if (characterIsFemale) R.drawable.f1 else R.drawable.male),
-                                modifier = Modifier.size(220.dp),
+                                painter = painterResource(id = if (characterIsFemale) R.drawable.female_half else R.drawable.male_half),
+                                modifier = Modifier.size(260.dp),
                                 contentDescription = null
                             )
+                            Spacer(modifier = Modifier.padding(5.dp))
                             when {
                                 score() >= 10 && !isMode -> {
                                     Text(
                                         stringResource(R.string.pass) + " " + score().toString(),
-                                        style = MaterialTheme.typography.titleSmall,
+                                        style = MaterialTheme.typography.titleSmall.copy(fontSize = 18.sp),
                                         color = textColor
                                     )
                                 }
@@ -965,7 +968,7 @@ fun DisplayResults(
                                 !isMode -> {
                                     Text(
                                         stringResource(R.string.fail) + " " + score().toString(),
-                                        style = MaterialTheme.typography.titleSmall,
+                                        style = MaterialTheme.typography.titleSmall.copy(fontSize = 18.sp),
                                         color = textColor
                                     )
                                 }
@@ -973,7 +976,7 @@ fun DisplayResults(
                                 else -> {
                                     Text(
                                         stringResource(R.string.nice_try) + " " + score().toString(),
-                                        style = MaterialTheme.typography.titleSmall,
+                                        style = MaterialTheme.typography.titleSmall.copy(fontSize = 18.sp),
                                         color = textColor
                                     )
                                 }
@@ -998,7 +1001,7 @@ fun DisplayResults(
                                 ) {
                                     Text(
                                         stringResource(R.string.exit),
-                                        style = MaterialTheme.typography.titleSmall,
+                                        style = MaterialTheme.typography.titleSmall.copy(fontSize = 18.sp),
                                         color = if (buttonsEnabled) {
                                             boxColor
                                         } else {
@@ -1022,7 +1025,7 @@ fun DisplayResults(
                                     ) {
                                         Text(
                                             stringResource(R.string.play_again),
-                                            style = MaterialTheme.typography.titleSmall,
+                                            style = MaterialTheme.typography.titleSmall.copy(fontSize = 18.sp),
                                             color = if (buttonsEnabled) {
                                                 boxColor
                                             } else {
@@ -1042,7 +1045,7 @@ fun DisplayResults(
                                     ) {
                                         Text(
                                             stringResource(R.string.try_again),
-                                            style = MaterialTheme.typography.titleSmall,
+                                            style = MaterialTheme.typography.titleSmall.copy(fontSize = 18.sp),
                                             color = if (buttonsEnabled) {
                                                 boxColor
                                             } else {
@@ -1066,7 +1069,7 @@ fun DisplayResults(
                                     ) {
                                         Text(
                                             stringResource(R.string.next_level),
-                                            style = MaterialTheme.typography.titleSmall,
+                                            style = MaterialTheme.typography.titleSmall.copy(fontSize = 18.sp),
                                             color = if (buttonsEnabled && score() >= calculatePassingScore(
                                                     currentLevel
                                                 )

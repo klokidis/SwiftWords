@@ -35,6 +35,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.example.swiftwords.R
 import com.example.swiftwords.data.DataSource
 import com.example.swiftwords.ui.elements.ModesCards
@@ -203,7 +204,7 @@ fun PopUp(
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     Image(
-                        painter = painterResource(id = if (characterIsFemale) R.drawable.f1 else R.drawable.male),
+                        painter = painterResource(id = if (characterIsFemale) R.drawable.female_half else R.drawable.male_half),
                         modifier = Modifier.size(100.dp),
                         contentDescription = null
                     )
@@ -216,6 +217,7 @@ fun PopUp(
                                 Text(
                                     text = selectedTime?.toString()?.take(2)
                                         ?: stringResource(R.string.select_time),
+                                    style = MaterialTheme.typography.titleSmall.copy(fontSize = 18.sp),
                                     color = textColor
                                 )
                             }
@@ -231,7 +233,14 @@ fun PopUp(
                                             selectedTime = time
                                             expandedTime = false
                                         },
-                                        text = { Text(firstTwoDigits) }
+                                        text = {
+                                            Text(
+                                                firstTwoDigits,
+                                                style = MaterialTheme.typography.titleSmall.copy(
+                                                    fontSize = 18.sp
+                                                ),
+                                            )
+                                        }
                                     )
                                 }
                             }
@@ -242,6 +251,7 @@ fun PopUp(
                                 Text(
                                     text = selectedModeVisible
                                         ?: stringResource(R.string.select_mode),
+                                    style = MaterialTheme.typography.titleSmall.copy(fontSize = 18.sp),
                                     color = textColor
                                 )
                             }
@@ -257,7 +267,12 @@ fun PopUp(
                                             expandedMode = false
                                         },
                                         text = {
-                                            Text(modeStringOptions[mode])
+                                            Text(
+                                                modeStringOptions[mode],
+                                                style = MaterialTheme.typography.titleSmall.copy(
+                                                    fontSize = 18.sp
+                                                ),
+                                            )
                                         }
                                     )
                                 }
@@ -270,7 +285,7 @@ fun PopUp(
                         ) {
                             Text(
                                 stringResource(R.string.cancel),
-                                style = MaterialTheme.typography.titleSmall,
+                                style = MaterialTheme.typography.titleSmall.copy(fontSize = 18.sp),
                                 color = textColor
                             )
                         }
@@ -286,7 +301,7 @@ fun PopUp(
                         ) {
                             Text(
                                 stringResource(R.string.confirm),
-                                style = MaterialTheme.typography.titleSmall,
+                                style = MaterialTheme.typography.titleSmall.copy(fontSize = 18.sp),
                                 color = if (selectedTime == null || selectedMode == null) Color.Gray else textColor
                             )
                         }
