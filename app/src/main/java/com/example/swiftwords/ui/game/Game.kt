@@ -854,6 +854,7 @@ fun DisplayResults(
 
     if (isVisible) {
         Dialog(onDismissRequest = { }) {
+
             BackHandler {
                 navigateUp()
                 if (score() >= 1 && !isMode) {
@@ -863,83 +864,41 @@ fun DisplayResults(
                 }
                 stopClockOnExit()
             }
+
             Card(
-                modifier = Modifier,
                 colors = CardDefaults.cardColors(
                     MaterialTheme.colorScheme.secondary
                 )
             ) {
                 if (score() > highScore && !isMode) {
-                    Column(
-                        modifier = Modifier
-                            .padding(10.dp),
-                        verticalArrangement = Arrangement.Center,
-                        horizontalAlignment = Alignment.CenterHorizontally
-                    ) {
-                        Image(
-                            painter = painterResource(id = if (characterIsFemale) R.drawable.female_half else R.drawable.male_half),
-                            modifier = Modifier.size(260.dp),
-                            contentDescription = null
-                        )
-                        Spacer(modifier = Modifier.padding(5.dp))
-                        Text(
-                            stringResource(R.string.new_high_score) + " " + score().toString(),
-                            style = MaterialTheme.typography.titleSmall.copy(fontSize = 18.sp),
-                            color = textColor
-                        )
-                        TextButton(
-                            onClick = {
-                                checkHighScore(score())
-                            },
-                            enabled = buttonsEnabled
-                        ) {
-                            Text(
-                                stringResource(R.string.claim),
-                                style = MaterialTheme.typography.titleSmall.copy(fontSize = 18.sp),
-                                color = if (buttonsEnabled) {
-                                    boxColor
-                                } else {
-                                    Color.Gray
-                                }
-                            )
-                        }
-                    }
+                    ScoreContent(
+                        imageId = if (characterIsFemale) R.drawable.female_half else R.drawable.male_half,
+                        text = stringResource(R.string.new_high_score) + " " + score().toString(),
+                        buttonText = stringResource(R.string.claim),
+                        buttonAction = { checkHighScore(score()) },
+                        buttonsEnabled = buttonsEnabled,
+                        boxColor = if (buttonsEnabled) {
+                            boxColor
+                        } else {
+                            Color.Gray
+                        },
+                        textColor = textColor
+                    )
                 } else {
                     if (!isMode && (dateNow.substring(0, 10) != dataDate()) && score() >= 1) {
-                        Column(
-                            modifier = Modifier
-                                .padding(10.dp),
-                            verticalArrangement = Arrangement.Center,
-                            horizontalAlignment = Alignment.CenterHorizontally
-                        ) {
-                            Image(
-                                painter = painterResource(id = if (characterIsFemale) R.drawable.female_half else R.drawable.male_half),
-                                modifier = Modifier.size(260.dp),
-                                contentDescription = null
-                            )
-                            Spacer(modifier = Modifier.padding(5.dp))
-                            Text(
-                                stringResource(R.string.streak_increase),
-                                style = MaterialTheme.typography.titleSmall.copy(fontSize = 18.sp),
-                                color = textColor,
-                            )
-                            TextButton(
-                                onClick = {
-                                    increaseStreak()
-                                },
-                                enabled = buttonsEnabled
-                            ) {
-                                Text(
-                                    stringResource(R.string.claim),
-                                    style = MaterialTheme.typography.titleSmall.copy(fontSize = 18.sp),
-                                    color = if (buttonsEnabled) {
-                                        boxColor
-                                    } else {
-                                        Color.Gray
-                                    }
-                                )
-                            }
-                        }
+                        ScoreContent(
+                            imageId = if (characterIsFemale) R.drawable.female_half else R.drawable.male_half,
+                            text = stringResource(R.string.streak_increase),
+                            buttonText = stringResource(R.string.claim),
+                            buttonAction = { increaseStreak() },
+                            buttonsEnabled = buttonsEnabled,
+                            boxColor = if (buttonsEnabled) {
+                                boxColor
+                            } else {
+                                Color.Gray
+                            },
+                            textColor = textColor
+                        )
                     } else {
                         Column(
                             modifier = Modifier
@@ -1111,6 +1070,45 @@ fun DisplayResults(
                     }
                 }
             }
+        }
+    }
+}
+
+@Composable
+fun ScoreContent(
+    imageId: Int,
+    text: String,
+    buttonText: String,
+    buttonAction: () -> Unit,
+    buttonsEnabled: Boolean,
+    boxColor: Color,
+    textColor: Color
+) {
+    Column(
+        modifier = Modifier.padding(10.dp),
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        Image(
+            painter = painterResource(id = imageId),
+            modifier = Modifier.size(260.dp),
+            contentDescription = null
+        )
+        Spacer(modifier = Modifier.padding(5.dp))
+        Text(
+            text,
+            style = MaterialTheme.typography.titleSmall.copy(fontSize = 18.sp),
+            color = textColor
+        )
+        TextButton(
+            onClick = buttonAction,
+            enabled = buttonsEnabled
+        ) {
+            Text(
+                buttonText,
+                style = MaterialTheme.typography.titleSmall.copy(fontSize = 18.sp),
+                color = if (buttonsEnabled) boxColor else Color.Gray
+            )
         }
     }
 }
