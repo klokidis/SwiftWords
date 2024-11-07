@@ -171,8 +171,10 @@ fun PopUp(
         stringResource(R.string.consequences)
     ),
     modeOptions: List<Int> = listOf(0, 1),
-    timeOptions: List<Long> =
-        listOf(20000L, 30000L, 40000L, 50000L, 60000L, 70000L),
+    timeOptions1: List<Long> =
+        listOf(20000L, 30000L, 40000L),
+    timeOptions2: List<Long> =
+        listOf(50000L, 60000L, 70000L),
 ) {
     var expandedTime by remember { mutableStateOf(false) }
     var expandedMode by remember { mutableStateOf(false) }
@@ -211,25 +213,48 @@ fun PopUp(
                             }
                             DropdownMenu(
                                 expanded = expandedTime,
-                                modifier = Modifier.width(50.dp),
+                                modifier = Modifier.width(100.dp),
                                 onDismissRequest = { expandedTime = false }
                             ) {
-                                timeOptions.forEach { time ->
-                                    val firstTwoDigits = time.toString().take(2)
-                                    DropdownMenuItem(
-                                        onClick = {
-                                            selectedTime = time
-                                            expandedTime = false
-                                        },
-                                        text = {
-                                            Text(
-                                                firstTwoDigits,
-                                                style = MaterialTheme.typography.titleSmall.copy(
-                                                    fontSize = 18.sp
-                                                ),
+                                Row{
+                                    Column(modifier = Modifier.width(50.dp)) {
+                                        timeOptions1.forEach { time ->
+                                            val firstTwoDigits = time.toString().take(2)
+                                            DropdownMenuItem(
+                                                onClick = {
+                                                    selectedTime = time
+                                                    expandedTime = false
+                                                },
+                                                text = {
+                                                    Text(
+                                                        firstTwoDigits,
+                                                        style = MaterialTheme.typography.titleSmall.copy(
+                                                            fontSize = 18.sp
+                                                        ),
+                                                    )
+                                                }
                                             )
                                         }
-                                    )
+                                    }
+                                    Column(modifier = Modifier.width(50.dp)) {
+                                        timeOptions2.forEach { time ->
+                                            val firstTwoDigits = time.toString().take(2)
+                                            DropdownMenuItem(
+                                                onClick = {
+                                                    selectedTime = time
+                                                    expandedTime = false
+                                                },
+                                                text = {
+                                                    Text(
+                                                        firstTwoDigits,
+                                                        style = MaterialTheme.typography.titleSmall.copy(
+                                                            fontSize = 18.sp
+                                                        ),
+                                                    )
+                                                }
+                                            )
+                                        }
+                                    }
                                 }
                             }
                         }
