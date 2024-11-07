@@ -368,6 +368,7 @@ fun SwiftWordsApp(
                             playCorrectSound = soundViewModel::playCorrectSound,
                             playIncorrectSound = soundViewModel::playIncorrectSound,
                             generateRandomLettersForMode = viewModel::generateRandomLettersForMode,
+                            generateRandomLettersForBoth = viewModel::generateRandomLettersForBoth,
                             generateRandomLettersForBothOnExit = viewModel::generateRandomLettersForBothOnExit
                         )
                     }

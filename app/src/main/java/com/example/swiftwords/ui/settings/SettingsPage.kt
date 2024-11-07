@@ -1,6 +1,5 @@
 package com.example.swiftwords.ui.settings
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
@@ -45,6 +44,7 @@ import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.window.Dialog
 import com.example.swiftwords.R
 import com.example.swiftwords.data.DataSource
 import com.example.swiftwords.ui.elements.brighten
@@ -129,17 +129,19 @@ fun SettingsPage(
         }
     }
     if (displayEdit) {
-        NewNamePopUp(
-            newName = newName,
-            onNameChange = { newName = it },
-            onSave = {
-                changeName(newName.text.trim()) // Save the new name
-                displayEdit = false // Close the dialog
-            },
-            onCancel = { displayEdit = false },
-            isError = (newName.text.isBlank() || (newName.text.trim().length) !in 2..15),
-            color = color
-        )
+        Dialog(onDismissRequest = { displayEdit = false }) {
+            NewNamePopUp(
+                newName = newName,
+                onNameChange = { newName = it },
+                onSave = {
+                    changeName(newName.text.trim()) // Save the new name
+                    displayEdit = false // Close the dialog
+                },
+                onCancel = { displayEdit = false },
+                isError = (newName.text.isBlank() || (newName.text.trim().length) !in 2..15),
+                color = color
+            )
+        }
     }
 }
 
@@ -153,79 +155,70 @@ fun NewNamePopUp(
     color: Color,
     isDarkTheme: Boolean = isSystemInDarkTheme(),
 ) {
-    Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(Color.Black.copy(alpha = 0.3f)),
+    Card(
+        modifier = Modifier.fillMaxWidth(),
+        colors = CardDefaults.cardColors(
+            MaterialTheme.colorScheme.secondary
+        ),
+        shape = RoundedCornerShape(20.dp)
     ) {
-        Card(
+        Column(
             modifier = Modifier
-                .align(Alignment.Center)
-                .padding(25.dp),
-            colors = CardDefaults.cardColors(
-                MaterialTheme.colorScheme.secondary
-            ),
-            shape = RoundedCornerShape(20.dp)
-
+                .padding(16.dp),
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally,
         ) {
-            Column(
-                modifier = Modifier
-                    .padding(16.dp),
-                verticalArrangement = Arrangement.Center,
-                horizontalAlignment = Alignment.CenterHorizontally,
-            ) {
-                Text(
-                    text = stringResource(R.string.enter_new_name),
-                    style = MaterialTheme.typography.titleSmall.copy(fontSize = 25.sp),
-                    color = if (isDarkTheme) Color.White else Color.Black
-                )
+            Text(
+                text = stringResource(R.string.enter_new_name),
+                style = MaterialTheme.typography.titleSmall.copy(fontSize = 25.sp),
+                color = if (isDarkTheme) Color.White else Color.Black
+            )
 
-                Spacer(modifier = Modifier.padding(8.dp))
+            Spacer(modifier = Modifier.padding(8.dp))
 
-                OutlinedTextField(
-                    value = newName,
-                    onValueChange = onNameChange,
-                    label = { Text(stringResource(R.string.new_name)) },
-                    modifier = Modifier.fillMaxWidth(),
-                    singleLine = true,
-                    keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
-                    keyboardActions = KeyboardActions(
-                        onDone = {
-                            if (!isError) {
-                                onSave()
-                            }
+            OutlinedTextField(
+                value = newName,
+                onValueChange = onNameChange,
+                label = { Text(stringResource(R.string.new_name)) },
+                modifier = Modifier.fillMaxWidth(),
+                singleLine = true,
+                keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
+                keyboardActions = KeyboardActions(
+                    onDone = {
+                        if (!isError) {
+                            onSave()
                         }
-                    ),
-                    isError = isError
-                )
+                    }
+                ),
+                isError = isError
+            )
 
-                Spacer(modifier = Modifier.padding(8.dp))
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.Center
+            Spacer(modifier = Modifier.padding(8.dp))
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.Center
+            ) {
+                Spacer(modifier = Modifier.weight(1f))
+                TextButton(
+                    onClick = onCancel,
                 ) {
-                    Spacer(modifier = Modifier.weight(1f))
-                    TextButton(
-                        onClick = onCancel,
-                    ) {
-                        Text(stringResource(R.string.cancel), color = color)
-                    }
-                    Spacer(modifier = Modifier.weight(1f))
-                    TextButton(
-                        onClick = onSave,
-                        enabled = !isError,
-                    ) {
-                        Text(
-                            stringResource(R.string.save),
-                            color = if (!isError) {
-                                color
-                            } else {
-                                Color.DarkGray.brighten()
-                            }
-                        )
-                    }
-                    Spacer(modifier = Modifier.weight(1f))
+                    Text(stringResource(R.string.cancel), color = color)
                 }
+                Spacer(modifier = Modifier.weight(1f))
+                TextButton(
+                    onClick = onSave,
+                    enabled = !isError,
+                ) {
+                    Text(
+                        stringResource(R.string.save),
+                        color = if (!isError) {
+                            color
+                        } else {
+                            Color.DarkGray.brighten()
+                        }
+                    )
+                }
+                Spacer(modifier = Modifier.weight(1f))
             }
         }
     }

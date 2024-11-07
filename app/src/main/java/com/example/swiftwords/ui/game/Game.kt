@@ -1,11 +1,8 @@
 package com.example.swiftwords.ui.game
 
 import androidx.activity.compose.BackHandler
-import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.tween
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -79,6 +76,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.window.Dialog
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.swiftwords.R
 import com.example.swiftwords.data.ColorPair
@@ -119,6 +117,7 @@ fun Game(
     characterIsFemale: Boolean,
     playCorrectSound: KFunction0<Unit>,
     playIncorrectSound: KFunction0<Unit>,
+    generateRandomLettersForBoth: KFunction0<Unit>,
     generateRandomLettersForBothOnExit: KFunction0<Unit>,
     generateRandomLettersForMode: KFunction0<Unit>
 ) {
@@ -258,7 +257,7 @@ fun Game(
                 }
             }
             Spacer(modifier = Modifier.weight(0.2f))
-            if (checked() && isTimerRunning) {
+            if (checked()) {
                 CustomKeyboard(
                     listOfLetters = listOfLetters,
                     colorCode,
@@ -287,7 +286,8 @@ fun Game(
         newTime,
         navigateUp,
         increaseScore,
-        generateRandomLettersForBoth = generateRandomLettersForBothOnExit,
+        generateRandomLettersForBoth = generateRandomLettersForBoth,
+        generateRandomLettersForBothOnExit = generateRandomLettersForBothOnExit,
         generateRandomLettersForMode = generateRandomLettersForMode,
         calculatePassingScore = viewModel::calculatePassingScore,
         isMode = isMode,
@@ -830,44 +830,32 @@ fun DisplayResults(
     generateRandomLettersForBoth: KFunction0<Unit>,
     generateRandomLettersForMode: KFunction0<Unit>,
     calculatePassingScore: KFunction1<Int, Int>,
+    generateRandomLettersForBothOnExit: KFunction0<Unit>,
 ) {
     val context = LocalContext.current
-    AnimatedVisibility(
-        visible = isVisible,
-        enter = fadeIn(
-            // Overwrites the initial value of alpha to 0.2f for fade in, 0 by default
-            initialAlpha = 0.2f
-        ),
-        exit = fadeOut(
-            // Overwrites the default animation with tween
-            animationSpec = tween(durationMillis = 200)
-        )
-    ) {
-        val coroutineScope = rememberCoroutineScope()
-        var buttonsEnabled by remember { mutableStateOf(false) }
-        val textColor by remember {
-            mutableStateOf(
-                if (isDarkTheme) {
-                    Color.White
-                } else {
-                    Color.Black
-                }
-            )
-        }
 
-        // Launch a coroutine to enable the buttons after a delay
-        LaunchedEffect(Unit) {
-            delay(800L)
-            buttonsEnabled = true
-        }
-        Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .background(Color.Black.copy(alpha = 0.3f)),
-        ) {
+    val coroutineScope = rememberCoroutineScope()
+    var buttonsEnabled by remember { mutableStateOf(false) }
+    val textColor by remember {
+        mutableStateOf(
+            if (isDarkTheme) {
+                Color.White
+            } else {
+                Color.Black
+            }
+        )
+    }
+
+    // Launch a coroutine to enable the buttons after a delay
+    LaunchedEffect(Unit) {
+        delay(800L)
+        buttonsEnabled = true
+    }
+
+    if (isVisible) {
+        Dialog(onDismissRequest = { }) {
             Card(
-                modifier = Modifier
-                    .align(Alignment.Center),
+                modifier = Modifier,
                 colors = CardDefaults.cardColors(
                     MaterialTheme.colorScheme.secondary
                 )
@@ -974,7 +962,9 @@ fun DisplayResults(
                                 score() >= 10 && !isMode -> {
                                     Text(
                                         stringResource(R.string.pass) + " " + score().toString(),
-                                        style = MaterialTheme.typography.titleSmall.copy(fontSize = 18.sp),
+                                        style = MaterialTheme.typography.titleSmall.copy(
+                                            fontSize = 18.sp
+                                        ),
                                         color = textColor
                                     )
                                 }
@@ -982,7 +972,9 @@ fun DisplayResults(
                                 !isMode -> {
                                     Text(
                                         stringResource(R.string.fail) + " " + score().toString(),
-                                        style = MaterialTheme.typography.titleSmall.copy(fontSize = 18.sp),
+                                        style = MaterialTheme.typography.titleSmall.copy(
+                                            fontSize = 18.sp
+                                        ),
                                         color = textColor
                                     )
                                 }
@@ -990,7 +982,9 @@ fun DisplayResults(
                                 else -> {
                                     Text(
                                         stringResource(R.string.nice_try) + " " + score().toString(),
-                                        style = MaterialTheme.typography.titleSmall.copy(fontSize = 18.sp),
+                                        style = MaterialTheme.typography.titleSmall.copy(
+                                            fontSize = 18.sp
+                                        ),
                                         color = textColor
                                     )
                                 }
@@ -1007,7 +1001,7 @@ fun DisplayResults(
                                         if (score() >= 1 && !isMode) {
                                             increaseScore(score())
                                             scheduleDailyNotification(context, streakLevel)
-                                            generateRandomLettersForBoth()
+                                            generateRandomLettersForBothOnExit()
                                         }
                                         stopClockOnExit()
                                     },
@@ -1015,7 +1009,9 @@ fun DisplayResults(
                                 ) {
                                     Text(
                                         stringResource(R.string.exit),
-                                        style = MaterialTheme.typography.titleSmall.copy(fontSize = 18.sp),
+                                        style = MaterialTheme.typography.titleSmall.copy(
+                                            fontSize = 18.sp
+                                        ),
                                         color = if (buttonsEnabled) {
                                             boxColor
                                         } else {
@@ -1073,13 +1069,13 @@ fun DisplayResults(
                                     }
                                     TextButton(
                                         onClick = {
-                                            increaseScore(score())
-                                            restartGame()
-                                            scheduleDailyNotification(context, streakLevel)
                                             coroutineScope.launch {
                                                 generateRandomLettersForBoth()
                                                 restart(time())
                                             }
+                                            increaseScore(score())
+                                            restartGame()
+                                            scheduleDailyNotification(context, streakLevel)
                                         },
                                         enabled = score() >= calculatePassingScore(
                                             currentLevel

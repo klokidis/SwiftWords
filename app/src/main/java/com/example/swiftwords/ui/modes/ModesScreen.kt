@@ -1,11 +1,6 @@
 package com.example.swiftwords.ui.modes
 
-import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.core.tween
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -36,6 +31,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.window.Dialog
 import com.example.swiftwords.R
 import com.example.swiftwords.data.DataSource
 import com.example.swiftwords.ui.elements.ModesCards
@@ -184,18 +180,10 @@ fun PopUp(
     var selectedModeVisible by remember { mutableStateOf<String?>(null) }
     var selectedMode by remember { mutableStateOf<Int?>(null) }
 
-    AnimatedVisibility(
-        visible = visible,
-        enter = fadeIn(initialAlpha = 0.2f),
-        exit = fadeOut(animationSpec = tween(durationMillis = 200))
-    ) {
-        Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .background(Color.Black.copy(alpha = 0.3f)),
-        ) {
+
+    if (visible) {
+        Dialog(onDismissRequest = hide) {
             Card(
-                modifier = Modifier.align(Alignment.Center),
                 colors = CardDefaults.cardColors(MaterialTheme.colorScheme.secondary)
             ) {
                 Column(
