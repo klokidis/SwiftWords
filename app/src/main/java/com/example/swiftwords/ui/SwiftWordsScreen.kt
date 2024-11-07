@@ -283,7 +283,7 @@ fun SwiftWordsApp(
                         viewModel.changingLetters(
                             true,
                             soundViewModel::playChangeSound,
-                            40000L
+                            dataUiState.userDetails.levelTime
                         )
                         viewModel.changeGameState(true) //this is a game mode
                         navController.navigate(SwiftWordsScreen.Game.name)

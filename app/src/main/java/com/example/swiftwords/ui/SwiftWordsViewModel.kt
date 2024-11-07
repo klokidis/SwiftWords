@@ -158,7 +158,7 @@ class SwiftWordsMainViewModel : ViewModel() {
     ) {
         var elapsedTime = 0 // Initialize counter for elapsed time
 
-        while (run && elapsedTime < gameTime) { // Continue only if less than 40 seconds
+        while (run && elapsedTime < gameTime) { // Continue only if less than game time
             delay(5000)
             generateRandomLettersForMode()
             playChangeSound()

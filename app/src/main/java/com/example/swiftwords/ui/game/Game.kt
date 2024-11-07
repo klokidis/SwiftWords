@@ -854,6 +854,15 @@ fun DisplayResults(
 
     if (isVisible) {
         Dialog(onDismissRequest = { }) {
+            BackHandler {
+                navigateUp()
+                if (score() >= 1 && !isMode) {
+                    increaseScore(score())
+                    scheduleDailyNotification(context, streakLevel)
+                    generateRandomLettersForBothOnExit()
+                }
+                stopClockOnExit()
+            }
             Card(
                 modifier = Modifier,
                 colors = CardDefaults.cardColors(
