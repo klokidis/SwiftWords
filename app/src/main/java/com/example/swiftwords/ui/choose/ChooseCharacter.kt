@@ -59,7 +59,7 @@ import com.example.swiftwords.R
 import com.example.swiftwords.ui.AppViewModelProvider
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.swiftwords.ui.elements.LetterByLetterText
-import com.example.swiftwords.ui.elements.ProfileImage
+import com.example.swiftwords.ui.elements.ProfileImagePopUp
 import kotlin.reflect.KFunction1
 import kotlin.reflect.KFunction2
 
@@ -71,6 +71,9 @@ fun StartingScreen(
     updateName: KFunction1<String, Unit>,
     updateCharacter: KFunction1<Boolean, Unit>,
     playLetterSound: KFunction2<Char, Float, Unit>,
+    profileSelected: Int,
+    changeProfilePic: KFunction1<Int, Unit>,
+    isCharacterFemale: Boolean,
 ) {
     val uiState by viewModel.uiState.collectAsState()
 
@@ -150,6 +153,9 @@ fun StartingScreen(
                     onSave = updateName,
                     onCancel = { viewModel.decreaseState() },
                     nextState = { viewModel.increaseState() },
+                    profileSelected = profileSelected,
+                    changeProfilePic = changeProfilePic,
+                    isCharacterFemale = isCharacterFemale
                 )
             }
 
@@ -231,7 +237,10 @@ fun SetNickName(
     onSave: KFunction1<String, Unit>,
     onCancel: () -> Unit,
     nextState: () -> Unit,
-    nickName: String
+    nickName: String,
+    profileSelected: Int,
+    changeProfilePic: KFunction1<Int, Unit>,
+    isCharacterFemale: Boolean
 ) {
     var textState by rememberSaveable { mutableStateOf(nickName) }
     var showProfilePhotos by rememberSaveable { mutableStateOf(false) }
@@ -324,14 +333,12 @@ fun SetNickName(
             }
         }
     }
-    ProfileImage(
-        1,
+    ProfileImagePopUp(
+        profileSelected,
         showProfilePhotos,
         { showProfilePhotos = false },
-        {
-            showProfilePhotos = false
-        },
-        true
+        changeProfilePic,
+        isCharacterFemale
     )
 }
 

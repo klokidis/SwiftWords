@@ -65,4 +65,5 @@
     <string name="dialog2">A word game where you must find as many words as you can before the time runs out!</string>
     <string name="dialog3">Meet Streaky, your adorable pet! Remember to feed him words daily, or he will lose his spark :c</string>
     <string name="dialog4">I’m happy to be your companion on this adventure! I’ll have control over the game’s logic, ensuring you have an amazing time. Let’s dive in!</string>
+    <string name="change_profile">Change profile</string>
 </resources>

@@ -71,6 +71,13 @@ class GetDataViewModel(private val userRepository: UserRepository) : ViewModel()
         }
     }
 
+    fun changeProfilePic(imageId: Int) {
+        viewModelScope.launch {
+            val currentUser = getDataUiState.value.userDetails.toUser()
+            userRepository.updateUser(currentUser.copy(profileSelected = imageId))
+        }
+    }
+
     fun checkAndResetStreak() {
         viewModelScope.launch {
             val currentUser = getDataUiState.value.userDetails.toUser()

@@ -23,14 +23,15 @@ import com.example.swiftwords.R
 import com.example.swiftwords.data.DataSource
 
 @Composable
-fun ProfileImage(
+fun ProfileImagePopUp(
     selectedImageId: Int,
     isVisible: Boolean,
     onCancel: () -> Unit,
-    onSelect: () -> Unit,
+    onSelect: (Int) -> Unit,
     isCharacterFemale: Boolean
 ) {
-    val listOfCharacter = if (isCharacterFemale) DataSource().profileImagesFemale else DataSource().profileImagesMale
+    val listOfCharacter =
+        if (isCharacterFemale) DataSource().profileImagesFemale else DataSource().profileImagesMale
     if (isVisible) {
         Dialog(
             onDismissRequest = onCancel
@@ -50,7 +51,10 @@ fun ProfileImage(
                         modifier = Modifier
                             .padding(8.dp)
                             .clip(CircleShape)
-                            .clickable { onSelect() }
+                            .clickable {
+                                onSelect(index)
+                                onCancel()
+                            }
                             .border(
                                 width = if (selectedImageId == index) 2.dp else 0.dp,
                                 color = if (selectedImageId == index) MaterialTheme.colorScheme.primary else Color.Transparent,

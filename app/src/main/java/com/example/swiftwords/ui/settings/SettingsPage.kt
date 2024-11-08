@@ -47,6 +47,7 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import com.example.swiftwords.R
 import com.example.swiftwords.data.DataSource
+import com.example.swiftwords.ui.elements.ProfileImagePopUp
 import com.example.swiftwords.ui.elements.brighten
 import kotlin.reflect.KFunction1
 
@@ -61,71 +62,75 @@ fun SettingsPage(
     nickname: String,
     character: Boolean,
     levelTime: Long,
+    profileSelected: Int,
+    changeProfilePic: KFunction1<Int, Unit>,
 ) {
     val color by remember { mutableStateOf(DataSource().colorPairs[dataColor].darkColor) }
     val scrollState = rememberScrollState()
     var displayEdit by rememberSaveable { mutableStateOf(false) }
     var newName by remember { mutableStateOf(TextFieldValue(nickname)) }
+    var showProfilePhotos by remember { mutableStateOf(false) }
 
-    Box(
+    Column(
         modifier = Modifier.fillMaxSize()
     ) {
-        Column(
-            modifier = Modifier.fillMaxSize()
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.Start,
+            modifier = Modifier
+                .fillMaxWidth()
         ) {
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.Start,
+            IconButton(
+                onClick = { navigateOut() },
                 modifier = Modifier
-                    .fillMaxWidth()
+                    .padding(start = 5.dp)
             ) {
-                IconButton(
-                    onClick = { navigateOut() },
-                    modifier = Modifier
-                        .padding(start = 5.dp)
-                ) {
-                    Icon(
-                        imageVector = Icons.AutoMirrored.Filled.ArrowBack, // Use the appropriate icon
-                        contentDescription = stringResource(id = R.string.settings),
-                        modifier = Modifier.size(30.dp)
-                    )
-                }
-                Spacer(modifier = Modifier.weight(0.65f))
-                Text(
-                    text = "Setting",
-                    style = MaterialTheme.typography.titleSmall.copy(fontSize = 35.sp)
-                )
-                Spacer(modifier = Modifier.weight(1f))
-            }
-            Column(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .verticalScroll(scrollState)
-            ) {
-                Spacer(modifier = Modifier.padding(10.dp))
-                OneSettingMenuLong(
-                    stringResource(R.string.level_time),
-                    listOf(35000L, 40000L, 50000L, 60000L, 70000L),
-                    updateTime,
-                    levelTime,
-                    color
-                )
-                Spacer(modifier = Modifier.padding(5.dp))
-                OneSettingMenuStrings(
-                    stringResource(R.string.change_character),
-                    listOf(stringResource(R.string.female), stringResource(R.string.male)),
-                    changeCharacter,
-                    character,
-                    color
-                )
-                Spacer(modifier = Modifier.padding(5.dp))
-                OneSettingSimple(stringResource(R.string.introdacton), introduction)
-                Spacer(modifier = Modifier.padding(5.dp))
-                OneSettingPopUp(
-                    stringResource(R.string.edit_name),
-                    onClick = { displayEdit = true }
+                Icon(
+                    imageVector = Icons.AutoMirrored.Filled.ArrowBack, // Use the appropriate icon
+                    contentDescription = stringResource(id = R.string.settings),
+                    modifier = Modifier.size(30.dp)
                 )
             }
+            Spacer(modifier = Modifier.weight(0.65f))
+            Text(
+                text = "Setting",
+                style = MaterialTheme.typography.titleSmall.copy(fontSize = 35.sp)
+            )
+            Spacer(modifier = Modifier.weight(1f))
+        }
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .verticalScroll(scrollState)
+        ) {
+            Spacer(modifier = Modifier.padding(10.dp))
+            OneSettingMenuLong(
+                stringResource(R.string.level_time),
+                listOf(35000L, 40000L, 50000L, 60000L, 70000L),
+                updateTime,
+                levelTime,
+                color
+            )
+            Spacer(modifier = Modifier.padding(5.dp))
+            OneSettingMenuStrings(
+                stringResource(R.string.change_character),
+                listOf(stringResource(R.string.female), stringResource(R.string.male)),
+                changeCharacter,
+                character,
+                color
+            )
+            Spacer(modifier = Modifier.padding(5.dp))
+            OneSettingSimple(stringResource(R.string.introdacton), introduction)
+            Spacer(modifier = Modifier.padding(5.dp))
+            OneSettingPopUp(
+                stringResource(R.string.edit_name),
+                onClick = { displayEdit = true }
+            )
+            Spacer(modifier = Modifier.padding(5.dp))
+            OneSettingSimple(
+                stringResource(R.string.change_profile),
+                onClick = { showProfilePhotos = it }
+            )
         }
     }
     if (displayEdit) {
@@ -143,6 +148,13 @@ fun SettingsPage(
             )
         }
     }
+    ProfileImagePopUp(
+        profileSelected,
+        showProfilePhotos,
+        { showProfilePhotos = false },
+        changeProfilePic,
+        character
+    )
 }
 
 @Composable
@@ -226,7 +238,7 @@ fun NewNamePopUp(
 
 
 @Composable
-fun OneSettingSimple(text: String, onClick: KFunction1<Boolean, Unit>) {
+fun OneSettingSimple(text: String, onClick: (Boolean) -> Unit) {
     Row(
         modifier = Modifier
             .fillMaxWidth()

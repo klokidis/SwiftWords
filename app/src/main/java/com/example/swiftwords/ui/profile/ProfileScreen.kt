@@ -1,6 +1,7 @@
 package com.example.swiftwords.ui.profile
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -20,6 +21,10 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -30,6 +35,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.swiftwords.R
+import com.example.swiftwords.data.DataSource
+import com.example.swiftwords.ui.elements.ProfileImagePopUp
 import com.example.swiftwords.ui.theme.SwiftWordsTheme
 
 @Composable
@@ -39,13 +46,16 @@ fun ProfileScreen(
     highScore: Int,
     name: String,
     character: Boolean,
-    navigate: () -> Unit
+    pictureId: Int,
+    navigate: () -> Unit,
+    changeProfilePic: (Int) -> Unit
 ) {
     val scrollState = rememberScrollState()
+    var showProfilePhotos by remember { mutableStateOf(false) }
     val painter = if (character) {
-        painterResource(id = R.drawable.female_icon)//true for f
+        painterResource(id = DataSource().profileImagesFemale[pictureId])//true for f
     } else {
-        painterResource(id = R.drawable.male_icon)//false for m
+        painterResource(id = DataSource().profileImagesMale[pictureId])//false for m
     }
     Box(
         modifier = Modifier
@@ -66,7 +76,7 @@ fun ProfileScreen(
                     .padding(top = 15.dp)
                     .size(160.dp)
                     .clip(CircleShape)
-                //.border(2.dp, DataSource().colorPairs[color].darkColor, CircleShape)//optional
+                    .clickable { showProfilePhotos = true  }
             )
             Spacer(modifier = Modifier.padding(4.dp))
             Text(
@@ -91,6 +101,13 @@ fun ProfileScreen(
             )
         }
     }
+    ProfileImagePopUp(
+        pictureId,
+        showProfilePhotos,
+        { showProfilePhotos = false },
+        changeProfilePic,
+        character
+    )
 }
 
 @Composable
@@ -129,12 +146,22 @@ fun TextScores(content: String, score: String) {
 @Composable
 fun ProfilePreview() {
     SwiftWordsTheme {
-        ProfileScreen(
-            20,
-            1,
-            2,
-            "dimitris",
-            true
-        ) { }
+        val changeProfilePic: (Int) -> Unit = { newPicId ->
+            // For demonstration purposes, printing the new picture ID
+            println("Profile picture changed to ID: $newPicId")
+        }
+
+        SwiftWordsTheme {
+            ProfileScreen(
+                currentLevel = 20,
+                streak = 1,
+                highScore = 2,
+                name = "dimitris",
+                character = true,
+                pictureId = 1,
+                navigate = { },
+                changeProfilePic = changeProfilePic // Pass the function here
+            )
+        }
     }
 }

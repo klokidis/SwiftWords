@@ -247,7 +247,10 @@ fun SwiftWordsApp(
                     updateName = dataViewmodel::updateName,
                     updateCharacter = dataViewmodel::updateCharacter,
                     playLetterSound = soundViewModel::playLetterSound,
-                    nickName = dataUiState.userDetails.nickname
+                    nickName = dataUiState.userDetails.nickname,
+                    profileSelected = dataUiState.userDetails.profileSelected,
+                    changeProfilePic = dataViewmodel::changeProfilePic,
+                    isCharacterFemale = dataUiState.userDetails.character
                 )
             }
             composable(route = SwiftWordsScreen.Levels.name) {
@@ -315,6 +318,8 @@ fun SwiftWordsApp(
                         data.highScore,
                         data.nickname,
                         data.character,
+                        data.profileSelected,
+                        changeProfilePic = dataViewmodel::changeProfilePic,
                         navigate = { navController.navigate(SwiftWordsScreen.Settings.name) }
                     )
                 }
@@ -392,7 +397,9 @@ fun SwiftWordsApp(
                     character = dataUiState.userDetails.character,
                     levelTime = dataUiState.userDetails.levelTime,
                     navigateOut = { navController.navigateUp() },
-                    introduction = dataViewmodel::updateInitialState
+                    introduction = dataViewmodel::updateInitialState,
+                    profileSelected = dataUiState.userDetails.profileSelected,
+                    changeProfilePic = dataViewmodel::changeProfilePic
                 )
             }
         }
