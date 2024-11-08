@@ -187,7 +187,9 @@ fun PopUp(
                 colors = CardDefaults.cardColors(MaterialTheme.colorScheme.secondary)
             ) {
                 Column(
-                    modifier = Modifier.padding(30.dp),
+                    modifier = Modifier
+                        .padding(30.dp)
+                        .verticalScroll(rememberScrollState()),
                     verticalArrangement = Arrangement.Center,
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {

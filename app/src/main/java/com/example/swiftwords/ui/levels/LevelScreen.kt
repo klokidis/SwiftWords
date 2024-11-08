@@ -122,6 +122,12 @@ fun LevelScreen(
             }
     }
 
+    LaunchedEffect(Unit) {
+        val indexToScroll =
+            dataUiState.userDetails.currentLevel - dataUiState.userDetails.starterLevel
+        listState.scrollToItem(if ((indexToScroll - 1) > 0) indexToScroll - 1 else indexToScroll)
+    }
+
     LazyColumn(
         state = listState,
         modifier = Modifier

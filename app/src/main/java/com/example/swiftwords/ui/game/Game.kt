@@ -904,7 +904,8 @@ fun DisplayResults(
                     } else {
                         Column(
                             modifier = Modifier
-                                .padding(10.dp),
+                                .padding(10.dp)
+                                .verticalScroll(rememberScrollState()),
                             verticalArrangement = Arrangement.Center,
                             horizontalAlignment = Alignment.CenterHorizontally
                         ) {
@@ -1098,7 +1099,9 @@ fun ScoreContent(
     size: Dp
 ) {
     Column(
-        modifier = Modifier.padding(10.dp),
+        modifier = Modifier
+            .padding(10.dp)
+            .verticalScroll(rememberScrollState()),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
