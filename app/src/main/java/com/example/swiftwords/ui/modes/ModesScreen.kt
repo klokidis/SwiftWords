@@ -1,6 +1,5 @@
 package com.example.swiftwords.ui.modes
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -12,10 +11,13 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -27,7 +29,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -53,7 +54,6 @@ fun ModesScreen(
     changeGameMode: KFunction1<Int, Unit>,
     startShuffle: KFunction3<Boolean, () -> Unit, Long, Unit>,
     sound: KFunction0<Unit>,
-    characterIsFemale: Boolean,
     isDarkTheme: Boolean = isSystemInDarkTheme(),
 ) {
     val scrollState = rememberScrollState()
@@ -110,7 +110,6 @@ fun ModesScreen(
         DataSource().colorPairs[color!!].darkColor,
         navigateCustomGame,
         { visible = false },
-        characterIsFemale,
         changeTime,
         changeGameMode,
         startShuffle,
@@ -158,10 +157,9 @@ fun BottomCard(
 @Composable
 fun PopUp(
     visible: Boolean,
-    textColor: Color,
+    colorTheme: Color,
     navigate: () -> Unit,
     hide: () -> Unit,
-    characterIsFemale: Boolean,
     changeTime: (Long) -> Unit,
     changeGameMode: (Int) -> Unit,
     startShuffle: KFunction3<Boolean, () -> Unit, Long, Unit>,
@@ -193,10 +191,11 @@ fun PopUp(
                     verticalArrangement = Arrangement.Center,
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
-                    Image(
-                        painter = painterResource(id = if (characterIsFemale) R.drawable.female_half else R.drawable.male_half),
+                    Icon(
+                        imageVector = Icons.Default.Settings,
                         modifier = Modifier.size(100.dp),
-                        contentDescription = null
+                        contentDescription = null,
+                        tint = colorTheme
                     )
                     Row(
                         modifier = Modifier.padding(top = 15.dp)
@@ -208,7 +207,7 @@ fun PopUp(
                                     text = selectedTime?.toString()?.take(2)
                                         ?: stringResource(R.string.select_time),
                                     style = MaterialTheme.typography.titleSmall.copy(fontSize = 18.sp),
-                                    color = textColor
+                                    color = colorTheme
                                 )
                             }
                             DropdownMenu(
@@ -265,7 +264,7 @@ fun PopUp(
                                     text = selectedModeVisible
                                         ?: stringResource(R.string.select_mode),
                                     style = MaterialTheme.typography.titleSmall.copy(fontSize = 18.sp),
-                                    color = textColor
+                                    color = colorTheme
                                 )
                             }
                             DropdownMenu(
@@ -299,7 +298,7 @@ fun PopUp(
                             Text(
                                 stringResource(R.string.cancel),
                                 style = MaterialTheme.typography.titleSmall.copy(fontSize = 18.sp),
-                                color = textColor
+                                color = colorTheme
                             )
                         }
                         TextButton(
@@ -315,7 +314,7 @@ fun PopUp(
                             Text(
                                 stringResource(R.string.confirm),
                                 style = MaterialTheme.typography.titleSmall.copy(fontSize = 18.sp),
-                                color = if (selectedTime == null || selectedMode == null) Color.Gray else textColor
+                                color = if (selectedTime == null || selectedMode == null) Color.Gray else colorTheme
                             )
                         }
                     }

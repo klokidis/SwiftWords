@@ -95,7 +95,7 @@ fun ProfileScreen(
                 .align(Alignment.TopEnd)
         ) {
             Icon(
-                imageVector = Icons.Default.Settings, // Use the appropriate icon
+                imageVector = Icons.Default.Settings,
                 contentDescription = stringResource(id = R.string.settings),
                 modifier = Modifier.size(28.dp)
             )
