@@ -17,15 +17,19 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
@@ -49,6 +53,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.window.Dialog
 import androidx.core.content.ContextCompat
 import androidx.core.content.PermissionChecker
 import com.example.swiftwords.R
@@ -229,6 +234,7 @@ fun SetNickName(
     nickName: String
 ) {
     var textState by rememberSaveable { mutableStateOf(nickName) }
+    var showProfilePhotos by rememberSaveable { mutableStateOf(false) }
     var isError by remember { mutableStateOf(textState.isBlank() || textState.trim().length !in 2..15) }
     val painter = if (chose == 1) {
         painterResource(id = R.drawable.male_icon)
@@ -246,14 +252,29 @@ fun SetNickName(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Spacer(modifier = Modifier.weight(0.3f))
-        Image(
-            painter = painter,
-            contentDescription = null,
-            contentScale = ContentScale.Crop,
+        Box(
             modifier = Modifier
-                .size(160.dp)
-                .clip(CircleShape)
-        )
+                .wrapContentSize()
+        ) {
+            Image(
+                painter = painter,
+                contentDescription = null,
+                contentScale = ContentScale.Crop,
+                modifier = Modifier
+                    .size(160.dp)
+                    .clip(CircleShape)
+                    .clickable { showProfilePhotos = true }
+            )
+            Icon(
+                imageVector = Icons.Default.Edit,
+                contentDescription = stringResource(R.string.edit),
+                modifier = Modifier
+                    .align(Alignment.TopEnd)
+                    .size(27.dp)
+                    .clip(CircleShape)
+                    .clickable { showProfilePhotos = true },
+            )
+        }
         Spacer(modifier = Modifier.padding(20.dp))
         OutlinedTextField(
             value = textState,
@@ -301,6 +322,13 @@ fun SetNickName(
             ) {
                 Text(stringResource(R.string.save))
             }
+        }
+    }
+    if (showProfilePhotos) {
+        Dialog(
+            onDismissRequest = { showProfilePhotos = false }
+        ) {
+
         }
     }
 }
