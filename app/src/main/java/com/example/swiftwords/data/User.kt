@@ -2,7 +2,6 @@ package com.example.swiftwords.data
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-
 @Entity(tableName = "user")
 data class User(
     @PrimaryKey
@@ -21,5 +20,6 @@ data class User(
     val starterLevel: Int,
     val endingLevel: Int,
     val checked: Boolean,
-    val levelTime: Long
+    val levelTime: Long,
+    val profileSelected: Int
 )

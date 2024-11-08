@@ -26,6 +26,7 @@ data class UserDetails(
     val endingLevel: Int = 20,
     val checked: Boolean = false,
     val levelTime: Long = 40000,
+    val profileSelected: Int = 0
 )
 
 fun UserDetails.toUser(): User = User(
@@ -44,7 +45,8 @@ fun UserDetails.toUser(): User = User(
     starterLevel = starterLevel,
     endingLevel = endingLevel,
     checked = checked,
-    levelTime = levelTime
+    levelTime = levelTime,
+    profileSelected = profileSelected
 )
 
 
@@ -67,7 +69,8 @@ fun User.toUserDetails(): UserDetails = UserDetails(
     starterLevel = starterLevel,
     endingLevel = endingLevel,
     checked = checked,
-    levelTime = levelTime
+    levelTime = levelTime,
+    profileSelected = profileSelected
 )
 
 class DataViewmodel(private val userRepository: UserRepository) : ViewModel() {
