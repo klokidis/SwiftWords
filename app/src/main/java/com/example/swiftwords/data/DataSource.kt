@@ -3,6 +3,7 @@ package com.example.swiftwords.data
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import com.example.swiftwords.R
 
 class DataSource {
 
@@ -19,6 +20,20 @@ class DataSource {
         ColorPair(id = 9, lightColor = Color.White, darkColor = Color(0xFF5E0000)),
         ColorPair(id = 10, lightColor = Color.White, darkColor = Color(0xFFC40000)),
         ColorPair(id = 11, lightColor = Color.White, darkColor = Color(0xFFE24615)),
+    )
+
+    val profileImagesMale = listOf(
+        R.drawable.male_icon,
+        R.drawable.male_icon,
+        R.drawable.male_icon,
+        R.drawable.male_icon
+    )
+
+    val profileImagesFemale = listOf(
+        R.drawable.female_icon,
+        R.drawable.female_icon,
+        R.drawable.female_icon,
+        R.drawable.female_icon
     )
 
     val paddingList: List<Pair<Dp, Dp>> = listOf(

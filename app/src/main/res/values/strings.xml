@@ -3,6 +3,7 @@
     <string name="home">Home</string>
     <string name="modes">Game Modes</string>
     <string name="profile">Profile</string>
+    <string name="profile_drawings">Profile Drawings</string>
     <string name="game">Game</string>
     <string name="exit">Exit</string>
     <string name="textfield">text Field for answers</string>

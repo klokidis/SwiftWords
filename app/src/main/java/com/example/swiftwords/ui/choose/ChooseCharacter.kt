@@ -53,13 +53,13 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.compose.ui.window.Dialog
 import androidx.core.content.ContextCompat
 import androidx.core.content.PermissionChecker
 import com.example.swiftwords.R
 import com.example.swiftwords.ui.AppViewModelProvider
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.swiftwords.ui.elements.LetterByLetterText
+import com.example.swiftwords.ui.elements.ProfileImage
 import kotlin.reflect.KFunction1
 import kotlin.reflect.KFunction2
 
@@ -324,13 +324,15 @@ fun SetNickName(
             }
         }
     }
-    if (showProfilePhotos) {
-        Dialog(
-            onDismissRequest = { showProfilePhotos = false }
-        ) {
-
-        }
-    }
+    ProfileImage(
+        1,
+        showProfilePhotos,
+        { showProfilePhotos = false },
+        {
+            showProfilePhotos = false
+        },
+        true
+    )
 }
 
 @Composable
