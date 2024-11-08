@@ -8,9 +8,7 @@ import androidx.activity.viewModels
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
-import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import com.example.swiftwords.ui.AppViewModelProvider
 import com.example.swiftwords.ui.SwiftWordsApp
@@ -46,12 +44,5 @@ class MainActivity : ComponentActivity() {
     override fun onResume() {
         super.onResume()
         soundViewModel.unMuteSounds()
-    }
-}
-
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-    SwiftWordsTheme {
     }
 }
