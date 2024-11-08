@@ -882,12 +882,13 @@ fun DisplayResults(
                         } else {
                             Color.Gray
                         },
-                        textColor = textColor
+                        textColor = textColor,
+                        size = 260.dp
                     )
                 } else {
                     if (!isMode && (dateNow.substring(0, 10) != dataDate()) && score() >= 1) {
                         ScoreContent(
-                            imageId = if (characterIsFemale) R.drawable.female_half else R.drawable.male_half,
+                            imageId = getFireImage(streakLevel),
                             text = stringResource(R.string.streak_increase),
                             buttonText = stringResource(R.string.claim),
                             buttonAction = { increaseStreak() },
@@ -897,7 +898,8 @@ fun DisplayResults(
                             } else {
                                 Color.Gray
                             },
-                            textColor = textColor
+                            textColor = textColor,
+                            size = 100.dp
                         )
                     } else {
                         Column(
@@ -1074,6 +1076,16 @@ fun DisplayResults(
     }
 }
 
+fun getFireImage(streakLevel: Int): Int {
+    return when {
+        streakLevel < 5 -> R.drawable.fire_on
+        streakLevel < 15 -> R.drawable.fire3
+        streakLevel < 30 -> R.drawable.fire4
+        streakLevel < 40 -> R.drawable.fire5
+        else -> R.drawable.fire6
+    }
+}
+
 @Composable
 fun ScoreContent(
     imageId: Int,
@@ -1082,7 +1094,8 @@ fun ScoreContent(
     buttonAction: () -> Unit,
     buttonsEnabled: Boolean,
     boxColor: Color,
-    textColor: Color
+    textColor: Color,
+    size: Dp
 ) {
     Column(
         modifier = Modifier.padding(10.dp),
@@ -1091,7 +1104,7 @@ fun ScoreContent(
     ) {
         Image(
             painter = painterResource(id = imageId),
-            modifier = Modifier.size(260.dp),
+            modifier = Modifier.size(size),
             contentDescription = null
         )
         Spacer(modifier = Modifier.padding(5.dp))

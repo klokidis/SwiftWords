@@ -75,6 +75,7 @@ import com.example.swiftwords.ui.AppViewModelProvider
 import com.example.swiftwords.ui.elements.CurrentLevel
 import com.example.swiftwords.data.ItemDetailsUiState
 import com.example.swiftwords.ui.elements.Levels
+import com.example.swiftwords.ui.game.getFireImage
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.Calendar
@@ -330,17 +331,7 @@ fun TopBar(
 
                     else -> {
                         painterResource(
-                            id = when {
-                                streak < 5 -> R.drawable.fire_on
-
-                                streak < 20 -> R.drawable.fire3
-
-                                streak < 30 -> R.drawable.fire4
-
-                                streak < 40 -> R.drawable.fire5
-
-                                else -> R.drawable.fire6
-                            }
+                            id = getFireImage(streak)
                         )
                     }
                 },
