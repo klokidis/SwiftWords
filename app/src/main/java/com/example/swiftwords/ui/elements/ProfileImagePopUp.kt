@@ -4,7 +4,6 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.grid.GridCells
@@ -40,7 +39,6 @@ fun ProfileImagePopUp(
                 columns = GridCells.Fixed(2), // 2 columns
                 modifier = Modifier
                     .wrapContentSize(),
-                contentPadding = PaddingValues(8.dp),
                 horizontalArrangement = Arrangement.Center,
                 verticalArrangement = Arrangement.Center,
             ) {
@@ -49,7 +47,7 @@ fun ProfileImagePopUp(
                         painter = painterResource(id = listOfCharacter[index]),
                         contentDescription = stringResource(R.string.profile_drawings),
                         modifier = Modifier
-                            .padding(8.dp)
+                            .padding(bottom = 8.dp, end = 4.dp, start = 4.dp)
                             .clip(CircleShape)
                             .clickable {
                                 onSelect(index)
