@@ -24,6 +24,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
@@ -35,6 +36,8 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -71,9 +74,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.swiftwords.data.ColorPair
+import com.example.swiftwords.data.DataSource
 import com.example.swiftwords.ui.AppViewModelProvider
 import com.example.swiftwords.ui.elements.CurrentLevel
-import com.example.swiftwords.data.ItemDetailsUiState
 import com.example.swiftwords.ui.elements.Levels
 import com.example.swiftwords.ui.game.getFireImage
 import kotlinx.coroutines.launch
@@ -85,7 +88,10 @@ import kotlin.math.abs
 @Composable
 fun LevelScreen(
     levelViewModel: LevelViewModel = viewModel(factory = AppViewModelProvider.Factory),
-    dataUiState: ItemDetailsUiState,
+    currentLevel: Int,
+    starterLevel: Int,
+    endingLevel: Int,
+    color: Int,
     navigateToLevel: () -> Unit,
 ) {
     val levelUiState by levelViewModel.uiState.collectAsState()
@@ -99,32 +105,30 @@ fun LevelScreen(
     var isCurrentLevelBelowVisible by remember { mutableStateOf(false) }
 
     // LaunchedEffect to track scroll position but avoid recomposing unnecessarily
-    LaunchedEffect(listState, dataUiState.userDetails.currentLevel) {
+    LaunchedEffect(listState, currentLevel) {
         snapshotFlow { listState.layoutInfo }
             .collect { layoutInfo ->
-                dataUiState.userDetails.let { userDetails ->
-                    val currentLevelIndex = userDetails.currentLevel - userDetails.starterLevel
+                val currentLevelIndex = currentLevel - starterLevel
 
-                    // Update the state based on the position of the current level
-                    val firstVisibleIndex = layoutInfo.visibleItemsInfo.firstOrNull()?.index ?: 0
-                    val lastVisibleIndex = layoutInfo.visibleItemsInfo.lastOrNull()?.index ?: 0
+                // Update the state based on the position of the current level
+                val firstVisibleIndex = layoutInfo.visibleItemsInfo.firstOrNull()?.index ?: 0
+                val lastVisibleIndex = layoutInfo.visibleItemsInfo.lastOrNull()?.index ?: 0
 
-                    val isAbove = currentLevelIndex < firstVisibleIndex
-                    val isBelow = currentLevelIndex > lastVisibleIndex
+                val isAbove = currentLevelIndex < firstVisibleIndex
+                val isBelow = currentLevelIndex > lastVisibleIndex
 
-                    if (isCurrentLevelAboveVisible != isAbove) {
-                        isCurrentLevelAboveVisible = isAbove
-                    }
-                    if (isCurrentLevelBelowVisible != isBelow) {
-                        isCurrentLevelBelowVisible = isBelow
-                    }
+                if (isCurrentLevelAboveVisible != isAbove) {
+                    isCurrentLevelAboveVisible = isAbove
                 }
+                if (isCurrentLevelBelowVisible != isBelow) {
+                    isCurrentLevelBelowVisible = isBelow
+                }
+
             }
     }
 
     LaunchedEffect(Unit) {
-        val indexToScroll =
-            dataUiState.userDetails.currentLevel - dataUiState.userDetails.starterLevel
+        val indexToScroll = currentLevel - starterLevel
         listState.scrollToItem(if ((indexToScroll - 1) > 0) indexToScroll - 1 else indexToScroll)
     }
 
@@ -135,7 +139,7 @@ fun LevelScreen(
         verticalArrangement = Arrangement.Top,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        itemsIndexed((dataUiState.userDetails.starterLevel..dataUiState.userDetails.endingLevel).toList()) { index, level ->
+        itemsIndexed((starterLevel..endingLevel).toList()) { index, level ->
             if (level > 0) {
                 val (leftPadding, rightPadding) = levelUiState.padding.getOrNull(index)
                     ?: Pair(0.dp, 0.dp)
@@ -144,9 +148,9 @@ fun LevelScreen(
                     rightPadding = rightPadding,
                     leftPadding = leftPadding,
                     thisLevel = level,
-                    currentLevel = dataUiState.userDetails.currentLevel,
+                    currentLevel = currentLevel,
                     onClick = navigateToLevel,
-                    color = dataUiState.userDetails.color,
+                    color = color,
                     colors = levelUiState.colors
                 )
             }
@@ -172,7 +176,7 @@ fun LevelScreen(
             contentAlignment = Alignment.BottomEnd
         ) {
             val animatedColor by animateColorAsState(
-                targetValue = levelUiState.colors[dataUiState.userDetails.color].darkColor,
+                targetValue = levelUiState.colors[color].darkColor,
                 animationSpec = tween(durationMillis = 300),
                 label = ""
             )
@@ -190,8 +194,7 @@ fun LevelScreen(
                 onClick = {
                     // Scroll to the current level when the button is clicked
                     coroutineScope.launch {
-                        val indexToScroll =
-                            dataUiState.userDetails.currentLevel - dataUiState.userDetails.starterLevel
+                        val indexToScroll = currentLevel - starterLevel
                         listState.scrollToItem(if ((indexToScroll - 1) > 0) indexToScroll - 1 else indexToScroll)
                     }
                 }) {
@@ -221,8 +224,8 @@ fun LevelScreen(
     ) {
         BottomLevel(
             onClick = navigateToLevel,
-            level = dataUiState.userDetails.currentLevel.toString(),
-            color = dataUiState.userDetails.color,
+            level = currentLevel.toString(),
+            color = color,
             colors = levelUiState.colors
         )
 
@@ -284,16 +287,24 @@ fun LevelCard(
 
 @Composable
 fun TopBar(
-    livesLeft: Int,
+    //livesLeft: Int, //will be used in the future
     streak: Int,
     color: Int,
     changeColorFun: (Int) -> Unit,
     colors: List<ColorPair>,
     streakDateData: String,
-    dateNow: String
+    dateNow: String,
+    selectedTime: Long,
+    timeList: List<Long> = DataSource().timeList,
+    isDarkTheme: Boolean = isSystemInDarkTheme(),
+    onTimeChange: (Long) -> Unit,
 ) {
     val formattedStreakDate = safeSubstring(streakDateData, 10)
     val formattedDateNow = safeSubstring(dateNow, 10)
+    var isExpandedColor by remember { mutableStateOf(false) }
+
+
+
     Surface(
         modifier = Modifier
             .fillMaxWidth(),
@@ -306,7 +317,12 @@ fun TopBar(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.Center
         ) {
-            MenuColorPicker(color, changeColorFun, colors)
+            MenuColorPicker(
+                color,
+                changeColorFun,
+                colors,
+                isExpandedColor
+            ) { isExpandedColor = !isExpandedColor }
 
             Spacer(modifier = Modifier.weight(1f))
 
@@ -363,16 +379,98 @@ fun TopBar(
 
             Spacer(modifier = Modifier.weight(1f))
 
-            Image(
-                painter = painterResource(id = R.drawable.heart),
-                modifier = Modifier.size(28.dp),
-                contentDescription = stringResource(R.string.lives_left)
+            TimerMenu(
+                isExpandedColor,
+                colors,
+                color,
+                timeList,
+                selectedTime,
+                isDarkTheme,
+                onTimeChange
             )
-            Text(
-                text = livesLeft.toString(),
-                modifier = Modifier.padding(start = 3.dp, bottom = 3.dp, end = 5.dp),
-                style = MaterialTheme.typography.titleMedium.copy(fontSize = 24.sp)
+
+        }
+    }
+}
+
+@Composable
+private fun TimerMenu(
+    isExpandedColor: Boolean,
+    colors: List<ColorPair>,
+    color: Int,
+    timeList: List<Long>,
+    selectedTime: Long,
+    isDarkTheme: Boolean,
+    onNewTime: (Long) -> Unit
+) {
+    var isClickedTime by remember { mutableStateOf(false) }
+    val animatedColorIconButton by animateColorAsState(
+        if (isClickedTime) colors[color].darkColor else MaterialTheme.colorScheme.background,
+        animationSpec = tween(durationMillis = 300),
+        label = ""
+    )
+    Box {
+        IconButton(
+            onClick = {
+                if (!isExpandedColor) {
+                    isClickedTime = !isClickedTime
+                }
+            },
+            modifier = Modifier.drawBehind {
+                if (!isExpandedColor) { // hides draw behind to not interfere
+                    drawCircle(
+                        color = animatedColorIconButton,
+                        radius = size.minDimension / 3 + 10, // Set the radius to half of the smaller dimension to make a perfect circle
+                        center = Offset(
+                            size.width / 2,
+                            size.height / 2
+                        ) // Center the circle
+                    )
+                }
+            }
+        ) {
+            Icon(
+                modifier = Modifier.size(30.dp),
+                imageVector = if (isClickedTime) {
+                    ImageVector.vectorResource(R.drawable.timer_fill_24px)
+                } else {
+                    ImageVector.vectorResource(R.drawable.timer_24px)
+                },
+                contentDescription = stringResource(R.string.pickTheme),
+                tint = if (isClickedTime) MaterialTheme.colorScheme.surface else colors[color].darkColor
             )
+        }
+        DropdownMenu(
+            expanded = isClickedTime,
+            modifier = Modifier.wrapContentSize(),
+            onDismissRequest = { isClickedTime = false }
+        ) {
+            Row {
+                Column(modifier = Modifier.width(50.dp)) {
+                    timeList.forEach { time ->
+                        val firstTwoDigits = time.toString().take(2)
+                        DropdownMenuItem(
+                            onClick = {
+                                onNewTime(time)
+                                isClickedTime = false
+                            },
+                            text = {
+                                Text(
+                                    firstTwoDigits,
+                                    style = MaterialTheme.typography.titleSmall.copy(
+                                        fontSize = 18.sp
+                                    ),
+                                    color = when {
+                                        time == selectedTime -> colors[color].darkColor
+                                        isDarkTheme -> Color.White
+                                        else -> Color.Black
+                                    }
+                                )
+                            }
+                        )
+                    }
+                }
+            }
         }
     }
 }
@@ -416,9 +514,11 @@ fun areDatesMoreThanOneDaysApart(date1: String, date2: String): Boolean {
 @Composable
 fun MenuColorPicker(
     color: Int,
-    changeColorFun: (Int) -> Unit, colors: List<ColorPair>
+    changeColorFun: (Int) -> Unit,
+    colors: List<ColorPair>,
+    isExpanded: Boolean,
+    changeExpanded: () -> Unit
 ) {
-    var isExpanded by remember { mutableStateOf(false) }
     val scrollState = rememberScrollState()
 
     val animatedColorIconButton by animateColorAsState(
@@ -433,7 +533,7 @@ fun MenuColorPicker(
             horizontalArrangement = Arrangement.Center
         ) {
             IconButton(
-                onClick = { isExpanded = !isExpanded },
+                onClick = changeExpanded,
                 modifier = Modifier.drawBehind {
                     drawCircle(
                         color = animatedColorIconButton,

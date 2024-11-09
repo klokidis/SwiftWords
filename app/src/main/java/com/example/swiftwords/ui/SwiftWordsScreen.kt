@@ -211,14 +211,15 @@ fun SwiftWordsApp(
             if (currentScreen == SwiftWordsScreen.Levels) {
                 dataUiState.userDetails.let {
                     TopBar(
-                        livesLeft = it.lives,
+                        //livesLeft = it.lives,
                         streak = it.streak,
                         streakDateData = it.dailyDate,
                         dateNow = mainUiState.todayDate,
                         color = it.color,
                         changeColorFun = dataViewmodel::updateUserColor,
                         colors = DataSource().colorPairs,
-                        selectedTime = it.levelTime
+                        selectedTime = it.levelTime,
+                        onTimeChange = dataViewmodel::updateTime
                     )
                 }
             }
@@ -255,7 +256,10 @@ fun SwiftWordsApp(
             }
             composable(route = SwiftWordsScreen.Levels.name) {
                 LevelScreen(
-                    dataUiState = dataUiState,
+                    currentLevel = dataUiState.userDetails.currentLevel,
+                    starterLevel=  dataUiState.userDetails.starterLevel,
+                    endingLevel = dataUiState.userDetails.endingLevel,
+                    color = dataUiState.userDetails.color
                 ) {
                     viewModel.changeGameState(false)//tells the game this is not a game mode
                     viewModel.changeTime(dataUiState.userDetails.levelTime)

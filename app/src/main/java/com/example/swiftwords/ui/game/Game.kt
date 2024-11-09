@@ -846,13 +846,15 @@ fun DisplayResults(
         )
     }
 
-    // Launch a coroutine to enable the buttons after a delay
-    LaunchedEffect(Unit) {
-        delay(800L)
-        buttonsEnabled = true
-    }
 
     if (isVisible) {
+
+        // Launch a coroutine to enable the buttons after a delay
+        LaunchedEffect(Unit) {
+            delay(800L)
+            buttonsEnabled = true
+        }
+
         Dialog(onDismissRequest = { }) {
 
             BackHandler {
