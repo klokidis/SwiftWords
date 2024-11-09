@@ -58,6 +58,7 @@ import androidx.core.content.PermissionChecker
 import com.example.swiftwords.R
 import com.example.swiftwords.ui.AppViewModelProvider
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.swiftwords.data.DataSource
 import com.example.swiftwords.ui.elements.LetterByLetterText
 import com.example.swiftwords.ui.elements.ProfileImagePopUp
 import kotlin.reflect.KFunction1
@@ -73,7 +74,6 @@ fun StartingScreen(
     playLetterSound: KFunction2<Char, Float, Unit>,
     profileSelected: Int,
     changeProfilePic: KFunction1<Int, Unit>,
-    isCharacterFemale: Boolean,
 ) {
     val uiState by viewModel.uiState.collectAsState()
 
@@ -155,7 +155,6 @@ fun StartingScreen(
                     nextState = { viewModel.increaseState() },
                     profileSelected = profileSelected,
                     changeProfilePic = changeProfilePic,
-                    isCharacterFemale = isCharacterFemale
                 )
             }
 
@@ -240,15 +239,14 @@ fun SetNickName(
     nickName: String,
     profileSelected: Int,
     changeProfilePic: KFunction1<Int, Unit>,
-    isCharacterFemale: Boolean
 ) {
     var textState by rememberSaveable { mutableStateOf(nickName) }
     var showProfilePhotos by rememberSaveable { mutableStateOf(false) }
     var isError by remember { mutableStateOf(textState.isBlank() || textState.trim().length !in 2..15) }
-    val painter = if (chose == 1) {
-        painterResource(id = R.drawable.male_icon)
+    val painter = if (chose == 0) {
+        painterResource(id = DataSource().profileImagesFemale[profileSelected])
     } else {
-        painterResource(id = R.drawable.female_icon)
+        painterResource(id = DataSource().profileImagesMale[profileSelected])
     }
     val scrollState = rememberScrollState()
 
@@ -270,9 +268,10 @@ fun SetNickName(
                 contentDescription = null,
                 contentScale = ContentScale.Crop,
                 modifier = Modifier
-                    .size(160.dp)
+                    .padding(top = 15.dp)
+                    .size(200.dp)
                     .clip(CircleShape)
-                    .clickable { showProfilePhotos = true }
+                    .clickable { showProfilePhotos = true  },
             )
             Icon(
                 imageVector = Icons.Default.Edit,
@@ -338,7 +337,7 @@ fun SetNickName(
         showProfilePhotos,
         { showProfilePhotos = false },
         changeProfilePic,
-        isCharacterFemale
+        chose == 0
     )
 }
 

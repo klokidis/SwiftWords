@@ -74,9 +74,9 @@ fun ProfileScreen(
                 contentScale = ContentScale.Crop,
                 modifier = Modifier
                     .padding(top = 15.dp)
-                    .size(160.dp)
+                    .size(200.dp)
                     .clip(CircleShape)
-                    .clickable { showProfilePhotos = true  }
+                    .clickable { showProfilePhotos = true  },
             )
             Spacer(modifier = Modifier.padding(4.dp))
             Text(

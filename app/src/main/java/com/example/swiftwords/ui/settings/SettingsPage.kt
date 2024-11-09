@@ -64,6 +64,7 @@ fun SettingsPage(
     levelTime: Long,
     profileSelected: Int,
     changeProfilePic: KFunction1<Int, Unit>,
+    timeList: List<Long> = DataSource().timeList
 ) {
     val color by remember { mutableStateOf(DataSource().colorPairs[dataColor].darkColor) }
     val scrollState = rememberScrollState()
@@ -93,7 +94,7 @@ fun SettingsPage(
             }
             Spacer(modifier = Modifier.weight(0.65f))
             Text(
-                text = "Setting",
+                text = stringResource(R.string.settings),
                 style = MaterialTheme.typography.titleSmall.copy(fontSize = 35.sp)
             )
             Spacer(modifier = Modifier.weight(1f))
@@ -106,7 +107,7 @@ fun SettingsPage(
             Spacer(modifier = Modifier.padding(10.dp))
             OneSettingMenuLong(
                 stringResource(R.string.level_time),
-                listOf(35000L, 40000L, 50000L, 60000L, 70000L),
+                timeList,
                 updateTime,
                 levelTime,
                 color

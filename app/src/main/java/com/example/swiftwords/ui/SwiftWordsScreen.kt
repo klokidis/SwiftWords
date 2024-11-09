@@ -217,7 +217,8 @@ fun SwiftWordsApp(
                         dateNow = mainUiState.todayDate,
                         color = it.color,
                         changeColorFun = dataViewmodel::updateUserColor,
-                        colors = DataSource().colorPairs
+                        colors = DataSource().colorPairs,
+                        selectedTime = it.levelTime
                     )
                 }
             }
@@ -250,7 +251,6 @@ fun SwiftWordsApp(
                     nickName = dataUiState.userDetails.nickname,
                     profileSelected = dataUiState.userDetails.profileSelected,
                     changeProfilePic = dataViewmodel::changeProfilePic,
-                    isCharacterFemale = dataUiState.userDetails.character
                 )
             }
             composable(route = SwiftWordsScreen.Levels.name) {
