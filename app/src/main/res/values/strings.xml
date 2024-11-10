@@ -51,7 +51,7 @@
     <string name="select_mode">Mode</string>
     <string name="confirm">Confirm</string>
     <string name="custom">Custom</string>
-    <string name="consequences">Consequences</string>
+    <string name="effect">Effect</string>
     <string name="level_time">Level time</string>
     <string name="seconds">Seconds</string>
     <string name="edit">Edit</string>

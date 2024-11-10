@@ -94,7 +94,7 @@ fun ModesScreen(
                 )
                 ModeCard(
                     imageRes = if (isDarkTheme) R.drawable.black_con else R.drawable.white_con,
-                    textRes = R.string.consequences,
+                    textRes = R.string.effect,
                     onClick = { navigateConsequencesGame() },
                     color = color,
                     modifier = Modifier
@@ -166,7 +166,7 @@ fun PopUp(
     sound: () -> Unit,
     modeStringOptions: List<String> = listOf(
         stringResource(R.string.shuffle),
-        stringResource(R.string.consequences)
+        stringResource(R.string.effect)
     ),
     modeOptions: List<Int> = listOf(0, 1),
     timeOptions1: List<Long> =
