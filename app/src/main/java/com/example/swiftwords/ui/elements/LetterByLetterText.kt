@@ -67,14 +67,13 @@ private suspend fun animateText(
     callback: (String) -> Unit
 ) {
     delay(100) // a little delay for sound to load
+    val pitch = if (characterIsMale) {
+        1.4f
+    } else {
+        2f
+    }
     for (i in text.indices) { // returns 0..length-1
         val currentLetter = text[i]
-        val pitch = if (characterIsMale) {
-            1.4f
-        } else {
-            2f
-        }
-
         if (i % 2 == 0) {
             playLetterSound(currentLetter, pitch)
         }
