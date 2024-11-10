@@ -67,4 +67,7 @@
     <string name="dialog4">I’m happy to be your companion on this adventure! I’ll have control over the game’s logic, ensuring you have an amazing time. Let’s dive in!</string>
     <string name="change_profile">Change profile</string>
     <string name="pickTime">Pick time for level game</string>
+    <string name="credits">Credits</string>
+    <string name="back">Previous</string>
+    <string name="artist_credit">Art made by @tsuki.chiin</string>
 </resources>

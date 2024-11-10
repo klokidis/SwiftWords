@@ -22,6 +22,16 @@ class DataSource {
         ColorPair(id = 11, lightColor = Color.White, darkColor = Color(0xFFE24615)),
     )
 
+    val allImagesCredit = listOf(
+        R.drawable.female_full_body,
+        R.drawable.male_full_body,
+        R.drawable.male_half_sad,
+        R.drawable.female_half_sad,
+        R.drawable.profile_icon,
+        R.drawable.male_half_sad_eyebags,
+        R.drawable.female_half_sad_eyebags
+    )
+
     val profileImagesMale = listOf(
         R.drawable.male_icon,
         R.drawable.profile_icon,

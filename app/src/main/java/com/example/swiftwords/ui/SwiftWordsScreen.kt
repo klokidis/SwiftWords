@@ -47,6 +47,7 @@ import com.example.swiftwords.data.DataSource
 import com.example.swiftwords.data.GetDataViewModel
 import com.example.swiftwords.model.BarItem
 import com.example.swiftwords.ui.choose.StartingScreen
+import com.example.swiftwords.ui.credits.CreditsScreen
 import com.example.swiftwords.ui.elements.SoundViewModel
 import com.example.swiftwords.ui.elements.darken
 import com.example.swiftwords.ui.game.Game
@@ -65,6 +66,7 @@ enum class SwiftWordsScreen {
     Profile,
     Game,
     Settings,
+    Credits
 }
 
 @Composable
@@ -123,6 +125,7 @@ fun SwiftWordsApp(
                 && currentScreen != SwiftWordsScreen.Settings
                 && currentScreen != SwiftWordsScreen.Choose
                 && currentScreen != SwiftWordsScreen.Loading
+                && currentScreen != SwiftWordsScreen.Credits
             ) {
                 val barItems = listOf(
                     BarItem(
@@ -403,7 +406,13 @@ fun SwiftWordsApp(
                     navigateOut = { navController.navigateUp() },
                     introduction = dataViewmodel::updateInitialState,
                     profileSelected = dataUiState.userDetails.profileSelected,
-                    changeProfilePic = dataViewmodel::changeProfilePic
+                    changeProfilePic = dataViewmodel::changeProfilePic,
+                    navigateCredit = { navController.navigate(SwiftWordsScreen.Credits.name) }
+                )
+            }
+            composable(route = SwiftWordsScreen.Credits.name) {
+                CreditsScreen(
+                    navigateOut = { navController.navigateUp() }
                 )
             }
         }

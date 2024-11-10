@@ -64,7 +64,8 @@ fun SettingsPage(
     levelTime: Long,
     profileSelected: Int,
     changeProfilePic: KFunction1<Int, Unit>,
-    timeList: List<Long> = DataSource().timeList
+    timeList: List<Long> = DataSource().timeList,
+    navigateCredit: () -> Unit
 ) {
     val color by remember { mutableStateOf(DataSource().colorPairs[dataColor].darkColor) }
     val scrollState = rememberScrollState()
@@ -88,7 +89,7 @@ fun SettingsPage(
             ) {
                 Icon(
                     imageVector = Icons.AutoMirrored.Filled.ArrowBack, // Use the appropriate icon
-                    contentDescription = stringResource(id = R.string.settings),
+                    contentDescription = stringResource(id = R.string.back),
                     modifier = Modifier.size(30.dp)
                 )
             }
@@ -121,8 +122,6 @@ fun SettingsPage(
                 color
             )
             Spacer(modifier = Modifier.padding(5.dp))
-            OneSettingSimple(stringResource(R.string.introdacton), introduction)
-            Spacer(modifier = Modifier.padding(5.dp))
             OneSettingPopUp(
                 stringResource(R.string.edit_name),
                 onClick = { displayEdit = true }
@@ -132,6 +131,10 @@ fun SettingsPage(
                 stringResource(R.string.change_profile),
                 onClick = { showProfilePhotos = it }
             )
+            Spacer(modifier = Modifier.padding(5.dp))
+            OneSettingSimple(stringResource(R.string.introdacton), introduction)
+            Spacer(modifier = Modifier.padding(5.dp))
+            OneSettingNavigate(stringResource(R.string.credits),  onClick = { navigateCredit() })
         }
     }
     if (displayEdit) {
@@ -376,5 +379,23 @@ fun <T> SettingMenu(
                 }
             }
         }
+    }
+}
+
+@Composable
+fun OneSettingNavigate(text: String, onClick: () -> Unit) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .clickable { onClick() }
+            .size(60.dp)
+            .padding(start = 15.dp, end = 15.dp),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.Start
+    ) {
+        Text(
+            text = text,
+            style = MaterialTheme.typography.titleSmall.copy(fontSize = 25.sp)
+        )
     }
 }
