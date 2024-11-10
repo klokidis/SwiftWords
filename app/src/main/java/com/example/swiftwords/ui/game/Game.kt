@@ -890,7 +890,7 @@ fun DisplayResults(
                 } else {
                     if (!isMode && (dateNow.substring(0, 10) != dataDate()) && score() >= 1) {
                         ScoreContent(
-                            imageId = getFireImage(streakLevel),
+                            imageId = getFireImage(streakLevel + 1),
                             text = stringResource(R.string.streak_increase),
                             buttonText = stringResource(R.string.claim),
                             buttonAction = { increaseStreak() },

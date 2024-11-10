@@ -69,7 +69,7 @@ private suspend fun animateText(
     for (i in text.indices) { // returns 0..length-1
         val currentLetter = text[i]
         val pitch = if (characterIsMale) {
-            1.3f
+            1.4f
         } else {
             2f
         }
