@@ -27,7 +27,8 @@ fun ProfileImagePopUp(
     isVisible: Boolean,
     onCancel: () -> Unit,
     onSelect: (Int) -> Unit,
-    isCharacterFemale: Boolean
+    isCharacterFemale: Boolean,
+    borderColor: Color = MaterialTheme.colorScheme.primary
 ) {
     val listOfCharacter =
         if (isCharacterFemale) DataSource().profileImagesFemale else DataSource().profileImagesMale
@@ -55,7 +56,7 @@ fun ProfileImagePopUp(
                             }
                             .border(
                                 width = if (selectedImageId == index) 2.dp else 0.dp,
-                                color = if (selectedImageId == index) MaterialTheme.colorScheme.primary else Color.Transparent,
+                                color = if (selectedImageId == index) borderColor else Color.Transparent,
                                 shape = CircleShape
                             )
                     )

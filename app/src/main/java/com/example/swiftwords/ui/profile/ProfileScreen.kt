@@ -47,8 +47,9 @@ fun ProfileScreen(
     name: String,
     character: Boolean,
     pictureId: Int,
+    colorBoarder: Int,
     navigate: () -> Unit,
-    changeProfilePic: (Int) -> Unit
+    changeProfilePic: (Int) -> Unit,
 ) {
     val scrollState = rememberScrollState()
     var showProfilePhotos by remember { mutableStateOf(false) }
@@ -106,7 +107,8 @@ fun ProfileScreen(
         showProfilePhotos,
         { showProfilePhotos = false },
         changeProfilePic,
-        character
+        character,
+        DataSource().colorPairs[colorBoarder].darkColor
     )
 }
 
@@ -159,6 +161,7 @@ fun ProfilePreview() {
                 name = "dimitris",
                 character = true,
                 pictureId = 1,
+                colorBoarder = 2,
                 navigate = { },
                 changeProfilePic = changeProfilePic // Pass the function here
             )

@@ -154,7 +154,8 @@ fun SettingsPage(
         showProfilePhotos,
         { showProfilePhotos = false },
         changeProfilePic,
-        character
+        character,
+        color
     )
 }
 

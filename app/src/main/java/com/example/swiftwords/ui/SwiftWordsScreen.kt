@@ -322,6 +322,7 @@ fun SwiftWordsApp(
                         data.nickname,
                         data.character,
                         data.profileSelected,
+                        data.color,
                         changeProfilePic = dataViewmodel::changeProfilePic,
                         navigate = { navController.navigate(SwiftWordsScreen.Settings.name) }
                     )
