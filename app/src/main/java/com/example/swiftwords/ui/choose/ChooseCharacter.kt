@@ -36,6 +36,7 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -61,6 +62,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.swiftwords.data.DataSource
 import com.example.swiftwords.ui.elements.LetterByLetterText
 import com.example.swiftwords.ui.elements.ProfileImagePopUp
+import kotlin.reflect.KFunction0
 import kotlin.reflect.KFunction1
 import kotlin.reflect.KFunction2
 
@@ -74,6 +76,8 @@ fun StartingScreen(
     playLetterSound: KFunction2<Char, Float, Unit>,
     profileSelected: Int,
     changeProfilePic: KFunction1<Int, Unit>,
+    loadLettersSound: KFunction0<Unit>,
+    releaseAllAlphabetSounds: KFunction0<Unit>,
 ) {
     val uiState by viewModel.uiState.collectAsState()
 
@@ -84,6 +88,10 @@ fun StartingScreen(
         contract = ActivityResultContracts.RequestPermission()
     ) { isGranted: Boolean ->
         permissionGranted = isGranted
+    }
+
+    LaunchedEffect(Unit) {
+        loadLettersSound()
     }
 
     Column(
@@ -99,6 +107,7 @@ fun StartingScreen(
                             }
                         }
                         updateInitialState(false)
+                        releaseAllAlphabetSounds()
                     } else {
                         if (uiState.dialogueState < 4) {
                             viewModel.increaseState()

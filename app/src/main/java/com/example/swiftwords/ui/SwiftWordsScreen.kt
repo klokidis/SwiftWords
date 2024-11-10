@@ -255,6 +255,8 @@ fun SwiftWordsApp(
                     nickName = dataUiState.userDetails.nickname,
                     profileSelected = dataUiState.userDetails.profileSelected,
                     changeProfilePic = dataViewmodel::changeProfilePic,
+                    loadLettersSound = soundViewModel::loadLettersSound,
+                    releaseAllAlphabetSounds = soundViewModel::releaseAllAlphabetSounds
                 )
             }
             composable(route = SwiftWordsScreen.Levels.name) {

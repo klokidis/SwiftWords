@@ -66,6 +66,7 @@ private suspend fun animateText(
     playLetterSound: KFunction2<Char, Float, Unit>,
     callback: (String) -> Unit
 ) {
+    delay(100) // a little delay for sound to load
     for (i in text.indices) { // returns 0..length-1
         val currentLetter = text[i]
         val pitch = if (characterIsMale) {
