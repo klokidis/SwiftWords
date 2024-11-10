@@ -432,7 +432,7 @@ private fun TimerMenu(
             Icon(
                 modifier = Modifier.size(30.dp),
                 imageVector = if (isClickedTime) {
-                    ImageVector.vectorResource(R.drawable.timer_fill_24px)
+                    ImageVector.vectorResource(R.drawable.timer_filled_24px)
                 } else {
                     ImageVector.vectorResource(R.drawable.timer_24px)
                 },
