@@ -122,14 +122,14 @@ fun SettingsPage(
                 color
             )
             Spacer(modifier = Modifier.padding(5.dp))
-            OneSettingPopUp(
-                stringResource(R.string.edit_name),
-                onClick = { displayEdit = true }
-            )
-            Spacer(modifier = Modifier.padding(5.dp))
             OneSettingSimple(
                 stringResource(R.string.change_profile),
                 onClick = { showProfilePhotos = it }
+            )
+            Spacer(modifier = Modifier.padding(5.dp))
+            OneSettingPopUp(
+                stringResource(R.string.edit_name),
+                onClick = { displayEdit = true }
             )
             Spacer(modifier = Modifier.padding(5.dp))
             OneSettingSimple(stringResource(R.string.introdacton), introduction)
