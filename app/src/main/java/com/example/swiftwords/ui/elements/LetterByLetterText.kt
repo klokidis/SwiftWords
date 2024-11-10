@@ -73,9 +73,8 @@ private suspend fun animateText(
         2f
     }
     for (i in text.indices) { // returns 0..length-1
-        val currentLetter = text[i]
         if (i % 2 == 0) {
-            playLetterSound(currentLetter, pitch)
+            playLetterSound(text[i], pitch)
         }
         // Delay between each letter
         delay(timeDelay)
