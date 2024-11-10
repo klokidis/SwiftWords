@@ -211,7 +211,7 @@ fun SwiftWordsApp(
             if (currentScreen == SwiftWordsScreen.Levels) {
                 dataUiState.userDetails.let {
                     TopBar(
-                        //livesLeft = it.lives,
+                        //livesLeft = it.lives, maybe in the future
                         streak = it.streak,
                         streakDateData = it.dailyDate,
                         dateNow = mainUiState.todayDate,
