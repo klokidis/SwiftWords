@@ -44,7 +44,7 @@ fun LetterByLetterText(
 
         Text(
             text = visibleText,
-            style = MaterialTheme.typography.bodyMedium.copy(fontSize = 25.sp),
+            style = MaterialTheme.typography.bodyMedium.copy(fontSize = 23.sp),
             color = if (isDarkTheme) {
                 Color.White
             } else {

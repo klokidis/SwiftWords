@@ -271,7 +271,7 @@ fun SetNickName(
                     .padding(top = 15.dp)
                     .size(200.dp)
                     .clip(CircleShape)
-                    .clickable { showProfilePhotos = true  },
+                    .clickable { showProfilePhotos = true },
             )
             Icon(
                 imageVector = Icons.Default.Edit,
