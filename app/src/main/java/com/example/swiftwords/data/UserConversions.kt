@@ -1,13 +1,8 @@
 package com.example.swiftwords.data
 
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
-import androidx.lifecycle.ViewModel
-
-data class UserUiState(
-    val userDetails: UserDetails = UserDetails(),
-)
+//data class UserUiState(
+//    val userDetails: UserDetails = UserDetails(),
+//)
 
 data class UserDetails(
     val id: Int = 0,
@@ -50,9 +45,9 @@ fun UserDetails.toUser(): User = User(
 )
 
 
-fun User.toUserUiState(isEntryValid: Boolean = false): UserUiState = UserUiState(
-    userDetails = this.toUserDetails()
-)
+//fun User.toUserUiState(isEntryValid: Boolean = false): UserUiState = UserUiState(
+//    userDetails = this.toUserDetails()
+//)
 
 fun User.toUserDetails(): UserDetails = UserDetails(
     id = id,
@@ -72,12 +67,3 @@ fun User.toUserDetails(): UserDetails = UserDetails(
     levelTime = levelTime,
     profileSelected = profileSelected
 )
-
-class DataViewmodel(private val userRepository: UserRepository) : ViewModel() {
-    var userUiState by mutableStateOf(UserUiState())
-        private set
-
-    suspend fun saveUser() {
-        userRepository.insertUser(userUiState.userDetails.toUser())
-    }
-}
