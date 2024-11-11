@@ -1,8 +1,10 @@
 package com.yukuro.swiftwords.ui
 
+import androidx.compose.animation.core.CubicBezierEasing
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
+import androidx.compose.animation.scaleIn
 import androidx.compose.foundation.background
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
@@ -309,7 +311,15 @@ fun SwiftWordsApp(
                     )
                 }
             }
-            composable(route = SwiftWordsScreen.Game.name) {
+            composable(
+                route = SwiftWordsScreen.Game.name,
+                enterTransition = {
+                    scaleIn(
+                        initialScale = 0.8f,
+                        animationSpec = tween(durationMillis = 500, easing = CubicBezierEasing(0.34f, 1.56f, 0.64f, 1f))
+                    ) + fadeIn(animationSpec = tween(durationMillis = 500))
+                },
+            ) {
                 wordListState.value?.let { wordList ->
                     dataUiState.userDetails.let { data ->
                         Game(
