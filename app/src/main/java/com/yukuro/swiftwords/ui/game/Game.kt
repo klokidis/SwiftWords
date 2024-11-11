@@ -165,7 +165,10 @@ fun Game(
         if (isMode) {
             exitChangingMode()
         }
-        if (!onExitButtonPressed && gameUiState.score >= 1 && !isMode) {
+        if (!onExitButtonPressed && gameUiState.score >= viewModel.calculatePassingScore(
+                currentLevel
+            ) && !isMode
+        ) {
             increaseScore(gameUiState.score)
             scheduleDailyNotification(context, streakLevel)
             generateRandomLettersForBothOnExit()
@@ -195,10 +198,12 @@ fun Game(
                 increaseScore,
                 generateRandomLettersForBothOnExit,
                 streakLevel,
-                viewModel,
                 checked,
                 colorCode,
-                gameModeNumber
+                gameModeNumber,
+                currentLevel = currentLevel,
+                stopClockOnExit = viewModel::stopClockOnExit,
+                calculatePassingScore = viewModel::calculatePassingScore
             )
 
             if (!checked()) {
@@ -478,10 +483,12 @@ private fun UpperLevelUi(
     increaseScore: KFunction1<Int, Unit>,
     generateRandomLettersForBoth: KFunction0<Unit>,
     streakLevel: Int,
-    viewModel: GameViewModel,
     checked: () -> Boolean,
     colorCode: Int,
-    gameModeNumber: Int
+    gameModeNumber: Int,
+    stopClockOnExit: () -> Unit,
+    calculatePassingScore: (Int) -> Int,
+    currentLevel: Int
 ) {
     val context = LocalContext.current
     Row(
@@ -496,12 +503,12 @@ private fun UpperLevelUi(
                 if (isMode) {
                     exitChangingMode()
                 }
-                if (!onExitButtonPressed && score() >= 1 && !isMode) {
+                if (!onExitButtonPressed && score() >= calculatePassingScore(currentLevel) && !isMode) {
                     increaseScore(score())
                     generateRandomLettersForBoth()
                     scheduleDailyNotification(context, streakLevel)
                 }
-                viewModel.stopClockOnExit()
+                stopClockOnExit()
             },
             modifier = Modifier
                 .size(33.dp)
@@ -859,7 +866,7 @@ fun DisplayResults(
 
             BackHandler {
                 navigateUp()
-                if (score() >= 1 && !isMode) {
+                if (score() >= calculatePassingScore(currentLevel) && !isMode) {
                     increaseScore(score())
                     scheduleDailyNotification(context, streakLevel)
                     generateRandomLettersForBothOnExit()
@@ -888,7 +895,11 @@ fun DisplayResults(
                         size = 260.dp
                     )
                 } else {
-                    if (!isMode && (dateNow.substring(0, 10) != dataDate()) && score() >= 1) {
+                    if (!isMode && (dateNow.substring(
+                            0,
+                            10
+                        ) != dataDate()) && score() >= calculatePassingScore(currentLevel)
+                    ) {
                         ScoreContent(
                             imageId = getFireImage(streakLevel + 1),
                             text = stringResource(R.string.streak_increase),
@@ -915,13 +926,13 @@ fun DisplayResults(
                                 painter = painterResource(
                                     id = if (characterIsFemale) {
                                         when {
-                                            score() >= 10 -> R.drawable.female_half
+                                            score() >= calculatePassingScore(currentLevel) -> R.drawable.female_half
                                             !isMode -> R.drawable.female_half_sad_eyebags
                                             else -> R.drawable.female_half
                                         }
                                     } else {
                                         when {
-                                            score() >= 10 -> R.drawable.male_half
+                                            score() >= calculatePassingScore(currentLevel) -> R.drawable.male_half
                                             !isMode -> R.drawable.male_half_sad_eyebags
                                             else -> R.drawable.male_half
                                         }
@@ -932,7 +943,7 @@ fun DisplayResults(
                             )
                             Spacer(modifier = Modifier.padding(5.dp))
                             when {
-                                score() >= 10 && !isMode -> {
+                                score() >= calculatePassingScore(currentLevel) && !isMode -> {
                                     Text(
                                         stringResource(R.string.pass) + " " + score().toString(),
                                         style = MaterialTheme.typography.titleSmall.copy(
@@ -971,7 +982,7 @@ fun DisplayResults(
                                     onClick = {
                                         navigateUp()
                                         exitPressed()
-                                        if (score() >= 1 && !isMode) {
+                                        if (score() >= calculatePassingScore(currentLevel) && !isMode) {
                                             increaseScore(score())
                                             scheduleDailyNotification(context, streakLevel)
                                             generateRandomLettersForBothOnExit()
