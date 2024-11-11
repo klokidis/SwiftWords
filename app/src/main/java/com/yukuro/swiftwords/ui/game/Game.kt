@@ -268,7 +268,7 @@ fun Game(
                     colorCode,
                     onClick = { newText ->
                         inputTextState =
-                            newText.toString()
+                            newText
                     },
                     word = inputTextState,
                     onEnter = checkAnswer,
@@ -543,7 +543,7 @@ private fun UpperLevelUi(
 fun CustomKeyboard(
     listOfLetters: List<Char>,
     colorCode: Int,
-    onClick: (Any?) -> Unit,
+    onClick: (String) -> Unit,
     word: String,
     onEnter: () -> Unit,
     onRemove: () -> Unit
@@ -598,7 +598,7 @@ fun CustomLetterClick(
     letter: Char,
     colorCode: Int,
     boxColor: ColorPair = DataSource().colorPairs[colorCode],
-    onLetterClicked: (Any?) -> Unit,
+    onLetterClicked: (String) -> Unit,
     image: Int? = null,
     thisText: String? = null,
     word: String

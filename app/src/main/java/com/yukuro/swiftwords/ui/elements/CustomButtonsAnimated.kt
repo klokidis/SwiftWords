@@ -399,7 +399,7 @@ fun KeyCards(
     color: Color,
     textColor: Color = Color.White,
     shadowColor: Color,
-    onClick: (Any?) -> Unit
+    onClick: (String) -> Unit
 ) {
     val cornerRadius = 16.dp // Adjust the corner radius as needed
     val coroutineScope = rememberCoroutineScope()
@@ -439,7 +439,7 @@ fun KeyCards(
 
         Button(
             onClick = {
-                onClick(thisWord.lowercase(Locale.ROOT) + thisLetter.lowercase(Locale.ROOT))
+                onClick(thisWord.lowercase() + thisLetter.lowercase())
                 coroutineScope.launch {
                     animatedY = 5.dp
                     delay(150L)
