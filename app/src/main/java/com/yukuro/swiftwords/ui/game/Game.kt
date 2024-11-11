@@ -99,27 +99,27 @@ fun Game(
     colorCode: Int,
     isMode: Boolean,
     gameModeNumber: Int,
-    increaseScore: KFunction1<Int, Unit>,
+    increaseScore: (Int) -> Unit,
     viewModel: GameViewModel = viewModel(factory = GameViewModelFactory(newTime)),
     navigateUp: () -> Unit,
-    checkHighScore: KFunction1<Int, Unit>,
+    checkHighScore: (Int) -> Unit,
     setOfLetters: Set<Char>,
     highScore: Int,
     checked: () -> Boolean,
-    changeChecked: KFunction0<Unit>,
-    increaseStreak: KFunction0<Unit>,
+    changeChecked: () -> Unit,
+    increaseStreak: () -> Unit,
     listOfLetters: List<Char>,
-    shuffle: KFunction0<Unit>,
+    shuffle: () -> Unit,
     exitChangingMode: () -> Unit,
     launchChanging: () -> Unit,
     currentLevel: Int,
     streakLevel: Int,
     characterIsFemale: Boolean,
-    playCorrectSound: KFunction0<Unit>,
-    playIncorrectSound: KFunction0<Unit>,
-    generateRandomLettersForBoth: KFunction0<Unit>,
-    generateRandomLettersForBothOnExit: KFunction0<Unit>,
-    generateRandomLettersForMode: KFunction0<Unit>
+    playCorrectSound: () -> Unit,
+    playIncorrectSound: () -> Unit,
+    generateRandomLettersForBoth: () -> Unit,
+    generateRandomLettersForBothOnExit: () -> Unit,
+    generateRandomLettersForMode: () -> Unit
 ) {
     val gameUiState by viewModel.uiState.collectAsState()
     val isTimerRunning by remember { derivedStateOf { gameUiState.isTimerRunning } }
@@ -320,9 +320,9 @@ fun Game(
 @Composable
 private fun BottomButtons(
     checked: () -> Boolean,
-    changeChecked: KFunction0<Unit>,
+    changeChecked: () -> Unit,
     colorCode: Int,
-    shuffle: KFunction0<Unit>
+    shuffle: () -> Unit
 ) {
     Row(
         modifier = Modifier
@@ -480,8 +480,8 @@ private fun UpperLevelUi(
     score: () -> Int,
     value: () -> Float,
     currentTime: () -> Long,
-    increaseScore: KFunction1<Int, Unit>,
-    generateRandomLettersForBoth: KFunction0<Unit>,
+    increaseScore: (Int) -> Unit,
+    generateRandomLettersForBoth: () -> Unit,
     streakLevel: Int,
     checked: () -> Boolean,
     colorCode: Int,
@@ -815,16 +815,16 @@ fun DisplayResults(
     restart: KFunction1<Long, Unit>,
     time: () -> Long,
     navigateUp: () -> Unit,
-    increaseScore: KFunction1<Int, Unit>,
+    increaseScore: (Int) -> Unit,
     isMode: Boolean,
     highScore: Int,
-    checkHighScore: KFunction1<Int, Unit>,
+    checkHighScore: (Int) -> Unit,
     isVisible: Boolean,
     restartGame: () -> Unit,
     exitPressed: () -> Unit,
     dateNow: String,
     dataDate: () -> String,
-    increaseStreak: KFunction0<Unit>,
+    increaseStreak: () -> Unit,
     colorCode: Int,
     boxColor: Color = DataSource().colorPairs[colorCode].darkColor,
     isDarkTheme: Boolean = isSystemInDarkTheme(),
@@ -834,10 +834,10 @@ fun DisplayResults(
     streakLevel: Int,
     characterIsFemale: Boolean,
     stopClockOnExit: KFunction0<Unit>,
-    generateRandomLettersForBoth: KFunction0<Unit>,
-    generateRandomLettersForMode: KFunction0<Unit>,
+    generateRandomLettersForBoth: () -> Unit,
+    generateRandomLettersForMode: () -> Unit,
     calculatePassingScore: KFunction1<Int, Int>,
-    generateRandomLettersForBothOnExit: KFunction0<Unit>,
+    generateRandomLettersForBothOnExit: () -> Unit,
 ) {
     val context = LocalContext.current
 
