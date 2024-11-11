@@ -18,7 +18,6 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.res.stringResource
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeDrawingPadding
@@ -28,6 +27,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -120,12 +120,11 @@ fun SwiftWordsApp(
 
     Scaffold(
         bottomBar = {
-            if (
-                currentScreen != SwiftWordsScreen.Game
-                && currentScreen != SwiftWordsScreen.Settings
-                && currentScreen != SwiftWordsScreen.Choose
-                && currentScreen != SwiftWordsScreen.Loading
-                && currentScreen != SwiftWordsScreen.Credits
+            if (currentScreen in listOf(
+                    SwiftWordsScreen.Levels,
+                    SwiftWordsScreen.Modes,
+                    SwiftWordsScreen.Profile
+                )
             ) {
                 val barItems = listOf(
                     BarItem(
@@ -162,38 +161,15 @@ fun SwiftWordsApp(
                         containerColor = MaterialTheme.colorScheme.background, // Override the background color
                     ) {
                         barItems.forEachIndexed { index, item ->
+                            val isSelected = selectedItemIndex == index
                             NavigationBarItem(
                                 onClick = {
-                                    if (selectedItemIndex != index) {
-                                        when (index) {
-                                            0 -> navController.navigate(SwiftWordsScreen.Levels.name) {
-                                                popUpTo(navController.graph.findStartDestination().id) {
-                                                    saveState = true
-                                                }
-                                                launchSingleTop = true
-                                                restoreState = true
-                                            }
-
-                                            1 -> navController.navigate(SwiftWordsScreen.Modes.name) {
-                                                popUpTo(navController.graph.findStartDestination().id) {
-                                                    saveState = true
-                                                }
-                                                launchSingleTop = true
-                                                restoreState = true
-                                            }
-
-                                            2 -> navController.navigate(SwiftWordsScreen.Profile.name) {
-                                                popUpTo(navController.graph.findStartDestination().id) {
-                                                    saveState = true
-                                                }
-                                                launchSingleTop = true
-                                                restoreState = true
-                                            }
-                                        }
+                                    if (!isSelected) {
                                         selectedItemIndex = index
+                                        navController.navigateToScreen(index)
                                     }
                                 },
-                                selected = selectedItemIndex == index,
+                                selected = isSelected,
                                 label = { Text(text = stringResource(item.title)) },
                                 icon = {
                                     Icon(
@@ -262,7 +238,7 @@ fun SwiftWordsApp(
             composable(route = SwiftWordsScreen.Levels.name) {
                 LevelScreen(
                     currentLevel = dataUiState.userDetails.currentLevel,
-                    starterLevel=  dataUiState.userDetails.starterLevel,
+                    starterLevel = dataUiState.userDetails.starterLevel,
                     endingLevel = dataUiState.userDetails.endingLevel,
                     color = dataUiState.userDetails.color
                 ) {
@@ -418,5 +394,19 @@ fun SwiftWordsApp(
                 )
             }
         }
+    }
+}
+
+private fun NavHostController.navigateToScreen(index: Int) {
+    val screen = when (index) {
+        0 -> SwiftWordsScreen.Levels.name
+        1 -> SwiftWordsScreen.Modes.name
+        2 -> SwiftWordsScreen.Profile.name
+        else -> SwiftWordsScreen.Levels.name
+    }
+    navigate(screen) {
+        popUpTo(graph.findStartDestination().id) { saveState = true }
+        launchSingleTop = true
+        restoreState = true
     }
 }
