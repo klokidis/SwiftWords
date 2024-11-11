@@ -24,12 +24,12 @@ class DataSource {
 
     val allImagesCredit = listOf(
         R.drawable.profile_icon,
-        R.drawable.female_full_body,
-        R.drawable.male_full_body,
         R.drawable.male_half_sad,
-        R.drawable.female_half_sad,
         R.drawable.male_half_sad_eyebags,
-        R.drawable.female_half_sad_eyebags
+        R.drawable.female_half_sad,
+        R.drawable.female_half_sad_eyebags,
+        R.drawable.female_full_body,
+        R.drawable.male_full_body
     )
 
     val profileImagesMale = listOf(
