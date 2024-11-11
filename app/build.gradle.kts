@@ -6,11 +6,11 @@ plugins {
 }
 
 android {
-    namespace = "com.example.swiftwords"
+    namespace = "com.yukuro.swiftwords"
     compileSdk = 35
 
     defaultConfig {
-        applicationId = "com.example.swiftwords"
+        applicationId = "com.yukuro.swiftwords"
         minSdk = 26
         targetSdk = 35
         versionCode = 1
