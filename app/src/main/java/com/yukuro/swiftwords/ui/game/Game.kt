@@ -311,7 +311,8 @@ fun Game(
         currentLevel = currentLevel,
         streakLevel = streakLevel,
         stopClockOnExit = viewModel::stopClockOnExit,
-        characterIsFemale = characterIsFemale
+        characterIsFemale = characterIsFemale,
+        getFireImage = viewModel::getFireImage
     )
 }
 
@@ -831,6 +832,7 @@ fun DisplayResults(
     generateRandomLettersForMode: () -> Unit,
     calculatePassingScore: KFunction1<Int, Int>,
     generateRandomLettersForBothOnExit: () -> Unit,
+    getFireImage: (Int) -> Int,
 ) {
     val context = LocalContext.current
 
@@ -1080,16 +1082,6 @@ fun DisplayResults(
                 }
             }
         }
-    }
-}
-
-fun getFireImage(streakLevel: Int): Int {
-    return when {
-        streakLevel < 5 -> R.drawable.fire_on
-        streakLevel < 15 -> R.drawable.fire3
-        streakLevel < 30 -> R.drawable.fire4
-        streakLevel < 40 -> R.drawable.fire5
-        else -> R.drawable.fire6
     }
 }
 

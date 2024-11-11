@@ -4,6 +4,7 @@ import androidx.compose.ui.unit.IntSize
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
+import com.yukuro.swiftwords.R
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
@@ -190,6 +191,16 @@ class GameViewModel(time: () -> Long) : ViewModel() {
                     stopClock()
                 }
             }
+        }
+    }
+
+    fun getFireImage(streakLevel: Int): Int {
+        return when {
+            streakLevel < 5 -> R.drawable.fire_on
+            streakLevel < 15 -> R.drawable.fire3
+            streakLevel < 30 -> R.drawable.fire4
+            streakLevel < 40 -> R.drawable.fire5
+            else -> R.drawable.fire6
         }
     }
 }
