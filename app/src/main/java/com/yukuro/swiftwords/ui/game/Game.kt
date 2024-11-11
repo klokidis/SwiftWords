@@ -267,10 +267,8 @@ fun Game(
                     listOfLetters = listOfLetters,
                     colorCode,
                     onClick = { newText ->
-                        inputTextState =
-                            newText
+                        inputTextState += newText
                     },
-                    word = inputTextState,
                     onEnter = checkAnswer,
                     onRemove = { inputTextState = inputTextState.dropLast(1) }
                 )
@@ -544,7 +542,6 @@ fun CustomKeyboard(
     listOfLetters: List<Char>,
     colorCode: Int,
     onClick: (String) -> Unit,
-    word: String,
     onEnter: () -> Unit,
     onRemove: () -> Unit
 ) {
@@ -554,40 +551,38 @@ fun CustomKeyboard(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Row {
-            CustomLetterClick(listOfLetters[0], colorCode, onLetterClicked = onClick, word = word)
+            CustomLetterClick(listOfLetters[0], colorCode, onLetterClicked = onClick)
             Spacer(modifier = Modifier.size(10.dp))
-            CustomLetterClick(listOfLetters[1], colorCode, onLetterClicked = onClick, word = word)
+            CustomLetterClick(listOfLetters[1], colorCode, onLetterClicked = onClick)
             Spacer(modifier = Modifier.size(10.dp))
-            CustomLetterClick(listOfLetters[2], colorCode, onLetterClicked = onClick, word = word)
+            CustomLetterClick(listOfLetters[2], colorCode, onLetterClicked = onClick)
             Spacer(modifier = Modifier.size(10.dp))
             CustomLetterClick(
                 thisText = stringResource(R.string.enter),
                 letter = ' ',
                 colorCode = colorCode,
-                onLetterClicked = { onEnter() },
-                word = word
+                onLetterClicked = { onEnter() }
             )
         }
         Row {
-            CustomLetterClick(listOfLetters[3], colorCode, onLetterClicked = onClick, word = word)
+            CustomLetterClick(listOfLetters[3], colorCode, onLetterClicked = onClick)
             Spacer(modifier = Modifier.size(10.dp))
-            CustomLetterClick(listOfLetters[4], colorCode, onLetterClicked = onClick, word = word)
+            CustomLetterClick(listOfLetters[4], colorCode, onLetterClicked = onClick)
             Spacer(modifier = Modifier.size(10.dp))
-            CustomLetterClick(listOfLetters[5], colorCode, onLetterClicked = onClick, word = word)
+            CustomLetterClick(listOfLetters[5], colorCode, onLetterClicked = onClick)
         }
         Row {
-            CustomLetterClick(listOfLetters[6], colorCode, onLetterClicked = onClick, word = word)
+            CustomLetterClick(listOfLetters[6], colorCode, onLetterClicked = onClick)
             Spacer(modifier = Modifier.size(10.dp))
-            CustomLetterClick(listOfLetters[7], colorCode, onLetterClicked = onClick, word = word)
+            CustomLetterClick(listOfLetters[7], colorCode, onLetterClicked = onClick)
             Spacer(modifier = Modifier.size(10.dp))
-            CustomLetterClick(listOfLetters[8], colorCode, onLetterClicked = onClick, word = word)
+            CustomLetterClick(listOfLetters[8], colorCode, onLetterClicked = onClick)
             Spacer(modifier = Modifier.size(10.dp))
             CustomLetterClick(
                 listOfLetters[2],
                 image = R.drawable.backspace_24px,
                 colorCode = colorCode,
                 onLetterClicked = { onRemove() },
-                word = word
             )
         }
     }
@@ -601,7 +596,6 @@ fun CustomLetterClick(
     onLetterClicked: (String) -> Unit,
     image: Int? = null,
     thisText: String? = null,
-    word: String
 ) {
     Box(modifier = Modifier.padding(top = 15.dp)) {
         KeyCards(
@@ -611,7 +605,6 @@ fun CustomLetterClick(
             onClick = onLetterClicked,
             imageRes = image,
             thisText = thisText,
-            thisWord = word
         )
     }
 }

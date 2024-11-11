@@ -53,7 +53,6 @@ import com.yukuro.swiftwords.R
 import com.yukuro.swiftwords.data.ColorPair
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import java.util.Locale
 
 private val shadowSize = 8.dp
 
@@ -393,7 +392,6 @@ fun ModesCards(
 @Composable
 fun KeyCards(
     thisLetter: Char,
-    thisWord: String,
     imageRes: Int? = null,
     thisText: String? = null,
     color: Color,
@@ -439,7 +437,7 @@ fun KeyCards(
 
         Button(
             onClick = {
-                onClick(thisWord.lowercase() + thisLetter.lowercase())
+                onClick(thisLetter.lowercase())
                 coroutineScope.launch {
                     animatedY = 5.dp
                     delay(150L)
@@ -469,9 +467,7 @@ fun KeyCards(
                             coroutineScope.launch {
                                 animatedY = 5.dp
                                 onClick(
-                                    thisWord.lowercase(Locale.ROOT) + thisLetter.lowercase(
-                                        Locale.ROOT
-                                    )
+                                    thisLetter.lowercase()
                                 )
                                 delay(300L)
                                 animatedY = 0.dp
