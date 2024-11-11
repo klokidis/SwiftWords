@@ -37,8 +37,6 @@ import com.yukuro.swiftwords.R
 import com.yukuro.swiftwords.data.DataSource
 import com.yukuro.swiftwords.ui.elements.ModesCards
 import com.yukuro.swiftwords.ui.elements.darken
-import kotlin.reflect.KFunction0
-import kotlin.reflect.KFunction1
 import kotlin.reflect.KFunction3
 
 
@@ -50,10 +48,10 @@ fun ModesScreen(
     color: Int?,
     navigateConsequencesGame: () -> Unit,
     navigateCustomGame: () -> Unit,
-    changeTime: KFunction1<Long, Unit>,
-    changeGameMode: KFunction1<Int, Unit>,
+    changeTime: (Long) -> Unit,
+    changeGameMode: (Int) -> Unit,
     startShuffle: KFunction3<Boolean, () -> Unit, Long, Unit>,
-    sound: KFunction0<Unit>,
+    sound: () -> Unit,
     isDarkTheme: Boolean = isSystemInDarkTheme(),
 ) {
     val scrollState = rememberScrollState()

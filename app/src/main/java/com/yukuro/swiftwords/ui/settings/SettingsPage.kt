@@ -49,21 +49,20 @@ import com.yukuro.swiftwords.R
 import com.yukuro.swiftwords.data.DataSource
 import com.yukuro.swiftwords.ui.elements.ProfileImagePopUp
 import com.yukuro.swiftwords.ui.elements.brighten
-import kotlin.reflect.KFunction1
 
 @Composable
 fun SettingsPage(
     navigateOut: () -> Unit,
-    updateTime: KFunction1<Long, Unit>,
-    changeCharacter: KFunction1<Boolean, Unit>,
-    introduction: KFunction1<Boolean, Unit>,
-    changeName: KFunction1<String, Unit>,
+    updateTime: (Long) -> Unit,
+    changeCharacter: (Boolean) -> Unit,
+    introduction: (Boolean) -> Unit,
+    changeName: (String) -> Unit,
     dataColor: Int,
     nickname: String,
     character: Boolean,
     levelTime: Long,
     profileSelected: Int,
-    changeProfilePic: KFunction1<Int, Unit>,
+    changeProfilePic: (Int) -> Unit,
     timeList: List<Long> = DataSource().timeList,
     navigateCredit: () -> Unit
 ) {
