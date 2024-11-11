@@ -78,7 +78,6 @@ import com.yukuro.swiftwords.data.DataSource
 import com.yukuro.swiftwords.ui.AppViewModelProvider
 import com.yukuro.swiftwords.ui.elements.CurrentLevel
 import com.yukuro.swiftwords.ui.elements.Levels
-import com.yukuro.swiftwords.ui.game.getFireImage
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.Calendar
@@ -353,7 +352,13 @@ fun TopBar(
 
                     else -> {
                         painterResource(
-                            id = getFireImage(streak)
+                            id = when { //fun reference gameViewModel
+                                streak < 5 -> R.drawable.fire_on
+                                streak < 15 -> R.drawable.fire3
+                                streak < 30 -> R.drawable.fire4
+                                streak < 40 -> R.drawable.fire5
+                                else -> R.drawable.fire6
+                            }
                         )
                     }
                 },
