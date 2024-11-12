@@ -187,24 +187,7 @@ fun SwiftWordsApp(
                 }
             }
         },
-        modifier = Modifier.safeDrawingPadding(),
-        topBar = {
-            if (currentScreen == SwiftWordsScreen.Levels) {
-                dataUiState.userDetails.let {
-                    TopBar(
-                        //livesLeft = it.lives, maybe in the future
-                        streak = it.streak,
-                        streakDateData = it.dailyDate,
-                        dateNow = mainUiState.todayDate,
-                        color = it.color,
-                        changeColorFun = dataViewmodel::updateUserColor,
-                        colors = DataSource().colorPairs,
-                        selectedTime = it.levelTime,
-                        onTimeChange = dataViewmodel::updateTime
-                    )
-                }
-            }
-        }
+        modifier = Modifier.safeDrawingPadding()
     ) { paddingValues ->
         NavHost(
             navController = navController,
@@ -238,15 +221,32 @@ fun SwiftWordsApp(
                 )
             }
             composable(route = SwiftWordsScreen.Levels.name) {
-                LevelScreen(
-                    currentLevel = dataUiState.userDetails.currentLevel,
-                    starterLevel = dataUiState.userDetails.starterLevel,
-                    endingLevel = dataUiState.userDetails.endingLevel,
-                    color = dataUiState.userDetails.color
-                ) {
-                    viewModel.changeGameState(false)//tells the game this is not a game mode
-                    viewModel.changeTime(dataUiState.userDetails.levelTime)
-                    navController.navigate(SwiftWordsScreen.Game.name)
+                Scaffold(topBar = {
+                    dataUiState.userDetails.let {
+                        TopBar(
+                            //livesLeft = it.lives, maybe in the future
+                            streak = it.streak,
+                            streakDateData = it.dailyDate,
+                            dateNow = mainUiState.todayDate,
+                            color = it.color,
+                            changeColorFun = dataViewmodel::updateUserColor,
+                            colors = DataSource().colorPairs,
+                            selectedTime = it.levelTime,
+                            onTimeChange = dataViewmodel::updateTime
+                        )
+                    }
+                }) { paddingTopBar ->
+                    LevelScreen(
+                        modifier = Modifier.padding(paddingTopBar),
+                        currentLevel = dataUiState.userDetails.currentLevel,
+                        starterLevel = dataUiState.userDetails.starterLevel,
+                        endingLevel = dataUiState.userDetails.endingLevel,
+                        color = dataUiState.userDetails.color
+                    ) {
+                        viewModel.changeGameState(false)//tells the game this is not a game mode
+                        viewModel.changeTime(dataUiState.userDetails.levelTime)
+                        navController.navigate(SwiftWordsScreen.Game.name)
+                    }
                 }
             }
             composable(route = SwiftWordsScreen.Modes.name) {
@@ -316,7 +316,10 @@ fun SwiftWordsApp(
                 enterTransition = {
                     scaleIn(
                         initialScale = 0.8f,
-                        animationSpec = tween(durationMillis = 500, easing = CubicBezierEasing(0.34f, 1.56f, 0.64f, 1f))
+                        animationSpec = tween(
+                            durationMillis = 500,
+                            easing = CubicBezierEasing(0.34f, 1.56f, 0.64f, 1f)
+                        )
                     ) + fadeIn(animationSpec = tween(durationMillis = 500))
                 },
             ) {

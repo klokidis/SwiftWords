@@ -86,6 +86,7 @@ import kotlin.math.abs
 
 @Composable
 fun LevelScreen(
+    modifier: Modifier,
     levelViewModel: LevelViewModel = viewModel(factory = AppViewModelProvider.Factory),
     currentLevel: Int,
     starterLevel: Int,
@@ -133,7 +134,7 @@ fun LevelScreen(
 
     LazyColumn(
         state = listState,
-        modifier = Modifier
+        modifier = modifier
             .fillMaxSize(),
         verticalArrangement = Arrangement.Top,
         horizontalAlignment = Alignment.CenterHorizontally
@@ -153,7 +154,6 @@ fun LevelScreen(
                     colors = levelUiState.colors
                 )
             }
-
         }
     }
 
@@ -224,10 +224,8 @@ fun LevelScreen(
         BottomLevel(
             onClick = navigateToLevel,
             level = currentLevel.toString(),
-            color = color,
-            colors = levelUiState.colors
+            color = levelUiState.colors[color]
         )
-
     }
 }
 
@@ -677,9 +675,9 @@ fun ColorBox(
 }
 
 @Composable
-fun BottomLevel(onClick: () -> Unit, level: String, color: Int, colors: List<ColorPair>) {
+fun BottomLevel(onClick: () -> Unit, level: String, color: ColorPair) {
     val animatedColor by animateColorAsState(
-        targetValue = colors[color].darkColor,
+        targetValue = color.darkColor,
         animationSpec = tween(durationMillis = 300),
         label = ""
     )
