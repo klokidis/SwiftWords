@@ -5,67 +5,39 @@ import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.scaleIn
-import androidx.compose.foundation.background
-import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.material3.Icon
-import androidx.compose.material3.NavigationBar
-import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.ui.res.stringResource
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeDrawingPadding
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.vectorResource
-import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import com.yukuro.swiftwords.R
-import com.yukuro.swiftwords.data.DataSource
 import com.yukuro.swiftwords.data.GetDataViewModel
-import com.yukuro.swiftwords.model.BarItem
 import com.yukuro.swiftwords.ui.choose.StartingScreen
 import com.yukuro.swiftwords.ui.credits.CreditsScreen
 import com.yukuro.swiftwords.ui.elements.SoundViewModel
-import com.yukuro.swiftwords.ui.elements.darken
 import com.yukuro.swiftwords.ui.game.Game
-import com.yukuro.swiftwords.ui.levels.LevelScreen
-import com.yukuro.swiftwords.ui.levels.TopBar
 import com.yukuro.swiftwords.ui.loading.LoadingView
-import com.yukuro.swiftwords.ui.modes.ModesScreen
-import com.yukuro.swiftwords.ui.profile.ProfileScreen
 import com.yukuro.swiftwords.ui.settings.SettingsPage
 
 enum class SwiftWordsScreen {
     Loading,
     Choose,
-    Levels,
-    Modes,
-    Profile,
+    BottomBarScreens,
     Game,
     Settings,
     Credits
@@ -80,25 +52,6 @@ fun SwiftWordsApp(
 ) {
     val dataUiState by dataViewmodel.getDataUiState.collectAsState()
     val mainUiState by viewModel.uiState.collectAsState()
-
-    val backStackEntry by navController.currentBackStackEntryAsState()
-    val currentScreen = SwiftWordsScreen.valueOf(
-        backStackEntry?.destination?.route ?: SwiftWordsScreen.Loading.name
-    )
-    var selectedItemIndex by rememberSaveable { mutableIntStateOf(0) }
-
-    LaunchedEffect(currentScreen) {
-        val newIndex = when (currentScreen) {
-            SwiftWordsScreen.Levels -> 0
-            SwiftWordsScreen.Modes -> 1
-            SwiftWordsScreen.Profile -> 2
-            else -> 0 // Default value
-        }
-
-        if (selectedItemIndex != newIndex) { //for navigating back with back phone arrow
-            selectedItemIndex = newIndex
-        }
-    }
 
     LaunchedEffect(mainUiState.todayDate) { //every 12am check the streak
         dataViewmodel.checkAndResetStreak()
@@ -121,72 +74,6 @@ fun SwiftWordsApp(
     }
 
     Scaffold(
-        bottomBar = {
-            if (currentScreen in listOf(
-                    SwiftWordsScreen.Levels,
-                    SwiftWordsScreen.Modes,
-                    SwiftWordsScreen.Profile
-                )
-            ) {
-                val barItems = listOf(
-                    BarItem(
-                        R.string.levels,
-                        R.drawable.levels,
-                        R.drawable.levels
-                    ),
-                    BarItem(
-                        R.string.modes,
-                        R.drawable.controller_filled,
-                        R.drawable.controller
-                    ),
-                    BarItem(
-                        R.string.profile,
-                        R.drawable.profilr_filled,
-                        R.drawable.profile
-                    )
-                )
-                // Wrapper for the NavigationBar to add top line and shadow
-                Column {
-                    Spacer(
-                        modifier = Modifier
-                            .background(
-                                if (isSystemInDarkTheme()) {
-                                    Color.DarkGray.darken(0.6f)
-                                } else {
-                                    Color(0xFFE8E8E8)
-                                }
-                            )
-                            .fillMaxWidth()
-                            .height(1.5.dp)
-                    )
-                    NavigationBar(
-                        containerColor = MaterialTheme.colorScheme.background, // Override the background color
-                    ) {
-                        barItems.forEachIndexed { index, item ->
-                            val isSelected = selectedItemIndex == index
-                            NavigationBarItem(
-                                onClick = {
-                                    if (!isSelected) {
-                                        selectedItemIndex = index
-                                        navController.navigateToScreen(index)
-                                    }
-                                },
-                                selected = isSelected,
-                                label = { Text(text = stringResource(item.title)) },
-                                icon = {
-                                    Icon(
-                                        imageVector = if (index == selectedItemIndex) ImageVector.vectorResource(
-                                            id = item.imageSelected
-                                        ) else ImageVector.vectorResource(id = item.imageUnSelected),
-                                        contentDescription = stringResource(id = item.title)
-                                    )
-                                }
-                            )
-                        }
-                    }
-                }
-            }
-        },
         modifier = Modifier.safeDrawingPadding()
     ) { paddingValues ->
         NavHost(
@@ -197,7 +84,7 @@ fun SwiftWordsApp(
                 if (dataUiState.userDetails.initializeProfile) {
                     SwiftWordsScreen.Choose.name
                 } else {
-                    SwiftWordsScreen.Levels.name
+                    SwiftWordsScreen.BottomBarScreens.name
                 }
             },
             modifier = Modifier.padding(paddingValues),
@@ -220,94 +107,33 @@ fun SwiftWordsApp(
                     releaseAllAlphabetSounds = soundViewModel::releaseAllAlphabetSounds
                 )
             }
-            composable(route = SwiftWordsScreen.Levels.name) {
-                Scaffold(topBar = {
-                    dataUiState.userDetails.let {
-                        TopBar(
-                            //livesLeft = it.lives, maybe in the future
-                            streak = it.streak,
-                            streakDateData = it.dailyDate,
-                            dateNow = mainUiState.todayDate,
-                            color = it.color,
-                            changeColorFun = dataViewmodel::updateUserColor,
-                            colors = DataSource().colorPairs,
-                            selectedTime = it.levelTime,
-                            onTimeChange = dataViewmodel::updateTime
-                        )
-                    }
-                }) { paddingTopBar ->
-                    LevelScreen(
-                        modifier = Modifier.padding(paddingTopBar),
-                        currentLevel = dataUiState.userDetails.currentLevel,
-                        starterLevel = dataUiState.userDetails.starterLevel,
-                        endingLevel = dataUiState.userDetails.endingLevel,
-                        color = dataUiState.userDetails.color
-                    ) {
-                        viewModel.changeGameState(false)//tells the game this is not a game mode
-                        viewModel.changeTime(dataUiState.userDetails.levelTime)
-                        navController.navigate(SwiftWordsScreen.Game.name)
-                    }
-                }
-            }
-            composable(route = SwiftWordsScreen.Modes.name) {
-                ModesScreen(
-                    color = dataUiState.userDetails.color,
-                    navigateFastGame = {
-                        viewModel.changeGameMode(0)
-                        viewModel.generateRandomLettersForMode()
-                        viewModel.changeTime(20000L)
-                        viewModel.changeGameState(true)//this is a game mode
-                        navController.navigate(SwiftWordsScreen.Game.name)
-                    },
-                    navigateLongGame = {
-                        viewModel.changeGameMode(1)
-                        viewModel.generateRandomLettersForMode()
-                        viewModel.changeTime(130000000L) //130000000L means no time
-                        viewModel.changeGameState(true) //this is a game mode
-                        navController.navigate(SwiftWordsScreen.Game.name)
-                    },
-                    navigateChangingGame = {
-                        viewModel.changeGameMode(2)
-                        viewModel.generateRandomLettersForMode()
-                        viewModel.changeTime(dataUiState.userDetails.levelTime)
-                        viewModel.changingLetters(
-                            true,
-                            soundViewModel::playChangeSound,
-                            dataUiState.userDetails.levelTime
-                        )
-                        viewModel.changeGameState(true) //this is a game mode
-                        navController.navigate(SwiftWordsScreen.Game.name)
-                    },
-                    navigateConsequencesGame = {
-                        viewModel.changeGameMode(3)
-                        viewModel.generateRandomLettersForMode()
-                        viewModel.changeTime(dataUiState.userDetails.levelTime)
-                        viewModel.changeGameState(true) //this is a game mode
-                        navController.navigate(SwiftWordsScreen.Game.name)
-                    },
-                    changeTime = viewModel::changeTime,
-                    changeGameMode = viewModel::changeGameMode,
-                    navigateCustomGame = {
-                        viewModel.changeGameState(true) //this is a game mode
-                        viewModel.generateRandomLettersForMode()
-                        navController.navigate(SwiftWordsScreen.Game.name)
-                    },
-                    sound = soundViewModel::playChangeSound,
-                    startShuffle = viewModel::changingLetters,
-                )
-            }
-            composable(route = SwiftWordsScreen.Profile.name) {
-                dataUiState.userDetails.let { data ->
-                    ProfileScreen(
-                        data.currentLevel,
-                        data.streak,
-                        data.highScore,
-                        data.nickname,
-                        data.character,
-                        data.profileSelected,
-                        data.color,
+            composable(route = SwiftWordsScreen.BottomBarScreens.name) { //separated screens to fix the bottom navigation junk. Since having it appear with an if condition it doesn't run smoothly
+                dataUiState.userDetails.let {
+                    BottomBarNavGraph(
+                        streak = it.streak,
+                        streakDateData = it.dailyDate,
+                        color = it.color,
+                        levelTime = it.levelTime,
+                        currentLevel = it.currentLevel,
+                        starterLevel = it.starterLevel,
+                        endingLevel = it.endingLevel,
+                        highScore = it.highScore,
+                        nickname = it.nickname,
+                        character = it.character,
+                        profileSelected = it.profileSelected,
+                        changeGameState = viewModel::changeGameState,
+                        changeTime = viewModel::changeTime,
+                        changeGameMode = viewModel::changeGameMode,
+                        generateRandomLettersForMode = viewModel::generateRandomLettersForMode,
+                        changingLetters = viewModel::changingLetters,
+                        mainUiState = mainUiState,
+                        updateUserColor = dataViewmodel::updateUserColor,
                         changeProfilePic = dataViewmodel::changeProfilePic,
-                        navigate = { navController.navigate(SwiftWordsScreen.Settings.name) }
+                        updateTime = dataViewmodel::updateTime,
+                        playChangeSound = soundViewModel::playChangeSound,
+                        navigateGame = { navController.navigate(SwiftWordsScreen.Game.name) },
+                        navigateSettings =
+                        { navController.navigate(SwiftWordsScreen.Settings.name) }
                     )
                 }
             }
@@ -407,19 +233,5 @@ fun SwiftWordsApp(
                 )
             }
         }
-    }
-}
-
-private fun NavHostController.navigateToScreen(index: Int) {
-    val screen = when (index) {
-        0 -> SwiftWordsScreen.Levels.name
-        1 -> SwiftWordsScreen.Modes.name
-        2 -> SwiftWordsScreen.Profile.name
-        else -> SwiftWordsScreen.Levels.name
-    }
-    navigate(screen) {
-        popUpTo(graph.findStartDestination().id) { saveState = true }
-        launchSingleTop = true
-        restoreState = true
     }
 }

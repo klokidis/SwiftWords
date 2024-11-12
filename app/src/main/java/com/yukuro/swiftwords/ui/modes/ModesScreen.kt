@@ -37,7 +37,6 @@ import com.yukuro.swiftwords.R
 import com.yukuro.swiftwords.data.DataSource
 import com.yukuro.swiftwords.ui.elements.ModesCards
 import com.yukuro.swiftwords.ui.elements.darken
-import kotlin.reflect.KFunction3
 
 
 @Composable
@@ -50,7 +49,7 @@ fun ModesScreen(
     navigateCustomGame: () -> Unit,
     changeTime: (Long) -> Unit,
     changeGameMode: (Int) -> Unit,
-    startShuffle: KFunction3<Boolean, () -> Unit, Long, Unit>,
+    startShuffle: (Boolean, () -> Unit, Long) -> Unit,
     sound: () -> Unit,
     isDarkTheme: Boolean = isSystemInDarkTheme(),
 ) {
@@ -160,7 +159,7 @@ fun PopUp(
     hide: () -> Unit,
     changeTime: (Long) -> Unit,
     changeGameMode: (Int) -> Unit,
-    startShuffle: KFunction3<Boolean, () -> Unit, Long, Unit>,
+    startShuffle: (Boolean, () -> Unit, Long) -> Unit,
     sound: () -> Unit,
     modeStringOptions: List<String> = listOf(
         stringResource(R.string.shuffle),
