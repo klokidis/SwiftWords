@@ -58,11 +58,12 @@ fun ModesScreen(
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .verticalScroll(scrollState)
-            .padding(start = 7.dp, end = 7.dp),
+            .verticalScroll(scrollState),
         contentAlignment = Alignment.Center
     ) {
         Column(
+            modifier = Modifier
+                .padding(start = 7.dp, end = 7.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
             Row(modifier = Modifier.fillMaxSize()) {
@@ -214,7 +215,7 @@ fun PopUp(
                                 modifier = Modifier.width(100.dp),
                                 onDismissRequest = { expandedTime = false }
                             ) {
-                                Row{
+                                Row {
                                     Column(modifier = Modifier.width(50.dp)) {
                                         timeOptions1.forEach { time ->
                                             val firstTwoDigits = time.toString().take(2)

@@ -176,112 +176,108 @@ fun Game(
         viewModel.stopClockOnExit()
     }
 
-    Box(
-        modifier = Modifier.fillMaxSize()
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .verticalScroll(scroll),
+        verticalArrangement = Arrangement.Top,
+        horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .verticalScroll(scroll),
-            verticalArrangement = Arrangement.Top,
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            Spacer(modifier = Modifier.padding(2.dp))
-            UpperLevelUi(
-                navigateUp,
-                isMode,
-                exitChangingMode,
-                onExitButtonPressed,
-                { gameUiState.score },
-                { gameUiState.value },
-                { gameUiState.currentTime },
-                increaseScore,
-                generateRandomLettersForBothOnExit,
-                streakLevel,
-                checked,
-                colorCode,
-                gameModeNumber,
-                currentLevel = currentLevel,
-                stopClockOnExit = viewModel::stopClockOnExit,
-                calculatePassingScore = viewModel::calculatePassingScore
-            )
+        Spacer(modifier = Modifier.padding(2.dp))
+        UpperLevelUi(
+            navigateUp,
+            isMode,
+            exitChangingMode,
+            onExitButtonPressed,
+            { gameUiState.score },
+            { gameUiState.value },
+            { gameUiState.currentTime },
+            increaseScore,
+            generateRandomLettersForBothOnExit,
+            streakLevel,
+            checked,
+            colorCode,
+            gameModeNumber,
+            currentLevel = currentLevel,
+            stopClockOnExit = viewModel::stopClockOnExit,
+            calculatePassingScore = viewModel::calculatePassingScore
+        )
 
-            if (!checked()) {
-                Spacer(modifier = Modifier.padding(10.dp))
-            } else {
-                Spacer(modifier = Modifier.weight(1f))
-            }
-
-            MiddleLevelUi(
-                checked,
-                listOfLetters,
-                colorCode,
-                { isCorrect }, //fixing recomposition
-                { gameUiState.value },
-                { gameUiState.currentTime },
-            )
-
-            if (!checked()) {
-                Spacer(modifier = Modifier.padding(10.dp))
-            } else {
-                Spacer(modifier = Modifier.weight(1f))
-            }
-
-            OutPutMessage(
-                isLoading,
-                { isCorrect },
-                viewModel::calculatePassingScore,
-                currentLevel,
-                { gameUiState.score },
-                isMode
-            )
-
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(start = 10.dp, end = 5.dp),
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.Center
-            ) {
-                CustomTextField(
-                    { inputTextState },
-                    { newText -> inputTextState = newText },
-                    checkAnswer,
-                    { isTimerRunning },
-                    modifier = Modifier.weight(1f),
-                    checked()
-                )
-                if (!checked()) {
-                    CustomButton(
-                        checkAnswer = checkAnswer,
-                        colorCode = colorCode,
-                        isTimerRunning = { isTimerRunning },
-                    )
-                } else {
-                    Spacer(modifier = Modifier.size(25.dp))
-                }
-            }
-            Spacer(modifier = Modifier.weight(0.2f))
-            if (checked()) {
-                CustomKeyboard(
-                    listOfLetters = listOfLetters,
-                    colorCode,
-                    onClick = { newText ->
-                        inputTextState += newText
-                    },
-                    onEnter = checkAnswer,
-                    onRemove = { inputTextState = inputTextState.dropLast(1) }
-                )
-            }
+        if (!checked()) {
+            Spacer(modifier = Modifier.padding(10.dp))
+        } else {
             Spacer(modifier = Modifier.weight(1f))
+        }
 
-            BottomButtons(
-                checked,
-                changeChecked,
+        MiddleLevelUi(
+            checked,
+            listOfLetters,
+            colorCode,
+            { isCorrect }, //fixing recomposition
+            { gameUiState.value },
+            { gameUiState.currentTime },
+        )
+
+        if (!checked()) {
+            Spacer(modifier = Modifier.padding(10.dp))
+        } else {
+            Spacer(modifier = Modifier.weight(1f))
+        }
+
+        OutPutMessage(
+            isLoading,
+            { isCorrect },
+            viewModel::calculatePassingScore,
+            currentLevel,
+            { gameUiState.score },
+            isMode
+        )
+
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(start = 10.dp, end = 5.dp),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.Center
+        ) {
+            CustomTextField(
+                { inputTextState },
+                { newText -> inputTextState = newText },
+                checkAnswer,
+                { isTimerRunning },
+                modifier = Modifier.weight(1f),
+                checked()
+            )
+            if (!checked()) {
+                CustomButton(
+                    checkAnswer = checkAnswer,
+                    colorCode = colorCode,
+                    isTimerRunning = { isTimerRunning },
+                )
+            } else {
+                Spacer(modifier = Modifier.size(25.dp))
+            }
+        }
+        Spacer(modifier = Modifier.weight(0.2f))
+        if (checked()) {
+            CustomKeyboard(
+                listOfLetters = listOfLetters,
                 colorCode,
-                shuffle
+                onClick = { newText ->
+                    inputTextState += newText
+                },
+                onEnter = checkAnswer,
+                onRemove = { inputTextState = inputTextState.dropLast(1) }
             )
         }
+        Spacer(modifier = Modifier.weight(1f))
+
+        BottomButtons(
+            checked,
+            changeChecked,
+            colorCode,
+            shuffle
+        )
     }
     DisplayResults(
         { gameUiState.score },
@@ -510,13 +506,13 @@ private fun UpperLevelUi(
                 stopClockOnExit()
             },
             modifier = Modifier
-                .size(33.dp)
+                .size(37.dp)
                 .padding(start = 7.dp)
         ) {
             Icon(
                 imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                 contentDescription = stringResource(R.string.exit),
-                modifier = Modifier.size(33.dp)
+                modifier = Modifier.size(37.dp)
             )
         }
         // most values pass as () -> type to fix the unnecessary recomposition of the ui
