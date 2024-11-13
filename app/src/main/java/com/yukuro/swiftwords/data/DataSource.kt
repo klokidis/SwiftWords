@@ -34,16 +34,14 @@ class DataSource {
 
     val profileImagesMale = listOf(
         R.drawable.male_icon,
-        R.drawable.profile_icon,
-        R.drawable.male_half_sad,
         R.drawable.male_half_sad_eyebags,
+        R.drawable.profile_icon,
     )
 
     val profileImagesFemale = listOf(
         R.drawable.female_icon,
-        R.drawable.profile_icon,
         R.drawable.female_half_sad,
-        R.drawable.female_half_sad_eyebags,
+        R.drawable.profile_icon,
     )
 
     val timeList = listOf(35000L, 40000L, 50000L, 60000L, 70000L)
