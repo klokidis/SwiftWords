@@ -48,8 +48,6 @@ import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.Checkbox
-import androidx.compose.material3.CheckboxDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.TextButton
@@ -275,8 +273,7 @@ fun Game(
         BottomButtons(
             checked,
             changeChecked,
-            colorCode,
-            shuffle
+            shuffle,
         )
     }
     DisplayResults(
@@ -316,8 +313,7 @@ fun Game(
 private fun BottomButtons(
     checked: () -> Boolean,
     changeChecked: () -> Unit,
-    colorCode: Int,
-    shuffle: () -> Unit
+    shuffle: () -> Unit,
 ) {
     Row(
         modifier = Modifier
@@ -327,23 +323,20 @@ private fun BottomButtons(
         horizontalArrangement = Arrangement.Center
 
     ) {
-        Box(modifier = Modifier.size(50.dp)) {
-            Checkbox(
-                checked = checked(),
-                onCheckedChange = {
-                    changeChecked()
-                },
+        Spacer(modifier = Modifier.padding(2.dp))
+        IconButton(
+            onClick = {
+                changeChecked()
+            },
+            modifier = Modifier
+                .size(35.dp)
+        ) {
+            Icon(
                 modifier = Modifier.fillMaxSize(),
-                colors = CheckboxDefaults.colors(
-                    checkedColor = DataSource().colorPairs[colorCode].darkColor,
-                )
+                imageVector = ImageVector.vectorResource(if (checked()) R.drawable.keyboard_filled_24px else R.drawable.keyboard_24px),
+                contentDescription = stringResource(R.string.keyboard),
             )
         }
-        Icon(
-            modifier = Modifier.size(35.dp),
-            imageVector = ImageVector.vectorResource(R.drawable.keyboard_24px),
-            contentDescription = stringResource(R.string.keyboard),
-        )
         Spacer(modifier = Modifier.weight(1f))
         IconButton(
             onClick = {
