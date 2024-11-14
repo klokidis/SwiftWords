@@ -73,10 +73,14 @@ fun ProfileScreen(
     val uiState by profileViewModel.uiState.collectAsState()
     val scrollState = rememberScrollState()
     var showProfilePhotos by remember { mutableStateOf(false) }
-    val painter = if (character) {
-        painterResource(id = DataSource().profileImagesFemale[pictureId])//true for f
-    } else {
-        painterResource(id = DataSource().profileImagesMale[pictureId])//false for m
+    val painter by remember {
+        mutableIntStateOf(
+            if (character) {
+                DataSource().profileImagesFemale[pictureId]//true for f
+            } else {
+                DataSource().profileImagesMale[pictureId]//false for m
+            }
+        )
     }
     Box(
         modifier = Modifier
@@ -90,7 +94,7 @@ fun ProfileScreen(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Image(
-                painter = painter,
+                painter = painterResource(id = painter),
                 contentDescription = null,
                 contentScale = ContentScale.Crop,
                 modifier = Modifier
@@ -112,8 +116,8 @@ fun ProfileScreen(
             Spacer(modifier = Modifier.weight(1f))
             WalkingFiresRow(
                 loopNumber = profileViewModel.streakCalculation(streak),
-                fires = uiState.firesWalk,
-                visible = uiState.visible,
+                fires = { uiState.firesWalk },
+                visible = { uiState.visible },
                 changeVisible = profileViewModel::changeVisible,
                 boublePadding = profileViewModel::boublePadding,
                 getText = profileViewModel::getTextBouble
@@ -144,8 +148,8 @@ fun ProfileScreen(
 @Composable
 private fun WalkingFiresRow(
     loopNumber: Int,
-    fires: List<Int>,
-    visible: Boolean,
+    fires: () -> List<Int>,
+    visible: () -> Boolean,
     changeVisible: () -> Unit,
     boublePadding: (Int) -> Dp,
     isDarkTheme: Boolean = isSystemInDarkTheme(),
@@ -158,7 +162,7 @@ private fun WalkingFiresRow(
         horizontalAlignment = Alignment.End
     ) {
         AnimatedVisibility(
-            visible = visible,
+            visible = visible(),
             enter = fadeIn(animationSpec = tween(durationMillis = 200)),
             exit = fadeOut(animationSpec = tween(durationMillis = 3000))
         ) {
@@ -212,7 +216,7 @@ private fun WalkingFiresRow(
                         ),
                 ) {
                     Image(
-                        painter = painterResource(id = fires[i]),
+                        painter = painterResource(id = fires()[i]),
                         contentDescription = null,
                         modifier = Modifier.size(40.dp)
                     )
