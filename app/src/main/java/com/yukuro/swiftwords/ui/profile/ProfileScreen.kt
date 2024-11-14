@@ -73,14 +73,10 @@ fun ProfileScreen(
     val uiState by profileViewModel.uiState.collectAsState()
     val scrollState = rememberScrollState()
     var showProfilePhotos by remember { mutableStateOf(false) }
-    val painter by remember {
-        mutableIntStateOf(
-            if (character) {
-                DataSource().profileImagesFemale[pictureId]//true for f
-            } else {
-                DataSource().profileImagesMale[pictureId]//false for m
-            }
-        )
+    val painter = if (character) {
+        painterResource(id = DataSource().profileImagesFemale[pictureId])//true for f
+    } else {
+        painterResource(id = DataSource().profileImagesMale[pictureId])//false for m
     }
     Box(
         modifier = Modifier
@@ -94,7 +90,7 @@ fun ProfileScreen(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Image(
-                painter = painterResource(id = painter),
+                painter = painter,
                 contentDescription = null,
                 contentScale = ContentScale.Crop,
                 modifier = Modifier
