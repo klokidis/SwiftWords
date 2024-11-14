@@ -22,6 +22,14 @@ data class UiState(
         R.drawable.fire5_walk,
         R.drawable.fire6_walk,
     ),
+    val fires: List<Int> = listOf(
+        R.drawable.fire_on,
+        R.drawable.fire2,
+        R.drawable.fire3,
+        R.drawable.fire4,
+        R.drawable.fire5,
+        R.drawable.fire6,
+    ),
     val padding: List<Dp> = listOf(),
     val visible: Boolean = false
 )
@@ -80,7 +88,7 @@ class ProfileViewmodel : ViewModel() {
                     visible = true,
                 )
             }
-            delay(2000)
+            delay(2500)
             _uiState.update { currentState ->
                 currentState.copy(
                     visible = false,

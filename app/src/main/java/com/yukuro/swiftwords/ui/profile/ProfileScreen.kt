@@ -116,11 +116,12 @@ fun ProfileScreen(
             Spacer(modifier = Modifier.weight(1f))
             WalkingFiresRow(
                 loopNumber = profileViewModel.streakCalculation(streak),
-                fires = { uiState.firesWalk },
+                firesWalk = { uiState.firesWalk },
                 visible = { uiState.visible },
                 changeVisible = profileViewModel::changeVisible,
                 boublePadding = profileViewModel::boublePadding,
-                getText = profileViewModel::getTextBouble
+                getText = profileViewModel::getTextBouble,
+                fires = { uiState.fires }
             )
         }
         IconButton(
@@ -148,12 +149,13 @@ fun ProfileScreen(
 @Composable
 private fun WalkingFiresRow(
     loopNumber: Int,
-    fires: () -> List<Int>,
+    firesWalk: () -> List<Int>,
     visible: () -> Boolean,
     changeVisible: () -> Unit,
     boublePadding: (Int) -> Dp,
     isDarkTheme: Boolean = isSystemInDarkTheme(),
     getText: (Int) -> Int,
+    fires: () -> List<Int>,
 ) {
     var boubleClicked by remember { mutableIntStateOf(0) }
 
@@ -164,7 +166,7 @@ private fun WalkingFiresRow(
         AnimatedVisibility(
             visible = visible(),
             enter = fadeIn(animationSpec = tween(durationMillis = 200)),
-            exit = fadeOut(animationSpec = tween(durationMillis = 3000))
+            exit = fadeOut(animationSpec = tween(durationMillis = 2500))
         ) {
             Card(
                 modifier = Modifier
@@ -216,7 +218,9 @@ private fun WalkingFiresRow(
                         ),
                 ) {
                     Image(
-                        painter = painterResource(id = fires()[i]),
+                        painter = painterResource(
+                            id = if (visible() && i == boubleClicked) fires()[i] else firesWalk()[i]
+                        ),
                         contentDescription = null,
                         modifier = Modifier.size(40.dp)
                     )
