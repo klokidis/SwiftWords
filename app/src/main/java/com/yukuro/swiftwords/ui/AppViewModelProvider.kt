@@ -9,12 +9,16 @@ import com.yukuro.swiftwords.data.GetDataViewModel
 import com.yukuro.swiftwords.ui.choose.StartingViewmodel
 import com.yukuro.swiftwords.ui.elements.SoundViewModel
 import com.yukuro.swiftwords.ui.levels.LevelViewModel
+import com.yukuro.swiftwords.ui.profile.ProfileViewmodel
 
 
 object AppViewModelProvider {
     val Factory = viewModelFactory {
         initializer {
             LevelViewModel()
+        }
+        initializer {
+            ProfileViewmodel()
         }
         initializer {
             SwiftWordsMainViewModel()

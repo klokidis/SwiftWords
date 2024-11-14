@@ -21,25 +21,6 @@ class DataSource {
         ColorPair(id = 10, lightColor = Color.White, darkColor = Color(0xFFDE0000)),
         ColorPair(id = 11, lightColor = Color.White, darkColor = Color(0xFFE24615)),
     )
-    val firesWalk = listOf(
-        R.drawable.fire1_walk,
-        R.drawable.fire2_walk,
-        R.drawable.fire3_walk,
-        R.drawable.fire4_walk,
-        R.drawable.fire5_walk,
-        R.drawable.fire6_walk,
-    )
-
-    fun streakCalculation(streak: Int): Int{
-        return when {
-            streak < 5 -> 0
-            streak < 15 -> 1
-            streak < 30 -> 2
-            streak < 40 -> 3
-            streak < 50 -> 4
-            else -> 5
-        }
-    }
 
     val allImagesCredit = listOf(
         R.drawable.profile_icon,
