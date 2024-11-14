@@ -1,6 +1,7 @@
 package com.yukuro.swiftwords.ui.profile
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -11,8 +12,10 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Settings
@@ -22,12 +25,14 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -77,7 +82,7 @@ fun ProfileScreen(
                     .padding(top = 15.dp)
                     .size(200.dp)
                     .clip(CircleShape)
-                    .clickable { showProfilePhotos = true  },
+                    .clickable { showProfilePhotos = true },
             )
             Spacer(modifier = Modifier.padding(4.dp))
             Text(
@@ -89,6 +94,11 @@ fun ProfileScreen(
             )
             Spacer(modifier = Modifier.padding(13.dp))
             Scores(currentLevel, highScore, streak)
+            Spacer(modifier = Modifier.weight(1f))
+            WalkingFiresRow(
+                loopNumber = DataSource().streakCalculation(streak),
+                fires = DataSource().firesWalk
+            )
         }
         IconButton(
             onClick = { navigate() },
@@ -111,6 +121,54 @@ fun ProfileScreen(
         DataSource().colorPairs[colorBoarder].darkColor
     )
 }
+
+@Composable
+private fun WalkingFiresRow(loopNumber: Int, fires: List<Int>) {
+    var boubleClicked by remember { mutableIntStateOf(0) }
+    Column(
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment =Alignment.End
+    ) {
+        if (boubleClicked == 1 || boubleClicked ==0) {
+            Text(
+                text = "Hello! I'm on fire!", // Funny message
+                color = Color.White,
+                modifier = Modifier
+                    .padding(10.dp)
+                    .background(
+                        color = Color.DarkGray,
+                        shape = RoundedCornerShape(8.dp)
+                    )
+            )
+        }
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(bottom = 3.dp),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.End
+        ) {
+
+            for (i in loopNumber downTo 0) { // Loop in reverse order
+                Box(
+                    modifier = Modifier
+                        .wrapContentSize()
+                        .padding(end = 5.dp)
+                        .clickable {
+                            boubleClicked = i
+                        }
+                ) {
+                    Image(
+                        painter = painterResource(id = fires[i]),
+                        contentDescription = null,
+                        modifier = Modifier.size(40.dp)
+                    )
+                }
+            }
+        }
+    }
+}
+
 
 @Composable
 fun Scores(currentLevel: Int, highScore: Int, streak: Int) {

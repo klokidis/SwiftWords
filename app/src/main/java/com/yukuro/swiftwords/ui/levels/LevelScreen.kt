@@ -334,13 +334,15 @@ fun TopBar(
                             id = when {
                                 streak < 5 -> R.drawable.fire_ending
 
-                                streak < 20 -> R.drawable.fire3_end
+                                streak < 20 -> R.drawable.fire2_end
 
-                                streak < 30 -> R.drawable.fire4_end
+                                streak < 30 -> R.drawable.fire3_end
 
-                                streak < 40 -> R.drawable.fire5_end
+                                streak < 40 -> R.drawable.fire4_end
 
-                                streak >= 50 -> R.drawable.fire6_end
+                                streak < 50 -> R.drawable.fire5_end
+
+                                streak >= 60 -> R.drawable.fire6_end
 
                                 else -> R.drawable.fire_ending
                             }
@@ -352,9 +354,10 @@ fun TopBar(
                         painterResource(
                             id = when { //fun reference gameViewModel
                                 streak < 5 -> R.drawable.fire_on
-                                streak < 15 -> R.drawable.fire3
-                                streak < 30 -> R.drawable.fire4
-                                streak < 40 -> R.drawable.fire5
+                                streak < 15 -> R.drawable.fire2
+                                streak < 30 -> R.drawable.fire3
+                                streak < 40 -> R.drawable.fire4
+                                streak < 50 -> R.drawable.fire5
                                 else -> R.drawable.fire6
                             }
                         )

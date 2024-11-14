@@ -58,30 +58,34 @@ fun showNotification(context: Context, title: String, content: String, streak: I
         when {
             streak < 5 -> R.drawable.fire_ending
 
-            streak < 20 -> R.drawable.fire3_end
+            streak < 20 -> R.drawable.fire2_end
 
-            streak < 30 -> R.drawable.fire4_end
+            streak < 30 -> R.drawable.fire3_end
 
-            streak < 40 -> R.drawable.fire5_end
+            streak < 40 -> R.drawable.fire4_end
 
-            streak >= 50 -> R.drawable.fire6_end
+            streak < 50 -> R.drawable.fire5_end
+
+            streak >= 60 -> R.drawable.fire6_end
 
             else -> R.drawable.fire_ending
         }
-    ) // Replace with your colored icon resource
+    )
 
     val icon = when {
-        streak < 5 -> R.drawable.fire_ending
+        streak < 5 -> R.drawable.fire_on
 
-        streak < 20 -> R.drawable.fire3_end
+        streak < 20 -> R.drawable.fire2
 
-        streak < 30 -> R.drawable.fire4_end
+        streak < 30 -> R.drawable.fire3
 
-        streak < 40 -> R.drawable.fire5_end
+        streak < 40 -> R.drawable.fire4
 
-        streak >= 50 -> R.drawable.fire6_end
+        streak < 50 -> R.drawable.fire5
 
-        else -> R.drawable.fire_ending
+        streak >= 60 -> R.drawable.fire6
+
+        else -> R.drawable.fire_on
     }
 
     // Create the notification

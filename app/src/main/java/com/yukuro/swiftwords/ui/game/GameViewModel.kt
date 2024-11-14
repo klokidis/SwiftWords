@@ -197,9 +197,10 @@ class GameViewModel(time: () -> Long) : ViewModel() {
     fun getFireImage(streakLevel: Int): Int {
         return when {
             streakLevel < 5 -> R.drawable.fire_on
-            streakLevel < 15 -> R.drawable.fire3
-            streakLevel < 30 -> R.drawable.fire4
-            streakLevel < 40 -> R.drawable.fire5
+            streakLevel < 15 -> R.drawable.fire2
+            streakLevel < 30 -> R.drawable.fire3
+            streakLevel < 40 -> R.drawable.fire4
+            streakLevel < 50 -> R.drawable.fire5
             else -> R.drawable.fire6
         }
     }
