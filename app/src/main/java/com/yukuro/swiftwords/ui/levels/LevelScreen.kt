@@ -649,7 +649,7 @@ fun ColorBox(
             }
             .clip(RoundedCornerShape(26.dp))
             .background(
-                if (isDarkTheme) Color.White else Color(0xFF0D1114)
+                if (isDarkTheme) Color.White else Color(0xFF1F1F1F)
             )
             .clickable {
                 changeColorFun(thisColor.id)
