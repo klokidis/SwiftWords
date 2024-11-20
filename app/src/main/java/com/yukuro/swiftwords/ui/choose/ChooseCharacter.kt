@@ -35,6 +35,7 @@ import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -62,22 +63,20 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.yukuro.swiftwords.data.DataSource
 import com.yukuro.swiftwords.ui.elements.LetterByLetterText
 import com.yukuro.swiftwords.ui.elements.ProfileImagePopUp
-import kotlin.reflect.KFunction0
-import kotlin.reflect.KFunction1
-import kotlin.reflect.KFunction2
 
 @Composable
 fun StartingScreen(
     viewModel: StartingViewmodel = viewModel(factory = AppViewModelProvider.Factory),
     nickName: String,
-    updateInitialState: KFunction1<Boolean, Unit>,
-    updateName: KFunction1<String, Unit>,
-    updateCharacter: KFunction1<Boolean, Unit>,
-    playLetterSound: KFunction2<Char, Float, Unit>,
+    updateInitialState: (Boolean) -> Unit,
+    updateName: (String) -> Unit,
+    updateCharacter: (Boolean) -> Unit,
+    playLetterSound: (Char, Float) -> Unit,
     profileSelected: Int,
-    changeProfilePic: KFunction1<Int, Unit>,
-    loadLettersSound: KFunction0<Unit>,
-    releaseAllAlphabetSounds: KFunction0<Unit>,
+    changeProfilePic: (Int) -> Unit,
+    loadLettersSound: () -> Unit,
+    releaseAllAlphabetSounds: () -> Unit,
+    level: Int,
 ) {
     val uiState by viewModel.uiState.collectAsState()
 
@@ -125,7 +124,10 @@ fun StartingScreen(
                     characterIsMale = false,
                     playLetterSound,
                     characterOne = R.drawable.male_full_body,
-                    characterTwo = R.drawable.female_full_body
+                    characterTwo = R.drawable.female_full_body,
+                    level = level,
+                    updateInitialState = updateInitialState,
+                    releaseAllAlphabetSounds = releaseAllAlphabetSounds
                 )
             }
 
@@ -133,7 +135,10 @@ fun StartingScreen(
                 CharacterChat(
                     characterIsMale = true,
                     text = stringResource(R.string.dialog2),
-                    playLetterSound = playLetterSound
+                    playLetterSound = playLetterSound,
+                    level = level,
+                    updateInitialState = updateInitialState,
+                    releaseAllAlphabetSounds = releaseAllAlphabetSounds
                 )
             }
 
@@ -143,7 +148,10 @@ fun StartingScreen(
                     characterIsMale = false,
                     playLetterSound,
                     characterOne = R.drawable.fire_on,
-                    characterTwo = R.drawable.female_full_body
+                    characterTwo = R.drawable.female_full_body,
+                    updateInitialState = updateInitialState,
+                    level = level,
+                    releaseAllAlphabetSounds
                 )
             }
 
@@ -151,7 +159,10 @@ fun StartingScreen(
                 ChooseCharacter(
                     updateCharacter,
                     uiState.character,
-                    viewModel::updateCharacter
+                    viewModel::updateCharacter,
+                    level,
+                    updateInitialState,
+                    releaseAllAlphabetSounds
                 ) { viewModel.increaseState() }
             }
 
@@ -171,7 +182,10 @@ fun StartingScreen(
                 CharacterChat(
                     characterIsMale = uiState.character != 0,
                     text = stringResource(R.string.dialog4),
-                    playLetterSound = playLetterSound
+                    playLetterSound = playLetterSound,
+                    level = level,
+                    updateInitialState = updateInitialState,
+                    releaseAllAlphabetSounds = releaseAllAlphabetSounds
                 )
             }
 
@@ -187,67 +201,73 @@ fun StartingScreen(
 fun CharacterChat(
     characterIsMale: Boolean,
     text: String,
-    playLetterSound: KFunction2<Char, Float, Unit>
+    playLetterSound: (Char, Float) -> Unit,
+    level: Int,
+    updateInitialState: (Boolean) -> Unit,
+    releaseAllAlphabetSounds: () -> Unit
 ) {
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(10.dp),
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        Spacer(modifier = Modifier.weight(1f))
-        Box(
-            contentAlignment = Alignment.BottomStart
+    Box(modifier = Modifier.fillMaxSize()) {
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(10.dp),
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Image(
-                painter = painterResource(
-                    id = if (characterIsMale) {
-                        R.drawable.male_full_body
-                    } else {
-                        R.drawable.female_full_body
-                    }
-                ),
-                modifier = Modifier
-                    .size(600.dp)
-                    .padding(bottom = 40.dp),
-                contentDescription = null,
-                contentScale = ContentScale.FillHeight
-            )
-            Card(
-                modifier = Modifier
-                    .clip(MaterialTheme.shapes.medium)
-                    .padding(10.dp)
-                    .fillMaxWidth()
-                    .shadow(
-                        elevation = 2.dp,
-                        shape = RoundedCornerShape(16.dp)
-                    ),
-                colors = CardDefaults.cardColors(
-                    containerColor = MaterialTheme.colorScheme.secondary,
-                ),
+            Spacer(modifier = Modifier.weight(1f))
+            Box(
+                contentAlignment = Alignment.BottomStart
             ) {
-                LetterByLetterText(
-                    text,
-                    characterIsMale = characterIsMale,
-                    playLetterSound = playLetterSound
+                Image(
+                    painter = painterResource(
+                        id = if (characterIsMale) {
+                            R.drawable.male_full_body
+                        } else {
+                            R.drawable.female_full_body
+                        }
+                    ),
+                    modifier = Modifier
+                        .size(600.dp)
+                        .padding(bottom = 40.dp),
+                    contentDescription = null,
+                    contentScale = ContentScale.FillHeight
                 )
+                Card(
+                    modifier = Modifier
+                        .clip(MaterialTheme.shapes.medium)
+                        .padding(10.dp)
+                        .fillMaxWidth()
+                        .shadow(
+                            elevation = 2.dp,
+                            shape = RoundedCornerShape(16.dp)
+                        ),
+                    colors = CardDefaults.cardColors(
+                        containerColor = MaterialTheme.colorScheme.secondary,
+                    ),
+                ) {
+                    LetterByLetterText(
+                        text,
+                        characterIsMale = characterIsMale,
+                        playLetterSound = playLetterSound
+                    )
+                }
             }
+            Spacer(modifier = Modifier.weight(1f))
+            Text(text = stringResource(id = R.string.click))
         }
-        Spacer(modifier = Modifier.weight(1f))
-        Text(text = stringResource(id = R.string.click))
+        SkipButton(level, updateInitialState, releaseAllAlphabetSounds)
     }
 }
 
 @Composable
 fun SetNickName(
     chose: Int,
-    onSave: KFunction1<String, Unit>,
+    onSave: (String) -> Unit,
     onCancel: () -> Unit,
     nextState: () -> Unit,
     nickName: String,
     profileSelected: Int,
-    changeProfilePic: KFunction1<Int, Unit>,
+    changeProfilePic: (Int) -> Unit,
 ) {
     var textState by rememberSaveable { mutableStateOf(nickName) }
     var showProfilePhotos by rememberSaveable { mutableStateOf(false) }
@@ -354,65 +374,94 @@ fun SetNickName(
 fun CharacterChatTwo(
     text: String,
     characterIsMale: Boolean,
-    playLetterSound: KFunction2<Char, Float, Unit>,
+    playLetterSound: (Char, Float) -> Unit,
     characterOne: Int,
-    characterTwo: Int
+    characterTwo: Int,
+    updateInitialState: (Boolean) -> Unit,
+    level: Int,
+    releaseAllAlphabetSounds: () -> Unit
 ) {
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(10.dp),
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        Spacer(modifier = Modifier.weight(1f))
-        Box(
-            contentAlignment = Alignment.BottomStart
+    Box(modifier = Modifier.fillMaxSize()) {
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(10.dp),
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(bottom = 25.dp),
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.Center,
+            Spacer(modifier = Modifier.weight(1f))
+            Box(
+                contentAlignment = Alignment.BottomStart
             ) {
-                Image(
-                    painter = painterResource(characterOne),
+                Row(
                     modifier = Modifier
-                        .weight(1f)
-                        .padding(bottom = 40.dp),
-                    contentDescription = null
-                )
-                Image(
-                    painter = painterResource(characterTwo),
+                        .fillMaxWidth()
+                        .padding(bottom = 25.dp),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.Center,
+                ) {
+                    Image(
+                        painter = painterResource(characterOne),
+                        modifier = Modifier
+                            .weight(1f)
+                            .padding(bottom = 40.dp),
+                        contentDescription = null
+                    )
+                    Image(
+                        painter = painterResource(characterTwo),
+                        modifier = Modifier
+                            .weight(1f)
+                            .padding(bottom = 40.dp),
+                        contentDescription = null
+                    )
+                }
+                Card(
                     modifier = Modifier
-                        .weight(1f)
-                        .padding(bottom = 40.dp),
-                    contentDescription = null
-                )
-            }
-            Card(
-                modifier = Modifier
-                    .clip(MaterialTheme.shapes.medium)
-                    .padding(10.dp)
-                    .fillMaxWidth()
-                    .shadow(
-                        elevation = 2.dp,
-                        shape = RoundedCornerShape(16.dp)
+                        .clip(MaterialTheme.shapes.medium)
+                        .padding(10.dp)
+                        .fillMaxWidth()
+                        .shadow(
+                            elevation = 2.dp,
+                            shape = RoundedCornerShape(16.dp)
+                        ),
+                    colors = CardDefaults.cardColors(
+                        containerColor = MaterialTheme.colorScheme.secondary,
                     ),
-                colors = CardDefaults.cardColors(
-                    containerColor = MaterialTheme.colorScheme.secondary,
-                ),
+                ) {
+                    LetterByLetterText(
+                        text,
+                        playLetterSound = playLetterSound,
+                        characterIsMale = characterIsMale
+                    )
+                }
+            }
+            Spacer(modifier = Modifier.weight(1f))
+            Text(text = stringResource(id = R.string.click))
+        }
+        SkipButton(level, updateInitialState, releaseAllAlphabetSounds)
+    }
+}
+
+@Composable
+private fun SkipButton(
+    level: Int, onClicked: (Boolean) -> Unit,
+    releaseAllAlphabetSounds: () -> Unit
+) {
+    Row {
+        Spacer(modifier = Modifier.weight(1f))
+        if (level > 1) {
+            TextButton(
+                onClick = {
+                    onClicked(false)
+                    releaseAllAlphabetSounds()
+                },
             ) {
-                LetterByLetterText(
-                    text,
-                    playLetterSound = playLetterSound,
-                    characterIsMale = characterIsMale
+                Text(
+                    stringResource(R.string.skip),
+                    style = MaterialTheme.typography.bodyMedium.copy(fontSize = 17.sp),
                 )
             }
         }
-        Spacer(modifier = Modifier.weight(1f))
-        Text(text = stringResource(id = R.string.click))
     }
 }
 
@@ -421,66 +470,72 @@ fun CharacterChatTwo(
 fun ChooseCharacter(
     dataUpdate: (Boolean) -> Unit,
     character: Int,
-    uiStateUpdate: KFunction1<Int, Unit>,
+    uiStateUpdate: (Int) -> Unit,
+    level: Int,
+    updateInitialState: (Boolean) -> Unit,
+    releaseAllAlphabetSounds: () -> Unit,
     increaseState: () -> Unit,
 ) {
     val scrollState = rememberScrollState()
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .verticalScroll(scrollState),
-        verticalArrangement = Arrangement.Top,
-        horizontalAlignment = Alignment.Start,
-    ) {
-        Spacer(modifier = Modifier.padding(5.dp))
-        Text(
-            text = stringResource(id = R.string.choose),
-            style = MaterialTheme.typography.titleLarge.copy(fontSize = 45.sp),
+    Box(modifier = Modifier) {
+        Column(
             modifier = Modifier
-                .padding(start = 10.dp)
-        )
-        Text(
-            text = stringResource(id = R.string.choose2),
-            style = MaterialTheme.typography.titleLarge.copy(fontSize = 45.sp),
-            modifier = Modifier.padding(start = 10.dp)
-        )
-        Spacer(modifier = Modifier.padding(top = 10.dp))
-        CharacterCard(
-            R.drawable.female_full_body,
-            character == 0,
-            uiStateUpdate,
-            character = 0,
-            Modifier.weight(1f)
-        )
-        Spacer(modifier = Modifier.padding(10.dp))
-        CharacterCard(
-            R.drawable.male_full_body,
-            character == 1,
-            uiStateUpdate,
-            character = 1,
-            Modifier.weight(1f)
-        )
-        Spacer(modifier = Modifier.padding(top = 10.dp))
-        Row(
-            modifier = Modifier
-                .padding(end = 25.dp)
-                .fillMaxWidth(),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.Center
+                .fillMaxSize()
+                .verticalScroll(scrollState),
+            verticalArrangement = Arrangement.Top,
+            horizontalAlignment = Alignment.Start,
         ) {
-            Spacer(modifier = Modifier.weight(1f))
-            Button(
-                onClick = {
-                    if (character != 2) {
-                        dataUpdate(character == 0) //true means f false mean m
-                        increaseState()
-                    }
-                },
-                enabled = character != 2
+            Spacer(modifier = Modifier.padding(5.dp))
+            Text(
+                text = stringResource(id = R.string.choose),
+                style = MaterialTheme.typography.titleLarge.copy(fontSize = 45.sp),
+                modifier = Modifier
+                    .padding(start = 10.dp)
+            )
+            Text(
+                text = stringResource(id = R.string.choose2),
+                style = MaterialTheme.typography.titleLarge.copy(fontSize = 45.sp),
+                modifier = Modifier.padding(start = 10.dp)
+            )
+            Spacer(modifier = Modifier.padding(top = 10.dp))
+            CharacterCard(
+                R.drawable.female_full_body,
+                character == 0,
+                uiStateUpdate,
+                character = 0,
+                Modifier.weight(1f)
+            )
+            Spacer(modifier = Modifier.padding(10.dp))
+            CharacterCard(
+                R.drawable.male_full_body,
+                character == 1,
+                uiStateUpdate,
+                character = 1,
+                Modifier.weight(1f)
+            )
+            Spacer(modifier = Modifier.padding(top = 10.dp))
+            Row(
+                modifier = Modifier
+                    .padding(end = 25.dp)
+                    .fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.Center
             ) {
-                Text(stringResource(R.string.next))
+                Spacer(modifier = Modifier.weight(1f))
+                Button(
+                    onClick = {
+                        if (character != 2) {
+                            dataUpdate(character == 0) //true means f false mean m
+                            increaseState()
+                        }
+                    },
+                    enabled = character != 2
+                ) {
+                    Text(stringResource(R.string.next))
+                }
             }
         }
+        SkipButton(level, updateInitialState, releaseAllAlphabetSounds)
     }
 }
 
@@ -488,7 +543,7 @@ fun ChooseCharacter(
 fun CharacterCard(
     imageResourceId: Int,
     selected: Boolean,
-    onClicked: KFunction1<Int, Unit>,
+    onClicked: (Int) -> Unit,
     character: Int,
     modifier: Modifier
 ) {

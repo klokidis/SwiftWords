@@ -104,7 +104,8 @@ fun SwiftWordsApp(
                     profileSelected = dataUiState.userDetails.profileSelected,
                     changeProfilePic = dataViewmodel::changeProfilePic,
                     loadLettersSound = soundViewModel::loadLettersSound,
-                    releaseAllAlphabetSounds = soundViewModel::releaseAllAlphabetSounds
+                    releaseAllAlphabetSounds = soundViewModel::releaseAllAlphabetSounds,
+                    level = dataUiState.userDetails.currentLevel
                 )
             }
             composable(route = SwiftWordsScreen.BottomBarScreens.name) { //separated screens to fix the bottom navigation junk. Since having it appear with an if condition it doesn't run smoothly

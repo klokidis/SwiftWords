@@ -18,7 +18,6 @@ import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import kotlinx.coroutines.delay
-import kotlin.reflect.KFunction2
 
 
 @Composable
@@ -27,7 +26,7 @@ fun LetterByLetterText(
     modifier: Modifier = Modifier,
     delay: Long = 40L,
     characterIsMale: Boolean,
-    playLetterSound: KFunction2<Char, Float, Unit>,
+    playLetterSound: (Char, Float) -> Unit,
     isDarkTheme: Boolean = isSystemInDarkTheme(),
 ) {
     var visibleText by rememberSaveable { mutableStateOf("") }
@@ -63,7 +62,7 @@ private suspend fun animateText(
     text: String,
     timeDelay: Long,
     characterIsMale: Boolean,
-    playLetterSound: KFunction2<Char, Float, Unit>,
+    playLetterSound: (Char, Float) -> Unit,
     callback: (String) -> Unit
 ) {
     delay(100) // a little delay for sound to load
