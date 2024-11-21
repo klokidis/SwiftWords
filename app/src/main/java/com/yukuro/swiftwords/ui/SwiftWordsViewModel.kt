@@ -132,7 +132,7 @@ class SwiftWordsMainViewModel : ViewModel() {
         initialiseLists()
     }
 
-    fun changeGameMode(number : Int) {
+    fun changeGameMode(number: Int) {
         _uiState.update { currentState ->
             currentState.copy(
                 gameMode = number
@@ -146,7 +146,7 @@ class SwiftWordsMainViewModel : ViewModel() {
 
         if (run) {
             lettersChangingJob = viewModelScope.launch {
-                runChangingLetters(true, playChangeSound,gameTime)
+                runChangingLetters(true, playChangeSound, gameTime)
             }
         }
     }
@@ -194,6 +194,11 @@ class SwiftWordsMainViewModel : ViewModel() {
     private fun generateNewRandomLetters(): Set<Char> {
         val vowels = mutableListOf('A', 'E', 'I', 'O')
         val consonants = ('A'..'Z').filter { it !in vowels }.toMutableList()
+        // List of consonants that should not appear more than twice
+        val restrictedConsonants = listOf('V', 'W', 'Y', 'Z', 'Q')
+
+        // Remove restricted consonants from the consonants list
+        val allowedConsonants = consonants.filter { it !in restrictedConsonants }.toMutableList()
 
         val randomVowels = mutableListOf<Char>()
         repeat(3) {
@@ -204,12 +209,12 @@ class SwiftWordsMainViewModel : ViewModel() {
 
         val randomConsonants = mutableListOf<Char>()
         repeat(3) {
-            val randomConsonant = consonants.random()
+            val randomConsonant = allowedConsonants.random()
             randomConsonants.add(randomConsonant)
-            consonants.remove(randomConsonant)
+            allowedConsonants.remove(randomConsonant)
         }
 
-        val remainingLetters = (vowels + consonants).toMutableList()
+        val remainingLetters = (vowels + allowedConsonants + restrictedConsonants).toMutableList()
         val randomOthers = mutableListOf<Char>()
         repeat(3) {
             val randomOther = remainingLetters.random()
