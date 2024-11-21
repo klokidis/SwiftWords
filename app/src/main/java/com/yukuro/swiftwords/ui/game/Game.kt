@@ -3,10 +3,11 @@ package com.yukuro.swiftwords.ui.game
 import androidx.activity.compose.BackHandler
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.animateColorAsState
+import androidx.compose.animation.core.CubicBezierEasing
 import androidx.compose.animation.core.tween
-import androidx.compose.animation.expandHorizontally
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
+import androidx.compose.animation.scaleIn
 import androidx.compose.animation.shrinkHorizontally
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -359,7 +360,13 @@ private fun BottomButtons(
         Spacer(modifier = Modifier.weight(1f))
         AnimatedVisibility(
             visible = isPassingScore && !isMode,
-            enter = fadeIn() + expandHorizontally(),
+            enter = scaleIn(
+                initialScale = 0.8f,
+                animationSpec = tween(
+                    durationMillis = 1000,
+                    easing = CubicBezierEasing(0.34f, 3f, 0.64f, 1f)
+                )
+            ) + fadeIn(animationSpec = tween(durationMillis = 100)),
             exit = fadeOut() + shrinkHorizontally()
         ) {
             TextButton(
