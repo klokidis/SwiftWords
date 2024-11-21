@@ -46,7 +46,7 @@ class GameViewModel(time: () -> Long) : ViewModel() {
         answer: () -> String,
         wordList: Set<String>,
         charArray: Set<Char>
-    ): Boolean {
+    ): Int {
         return withContext(Dispatchers.Default) {
             if (answer().length > 1) {
                 // Convert charArray to a set of lowercase characters for efficient lookup
@@ -55,14 +55,18 @@ class GameViewModel(time: () -> Long) : ViewModel() {
                 val isInWordList = wordList.contains(trimmedAnswer)
                 val canBeConstructed = trimmedAnswer.all { it in charSet }
                 val newWord = !uiState.value.alreadyAnswered.contains(answer())
-                if (isInWordList && canBeConstructed && newWord) {
-                    increaseScore()
-                    addWord(answer())
-                }
 
-                isInWordList && canBeConstructed && newWord
+                return@withContext when {
+                    !newWord -> 3 // Word already answered
+                    isInWordList && canBeConstructed -> {
+                        increaseScore()
+                        addWord(trimmedAnswer)
+                        1 // Everything is good
+                    }
+                    else -> 2 // False
+                }
             } else {
-                false
+                2 // False
             }
         }
     }

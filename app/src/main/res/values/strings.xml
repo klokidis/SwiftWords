@@ -78,4 +78,5 @@
     <string name="sixth_fire">My final form, powered by coffee and questionable decisions!</string>
     <string name="skip">Skip</string>
     <string name="completeLevel">End level</string>
+    <string name="answered">Used word</string>
 </resources>

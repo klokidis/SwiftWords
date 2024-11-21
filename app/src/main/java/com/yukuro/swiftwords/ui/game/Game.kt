@@ -129,7 +129,7 @@ fun Game(
     val isTimerRunning by remember { derivedStateOf { gameUiState.isTimerRunning } }
     val coroutineScope = rememberCoroutineScope()
     var inputTextState by rememberSaveable { mutableStateOf("") }
-    var isCorrect by rememberSaveable { mutableStateOf<Boolean?>(null) }
+    var outPutNumber by rememberSaveable { mutableStateOf<Int?>(null) } // 3 Word already answered 1 correct 2 false
     var isLoading by rememberSaveable { mutableStateOf(false) }
     var onExitButtonPressed by rememberSaveable { mutableStateOf(false) }
     val scroll = rememberScrollState()
@@ -138,15 +138,15 @@ fun Game(
         {
             isLoading = true
             coroutineScope.launch {
-                isCorrect = viewModel.checkAnswer(
+                outPutNumber = viewModel.checkAnswer(
                     { inputTextState },
                     wordList,
                     setOfLetters
                 )
                 isLoading = false
                 inputTextState = ""  // Reset textState after isCorrect is updated
-                when (isCorrect) {
-                    true -> {
+                when (outPutNumber) {
+                    1 -> {
                         playCorrectSound()
                         if (gameModeNumber == 3 && isMode) {
                             viewModel.addTime()
@@ -217,7 +217,7 @@ fun Game(
             checked,
             listOfLetters,
             colorCode,
-            { isCorrect }, //fixing recomposition
+            { outPutNumber }, //fixing recomposition
             { gameUiState.value },
             { gameUiState.currentTime },
         )
@@ -230,7 +230,7 @@ fun Game(
 
         OutPutMessage(
             isLoading,
-            { isCorrect },
+            { outPutNumber },
             viewModel::calculatePassingScore,
             currentLevel,
             { gameUiState.score },
@@ -303,7 +303,7 @@ fun Game(
         isVisible = !isTimerRunning,
         restartGame = {
             inputTextState = ""
-            isCorrect = null
+            outPutNumber = null
         },
         exitPressed = { onExitButtonPressed = true },
         dateNow = dateNow,
@@ -407,7 +407,7 @@ private fun BottomButtons(
 @Composable
 private fun OutPutMessage(
     isLoading: Boolean,
-    isCorrect: () -> Boolean?,
+    isCorrect: () -> Int?,
     calculatePassingScore: KFunction1<Int, Int>,
     currentLevel: Int,
     score: () -> Int,
@@ -422,13 +422,18 @@ private fun OutPutMessage(
         Text(
             text = when {
                 isLoading -> lastMessage // Keep the same message while loading
-                isCorrect() == true -> {
+                isCorrect() == 1 -> {
                     lastMessage = stringResource(R.string.correct)
                     lastMessage
                 }
 
-                isCorrect() == false -> {
+                isCorrect() == 2 -> {
                     lastMessage = stringResource(R.string.incorrect)
+                    lastMessage
+                }
+
+                isCorrect() == 3 -> {
+                    lastMessage = stringResource(R.string.answered)
                     lastMessage
                 }
 
@@ -440,8 +445,9 @@ private fun OutPutMessage(
             style = MaterialTheme.typography.titleSmall.copy(
                 fontSize = 17.sp,
                 color = when (isCorrect()) {
-                    true -> Color(0xFF006D2F)  // Correct color
-                    false -> Color(0xFF8D0C0C) // Incorrect color
+                    1 -> Color(0xFF006D2F)  // Correct color
+                    2 -> Color(0xFF8D0C0C) // Incorrect color
+                    3 -> Color(0xFF8D310C) // repeat color
                     else -> Color.Unspecified  // Default color when isCorrect is null
                 }
             )
@@ -460,7 +466,7 @@ private fun MiddleLevelUi(
     checked: () -> Boolean,
     listOfLetters: List<Char>,
     colorCode: Int,
-    isCorrect: () -> Boolean?,
+    isCorrect: () -> Int?,
     value: () -> Float,
     currentTime: () -> Long
 ) {
@@ -723,7 +729,7 @@ fun RowOfLetters(
     letter2: Char,
     letter3: Char,
     colorCode: Int,
-    isCorrect: () -> Boolean?
+    isCorrect: () -> Int?
 ) {
     Row(
         modifier = Modifier.wrapContentSize()
@@ -783,7 +789,7 @@ fun TextScore(score: () -> Int, currentPassingScore: Int, isMode: Boolean) {
 @Composable
 fun LetterBox(
     letter: Char,
-    isCorrect: () -> Boolean?,
+    isCorrect: () -> Int?,
     colorCode: Int,
     boxColor: ColorPair = DataSource().colorPairs[colorCode],
     isDarkTheme: Boolean = isSystemInDarkTheme(),
@@ -800,10 +806,10 @@ fun LetterBox(
     // Determine shadowColor based on correctness and theme
     val shadowColor = remember(isCorrect(), isDarkTheme) {
         when {
-            isCorrect() == true && isDarkTheme -> darkCorrect// Dark theme correct color
-            isCorrect() == true && !isDarkTheme -> lightCorrect // Light theme correct color
-            isCorrect() == false && isDarkTheme -> darkIncorrect// Dark theme incorrect color
-            isCorrect() == false && !isDarkTheme -> lightIncorrect// Light theme incorrect color
+            isCorrect() == 1 && isDarkTheme -> darkCorrect// Dark theme correct color
+            isCorrect() == 1 && !isDarkTheme -> lightCorrect // Light theme correct color
+            (isCorrect() == 2 || isCorrect() == 3) && isDarkTheme -> darkIncorrect// Dark theme incorrect color
+            (isCorrect() == 2 || isCorrect() == 3) && !isDarkTheme -> lightIncorrect// Light theme incorrect color
             else -> boxColor.darkColor // Default color if isCorrect is null
         }
     }
