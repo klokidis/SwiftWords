@@ -156,7 +156,7 @@ class GameViewModel(time: () -> Long) : ViewModel() {
         }
     }
 
-    private fun stopClock() {
+    fun stopClock() {
         _uiState.update { currentState ->
             currentState.copy(
                 isTimerRunning = false

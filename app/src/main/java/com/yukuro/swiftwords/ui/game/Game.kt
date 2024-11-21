@@ -1,8 +1,13 @@
 package com.yukuro.swiftwords.ui.game
 
 import androidx.activity.compose.BackHandler
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.tween
+import androidx.compose.animation.expandHorizontally
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.shrinkHorizontally
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -274,6 +279,11 @@ fun Game(
             checked,
             changeChecked,
             shuffle,
+            { gameUiState.score },
+            viewModel::calculatePassingScore,
+            currentLevel,
+            viewModel::stopClock,
+            isMode
         )
     }
     DisplayResults(
@@ -314,7 +324,16 @@ private fun BottomButtons(
     checked: () -> Boolean,
     changeChecked: () -> Unit,
     shuffle: () -> Unit,
+    score: () -> Int,
+    calculatePassingScore: (Int) -> Int,
+    currentLevel: Int,
+    stopClock: () -> Unit,
+    isMode: Boolean
 ) {
+    // Use derivedStateOf to avoid triggering recomposition unnecessarily
+    val isPassingScore by remember(score, calculatePassingScore, currentLevel) {
+        derivedStateOf { score() >= calculatePassingScore(currentLevel) }
+    }
     Row(
         modifier = Modifier
             .padding(3.dp)
@@ -336,6 +355,29 @@ private fun BottomButtons(
                 imageVector = ImageVector.vectorResource(if (checked()) R.drawable.keyboard_filled_24px else R.drawable.keyboard_24px),
                 contentDescription = stringResource(R.string.keyboard),
             )
+        }
+        Spacer(modifier = Modifier.weight(1f))
+        AnimatedVisibility(
+            visible = isPassingScore && !isMode,
+            enter = fadeIn() + expandHorizontally(),
+            exit = fadeOut() + shrinkHorizontally()
+        ) {
+            TextButton(
+                onClick = {
+                    stopClock()
+                },
+                enabled = isPassingScore,
+                modifier = Modifier
+                    .height(35.dp)
+            ) {
+                Text(
+                    text = stringResource(R.string.completeLevel),
+                    style = MaterialTheme.typography.titleSmall.copy(
+                        fontSize = 17.sp,
+                        color = Color(0xFF006D2F)
+                    )
+                )
+            }
         }
         Spacer(modifier = Modifier.weight(1f))
         IconButton(
@@ -819,7 +861,7 @@ fun DisplayResults(
     stopClockOnExit: KFunction0<Unit>,
     generateRandomLettersForBoth: () -> Unit,
     generateRandomLettersForMode: () -> Unit,
-    calculatePassingScore: KFunction1<Int, Int>,
+    calculatePassingScore: (Int) -> Int,
     generateRandomLettersForBothOnExit: () -> Unit,
     getFireImage: (Int) -> Int,
 ) {
@@ -827,6 +869,7 @@ fun DisplayResults(
 
     val coroutineScope = rememberCoroutineScope()
     var buttonsEnabled by remember { mutableStateOf(false) }
+    val passed = score() >= calculatePassingScore(currentLevel)
     val textColor by remember {
         mutableStateOf(
             if (isDarkTheme) {
@@ -850,7 +893,7 @@ fun DisplayResults(
 
             BackHandler {
                 navigateUp()
-                if (score() >= calculatePassingScore(currentLevel) && !isMode) {
+                if (passed && !isMode) {
                     increaseScore(score())
                     scheduleDailyNotification(context, streakLevel)
                     generateRandomLettersForBothOnExit()
@@ -882,7 +925,7 @@ fun DisplayResults(
                     if (!isMode && (dateNow.substring(
                             0,
                             10
-                        ) != dataDate()) && score() >= calculatePassingScore(currentLevel)
+                        ) != dataDate()) && passed
                     ) {
                         ScoreContent(
                             imageId = getFireImage(streakLevel + 1),
@@ -910,13 +953,13 @@ fun DisplayResults(
                                 painter = painterResource(
                                     id = if (characterIsFemale) {
                                         when {
-                                            score() >= calculatePassingScore(currentLevel) -> R.drawable.female_half
+                                            passed -> R.drawable.female_half
                                             !isMode -> R.drawable.female_half_sad_eyebags
                                             else -> R.drawable.female_half
                                         }
                                     } else {
                                         when {
-                                            score() >= calculatePassingScore(currentLevel) -> R.drawable.male_half
+                                            passed -> R.drawable.male_half
                                             !isMode -> R.drawable.male_half_sad_eyebags
                                             else -> R.drawable.male_half
                                         }
@@ -927,7 +970,7 @@ fun DisplayResults(
                             )
                             Spacer(modifier = Modifier.padding(5.dp))
                             when {
-                                score() >= calculatePassingScore(currentLevel) && !isMode -> {
+                                passed && !isMode -> {
                                     Text(
                                         stringResource(R.string.pass) + " " + score().toString(),
                                         style = MaterialTheme.typography.titleSmall.copy(
@@ -966,7 +1009,7 @@ fun DisplayResults(
                                     onClick = {
                                         navigateUp()
                                         exitPressed()
-                                        if (score() >= calculatePassingScore(currentLevel) && !isMode) {
+                                        if (passed && !isMode) {
                                             increaseScore(score())
                                             scheduleDailyNotification(context, streakLevel)
                                             generateRandomLettersForBothOnExit()
@@ -1045,18 +1088,14 @@ fun DisplayResults(
                                             restartGame()
                                             scheduleDailyNotification(context, streakLevel)
                                         },
-                                        enabled = score() >= calculatePassingScore(
-                                            currentLevel
-                                        ) && buttonsEnabled
+                                        enabled = passed && buttonsEnabled
                                     ) {
                                         Text(
                                             stringResource(R.string.next_level),
                                             style = MaterialTheme.typography.titleSmall.copy(
                                                 fontSize = 18.sp
                                             ),
-                                            color = if (buttonsEnabled && score() >= calculatePassingScore(
-                                                    currentLevel
-                                                )
+                                            color = if (buttonsEnabled && passed
                                             ) {
                                                 boxColor
                                             } else {
