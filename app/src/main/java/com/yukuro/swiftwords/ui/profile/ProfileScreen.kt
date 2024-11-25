@@ -110,15 +110,17 @@ fun ProfileScreen(
             Spacer(modifier = Modifier.padding(13.dp))
             Scores(currentLevel, highScore, streak)
             Spacer(modifier = Modifier.weight(1f))
-            WalkingFiresRow(
-                loopNumber = profileViewModel.streakCalculation(streak),
-                firesWalk = { uiState.firesWalk },
-                visible = { uiState.visible },
-                changeVisible = profileViewModel::changeVisible,
-                boublePadding = profileViewModel::boublePadding,
-                getText = profileViewModel::getTextBouble,
-                fires = { uiState.fires }
-            )
+            if (streak > 0) {
+                WalkingFiresRow(
+                    loopNumber = profileViewModel.streakCalculation(streak),
+                    firesWalk = { uiState.firesWalk },
+                    visible = { uiState.visible },
+                    changeVisible = profileViewModel::changeVisible,
+                    boublePadding = profileViewModel::boublePadding,
+                    getText = profileViewModel::getTextBouble,
+                    fires = { uiState.fires }
+                )
+            }
         }
         IconButton(
             onClick = { navigate() },
