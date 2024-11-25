@@ -331,7 +331,8 @@ fun <T> SettingMenu(
     displaySelected: @Composable (T) -> String,
     modifier: Modifier = Modifier,
     width: Dp = 100.dp,
-    color: Color
+    color: Color,
+    isDarkTheme: Boolean = isSystemInDarkTheme(),
 ) {
     var expanded by remember { mutableStateOf(false) }
 
@@ -371,7 +372,12 @@ fun <T> SettingMenu(
                         text = {
                             Text(
                                 displayOption(option), // Show options without "seconds"
-                                style = MaterialTheme.typography.titleSmall.copy(fontSize = 17.sp)
+                                style = MaterialTheme.typography.titleSmall.copy(fontSize = 17.sp),
+                                color = when {
+                                    selectedOption == option -> color
+                                    isDarkTheme -> Color.White
+                                    else -> Color.Black
+                                }
                             )
                         }
                     )
