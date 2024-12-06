@@ -18,9 +18,6 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
@@ -75,8 +72,6 @@ fun BottomBarNavGraph(
     changeProfilePic: (Int) -> Unit,
     playChangeSound: () -> Unit
 ) {
-    var selectedItemIndex by rememberSaveable { mutableIntStateOf(0) }
-
     val backStackEntry by navController.currentBackStackEntryAsState()
     val currentScreen = BottomBarScreensNames.valueOf(
         backStackEntry?.destination?.route ?: BottomBarScreensNames.Levels.name
@@ -121,20 +116,25 @@ fun BottomBarNavGraph(
                 NavigationBar(
                     containerColor = MaterialTheme.colorScheme.background, // Override the background color
                 ) {
-                    barItems.forEachIndexed { index, item ->
+                    barItems.forEach { item ->
                         val isSelected = currentScreen == item.screen
                         NavigationBarItem(
                             onClick = {
                                 if (!isSelected) {
-                                    selectedItemIndex = index
-                                    navController.navigateToScreen(selectedItemIndex)
+                                    navController.navigate(item.screen.name) {
+                                        popUpTo(navController.graph.findStartDestination().id) {
+                                            saveState = true
+                                        }
+                                        launchSingleTop = true
+                                        restoreState = true
+                                    }
                                 }
                             },
                             selected = isSelected,
                             label = { Text(text = stringResource(item.title)) },
                             icon = {
                                 Icon(
-                                    imageVector = if (index == selectedItemIndex) ImageVector.vectorResource(
+                                    imageVector = if (isSelected) ImageVector.vectorResource(
                                         id = item.imageSelected
                                     ) else ImageVector.vectorResource(id = item.imageUnSelected),
                                     contentDescription = stringResource(id = item.title)
@@ -242,19 +242,5 @@ fun BottomBarNavGraph(
 
             }
         }
-    }
-}
-
-private fun NavHostController.navigateToScreen(index: Int) {
-    val screen = when (index) {
-        0 -> BottomBarScreensNames.Levels.name
-        1 -> BottomBarScreensNames.Modes.name
-        2 -> BottomBarScreensNames.Profile.name
-        else -> BottomBarScreensNames.Levels.name
-    }
-    navigate(screen) {
-        popUpTo(graph.findStartDestination().id) { saveState = true }
-        launchSingleTop = true
-        restoreState = true
     }
 }
