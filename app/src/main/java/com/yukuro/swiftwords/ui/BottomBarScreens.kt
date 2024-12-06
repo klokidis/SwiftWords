@@ -17,7 +17,11 @@ import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
@@ -72,29 +76,40 @@ fun BottomBarNavGraph(
     changeProfilePic: (Int) -> Unit,
     playChangeSound: () -> Unit
 ) {
+    var selectedItemIndex by rememberSaveable { mutableIntStateOf(0) }
+
     val backStackEntry by navController.currentBackStackEntryAsState()
     val currentScreen = BottomBarScreensNames.valueOf(
         backStackEntry?.destination?.route ?: BottomBarScreensNames.Levels.name
     )
+
+    LaunchedEffect(currentScreen) {
+        val newIndex = when (currentScreen) {
+            BottomBarScreensNames.Levels -> 0
+            BottomBarScreensNames.Modes -> 1
+            BottomBarScreensNames.Profile -> 2
+        }
+
+        if (selectedItemIndex != newIndex) { //for navigating back with back phone arrow
+            selectedItemIndex = newIndex
+        }
+    }
 
     Scaffold(
         bottomBar = {
             val barItems = listOf(
                 BarItem(
                     R.string.levels,
-                    BottomBarScreensNames.Levels,
                     R.drawable.levels,
                     R.drawable.levels
                 ),
                 BarItem(
                     R.string.modes,
-                    BottomBarScreensNames.Modes,
                     R.drawable.controller_filled,
                     R.drawable.controller
                 ),
                 BarItem(
                     R.string.profile,
-                    BottomBarScreensNames.Profile,
                     R.drawable.profilr_filled,
                     R.drawable.profile
                 )
@@ -116,25 +131,20 @@ fun BottomBarNavGraph(
                 NavigationBar(
                     containerColor = MaterialTheme.colorScheme.background, // Override the background color
                 ) {
-                    barItems.forEach { item ->
-                        val isSelected = currentScreen == item.screen
+                    barItems.forEachIndexed { index, item ->
+                        val isSelected = selectedItemIndex == index
                         NavigationBarItem(
                             onClick = {
                                 if (!isSelected) {
-                                    navController.navigate(item.screen.name) {
-                                        popUpTo(navController.graph.findStartDestination().id) {
-                                            saveState = true
-                                        }
-                                        launchSingleTop = true
-                                        restoreState = true
-                                    }
+                                    selectedItemIndex = index
+                                    navController.navigateToScreen(selectedItemIndex)
                                 }
                             },
                             selected = isSelected,
                             label = { Text(text = stringResource(item.title)) },
                             icon = {
                                 Icon(
-                                    imageVector = if (isSelected) ImageVector.vectorResource(
+                                    imageVector = if (index == selectedItemIndex) ImageVector.vectorResource(
                                         id = item.imageSelected
                                     ) else ImageVector.vectorResource(id = item.imageUnSelected),
                                     contentDescription = stringResource(id = item.title)
@@ -242,5 +252,19 @@ fun BottomBarNavGraph(
 
             }
         }
+    }
+}
+
+private fun NavHostController.navigateToScreen(index: Int) {
+    val screen = when (index) {
+        0 -> BottomBarScreensNames.Levels.name
+        1 -> BottomBarScreensNames.Modes.name
+        2 -> BottomBarScreensNames.Profile.name
+        else -> BottomBarScreensNames.Levels.name
+    }
+    navigate(screen) {
+        popUpTo(graph.findStartDestination().id) { saveState = true }
+        launchSingleTop = true
+        restoreState = true
     }
 }
