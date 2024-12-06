@@ -17,7 +17,6 @@ import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -83,33 +82,24 @@ fun BottomBarNavGraph(
         backStackEntry?.destination?.route ?: BottomBarScreensNames.Levels.name
     )
 
-    LaunchedEffect(currentScreen) {
-        val newIndex = when (currentScreen) {
-            BottomBarScreensNames.Levels -> 0
-            BottomBarScreensNames.Modes -> 1
-            BottomBarScreensNames.Profile -> 2
-        }
-
-        if (selectedItemIndex != newIndex) { //for navigating back with back phone arrow
-            selectedItemIndex = newIndex
-        }
-    }
-
     Scaffold(
         bottomBar = {
             val barItems = listOf(
                 BarItem(
                     R.string.levels,
+                    BottomBarScreensNames.Levels,
                     R.drawable.levels,
                     R.drawable.levels
                 ),
                 BarItem(
                     R.string.modes,
+                    BottomBarScreensNames.Modes,
                     R.drawable.controller_filled,
                     R.drawable.controller
                 ),
                 BarItem(
                     R.string.profile,
+                    BottomBarScreensNames.Profile,
                     R.drawable.profilr_filled,
                     R.drawable.profile
                 )
@@ -132,7 +122,7 @@ fun BottomBarNavGraph(
                     containerColor = MaterialTheme.colorScheme.background, // Override the background color
                 ) {
                     barItems.forEachIndexed { index, item ->
-                        val isSelected = selectedItemIndex == index
+                        val isSelected = currentScreen == item.screen
                         NavigationBarItem(
                             onClick = {
                                 if (!isSelected) {
