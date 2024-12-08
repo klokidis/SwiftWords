@@ -1,6 +1,7 @@
 package com.yukuro.swiftwords.ui.game
 
 import androidx.activity.compose.BackHandler
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -8,11 +9,16 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
@@ -25,18 +31,22 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.window.Dialog
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.yukuro.swiftwords.R
 import com.yukuro.swiftwords.data.DataSource
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 @Composable
 fun GameCombat(
     newTime: () -> Long,
     wordList: Set<String>,
+    colorTheme: Int,
     colorCodePlayerOne: Int,
     colorCodePlayerTwo: Int,
     navigateUp: () -> Unit,
@@ -211,7 +221,10 @@ fun GameCombat(
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(start = 10.dp, end = 25.dp), // our CustomTextField has padding start = 20.dp, end = 5.dp so we balance it with new row padding
+                .padding(
+                    start = 10.dp,
+                    end = 25.dp
+                ), // our CustomTextField has padding start = 20.dp, end = 5.dp so we balance it with new row padding
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.Center
         ) {
@@ -235,6 +248,26 @@ fun GameCombat(
         )
         Spacer(modifier = Modifier.weight(1f))
     }
+    DisplayResults(
+        time = newTime,
+        isVisible = !isTimerRunning,
+        restartGame = {
+            inputTextStatePlayerOne = ""
+            inputTextStatePlayerTwo = ""
+            outPutNumberPlayerOne = null
+            outPutNumberPlayerTwo = null
+        },
+        navigateUp = navigateUp,
+        restart = viewModel::restartGame,
+        characterIsFemale = characterIsFemale,
+        colorWon = if (gameUiState.scorePlayerOne > gameUiState.scorePlayerTwo) {
+            DataSource().colorPairs[colorCodePlayerOne].darkColor
+        } else {
+            DataSource().colorPairs[colorCodePlayerTwo].darkColor
+        },
+        generateRandomLettersForMode = generateRandomLettersForMode,
+        stopClockOnExit = viewModel::stopClockOnExit,
+    )
 }
 
 @Composable
@@ -307,4 +340,116 @@ fun TextScoreCombat(score: () -> Int, color: Color) {
         color = color,
         style = MaterialTheme.typography.titleSmall.copy(fontSize = 18.sp)
     )
+}
+
+@Composable
+fun DisplayResults(
+    time: () -> Long,
+    isVisible: Boolean,
+    restartGame: () -> Unit,
+    navigateUp: () -> Unit,
+    restart: (Long) -> Unit,
+    characterIsFemale: Boolean,
+    colorWon: Color,
+    generateRandomLettersForMode: () -> Unit,
+    stopClockOnExit: () -> Unit,
+) {
+    var buttonsEnabled by remember { mutableStateOf(false) }
+    val coroutineScope = rememberCoroutineScope()
+
+    if (isVisible) {
+
+        // Launch a coroutine to enable the buttons after a delay
+        LaunchedEffect(Unit) {
+            delay(800L)
+            buttonsEnabled = true
+        }
+
+        Dialog(onDismissRequest = { }) {
+
+            BackHandler {
+                navigateUp()
+                stopClockOnExit()
+            }
+            Card(
+                colors = CardDefaults.cardColors(
+                    MaterialTheme.colorScheme.secondary
+                )
+            ) {
+                Column(
+                    modifier = Modifier
+                        .padding(10.dp)
+                        .verticalScroll(rememberScrollState()),
+                    verticalArrangement = Arrangement.Center,
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    Image(
+                        painter = painterResource(
+                            id = if (characterIsFemale) {
+                                R.drawable.female_half
+                            } else {
+                                R.drawable.male_half
+                            }
+                        ),
+                        modifier = Modifier.size(260.dp),
+                        contentDescription = null
+                    )
+                    Spacer(modifier = Modifier.padding(5.dp))
+                    Text(
+                        stringResource(R.string.player) + " ",
+                        style = MaterialTheme.typography.titleSmall.copy(
+                            fontSize = 18.sp
+                        ),
+                        color = colorWon
+                    )
+                    Row(
+                        horizontalArrangement = Arrangement.Center,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        TextButton(
+                            onClick = {
+                                navigateUp()
+                                stopClockOnExit()
+                            },
+                            enabled = buttonsEnabled
+                        ) {
+                            Text(
+                                stringResource(R.string.exit),
+                                style = MaterialTheme.typography.titleSmall.copy(
+                                    fontSize = 18.sp
+                                ),
+                                color = if (buttonsEnabled) {
+                                    colorWon
+                                } else {
+                                    Color.Gray
+                                }
+                            )
+                        }
+                        TextButton(
+                            onClick = {
+                                restartGame()
+                                coroutineScope.launch {
+                                    generateRandomLettersForMode()
+                                    restart(time())
+                                }
+                            },
+                            enabled = buttonsEnabled
+                        ) {
+                            Text(
+                                stringResource(R.string.play_again),
+                                style = MaterialTheme.typography.titleSmall.copy(
+                                    fontSize = 18.sp
+                                ),
+                                color = if (buttonsEnabled) {
+                                    colorWon
+                                } else {
+                                    Color.Gray
+                                }
+                            )
+                        }
+                    }
+                }
+            }
+        }
+    }
 }

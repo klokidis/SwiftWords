@@ -91,8 +91,6 @@ import com.yukuro.swiftwords.ui.elements.brighten
 import com.yukuro.swiftwords.ui.elements.darken
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import kotlin.reflect.KFunction0
-import kotlin.reflect.KFunction1
 
 @Composable
 fun Game(
@@ -410,7 +408,7 @@ private fun BottomButtons(
 private fun OutPutMessage(
     isLoading: Boolean,
     isCorrect: () -> Int?,
-    calculatePassingScore: KFunction1<Int, Int>,
+    calculatePassingScore: (Int) -> Int,
     currentLevel: Int,
     score: () -> Int,
     isMode: Boolean
@@ -859,7 +857,7 @@ fun LetterBox(
 @Composable
 fun DisplayResults(
     score: () -> Int,
-    restart: KFunction1<Long, Unit>,
+    restart: (Long) -> Unit,
     time: () -> Long,
     navigateUp: () -> Unit,
     increaseScore: (Int) -> Unit,
@@ -880,7 +878,7 @@ fun DisplayResults(
     currentLevel: Int,
     streakLevel: Int,
     characterIsFemale: Boolean,
-    stopClockOnExit: KFunction0<Unit>,
+    stopClockOnExit: () -> Unit,
     generateRandomLettersForBoth: () -> Unit,
     generateRandomLettersForMode: () -> Unit,
     calculatePassingScore: (Int) -> Int,

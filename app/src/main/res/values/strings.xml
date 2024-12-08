@@ -79,4 +79,6 @@
     <string name="skip">Skip</string>
     <string name="completeLevel">End level</string>
     <string name="answered">Used word</string>
+    <string name="player_that_won">Player</string>
+    <string name="player">Player</string>
 </resources>

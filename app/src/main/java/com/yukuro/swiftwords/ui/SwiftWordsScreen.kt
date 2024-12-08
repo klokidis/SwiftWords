@@ -231,6 +231,7 @@ fun SwiftWordsApp(
                                     )
                                 },
                                 generateRandomLettersForMode = viewModel::generateRandomLettersForMode,
+                                colorTheme = dataUiState.userDetails.color
                             )
                         }
                     }
