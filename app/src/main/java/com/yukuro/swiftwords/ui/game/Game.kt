@@ -104,7 +104,6 @@ fun Game(
     isMode: Boolean,
     gameModeNumber: Int,
     increaseScore: (Int) -> Unit,
-    viewModel: GameViewModel = viewModel(factory = GameViewModelFactory(newTime)),
     navigateUp: () -> Unit,
     checkHighScore: (Int) -> Unit,
     setOfLetters: Set<Char>,
@@ -123,7 +122,8 @@ fun Game(
     playIncorrectSound: () -> Unit,
     generateRandomLettersForBoth: () -> Unit,
     generateRandomLettersForBothOnExit: () -> Unit,
-    generateRandomLettersForMode: () -> Unit
+    generateRandomLettersForMode: () -> Unit,
+    viewModel: GameViewModel = viewModel(factory = GameViewModelFactory(newTime)),
 ) {
     val gameUiState by viewModel.uiState.collectAsState()
     val isTimerRunning by remember { derivedStateOf { gameUiState.isTimerRunning } }
@@ -204,7 +204,9 @@ fun Game(
             gameModeNumber,
             currentLevel = currentLevel,
             stopClockOnExit = viewModel::stopClockOnExit,
-            calculatePassingScore = viewModel::calculatePassingScore
+            calculatePassingScore = viewModel::calculatePassingScore,
+            showExitButton = true,
+            showText = true
         )
 
         if (!checked()) {
@@ -515,7 +517,7 @@ private fun MiddleLevelUi(
 }
 
 @Composable
-private fun UpperLevelUi(
+fun UpperLevelUi(
     navigateUp: () -> Unit,
     isMode: Boolean,
     exitChangingMode: () -> Unit,
@@ -531,7 +533,9 @@ private fun UpperLevelUi(
     gameModeNumber: Int,
     stopClockOnExit: () -> Unit,
     calculatePassingScore: (Int) -> Int,
-    currentLevel: Int
+    currentLevel: Int,
+    showExitButton: Boolean,
+    showText: Boolean
 ) {
     val context = LocalContext.current
     Row(
@@ -540,28 +544,30 @@ private fun UpperLevelUi(
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.Center
     ) {
-        IconButton(
-            onClick = {
-                navigateUp()
-                if (isMode) {
-                    exitChangingMode()
-                }
-                if (!onExitButtonPressed && score() >= calculatePassingScore(currentLevel) && !isMode) {
-                    increaseScore(score())
-                    generateRandomLettersForBoth()
-                    scheduleDailyNotification(context, streakLevel)
-                }
-                stopClockOnExit()
-            },
-            modifier = Modifier
-                .size(37.dp)
-                .padding(start = 7.dp)
-        ) {
-            Icon(
-                imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                contentDescription = stringResource(R.string.exit),
-                modifier = Modifier.size(37.dp)
-            )
+        if (showExitButton) {
+            IconButton(
+                onClick = {
+                    navigateUp()
+                    if (isMode) {
+                        exitChangingMode()
+                    }
+                    if (!onExitButtonPressed && score() >= calculatePassingScore(currentLevel) && !isMode) {
+                        increaseScore(score())
+                        generateRandomLettersForBoth()
+                        scheduleDailyNotification(context, streakLevel)
+                    }
+                    stopClockOnExit()
+                },
+                modifier = Modifier
+                    .size(37.dp)
+                    .padding(start = 7.dp)
+            ) {
+                Icon(
+                    imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                    contentDescription = stringResource(R.string.exit),
+                    modifier = Modifier.size(37.dp)
+                )
+            }
         }
         // most values pass as () -> type to fix the unnecessary recomposition of the ui
         if (!checked()) {
@@ -569,13 +575,16 @@ private fun UpperLevelUi(
                 value,
                 colorCode,
                 modifier = Modifier
-                    .fillMaxWidth(0.9f)
+                    .fillMaxWidth()
+                    .weight(1f)
             )
-            TimerText(
-                modifier = Modifier.weight(1f),
-                currentTime = currentTime,
-                gameModeNumber = gameModeNumber
-            )
+            if (showText) {
+                TimerText(
+                    modifier = Modifier.weight(0.1f),
+                    currentTime = currentTime,
+                    gameModeNumber = gameModeNumber
+                )
+            }
         } else {
             Spacer(modifier = Modifier.weight(1f))
         }
@@ -591,7 +600,7 @@ fun CustomKeyboard(
     onRemove: () -> Unit
 ) {
     Column(
-        modifier = Modifier.padding(top = 5.dp, bottom = 50.dp),
+        modifier = Modifier.padding(top = 5.dp),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {

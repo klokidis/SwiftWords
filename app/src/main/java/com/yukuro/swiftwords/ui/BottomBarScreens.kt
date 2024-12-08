@@ -228,7 +228,8 @@ fun BottomBarNavGraph(
                     },
                     changeTime = changeTime,
                     changeGameMode = changeGameMode,
-                    navigateCustomGame = {
+                    navigateCustomGame = { //change this navigation
+                        changeGameMode(6)
                         changeGameState(true) //this is a game mode
                         generateRandomLettersForMode()
                         navigateGame()

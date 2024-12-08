@@ -23,7 +23,11 @@ data class GameUiState(
     val currentTime: Long = 40000L,
     val isTimerRunning: Boolean = true,
     val score: Int = 0,
-    val alreadyAnswered: Set<String> = setOf()
+    val scorePlayerOne: Int = 0,
+    val scorePlayerTwo: Int = 0,
+    val alreadyAnswered: Set<String> = setOf(),
+    val alreadyAnsweredPlayerOne: Set<String> = setOf(),
+    val alreadyAnsweredPlayerTwo: Set<String> = setOf(),
 )
 
 class GameViewModel(time: () -> Long) : ViewModel() {
@@ -71,22 +75,57 @@ class GameViewModel(time: () -> Long) : ViewModel() {
         }
     }
 
+    suspend fun checkAnswerCombat(
+        answer: () -> String,
+        wordList: Set<String>,
+        charArray: Set<Char>,
+        player: Int
+    ): Int {
+        return withContext(Dispatchers.Default) {
+            if (answer().length > 1) {
+                // Convert charArray to a set of lowercase characters for efficient lookup
+                val charSet = charArray.map { it.lowercaseChar() }.toSet()
+                val trimmedAnswer = answer().trim().lowercase(Locale.ROOT)
+                val isInWordList = wordList.contains(trimmedAnswer)
+                val canBeConstructed = trimmedAnswer.all { it in charSet }
+                val newWord = if (player == 1) {
+                    !uiState.value.alreadyAnsweredPlayerOne.contains(answer())
+                } else {
+                    !uiState.value.alreadyAnsweredPlayerTwo.contains(answer())
+                }
+
+                return@withContext when {
+                    !newWord -> 3 // Word already answered
+                    isInWordList && canBeConstructed -> {
+                        increaseScoreCombat(player)
+                        addWordCombat(trimmedAnswer, player)
+                        1 // Everything is good
+                    }
+
+                    else -> 2 // False
+                }
+            } else {
+                2 // False
+            }
+        }
+    }
+
 
     fun calculatePassingScore(level: Int): Int {
         return when {
             level < 1 -> 5
-            level < 8 -> 7
-            level < 20 -> 10
-            level < 40 -> 11
-            level < 50 -> 13
-            level < 60 -> 15
-            level < 70 -> 16
-            level < 90 -> 17
-            level < 130 -> 18
-            level < 200 -> 19
-            level < 250 -> 20
-            level < 300 -> 23
-            level < 350 -> 25
+            level < 8 -> 5
+            level < 20 -> 7
+            level < 40 -> 10
+            level < 50 -> 11
+            level < 60 -> 12
+            level < 70 -> 13
+            level < 90 -> 14
+            level < 130 -> 16
+            level < 200 -> 17
+            level < 250 -> 18
+            level < 300 -> 20
+            level < 350 -> 23
             else -> 30
         }
     }
@@ -130,6 +169,21 @@ class GameViewModel(time: () -> Long) : ViewModel() {
         }
     }
 
+    private fun addWordCombat(newWord: String, player: Int) {
+        _uiState.update { currentState ->
+            if (player == 1) {
+                currentState.copy(
+                    alreadyAnsweredPlayerOne = currentState.alreadyAnsweredPlayerOne.plus(newWord)
+                )
+            } else {
+                currentState.copy(
+                    alreadyAnsweredPlayerTwo = currentState.alreadyAnsweredPlayerTwo.plus(newWord)
+                )
+            }
+        }
+    }
+
+
     fun restartGame(newTime: Long) {
         // Cancel the existing job if it's still active
         clockJob?.cancel()
@@ -147,7 +201,11 @@ class GameViewModel(time: () -> Long) : ViewModel() {
         _uiState.update { currentState ->
             currentState.copy(
                 score = 0,
-                alreadyAnswered = setOf()
+                alreadyAnswered = setOf(),
+                scorePlayerOne = 0,
+                scorePlayerTwo = 0,
+                alreadyAnsweredPlayerOne = setOf(),
+                alreadyAnsweredPlayerTwo = setOf()
             )
         }
     }
@@ -157,6 +215,20 @@ class GameViewModel(time: () -> Long) : ViewModel() {
             currentState.copy(
                 score = currentState.score + 1
             )
+        }
+    }
+
+    private fun increaseScoreCombat(player: Int) {
+        _uiState.update { currentState ->
+            if (player == 1) {
+                currentState.copy(
+                    scorePlayerOne = currentState.scorePlayerOne + 1
+                )
+            } else {
+                currentState.copy(
+                    scorePlayerTwo = currentState.scorePlayerTwo + 1
+                )
+            }
         }
     }
 

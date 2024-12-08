@@ -31,6 +31,7 @@ import com.yukuro.swiftwords.ui.choose.StartingScreen
 import com.yukuro.swiftwords.ui.credits.CreditsScreen
 import com.yukuro.swiftwords.ui.elements.SoundViewModel
 import com.yukuro.swiftwords.ui.game.Game
+import com.yukuro.swiftwords.ui.game.GameCombat
 import com.yukuro.swiftwords.ui.loading.LoadingView
 import com.yukuro.swiftwords.ui.settings.SettingsPage
 
@@ -152,55 +153,86 @@ fun SwiftWordsApp(
             ) {
                 wordListState.value?.let { wordList ->
                     dataUiState.userDetails.let { data ->
-                        Game(
-                            dateNow = mainUiState.todayDate,
-                            dataDate = { data.dailyDate },
-                            newTime = { mainUiState.gameTime },
-                            wordList = wordList,
-                            colorCode = data.color,
-                            isMode = mainUiState.isMode,
-                            gameModeNumber = mainUiState.gameMode,
-                            increaseScore = dataViewmodel::increaseCurrentLevel,
-                            navigateUp = { navController.navigateUp() },
-                            checkHighScore = dataViewmodel::checkHighScore,
-                            setOfLetters = if (mainUiState.isMode) {
-                                mainUiState.setOfLettersForMode
-                            } else {
-                                mainUiState.setOfLettersForLevel
-                            },
-                            highScore = data.highScore,
-                            checked = { data.checked },
-                            changeChecked = dataViewmodel::updateChecked,
-                            increaseStreak = dataViewmodel::increaseStreak,
-                            listOfLetters = if (mainUiState.isMode) {
-                                mainUiState.listOfLettersForMode
-                            } else {
-                                mainUiState.listOfLettersForLevel
-                            },
-                            shuffle = viewModel::shuffleLetters,
-                            exitChangingMode = {
-                                viewModel.changingLetters(
-                                    false,
-                                    soundViewModel::playChangeSound,
-                                    mainUiState.gameTime
-                                )
-                            },
-                            launchChanging = {
-                                viewModel.changingLetters(
-                                    true,
-                                    soundViewModel::playChangeSound,
-                                    mainUiState.gameTime
-                                )
-                            },
-                            currentLevel = data.currentLevel,
-                            streakLevel = data.streak,
-                            characterIsFemale = data.character,
-                            playCorrectSound = soundViewModel::playCorrectSound,
-                            playIncorrectSound = soundViewModel::playIncorrectSound,
-                            generateRandomLettersForMode = viewModel::generateRandomLettersForMode,
-                            generateRandomLettersForBoth = viewModel::generateRandomLettersForBoth,
-                            generateRandomLettersForBothOnExit = viewModel::generateRandomLettersForBothOnExit
-                        )
+                        if (false) {
+                            Game(
+                                dateNow = mainUiState.todayDate,
+                                dataDate = { data.dailyDate },
+                                newTime = { mainUiState.gameTime },
+                                wordList = wordList,
+                                colorCode = data.color,
+                                isMode = mainUiState.isMode,
+                                gameModeNumber = mainUiState.gameMode,
+                                increaseScore = dataViewmodel::increaseCurrentLevel,
+                                navigateUp = { navController.navigateUp() },
+                                checkHighScore = dataViewmodel::checkHighScore,
+                                setOfLetters = if (mainUiState.isMode) {
+                                    mainUiState.setOfLettersForMode
+                                } else {
+                                    mainUiState.setOfLettersForLevel
+                                },
+                                highScore = data.highScore,
+                                checked = { data.checked },
+                                changeChecked = dataViewmodel::updateChecked,
+                                increaseStreak = dataViewmodel::increaseStreak,
+                                listOfLetters = if (mainUiState.isMode) {
+                                    mainUiState.listOfLettersForMode
+                                } else {
+                                    mainUiState.listOfLettersForLevel
+                                },
+                                shuffle = viewModel::shuffleLetters,
+                                exitChangingMode = {
+                                    viewModel.changingLetters(
+                                        false,
+                                        soundViewModel::playChangeSound,
+                                        mainUiState.gameTime
+                                    )
+                                },
+                                launchChanging = {
+                                    viewModel.changingLetters(
+                                        true,
+                                        soundViewModel::playChangeSound,
+                                        mainUiState.gameTime
+                                    )
+                                },
+                                currentLevel = data.currentLevel,
+                                streakLevel = data.streak,
+                                characterIsFemale = data.character,
+                                playCorrectSound = soundViewModel::playCorrectSound,
+                                playIncorrectSound = soundViewModel::playIncorrectSound,
+                                generateRandomLettersForMode = viewModel::generateRandomLettersForMode,
+                                generateRandomLettersForBoth = viewModel::generateRandomLettersForBoth,
+                                generateRandomLettersForBothOnExit = viewModel::generateRandomLettersForBothOnExit
+                            )
+                        } else {// make a new nav composable
+                            GameCombat(
+                                newTime = { mainUiState.gameTime },
+                                wordList = wordList,
+                                colorCodePlayerOne = data.color,
+                                colorCodePlayerTwo = 7,
+                                navigateUp = { navController.navigateUp() },
+                                setOfLetters = if (mainUiState.isMode) {
+                                    mainUiState.setOfLettersForMode
+                                } else {
+                                    mainUiState.setOfLettersForLevel
+                                },
+                                listOfLetters = if (mainUiState.isMode) {
+                                    mainUiState.listOfLettersForMode
+                                } else {
+                                    mainUiState.listOfLettersForLevel
+                                },
+                                characterIsFemale = data.character,
+                                playCorrectSound = soundViewModel::playCorrectSound,
+                                playIncorrectSound = soundViewModel::playIncorrectSound,
+                                exitChangingMode = {
+                                    viewModel.changingLetters(
+                                        false,
+                                        soundViewModel::playChangeSound,
+                                        mainUiState.gameTime
+                                    )
+                                },
+                                generateRandomLettersForMode = viewModel::generateRandomLettersForMode,
+                            )
+                        }
                     }
                 } ?: run {
                     Column(
