@@ -33,6 +33,9 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
@@ -95,10 +98,6 @@ fun GameCombat(
                     isLoading = false
                     if (player == 1) {
                         inputTextStatePlayerOne = ""
-                    } else {
-                        inputTextStatePlayerTwo = ""
-                    }
-                    if (player == 1) {
                         when (outPutNumberPlayerOne) {
                             1 -> {
                                 playCorrectSound()
@@ -109,6 +108,7 @@ fun GameCombat(
                             }
                         }
                     } else {
+                        inputTextStatePlayerTwo = ""
                         when (outPutNumberPlayerTwo) {
                             1 -> {
                                 playCorrectSound()
@@ -119,7 +119,6 @@ fun GameCombat(
                             }
                         }
                     }
-
                 }
             }
         }
@@ -260,13 +259,18 @@ fun GameCombat(
         navigateUp = navigateUp,
         restart = viewModel::restartGame,
         characterIsFemale = characterIsFemale,
-        colorWon = if (gameUiState.scorePlayerOne > gameUiState.scorePlayerTwo) {
-            DataSource().colorPairs[colorCodePlayerOne].darkColor
-        } else {
-            DataSource().colorPairs[colorCodePlayerTwo].darkColor
-        },
         generateRandomLettersForMode = generateRandomLettersForMode,
         stopClockOnExit = viewModel::stopClockOnExit,
+        playerWonText = when {
+            gameUiState.scorePlayerOne > gameUiState.scorePlayerTwo -> R.string.player_one
+            gameUiState.scorePlayerOne < gameUiState.scorePlayerTwo -> R.string.player_two
+            else -> R.string.player_tie
+        },
+        playerOneScore = gameUiState.scorePlayerOne,
+        playerTwoScore = gameUiState.scorePlayerTwo,
+        colorOne = DataSource().colorPairs[colorCodePlayerOne].darkColor,
+        colorTwo = DataSource().colorPairs[colorCodePlayerTwo].darkColor,
+        colorTheme = DataSource().colorPairs[colorTheme].darkColor
     )
 }
 
@@ -338,7 +342,7 @@ fun TextScoreCombat(score: () -> Int, color: Color) {
     Text(
         scoreValue,
         color = color,
-        style = MaterialTheme.typography.titleSmall.copy(fontSize = 18.sp)
+        style = MaterialTheme.typography.titleSmall.copy(fontSize = 20.sp)
     )
 }
 
@@ -350,9 +354,14 @@ fun DisplayResults(
     navigateUp: () -> Unit,
     restart: (Long) -> Unit,
     characterIsFemale: Boolean,
-    colorWon: Color,
+    colorOne: Color,
+    colorTwo: Color,
     generateRandomLettersForMode: () -> Unit,
     stopClockOnExit: () -> Unit,
+    playerWonText: Int,
+    playerOneScore: Int,
+    playerTwoScore: Int,
+    colorTheme: Color,
 ) {
     var buttonsEnabled by remember { mutableStateOf(false) }
     val coroutineScope = rememberCoroutineScope()
@@ -396,11 +405,19 @@ fun DisplayResults(
                     )
                     Spacer(modifier = Modifier.padding(5.dp))
                     Text(
-                        stringResource(R.string.player) + " ",
-                        style = MaterialTheme.typography.titleSmall.copy(
+                        text = buildAnnotatedString { //separates the colors on the text
+                            append(stringResource(playerWonText) + " ")
+                            withStyle(style = SpanStyle(color = colorOne)) {
+                                append("$playerOneScore")
+                            }
+                            append(" vs ")
+                            withStyle(style = SpanStyle(color = colorTwo)) {
+                                append("$playerTwoScore")
+                            }
+                        }, style = MaterialTheme.typography.titleSmall.copy(
                             fontSize = 18.sp
                         ),
-                        color = colorWon
+                        color = colorTheme
                     )
                     Row(
                         horizontalArrangement = Arrangement.Center,
@@ -419,7 +436,7 @@ fun DisplayResults(
                                     fontSize = 18.sp
                                 ),
                                 color = if (buttonsEnabled) {
-                                    colorWon
+                                    colorTheme
                                 } else {
                                     Color.Gray
                                 }
@@ -441,7 +458,7 @@ fun DisplayResults(
                                     fontSize = 18.sp
                                 ),
                                 color = if (buttonsEnabled) {
-                                    colorWon
+                                    colorTheme
                                 } else {
                                     Color.Gray
                                 }

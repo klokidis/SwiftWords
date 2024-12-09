@@ -207,19 +207,11 @@ fun SwiftWordsApp(
                             GameCombat(
                                 newTime = { mainUiState.gameTime },
                                 wordList = wordList,
-                                colorCodePlayerOne = data.color,
-                                colorCodePlayerTwo = 7,
+                                colorCodePlayerOne = 2,
+                                colorCodePlayerTwo = 3,
                                 navigateUp = { navController.navigateUp() },
-                                setOfLetters = if (mainUiState.isMode) {
-                                    mainUiState.setOfLettersForMode
-                                } else {
-                                    mainUiState.setOfLettersForLevel
-                                },
-                                listOfLetters = if (mainUiState.isMode) {
-                                    mainUiState.listOfLettersForMode
-                                } else {
-                                    mainUiState.listOfLettersForLevel
-                                },
+                                setOfLetters = mainUiState.setOfLettersForMode,
+                                listOfLetters = mainUiState.listOfLettersForMode,
                                 characterIsFemale = data.character,
                                 playCorrectSound = soundViewModel::playCorrectSound,
                                 playIncorrectSound = soundViewModel::playIncorrectSound,
