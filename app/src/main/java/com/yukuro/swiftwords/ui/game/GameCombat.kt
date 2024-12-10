@@ -22,6 +22,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -59,7 +60,6 @@ fun GameCombat(
     playCorrectSound: () -> Unit,
     playIncorrectSound: () -> Unit,
     generateRandomLettersForMode: () -> Unit,
-    exitChangingMode: () -> Unit,
     viewModel: GameViewModel = viewModel(factory = GameViewModelFactory(newTime)),
 ) {
     val gameUiState by viewModel.uiState.collectAsState()
@@ -150,8 +150,8 @@ fun GameCombat(
                 { outPutNumberPlayerOne },
                 { gameUiState.scorePlayerOne },
                 { gameUiState.scorePlayerTwo },
-                DataSource().colorPairs[colorCodePlayerOne].darkColor,
-                DataSource().colorPairs[colorCodePlayerTwo].darkColor
+                colorCodePlayerOne,
+                colorCodePlayerTwo
             )
             Row(
                 modifier = Modifier
@@ -184,25 +184,12 @@ fun GameCombat(
 
         Spacer(modifier = Modifier.padding(2.dp))
 
-        UpperLevelUi(
-            navigateUp,
-            true,
-            exitChangingMode,
-            true,
-            { gameUiState.score },
-            { gameUiState.value },
-            { gameUiState.currentTime },
-            {},
-            generateRandomLettersForMode,
-            0,
-            { false },
-            colorCodePlayerOne,
-            5,
-            currentLevel = 0,
-            stopClockOnExit = viewModel::stopClockOnExit,
-            calculatePassingScore = viewModel::calculatePassingScore,
-            showExitButton = false,
-            showText = false
+        Timer(
+            value = { gameUiState.value }, // Pass the value directly
+            colorCode = 2, // Replace with the actual color code
+            modifier = Modifier
+                .fillMaxWidth()
+                .weight(1f)
         )
 
         Spacer(modifier = Modifier.padding(2.dp))
@@ -214,8 +201,8 @@ fun GameCombat(
             { outPutNumberPlayerTwo },
             { gameUiState.scorePlayerTwo },
             { gameUiState.scorePlayerOne },
-            DataSource().colorPairs[colorCodePlayerTwo].darkColor,
-            DataSource().colorPairs[colorCodePlayerOne].darkColor
+            colorCodePlayerTwo,
+            colorCodePlayerOne
         )
         Row(
             modifier = Modifier
@@ -261,13 +248,8 @@ fun GameCombat(
         characterIsFemale = characterIsFemale,
         generateRandomLettersForMode = generateRandomLettersForMode,
         stopClockOnExit = viewModel::stopClockOnExit,
-        playerWonText = when {
-            gameUiState.scorePlayerOne > gameUiState.scorePlayerTwo -> R.string.player_one
-            gameUiState.scorePlayerOne < gameUiState.scorePlayerTwo -> R.string.player_two
-            else -> R.string.player_tie
-        },
-        playerOneScore = gameUiState.scorePlayerOne,
-        playerTwoScore = gameUiState.scorePlayerTwo,
+        playerOneScore = { gameUiState.scorePlayerOne },
+        playerTwoScore = { gameUiState.scorePlayerTwo },
         colorOne = DataSource().colorPairs[colorCodePlayerOne].darkColor,
         colorTwo = DataSource().colorPairs[colorCodePlayerTwo].darkColor,
         colorTheme = DataSource().colorPairs[colorTheme].darkColor
@@ -280,8 +262,8 @@ private fun OutPutMessageCombat(
     isCorrect: () -> Int?,
     scorePlayer: () -> Int,
     scoreEnemy: () -> Int,
-    colorPlayer: Color,
-    colorEnemy: Color
+    colorPlayer: Int,
+    colorEnemy: Int
 ) {
     var lastMessage by rememberSaveable { mutableStateOf("Enter an answer.") }
     Row(
@@ -330,7 +312,7 @@ private fun OutPutMessageCombat(
 }
 
 @Composable
-fun TextScoreCombat(score: () -> Int, color: Color) {
+fun TextScoreCombat(score: () -> Int, color: Int) {
     // Remember the score value to avoid unnecessary recompositions
     val scoreValue by remember {
         derivedStateOf {
@@ -341,7 +323,7 @@ fun TextScoreCombat(score: () -> Int, color: Color) {
     // Only recomposes if scoreValue changes
     Text(
         scoreValue,
-        color = color,
+        color = DataSource().colorPairs[color].darkColor,
         style = MaterialTheme.typography.titleSmall.copy(fontSize = 20.sp)
     )
 }
@@ -358,13 +340,24 @@ fun DisplayResults(
     colorTwo: Color,
     generateRandomLettersForMode: () -> Unit,
     stopClockOnExit: () -> Unit,
-    playerWonText: Int,
-    playerOneScore: Int,
-    playerTwoScore: Int,
+    playerOneScore: () ->Int,
+    playerTwoScore: ()-> Int,
     colorTheme: Color,
 ) {
     var buttonsEnabled by remember { mutableStateOf(false) }
     val coroutineScope = rememberCoroutineScope()
+
+    val playerWonText by remember {
+        mutableIntStateOf(
+            if (playerOneScore() > playerTwoScore()) {
+                R.string.player_one
+            } else if (playerOneScore() < playerTwoScore()) {
+                R.string.player_two
+            } else {
+                R.string.player_tie
+            }
+        )
+    }
 
     if (isVisible) {
 
@@ -380,6 +373,7 @@ fun DisplayResults(
                 navigateUp()
                 stopClockOnExit()
             }
+
             Card(
                 colors = CardDefaults.cardColors(
                     MaterialTheme.colorScheme.secondary
@@ -408,11 +402,11 @@ fun DisplayResults(
                         text = buildAnnotatedString { //separates the colors on the text
                             append(stringResource(playerWonText) + " ")
                             withStyle(style = SpanStyle(color = colorOne)) {
-                                append("$playerOneScore")
+                                append("${playerOneScore()}")
                             }
                             append(" vs ")
                             withStyle(style = SpanStyle(color = colorTwo)) {
-                                append("$playerTwoScore")
+                                append("${playerTwoScore()}")
                             }
                         }, style = MaterialTheme.typography.titleSmall.copy(
                             fontSize = 18.sp

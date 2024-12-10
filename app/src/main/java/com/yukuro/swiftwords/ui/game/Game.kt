@@ -598,7 +598,7 @@ fun CustomKeyboard(
     onRemove: () -> Unit
 ) {
     Column(
-        modifier = Modifier.padding(top = 5.dp),
+        modifier = Modifier.padding(top = 5.dp, bottom = 5.dp),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {

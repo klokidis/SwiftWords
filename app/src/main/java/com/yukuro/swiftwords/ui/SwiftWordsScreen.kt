@@ -215,15 +215,8 @@ fun SwiftWordsApp(
                                 characterIsFemale = data.character,
                                 playCorrectSound = soundViewModel::playCorrectSound,
                                 playIncorrectSound = soundViewModel::playIncorrectSound,
-                                exitChangingMode = {
-                                    viewModel.changingLetters(
-                                        false,
-                                        soundViewModel::playChangeSound,
-                                        mainUiState.gameTime
-                                    )
-                                },
                                 generateRandomLettersForMode = viewModel::generateRandomLettersForMode,
-                                colorTheme = dataUiState.userDetails.color
+                                colorTheme = data.color
                             )
                         }
                     }
