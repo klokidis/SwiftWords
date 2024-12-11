@@ -3,6 +3,7 @@ package com.yukuro.swiftwords.ui.game
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -12,8 +13,12 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -128,6 +133,7 @@ fun GameCombat(
         viewModel.stopClockOnExit()
     }
 
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -233,6 +239,26 @@ fun GameCombat(
             onRemove = { inputTextStatePlayerTwo = inputTextStatePlayerTwo.dropLast(1) }
         )
         Spacer(modifier = Modifier.weight(1f))
+    }
+    Box(
+        modifier = Modifier,
+        contentAlignment = Alignment.TopStart
+    ) {
+        IconButton(
+            onClick = {
+                navigateUp()
+                viewModel.stopClockOnExit()
+            },
+            modifier = Modifier
+                .size(35.dp)
+                .padding(start = 7.dp)
+        ) {
+            Icon(
+                imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                contentDescription = stringResource(R.string.exit),
+                modifier = Modifier.size(35.dp)
+            )
+        }
     }
     DisplayResults(
         time = newTime,
@@ -340,14 +366,14 @@ fun DisplayResults(
     colorTwo: Color,
     generateRandomLettersForMode: () -> Unit,
     stopClockOnExit: () -> Unit,
-    playerOneScore: () ->Int,
-    playerTwoScore: ()-> Int,
+    playerOneScore: () -> Int,
+    playerTwoScore: () -> Int,
     colorTheme: Color,
 ) {
     var buttonsEnabled by remember { mutableStateOf(false) }
     val coroutineScope = rememberCoroutineScope()
 
-    val playerWonText by remember(playerOneScore(),playerTwoScore()) {
+    val playerWonText by remember(playerOneScore(), playerTwoScore()) {
         mutableIntStateOf(
             if (playerOneScore() > playerTwoScore()) {
                 R.string.player_one
