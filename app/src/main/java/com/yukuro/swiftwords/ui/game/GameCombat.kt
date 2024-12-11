@@ -347,7 +347,7 @@ fun DisplayResults(
     var buttonsEnabled by remember { mutableStateOf(false) }
     val coroutineScope = rememberCoroutineScope()
 
-    val playerWonText by remember {
+    val playerWonText by remember(playerOneScore(),playerTwoScore()) {
         mutableIntStateOf(
             if (playerOneScore() > playerTwoScore()) {
                 R.string.player_one
@@ -397,10 +397,9 @@ fun DisplayResults(
                         modifier = Modifier.size(260.dp),
                         contentDescription = null
                     )
-                    Spacer(modifier = Modifier.padding(5.dp))
+                    Spacer(modifier = Modifier.padding(1.dp))
                     Text(
                         text = buildAnnotatedString { //separates the colors on the text
-                            append(stringResource(playerWonText) + " ")
                             withStyle(style = SpanStyle(color = colorOne)) {
                                 append("${playerOneScore()}")
                             }
@@ -408,6 +407,15 @@ fun DisplayResults(
                             withStyle(style = SpanStyle(color = colorTwo)) {
                                 append("${playerTwoScore()}")
                             }
+                        }, style = MaterialTheme.typography.titleSmall.copy(
+                            fontSize = 20.sp
+                        ),
+                        color = colorTheme
+                    )
+                    Spacer(modifier = Modifier.padding(1.dp))
+                    Text(
+                        text = buildAnnotatedString { //separates the colors on the text
+                            append(stringResource(playerWonText))
                         }, style = MaterialTheme.typography.titleSmall.copy(
                             fontSize = 18.sp
                         ),

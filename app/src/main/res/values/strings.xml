@@ -81,7 +81,7 @@
     <string name="answered">Used word</string>
     <string name="player_that_won">Player</string>
     <string name="player">Player</string>
-    <string name="player_one">Player One won! score:</string>
-    <string name="player_two">Player Two won! score:</string>
-    <string name="player_tie">Its a tie! score:</string>
+    <string name="player_one">Player One won!</string>
+    <string name="player_two">Player Two won!</string>
+    <string name="player_tie">Its a tie!</string>
 </resources>
