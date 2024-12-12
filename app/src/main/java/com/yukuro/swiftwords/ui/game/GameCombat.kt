@@ -1,7 +1,11 @@
 package com.yukuro.swiftwords.ui.game
 
 import androidx.activity.compose.BackHandler
+import androidx.compose.animation.animateColorAsState
+import androidx.compose.animation.core.tween
+import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -35,19 +39,25 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.withStyle
+import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.yukuro.swiftwords.R
 import com.yukuro.swiftwords.data.DataSource
+import com.yukuro.swiftwords.ui.elements.darken
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
@@ -190,9 +200,12 @@ fun GameCombat(
 
         Spacer(modifier = Modifier.padding(2.dp))
 
-        Timer(
+        ChangingColorTimer(
             value = { gameUiState.value }, // Pass the value directly
-            colorCode = 2, // Replace with the actual color code
+            scoreOne = { gameUiState.scorePlayerOne },
+            scoreTwo = { gameUiState.scorePlayerTwo },
+            colorCodeOne = colorCodePlayerOne,
+            colorCodeTwo = colorCodePlayerTwo,
             modifier = Modifier
                 .fillMaxWidth()
                 .weight(1f)
@@ -495,6 +508,74 @@ fun DisplayResults(
                     }
                 }
             }
+        }
+    }
+}
+
+@Composable
+fun ChangingColorTimer(
+    value: () -> Float,
+    colorCodeOne: Int,
+    colorCodeTwo: Int,
+    scoreOne: () -> Int,
+    scoreTwo: () -> Int,
+    modifier: Modifier = Modifier,
+    isDarkTheme: Boolean = isSystemInDarkTheme(),
+    strokeWidth: Dp = 10.dp
+) {
+    // Calculate the winning color code based on scores
+    val winningColorCode by remember {
+        derivedStateOf {
+            if (scoreOne() > scoreTwo()) {
+                colorCodeOne
+            } else {
+                colorCodeTwo
+            }
+        }
+    }
+    val animatedColor by animateColorAsState(
+        DataSource().colorPairs[winningColorCode].darkColor,
+        animationSpec = tween(durationMillis = 1000),
+        label = ""
+    )
+    var size by remember {
+        mutableStateOf(IntSize.Zero)
+    }
+    val inactiveBarColor = if (isDarkTheme) {
+        Color.Gray.darken()
+    } else {
+        Color.White.darken()
+    }
+    Box(
+        modifier = modifier
+            .onSizeChanged {
+                size = it
+            }
+    ) {
+        // draw the timer
+        Canvas(modifier = modifier) {
+            val sizePx = size
+            val center = Offset(sizePx.width / 2f, sizePx.height / 2f)
+            val lineLength = sizePx.width / 1.2f
+            val currentValue = value()
+
+            // Draw the inactive line
+            drawLine(
+                color = inactiveBarColor,
+                start = Offset(center.x - lineLength / 2, center.y),
+                end = Offset(center.x + lineLength / 2, center.y),
+                strokeWidth = strokeWidth.toPx(),
+                cap = StrokeCap.Round
+            )
+
+            // Draw the active line based on the current value
+            drawLine(
+                color = animatedColor,
+                start = Offset(center.x - lineLength / 2, center.y),
+                end = Offset(center.x - lineLength / 2 + lineLength * currentValue, center.y),
+                strokeWidth = strokeWidth.toPx(),
+                cap = StrokeCap.Round
+            )
         }
     }
 }
