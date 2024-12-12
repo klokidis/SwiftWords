@@ -80,7 +80,7 @@ fun GameCombat(
     val gameUiState by viewModel.uiState.collectAsState()
     val isTimerRunning by remember { derivedStateOf { gameUiState.isTimerRunning } }
     val coroutineScope = rememberCoroutineScope()
-    var inputTextStatePlayerOne by rememberSaveable { mutableStateOf("") }
+    var inputTextStatePlayerOne by rememberSaveable { mutableStateOf("") }// this can go to a viewmodel
     var inputTextStatePlayerTwo by rememberSaveable { mutableStateOf("") }
     var outPutNumberPlayerOne by rememberSaveable { mutableStateOf<Int?>(null) } // 3 Word already answered 1 correct 2 false
     var outPutNumberPlayerTwo by rememberSaveable { mutableStateOf<Int?>(null) } // 3 Word already answered 1 correct 2 false
@@ -307,8 +307,7 @@ private fun OutPutMessageCombat(
     var lastMessage by rememberSaveable { mutableStateOf("Enter an answer.") }
     Row(
         verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.Center,
-        modifier = Modifier.padding(start = 10.dp)
+        horizontalArrangement = Arrangement.Center
     ) {
         TextScoreCombat(scoreEnemy, colorEnemy)
         Spacer(modifier = Modifier.padding(7.dp))

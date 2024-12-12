@@ -397,16 +397,17 @@ fun KeyCards(
     color: Color,
     textColor: Color = Color.White,
     shadowColor: Color,
-    onClick: (String) -> Unit
+    onClick: (String) -> Unit,
+    customSize: Dp = 60.dp
 ) {
     val cornerRadius = 16.dp // Adjust the corner radius as needed
     val coroutineScope = rememberCoroutineScope()
     ConstraintLayout {
         val (back, button) = createRefs()
         val customWidth = if (imageRes == null && thisText == null) {
-            60.dp
+            customSize
         } else {
-            75.dp
+            customSize + 15.dp
         }
 
         var animatedY by remember { mutableStateOf(0.dp) }
@@ -448,7 +449,7 @@ fun KeyCards(
                 .fillMaxWidth()
                 .constrainAs(button) {
                     top.linkTo(parent.top)
-                    height = Dimension.value(60.dp)
+                    height = Dimension.value(customSize)
                     width = Dimension.value(customWidth)
 
                     translationY = animTranslationY

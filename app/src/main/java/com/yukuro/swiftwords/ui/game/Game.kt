@@ -595,7 +595,8 @@ fun CustomKeyboard(
     colorCode: Int,
     onClick: (String) -> Unit,
     onEnter: () -> Unit,
-    onRemove: () -> Unit
+    onRemove: () -> Unit,
+    customSize: Dp = 60.dp
 ) {
     Column(
         modifier = Modifier.padding(top = 5.dp, bottom = 5.dp),
@@ -603,11 +604,11 @@ fun CustomKeyboard(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Row {
-            CustomLetterClick(listOfLetters[0], colorCode, onLetterClicked = onClick)
+            CustomLetterClick(listOfLetters[0], colorCode, onLetterClicked = onClick,customSize = customSize)
             Spacer(modifier = Modifier.size(10.dp))
-            CustomLetterClick(listOfLetters[1], colorCode, onLetterClicked = onClick)
+            CustomLetterClick(listOfLetters[1], colorCode, onLetterClicked = onClick,customSize = customSize)
             Spacer(modifier = Modifier.size(10.dp))
-            CustomLetterClick(listOfLetters[2], colorCode, onLetterClicked = onClick)
+            CustomLetterClick(listOfLetters[2], colorCode, onLetterClicked = onClick,customSize = customSize)
             Spacer(modifier = Modifier.size(10.dp))
             CustomLetterClick(
                 thisText = stringResource(R.string.enter),
@@ -617,18 +618,18 @@ fun CustomKeyboard(
             )
         }
         Row {
-            CustomLetterClick(listOfLetters[3], colorCode, onLetterClicked = onClick)
+            CustomLetterClick(listOfLetters[3], colorCode, onLetterClicked = onClick,customSize = customSize)
             Spacer(modifier = Modifier.size(10.dp))
-            CustomLetterClick(listOfLetters[4], colorCode, onLetterClicked = onClick)
+            CustomLetterClick(listOfLetters[4], colorCode, onLetterClicked = onClick,customSize = customSize)
             Spacer(modifier = Modifier.size(10.dp))
-            CustomLetterClick(listOfLetters[5], colorCode, onLetterClicked = onClick)
+            CustomLetterClick(listOfLetters[5], colorCode, onLetterClicked = onClick,customSize = customSize)
         }
         Row {
-            CustomLetterClick(listOfLetters[6], colorCode, onLetterClicked = onClick)
+            CustomLetterClick(listOfLetters[6], colorCode, onLetterClicked = onClick,customSize = customSize)
             Spacer(modifier = Modifier.size(10.dp))
-            CustomLetterClick(listOfLetters[7], colorCode, onLetterClicked = onClick)
+            CustomLetterClick(listOfLetters[7], colorCode, onLetterClicked = onClick,customSize = customSize)
             Spacer(modifier = Modifier.size(10.dp))
-            CustomLetterClick(listOfLetters[8], colorCode, onLetterClicked = onClick)
+            CustomLetterClick(listOfLetters[8], colorCode, onLetterClicked = onClick,customSize = customSize)
             Spacer(modifier = Modifier.size(10.dp))
             CustomLetterClick(
                 listOfLetters[2],
@@ -648,6 +649,7 @@ fun CustomLetterClick(
     onLetterClicked: (String) -> Unit,
     image: Int? = null,
     thisText: String? = null,
+    customSize: Dp = 60.dp
 ) {
     Box(modifier = Modifier.padding(top = 15.dp)) {
         KeyCards(
@@ -657,6 +659,7 @@ fun CustomLetterClick(
             onClick = onLetterClicked,
             imageRes = image,
             thisText = thisText,
+            customSize = customSize
         )
     }
 }
