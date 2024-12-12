@@ -135,7 +135,7 @@ fun SwiftWordsApp(
                         updateTime = dataViewmodel::updateTime,
                         playChangeSound = soundViewModel::playChangeSound,
                         navigateGame = { navController.navigate(SwiftWordsScreen.Game.name) },
-                        navigateGameCombat = { navController.navigate(SwiftWordsScreen.Combat.name)},
+                        navigateGameCombat = { navController.navigate(SwiftWordsScreen.Combat.name) },
                         navigateSettings = { navController.navigate(SwiftWordsScreen.Settings.name) },
                         colorCodePlayerOne = mainUiState.colorCodePlayerOne,
                         colorCodePlayerTwo = mainUiState.colorCodePlayerTwo,
@@ -217,7 +217,18 @@ fun SwiftWordsApp(
                     }
                 }
             }
-            composable(route = SwiftWordsScreen.Combat.name) {
+            composable(
+                route = SwiftWordsScreen.Combat.name,
+                enterTransition = {
+                    scaleIn(
+                        initialScale = 0.8f,
+                        animationSpec = tween(
+                            durationMillis = 500,
+                            easing = CubicBezierEasing(0.34f, 1.56f, 0.64f, 1f)
+                        )
+                    ) + fadeIn(animationSpec = tween(durationMillis = 500))
+                },
+            ) {
                 wordListState.value?.let { it1 ->
                     GameCombat(
                         newTime = { mainUiState.gameTime },

@@ -388,9 +388,9 @@ fun DisplayResults(
     val playerWonText by remember(playerOneScore(), playerTwoScore()) {
         mutableIntStateOf(
             if (playerOneScore() > playerTwoScore()) {
-                R.string.player_one
+                R.string.player_one_won
             } else if (playerOneScore() < playerTwoScore()) {
-                R.string.player_two
+                R.string.player_two_won
             } else {
                 R.string.player_tie
             }

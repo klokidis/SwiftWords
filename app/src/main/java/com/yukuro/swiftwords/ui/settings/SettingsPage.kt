@@ -72,32 +72,36 @@ fun SettingsPage(
     var newName by remember { mutableStateOf(TextFieldValue(nickname)) }
     var showProfilePhotos by remember { mutableStateOf(false) }
 
+    Box(
+        modifier = Modifier,
+        contentAlignment = Alignment.TopStart
+    ) {
+        IconButton(
+            onClick = { navigateOut() },
+            modifier = Modifier
+                .padding(start = 5.dp)
+        ) {
+            Icon(
+                imageVector = Icons.AutoMirrored.Filled.ArrowBack, // Use the appropriate icon
+                contentDescription = stringResource(id = R.string.back),
+                modifier = Modifier.size(30.dp)
+            )
+        }
+    }
+
     Column(
         modifier = Modifier.fillMaxSize()
     ) {
         Row(
             verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.Start,
+            horizontalArrangement = Arrangement.Center,
             modifier = Modifier
                 .fillMaxWidth()
         ) {
-            IconButton(
-                onClick = { navigateOut() },
-                modifier = Modifier
-                    .padding(start = 5.dp)
-            ) {
-                Icon(
-                    imageVector = Icons.AutoMirrored.Filled.ArrowBack, // Use the appropriate icon
-                    contentDescription = stringResource(id = R.string.back),
-                    modifier = Modifier.size(30.dp)
-                )
-            }
-            Spacer(modifier = Modifier.weight(0.65f))
             Text(
                 text = stringResource(R.string.settings),
                 style = MaterialTheme.typography.titleSmall.copy(fontSize = 35.sp)
             )
-            Spacer(modifier = Modifier.weight(1f))
         }
         Column(
             modifier = Modifier
@@ -133,7 +137,7 @@ fun SettingsPage(
             Spacer(modifier = Modifier.padding(5.dp))
             OneSettingSimple(stringResource(R.string.introdacton), introduction)
             Spacer(modifier = Modifier.padding(5.dp))
-            OneSettingNavigate(stringResource(R.string.credits),  onClick = { navigateCredit() })
+            OneSettingNavigate(stringResource(R.string.credits), onClick = { navigateCredit() })
         }
     }
     if (displayEdit) {
