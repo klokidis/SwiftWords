@@ -104,7 +104,7 @@ fun ModesScreen(
                         .padding(end = 5.dp) // Ensures the button fills available space
                 )
             }
-            BottomCard(color) { visible = true }
+            BottomCard(color,{ visible = true })
         }
     }
     PopUp(
@@ -142,10 +142,11 @@ fun ModeCard(
 fun BottomCard(
     color: Int?,
     function: () -> Unit,
+    isDarkTheme: Boolean = isSystemInDarkTheme(),
 ) {
     Box(modifier = Modifier.padding(start = 7.dp, end = 7.dp, top = 18.dp, bottom = 10.dp)) {
         ModesCards(
-            imageRes = R.drawable.swords_24px,
+            imageRes = if (isDarkTheme) R.drawable.black_sword else R.drawable.white_sword,
             textRes = R.string.combat,
             color = DataSource().colorPairs[color!!].darkColor,
             shadowColor = DataSource().colorPairs[color].darkColor.darken(),
