@@ -74,7 +74,11 @@ fun BottomBarNavGraph(
     updateUserColor: (Int) -> Unit,
     updateTime: (Long) -> Unit,
     changeProfilePic: (Int) -> Unit,
-    playChangeSound: () -> Unit
+    playChangeSound: () -> Unit,
+    colorCodePlayerOne: Int,
+    colorCodePlayerTwo: Int,
+    changeColorPlayerCombat: (Int, Int) -> Unit,
+    navigateGameCombat: () -> Unit
 ) {
     var selectedItemIndex by rememberSaveable { mutableIntStateOf(0) }
 
@@ -226,16 +230,15 @@ fun BottomBarNavGraph(
                         changeGameState(true) //this is a game mode
                         navigateGame()
                     },
-                    changeTime = changeTime,
-                    changeGameMode = changeGameMode,
-                    navigateCustomGame = { //change this navigation
-                        changeGameMode(6)
+                    navigateCombatGame = { //change this navigation
+                        changeGameMode(4)
                         changeGameState(true) //this is a game mode
                         generateRandomLettersForMode()
-                        navigateGame()
+                        navigateGameCombat()
                     },
-                    sound = playChangeSound,
-                    startShuffle = changingLetters,
+                    colorCodePlayerOne = colorCodePlayerOne,
+                    colorCodePlayerTwo = colorCodePlayerTwo,
+                    changeColorPlayerCombat = changeColorPlayerCombat
                 )
             }
             composable(route = BottomBarScreensNames.Profile.name) {
@@ -250,7 +253,6 @@ fun BottomBarNavGraph(
                     changeProfilePic = changeProfilePic,
                     navigate = navigateSettings
                 )
-
             }
         }
     }

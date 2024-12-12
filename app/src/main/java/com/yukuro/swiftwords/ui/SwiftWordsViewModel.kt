@@ -26,7 +26,9 @@ data class MainUiState(
     val currentLevel: Int = 1,
     val isMode: Boolean = false,
     val todayDate: String = "",
-    val gameMode: Int = 0
+    val gameMode: Int = 0,
+    val colorCodePlayerOne: Int = 0,
+    val colorCodePlayerTwo: Int = 1,
 )
 
 class SwiftWordsMainViewModel : ViewModel() {
@@ -112,6 +114,22 @@ class SwiftWordsMainViewModel : ViewModel() {
             currentState.copy(
                 gameTime = newTime,
             )
+        }
+    }
+
+    fun changeColorCodePlayerCombat(colorCode: Int, player: Int) {
+        if(player ==1 ) {
+            _uiState.update { currentState ->
+                currentState.copy(
+                    colorCodePlayerOne = colorCode,
+                )
+            }
+        } else{
+            _uiState.update { currentState ->
+                currentState.copy(
+                    colorCodePlayerTwo = colorCode,
+                )
+            }
         }
     }
 

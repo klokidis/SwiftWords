@@ -300,8 +300,6 @@ fun TopBar(
     val formattedDateNow = safeSubstring(dateNow, 10)
     var isExpandedColor by remember { mutableStateOf(false) }
 
-
-
     Surface(
         modifier = Modifier
             .fillMaxWidth(),

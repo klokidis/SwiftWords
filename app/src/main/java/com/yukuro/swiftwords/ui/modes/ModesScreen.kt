@@ -1,5 +1,6 @@
 package com.yukuro.swiftwords.ui.modes
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -10,6 +11,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -26,6 +28,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
@@ -34,6 +37,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import com.yukuro.swiftwords.R
+import com.yukuro.swiftwords.data.ColorPair
 import com.yukuro.swiftwords.data.DataSource
 import com.yukuro.swiftwords.ui.elements.ModesCards
 import com.yukuro.swiftwords.ui.elements.darken
@@ -46,11 +50,10 @@ fun ModesScreen(
     navigateChangingGame: () -> Unit,
     color: Int?,
     navigateConsequencesGame: () -> Unit,
-    navigateCustomGame: () -> Unit,
-    changeTime: (Long) -> Unit,
-    changeGameMode: (Int) -> Unit,
-    startShuffle: (Boolean, () -> Unit, Long) -> Unit,
-    sound: () -> Unit,
+    navigateCombatGame: () -> Unit,
+    colorCodePlayerOne: Int,
+    colorCodePlayerTwo: Int,
+    changeColorPlayerCombat: (Int, Int) -> Unit,
     isDarkTheme: Boolean = isSystemInDarkTheme(),
 ) {
     val scrollState = rememberScrollState()
@@ -106,12 +109,11 @@ fun ModesScreen(
     PopUp(
         visible,
         DataSource().colorPairs[color!!].darkColor,
-        navigateCustomGame,
+        navigateCombatGame,
         { visible = false },
-        changeTime,
-        changeGameMode,
-        startShuffle,
-        sound
+        colorCodePlayerOne = colorCodePlayerOne,
+        colorCodePlayerTwo = colorCodePlayerTwo,
+        changeColorPlayerCombat = changeColorPlayerCombat,
     )
 }
 
@@ -138,16 +140,15 @@ fun ModeCard(
 fun BottomCard(
     color: Int?,
     function: () -> Unit,
-    isDarkTheme: Boolean = isSystemInDarkTheme(),
 ) {
     Box(modifier = Modifier.padding(start = 7.dp, end = 7.dp, top = 18.dp, bottom = 10.dp)) {
         ModesCards(
-            imageRes = if (isDarkTheme) R.drawable.black_custom else R.drawable.white_custom,
-            textRes = R.string.custom,
+            imageRes = R.drawable.swords_24px,
+            textRes = R.string.combat,
             color = DataSource().colorPairs[color!!].darkColor,
             shadowColor = DataSource().colorPairs[color].darkColor.darken(),
             onClick = function,
-            size = 150.dp
+            size = 140.dp
         )
     }
 }
@@ -158,26 +159,16 @@ fun PopUp(
     colorTheme: Color,
     navigate: () -> Unit,
     hide: () -> Unit,
-    changeTime: (Long) -> Unit,
-    changeGameMode: (Int) -> Unit,
-    startShuffle: (Boolean, () -> Unit, Long) -> Unit,
-    sound: () -> Unit,
-    modeStringOptions: List<String> = listOf(
-        stringResource(R.string.shuffle),
-        stringResource(R.string.effect)
-    ),
-    modeOptions: List<Int> = listOf(0, 1),
-    timeOptions1: List<Long> =
-        listOf(20000L, 30000L, 40000L),
-    timeOptions2: List<Long> =
-        listOf(50000L, 60000L, 70000L),
+    listOfColorsOne: List<ColorPair> = DataSource().colorPairs.subList(0, 7),
+    listOfColorsTwo: List<ColorPair> = DataSource().colorPairs.subList(7, 13),
+    colorCodePlayerOne: Int,
+    colorCodePlayerTwo: Int,
+    changeColorPlayerCombat: (Int, Int) -> Unit
 ) {
-    var expandedTime by remember { mutableStateOf(false) }
-    var expandedMode by remember { mutableStateOf(false) }
-    var selectedTime by remember { mutableStateOf<Long?>(null) }
-    var selectedModeVisible by remember { mutableStateOf<String?>(null) }
-    var selectedMode by remember { mutableStateOf<Int?>(null) }
-
+    var selectedOneVisible by remember { mutableStateOf(false) }
+    var selectedTwoVisible by remember { mutableStateOf(false) }
+    var selectedColorOne by remember { mutableStateOf<Int?>(null) }
+    var selectedColorTwo by remember { mutableStateOf<Int?>(null) }
 
     if (visible) {
         Dialog(onDismissRequest = hide) {
@@ -192,7 +183,7 @@ fun PopUp(
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     Icon(
-                        imageVector = ImageVector.vectorResource(id = R.drawable.black_custom),
+                        imageVector = ImageVector.vectorResource(id = R.drawable.swords_24px),
                         modifier = Modifier.size(100.dp),
                         contentDescription = null,
                         tint = colorTheme
@@ -202,55 +193,48 @@ fun PopUp(
                     ) {
                         // Dropdown Menu for Time Selection
                         Box {
-                            TextButton(onClick = { expandedTime = true }) {
-                                Text(
-                                    text = selectedTime?.toString()?.take(2)
-                                        ?: stringResource(R.string.select_time),
-                                    style = MaterialTheme.typography.titleSmall.copy(fontSize = 18.sp),
-                                    color = colorTheme
-                                )
+                            TextButton(onClick = { selectedOneVisible = true }) {
+                                if (selectedColorOne != null) {
+                                    ColorRound(colorCodePlayerOne)
+                                } else {
+                                    Text(
+                                        text = stringResource(R.string.player_one),
+                                        style = MaterialTheme.typography.titleSmall.copy(fontSize = 18.sp),
+                                        color = colorTheme
+                                    )
+                                }
                             }
                             DropdownMenu(
-                                expanded = expandedTime,
+                                expanded = selectedOneVisible,
                                 modifier = Modifier.width(100.dp),
-                                onDismissRequest = { expandedTime = false }
+                                onDismissRequest = { selectedOneVisible = false }
                             ) {
                                 Row {
                                     Column(modifier = Modifier.width(50.dp)) {
-                                        timeOptions1.forEach { time ->
-                                            val firstTwoDigits = time.toString().take(2)
+                                        listOfColorsOne.forEach { colorPair ->
                                             DropdownMenuItem(
                                                 onClick = {
-                                                    selectedTime = time
-                                                    expandedTime = false
+                                                    changeColorPlayerCombat(colorPair.id, 1)
+                                                    selectedColorOne = colorPair.id
+                                                    selectedOneVisible = false
                                                 },
                                                 text = {
-                                                    Text(
-                                                        firstTwoDigits,
-                                                        style = MaterialTheme.typography.titleSmall.copy(
-                                                            fontSize = 18.sp
-                                                        ),
-                                                    )
-                                                }
+                                                    ColorRound(colorPair.id)
+                                                },
                                             )
                                         }
                                     }
                                     Column(modifier = Modifier.width(50.dp)) {
-                                        timeOptions2.forEach { time ->
-                                            val firstTwoDigits = time.toString().take(2)
+                                        listOfColorsTwo.forEach { colorPair ->
                                             DropdownMenuItem(
                                                 onClick = {
-                                                    selectedTime = time
-                                                    expandedTime = false
+                                                    changeColorPlayerCombat(colorPair.id, 1)
+                                                    selectedColorOne = colorPair.id
+                                                    selectedOneVisible = false
                                                 },
                                                 text = {
-                                                    Text(
-                                                        firstTwoDigits,
-                                                        style = MaterialTheme.typography.titleSmall.copy(
-                                                            fontSize = 18.sp
-                                                        ),
-                                                    )
-                                                }
+                                                    ColorRound(colorPair.id)
+                                                },
                                             )
                                         }
                                     }
@@ -259,34 +243,51 @@ fun PopUp(
                         }
 
                         Box {
-                            TextButton(onClick = { expandedMode = true }) {
-                                Text(
-                                    text = selectedModeVisible
-                                        ?: stringResource(R.string.select_mode),
-                                    style = MaterialTheme.typography.titleSmall.copy(fontSize = 18.sp),
-                                    color = colorTheme
-                                )
+                            TextButton(onClick = { selectedTwoVisible = true }) {
+                                if (selectedColorTwo != null) {
+                                    ColorRound(colorCodePlayerTwo)
+                                } else {
+                                    Text(
+                                        text = stringResource(R.string.player_two),
+                                        style = MaterialTheme.typography.titleSmall.copy(fontSize = 18.sp),
+                                        color = colorTheme
+                                    )
+                                }
                             }
                             DropdownMenu(
-                                expanded = expandedMode,
-                                onDismissRequest = { expandedMode = false }
+                                expanded = selectedTwoVisible,
+                                modifier = Modifier.width(100.dp),
+                                onDismissRequest = { selectedTwoVisible = false }
                             ) {
-                                modeOptions.forEach { mode ->
-                                    DropdownMenuItem(
-                                        onClick = {
-                                            selectedModeVisible = modeStringOptions[mode]
-                                            selectedMode = mode + 2
-                                            expandedMode = false
-                                        },
-                                        text = {
-                                            Text(
-                                                modeStringOptions[mode],
-                                                style = MaterialTheme.typography.titleSmall.copy(
-                                                    fontSize = 18.sp
-                                                ),
+                                Row {
+                                    Column(modifier = Modifier.width(50.dp)) {
+                                        listOfColorsOne.forEach { colorPair ->
+                                            DropdownMenuItem(
+                                                onClick = {
+                                                    changeColorPlayerCombat(colorPair.id, 2)
+                                                    selectedColorTwo = colorPair.id
+                                                    selectedTwoVisible = false
+                                                },
+                                                text = {
+                                                    ColorRound(colorPair.id)
+                                                },
                                             )
                                         }
-                                    )
+                                    }
+                                    Column(modifier = Modifier.width(50.dp)) {
+                                        listOfColorsTwo.forEach { colorPair ->
+                                            DropdownMenuItem(
+                                                onClick = {
+                                                    changeColorPlayerCombat(colorPair.id, 2)
+                                                    selectedColorTwo = colorPair.id
+                                                    selectedTwoVisible = false
+                                                },
+                                                text = {
+                                                    ColorRound(colorPair.id)
+                                                },
+                                            )
+                                        }
+                                    }
                                 }
                             }
                         }
@@ -303,18 +304,15 @@ fun PopUp(
                         }
                         TextButton(
                             onClick = {
-                                changeTime(selectedTime!!)
-                                selectedMode?.let { changeGameMode(it) }
                                 hide()
-                                if (selectedMode == 2) startShuffle(true, sound, selectedTime!!)
                                 navigate()
                             },
-                            enabled = selectedTime != null && selectedMode != null
+                            enabled = selectedColorOne != null && selectedColorTwo != null
                         ) {
                             Text(
                                 stringResource(R.string.confirm),
                                 style = MaterialTheme.typography.titleSmall.copy(fontSize = 18.sp),
-                                color = if (selectedTime == null || selectedMode == null) Color.Gray else colorTheme
+                                color = if (selectedColorOne == null || selectedColorTwo == null) Color.Gray else colorTheme
                             )
                         }
                     }
@@ -322,4 +320,17 @@ fun PopUp(
             }
         }
     }
+}
+
+@Composable
+fun ColorRound(
+    colorCodePlayerOne: Int,
+    listOfColors: List<ColorPair> = DataSource().colorPairs,
+) {
+    Box(
+        modifier = Modifier
+            .size(26.dp)
+            .clip(RoundedCornerShape(26.dp))
+            .background(listOfColors[colorCodePlayerOne].darkColor)
+    )
 }

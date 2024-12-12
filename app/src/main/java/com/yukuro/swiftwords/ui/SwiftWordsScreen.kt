@@ -40,6 +40,7 @@ enum class SwiftWordsScreen {
     Choose,
     BottomBarScreens,
     Game,
+    Combat,
     Settings,
     Credits
 }
@@ -134,8 +135,11 @@ fun SwiftWordsApp(
                         updateTime = dataViewmodel::updateTime,
                         playChangeSound = soundViewModel::playChangeSound,
                         navigateGame = { navController.navigate(SwiftWordsScreen.Game.name) },
-                        navigateSettings =
-                        { navController.navigate(SwiftWordsScreen.Settings.name) }
+                        navigateGameCombat = { navController.navigate(SwiftWordsScreen.Combat.name)},
+                        navigateSettings = { navController.navigate(SwiftWordsScreen.Settings.name) },
+                        colorCodePlayerOne = mainUiState.colorCodePlayerOne,
+                        colorCodePlayerTwo = mainUiState.colorCodePlayerTwo,
+                        changeColorPlayerCombat = viewModel::changeColorCodePlayerCombat,
                     )
                 }
             }
@@ -153,72 +157,55 @@ fun SwiftWordsApp(
             ) {
                 wordListState.value?.let { wordList ->
                     dataUiState.userDetails.let { data ->
-                        if (false) {
-                            Game(
-                                dateNow = mainUiState.todayDate,
-                                dataDate = { data.dailyDate },
-                                newTime = { mainUiState.gameTime },
-                                wordList = wordList,
-                                colorCode = data.color,
-                                isMode = mainUiState.isMode,
-                                gameModeNumber = mainUiState.gameMode,
-                                increaseScore = dataViewmodel::increaseCurrentLevel,
-                                navigateUp = { navController.navigateUp() },
-                                checkHighScore = dataViewmodel::checkHighScore,
-                                setOfLetters = if (mainUiState.isMode) {
-                                    mainUiState.setOfLettersForMode
-                                } else {
-                                    mainUiState.setOfLettersForLevel
-                                },
-                                highScore = data.highScore,
-                                checked = { data.checked },
-                                changeChecked = dataViewmodel::updateChecked,
-                                increaseStreak = dataViewmodel::increaseStreak,
-                                listOfLetters = if (mainUiState.isMode) {
-                                    mainUiState.listOfLettersForMode
-                                } else {
-                                    mainUiState.listOfLettersForLevel
-                                },
-                                shuffle = viewModel::shuffleLetters,
-                                exitChangingMode = {
-                                    viewModel.changingLetters(
-                                        false,
-                                        soundViewModel::playChangeSound,
-                                        mainUiState.gameTime
-                                    )
-                                },
-                                launchChanging = {
-                                    viewModel.changingLetters(
-                                        true,
-                                        soundViewModel::playChangeSound,
-                                        mainUiState.gameTime
-                                    )
-                                },
-                                currentLevel = data.currentLevel,
-                                streakLevel = data.streak,
-                                characterIsFemale = data.character,
-                                playCorrectSound = soundViewModel::playCorrectSound,
-                                playIncorrectSound = soundViewModel::playIncorrectSound,
-                                generateRandomLettersForMode = viewModel::generateRandomLettersForMode,
-                                generateRandomLettersForBoth = viewModel::generateRandomLettersForBoth,
-                                generateRandomLettersForBothOnExit = viewModel::generateRandomLettersForBothOnExit
-                            )
-                        } else {// make a new nav composable
-                            GameCombat(
-                                newTime = { mainUiState.gameTime },
-                                wordList = wordList,
-                                colorCodePlayerOne = 2,
-                                colorCodePlayerTwo = 3,
-                                navigateUp = { navController.navigateUp() },
-                                setOfLetters = mainUiState.setOfLettersForMode,
-                                listOfLetters = mainUiState.listOfLettersForMode,
-                                characterIsFemale = data.character,
-                                playCorrectSound = soundViewModel::playCorrectSound,
-                                playIncorrectSound = soundViewModel::playIncorrectSound,
-                                generateRandomLettersForMode = viewModel::generateRandomLettersForMode,
-                                colorTheme = data.color
-                            )
-                        }
+                        Game(
+                            dateNow = mainUiState.todayDate,
+                            dataDate = { data.dailyDate },
+                            newTime = { mainUiState.gameTime },
+                            wordList = wordList,
+                            colorCode = data.color,
+                            isMode = mainUiState.isMode,
+                            gameModeNumber = mainUiState.gameMode,
+                            increaseScore = dataViewmodel::increaseCurrentLevel,
+                            navigateUp = { navController.navigateUp() },
+                            checkHighScore = dataViewmodel::checkHighScore,
+                            setOfLetters = if (mainUiState.isMode) {
+                                mainUiState.setOfLettersForMode
+                            } else {
+                                mainUiState.setOfLettersForLevel
+                            },
+                            highScore = data.highScore,
+                            checked = { data.checked },
+                            changeChecked = dataViewmodel::updateChecked,
+                            increaseStreak = dataViewmodel::increaseStreak,
+                            listOfLetters = if (mainUiState.isMode) {
+                                mainUiState.listOfLettersForMode
+                            } else {
+                                mainUiState.listOfLettersForLevel
+                            },
+                            shuffle = viewModel::shuffleLetters,
+                            exitChangingMode = {
+                                viewModel.changingLetters(
+                                    false,
+                                    soundViewModel::playChangeSound,
+                                    mainUiState.gameTime
+                                )
+                            },
+                            launchChanging = {
+                                viewModel.changingLetters(
+                                    true,
+                                    soundViewModel::playChangeSound,
+                                    mainUiState.gameTime
+                                )
+                            },
+                            currentLevel = data.currentLevel,
+                            streakLevel = data.streak,
+                            characterIsFemale = data.character,
+                            playCorrectSound = soundViewModel::playCorrectSound,
+                            playIncorrectSound = soundViewModel::playIncorrectSound,
+                            generateRandomLettersForMode = viewModel::generateRandomLettersForMode,
+                            generateRandomLettersForBoth = viewModel::generateRandomLettersForBoth,
+                            generateRandomLettersForBothOnExit = viewModel::generateRandomLettersForBothOnExit
+                        )
                     }
                 } ?: run {
                     Column(
@@ -228,6 +215,24 @@ fun SwiftWordsApp(
                     ) {
                         Text("Loading...")
                     }
+                }
+            }
+            composable(route = SwiftWordsScreen.Combat.name) {
+                wordListState.value?.let { it1 ->
+                    GameCombat(
+                        newTime = { mainUiState.gameTime },
+                        wordList = it1,
+                        colorCodePlayerOne = mainUiState.colorCodePlayerOne,
+                        colorCodePlayerTwo = mainUiState.colorCodePlayerTwo,
+                        navigateUp = { navController.navigateUp() },
+                        setOfLetters = mainUiState.setOfLettersForMode,
+                        listOfLetters = mainUiState.listOfLettersForMode,
+                        characterIsFemale = dataUiState.userDetails.character,
+                        playCorrectSound = soundViewModel::playCorrectSound,
+                        playIncorrectSound = soundViewModel::playIncorrectSound,
+                        generateRandomLettersForMode = viewModel::generateRandomLettersForMode,
+                        colorTheme = dataUiState.userDetails.color
+                    )
                 }
             }
             composable(route = SwiftWordsScreen.Settings.name) {
