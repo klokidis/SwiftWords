@@ -151,7 +151,7 @@ fun BottomCard(
             color = DataSource().colorPairs[color!!].darkColor,
             shadowColor = DataSource().colorPairs[color].darkColor.darken(),
             onClick = function,
-            size = 140.dp
+            size = 130.dp
         )
     }
 }
