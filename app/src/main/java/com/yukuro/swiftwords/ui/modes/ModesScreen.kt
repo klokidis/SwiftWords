@@ -22,6 +22,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -103,7 +104,7 @@ fun ModesScreen(
                         .padding(end = 5.dp) // Ensures the button fills available space
                 )
             }
-            BottomCard(color, { visible = true })
+            BottomCard(color) { visible = true }
         }
     }
     PopUp(
@@ -111,6 +112,7 @@ fun ModesScreen(
         DataSource().colorPairs[color!!].darkColor,
         navigateCombatGame,
         { visible = false },
+        colorThemeCode = color,
         colorCodePlayerOne = colorCodePlayerOne,
         colorCodePlayerTwo = colorCodePlayerTwo,
         changeColorPlayerCombat = changeColorPlayerCombat,
@@ -163,12 +165,25 @@ fun PopUp(
     listOfColorsTwo: List<ColorPair> = DataSource().colorPairs.subList(7, 13),
     colorCodePlayerOne: Int,
     colorCodePlayerTwo: Int,
-    changeColorPlayerCombat: (Int, Int) -> Unit
+    changeColorPlayerCombat: (Int, Int) -> Unit,
+    colorThemeCode: Int,
 ) {
     var selectedOneVisible by remember { mutableStateOf(false) }
     var selectedTwoVisible by remember { mutableStateOf(false) }
     var selectedColorOne by remember { mutableStateOf<Int?>(null) }
     var selectedColorTwo by remember { mutableStateOf<Int?>(null) }
+
+    val filteredColorsOne by remember(listOfColorsOne, colorThemeCode, selectedColorTwo) {
+        derivedStateOf {
+            listOfColorsOne.filter { it.id != colorThemeCode && it.id != selectedColorTwo && it.id != selectedColorOne }
+        }
+    }
+
+    val filteredColorsTwo by remember(listOfColorsTwo, colorThemeCode, selectedColorOne) {
+        derivedStateOf {
+            listOfColorsTwo.filter { it.id != colorThemeCode && it.id != selectedColorOne && it.id != selectedColorTwo }
+        }
+    }
 
     if (visible) {
         Dialog(onDismissRequest = hide) {
@@ -211,7 +226,7 @@ fun PopUp(
                             ) {
                                 Row {
                                     Column(modifier = Modifier.width(50.dp)) {
-                                        listOfColorsOne.forEach { colorPair ->
+                                        filteredColorsOne.forEach { colorPair ->
                                             DropdownMenuItem(
                                                 onClick = {
                                                     changeColorPlayerCombat(colorPair.id, 1)
@@ -225,7 +240,7 @@ fun PopUp(
                                         }
                                     }
                                     Column(modifier = Modifier.width(50.dp)) {
-                                        listOfColorsTwo.forEach { colorPair ->
+                                        filteredColorsTwo.forEach { colorPair ->
                                             DropdownMenuItem(
                                                 onClick = {
                                                     changeColorPlayerCombat(colorPair.id, 1)
@@ -261,7 +276,7 @@ fun PopUp(
                             ) {
                                 Row {
                                     Column(modifier = Modifier.width(50.dp)) {
-                                        listOfColorsOne.forEach { colorPair ->
+                                        filteredColorsOne.forEach { colorPair ->
                                             DropdownMenuItem(
                                                 onClick = {
                                                     changeColorPlayerCombat(colorPair.id, 2)
@@ -275,7 +290,7 @@ fun PopUp(
                                         }
                                     }
                                     Column(modifier = Modifier.width(50.dp)) {
-                                        listOfColorsTwo.forEach { colorPair ->
+                                        filteredColorsTwo.forEach { colorPair ->
                                             DropdownMenuItem(
                                                 onClick = {
                                                     changeColorPlayerCombat(colorPair.id, 2)
