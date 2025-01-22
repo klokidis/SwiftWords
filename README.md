@@ -4,19 +4,34 @@ Swift Words is an engaging and interactive word game app that challenges your vo
 
 ---
 
-## Features
+## Architecture
 
-- **Daily Challenges:** Receive new word puzzles daily to maintain your streak and improve your skills.
-- **Customizable Themes:** Personalize the app with a variety of color themes to match your style.
-- **High Score and Levels:** Compete against yourself or others by achieving the highest scores and advancing through levels.
-- **Interactive Animations:** Enjoy engaging animations that enhance gameplay, including sound effects.
-- **Dynamic Notifications:** Get notified about new challenges and your streak status.
-- **Offline Play:** Play without an internet connection.
+Swift Words adheres to the MVVM (Model-View-ViewModel) architecture, ensuring separation of concerns and scalability. Key architectural components include:
+
+- **ViewModel:** Manages UI-related data and business logic, keeping the UI codebase clean.
+- **Room Database:** Provides local data storage for offline access to user preferences, game data, and other persistent data, ensuring a seamless experience even without network connectivity.
+- **Coroutines:** Facilitates non-blocking asynchronous programming, ensuring smooth data operations and efficient use of resources.
+- **Jetpack Navigation Compose:** Facilitates navigation within the app, enhancing user experience and flow.
+- **WorkManager:** Schedules and manages background tasks such as sending daily notifications, even under constrained conditions like device restarts.
+- **Custom Injections:** Ensures modularity and flexibility by providing dependency injection tailored to specific features.
+- **Audio Manager:** Manages sound effects for a more immersive experience.
 
 ---
 
 ## Technology Stack
 
 - **Frontend:** Kotlin, Jetpack Compose
-- **Backend:** Room Database, StateFlow, ViewModel
+- **Backend:** Room Database, ViewModel
 - **Notifications:** WorkManager for scheduling notifications
+- **Audio:** Managed via AudioManager for enhanced user experience
+
+---
+
+## Features
+
+- **Dynamic Gameplay:** Offers exciting word challenges to test your vocabulary and speed.
+- **User Preferences:** Customizable themes, sounds, and user settings stored locally for offline use.
+- **Daily Notifications:** Keeps users engaged with streak reminders.
+- **Interactive UI:** A sleek, responsive design powered by Jetpack Compose.
+- **Seamless Audio Integration:** Sound effects.
+
