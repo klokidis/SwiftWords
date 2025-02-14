@@ -7,6 +7,7 @@ import androidx.room.Query
 import androidx.room.Update
 import kotlinx.coroutines.flow.Flow
 
+//Single-responsibility principle
 @Dao
 interface UserDao {
 
