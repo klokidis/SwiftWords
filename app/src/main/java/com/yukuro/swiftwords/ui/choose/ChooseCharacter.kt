@@ -1,6 +1,7 @@
 package com.yukuro.swiftwords.ui.choose
 
 import android.content.Context
+import android.graphics.BitmapFactory
 import android.os.Build
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
@@ -48,6 +49,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
@@ -381,6 +383,11 @@ fun CharacterChatTwo(
     level: Int,
     releaseAllAlphabetSounds: () -> Unit
 ) {
+    val options = BitmapFactory.Options().apply { inSampleSize = 2 } // Reduce size by half
+    val context = LocalContext.current
+    val bitmapOne = BitmapFactory.decodeResource(context.resources, characterOne, options)
+    val bitmapTwo = BitmapFactory.decodeResource(context.resources, characterTwo, options)
+
     Box(modifier = Modifier.fillMaxSize()) {
         Column(
             modifier = Modifier
@@ -400,20 +407,22 @@ fun CharacterChatTwo(
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.Center,
                 ) {
+
                     Image(
-                        painter = painterResource(characterOne),
+                        bitmap = bitmapOne.asImageBitmap(),
+                        contentDescription = null,
                         modifier = Modifier
                             .weight(1f)
-                            .padding(bottom = 40.dp),
-                        contentDescription = null
+                            .padding(bottom = 40.dp)
                     )
                     Image(
-                        painter = painterResource(characterTwo),
+                        bitmap = bitmapTwo.asImageBitmap(),
+                        contentDescription = null,
                         modifier = Modifier
                             .weight(1f)
-                            .padding(bottom = 40.dp),
-                        contentDescription = null
+                            .padding(bottom = 40.dp)
                     )
+
                 }
                 Card(
                     modifier = Modifier
