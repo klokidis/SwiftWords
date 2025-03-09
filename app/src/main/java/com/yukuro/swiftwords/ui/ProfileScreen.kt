@@ -1,4 +1,4 @@
-package com.yukuro.swiftwords.ui.profile
+package com.yukuro.swiftwords.ui
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.tween
@@ -53,9 +53,8 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.yukuro.swiftwords.R
 import com.yukuro.swiftwords.data.DataSource
-import com.yukuro.swiftwords.ui.AppViewModelProvider
-import com.yukuro.swiftwords.ui.elements.ProfileImagePopUp
 import com.yukuro.swiftwords.ui.theme.SwiftWordsTheme
+import com.yukuro.swiftwords.viewmodels.ProfileViewmodel
 
 @Composable
 fun ProfileScreen(
@@ -70,7 +69,7 @@ fun ProfileScreen(
     changeProfilePic: (Int) -> Unit,
     profileViewModel: ProfileViewmodel = viewModel(factory = AppViewModelProvider.Factory),
 ) {
-    val uiState by profileViewModel.uiState.collectAsState()
+    val uiState by profileViewModel.profileUiState.collectAsState()
     val scrollState = rememberScrollState()
     var showProfilePhotos by remember { mutableStateOf(false) }
     val painter = if (character) {

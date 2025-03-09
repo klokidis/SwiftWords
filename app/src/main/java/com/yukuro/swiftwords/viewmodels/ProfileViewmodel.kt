@@ -1,4 +1,4 @@
-package com.yukuro.swiftwords.ui.profile
+package com.yukuro.swiftwords.viewmodels
 
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
@@ -13,7 +13,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
-data class UiState(
+data class ProfileUiState(
     val firesWalk: List<Int> = listOf(
         R.drawable.fire1_walk,
         R.drawable.fire2_walk,
@@ -37,8 +37,8 @@ data class UiState(
 
 class ProfileViewmodel : ViewModel() {
 
-    private val _uiState = MutableStateFlow(UiState())
-    val uiState: StateFlow<UiState> = _uiState.asStateFlow()
+    private val _profileUiState = MutableStateFlow(ProfileUiState())
+    val profileUiState: StateFlow<ProfileUiState> = _profileUiState.asStateFlow()
 
     // Declare a Job to track the bouble visibility
     private var bubbleScope: Job? = null
@@ -83,13 +83,13 @@ class ProfileViewmodel : ViewModel() {
         bubbleScope?.cancel()
 
         bubbleScope = viewModelScope.launch {
-            _uiState.update { currentState ->
+            _profileUiState.update { currentState ->
                 currentState.copy(
                     visible = true,
                 )
             }
             delay(2500)
-            _uiState.update { currentState ->
+            _profileUiState.update { currentState ->
                 currentState.copy(
                     visible = false,
                 )

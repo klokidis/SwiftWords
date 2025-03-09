@@ -1,4 +1,4 @@
-package com.yukuro.swiftwords.ui
+package com.yukuro.swiftwords.viewmodels
 
 import android.content.Context
 import androidx.lifecycle.ViewModel
@@ -101,7 +101,7 @@ class SwiftWordsMainViewModel : ViewModel() {
         val dateFormat = SimpleDateFormat("dd/MM/yyyy HH:mm:ss", Locale.getDefault())
         val formattedDate = dateFormat.format(calendar.time)
 
-        // Update the UiState with the current date
+        // Update the StartingUiState with the current date
         _uiState.update { currentState ->
             currentState.copy(
                 todayDate = formattedDate

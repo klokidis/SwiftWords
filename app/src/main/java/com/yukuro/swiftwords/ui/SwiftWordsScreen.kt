@@ -27,13 +27,8 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.yukuro.swiftwords.data.GetDataViewModel
-import com.yukuro.swiftwords.ui.choose.StartingScreen
-import com.yukuro.swiftwords.ui.credits.CreditsScreen
-import com.yukuro.swiftwords.ui.elements.SoundViewModel
-import com.yukuro.swiftwords.ui.game.Game
-import com.yukuro.swiftwords.ui.game.GameCombat
-import com.yukuro.swiftwords.ui.loading.LoadingView
-import com.yukuro.swiftwords.ui.settings.SettingsPage
+import com.yukuro.swiftwords.viewmodels.SoundViewModel
+import com.yukuro.swiftwords.viewmodels.SwiftWordsMainViewModel
 
 enum class SwiftWordsScreen {
     Loading,

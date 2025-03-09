@@ -6,10 +6,11 @@ import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.yukuro.swiftwords.InventoryApplication
 import com.yukuro.swiftwords.data.GetDataViewModel
-import com.yukuro.swiftwords.ui.choose.StartingViewmodel
-import com.yukuro.swiftwords.ui.elements.SoundViewModel
-import com.yukuro.swiftwords.ui.levels.LevelViewModel
-import com.yukuro.swiftwords.ui.profile.ProfileViewmodel
+import com.yukuro.swiftwords.viewmodels.StartingViewmodel
+import com.yukuro.swiftwords.viewmodels.SoundViewModel
+import com.yukuro.swiftwords.viewmodels.LevelViewModel
+import com.yukuro.swiftwords.viewmodels.ProfileViewmodel
+import com.yukuro.swiftwords.viewmodels.SwiftWordsMainViewModel
 
 
 object AppViewModelProvider {

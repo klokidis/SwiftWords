@@ -1,4 +1,4 @@
-package com.yukuro.swiftwords.ui.game
+package com.yukuro.swiftwords.viewmodels
 
 import androidx.compose.ui.unit.IntSize
 import androidx.lifecycle.ViewModel

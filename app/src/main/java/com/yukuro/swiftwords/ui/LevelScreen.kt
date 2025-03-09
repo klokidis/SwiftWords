@@ -1,4 +1,4 @@
-package com.yukuro.swiftwords.ui.levels
+package com.yukuro.swiftwords.ui
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.animateColorAsState
@@ -75,9 +75,7 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.yukuro.swiftwords.data.ColorPair
 import com.yukuro.swiftwords.data.DataSource
-import com.yukuro.swiftwords.ui.AppViewModelProvider
-import com.yukuro.swiftwords.ui.elements.CurrentLevel
-import com.yukuro.swiftwords.ui.elements.Levels
+import com.yukuro.swiftwords.viewmodels.LevelViewModel
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.Calendar
@@ -94,7 +92,7 @@ fun LevelScreen(
     color: Int,
     navigateToLevel: () -> Unit,
 ) {
-    val levelUiState by levelViewModel.uiState.collectAsState()
+    val levelUiState by levelViewModel.levelUiState.collectAsState()
 
     // listState to manage the scroll state of the LazyColumn
     val listState = rememberLazyListState()

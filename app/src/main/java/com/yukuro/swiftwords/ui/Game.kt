@@ -1,4 +1,4 @@
-package com.yukuro.swiftwords.ui.game
+package com.yukuro.swiftwords.ui
 
 import androidx.activity.compose.BackHandler
 import androidx.compose.animation.AnimatedVisibility
@@ -86,9 +86,8 @@ import com.yukuro.swiftwords.R
 import com.yukuro.swiftwords.data.ColorPair
 import com.yukuro.swiftwords.data.DataSource
 import com.yukuro.swiftwords.notifications.scheduleDailyNotification
-import com.yukuro.swiftwords.ui.elements.KeyCards
-import com.yukuro.swiftwords.ui.elements.brighten
-import com.yukuro.swiftwords.ui.elements.darken
+import com.yukuro.swiftwords.viewmodels.GameViewModel
+import com.yukuro.swiftwords.viewmodels.GameViewModelFactory
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 

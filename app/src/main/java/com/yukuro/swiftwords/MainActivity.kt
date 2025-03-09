@@ -12,7 +12,7 @@ import androidx.compose.ui.Modifier
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import com.yukuro.swiftwords.ui.AppViewModelProvider
 import com.yukuro.swiftwords.ui.SwiftWordsApp
-import com.yukuro.swiftwords.ui.elements.SoundViewModel
+import com.yukuro.swiftwords.viewmodels.SoundViewModel
 import com.yukuro.swiftwords.ui.theme.SwiftWordsTheme
 
 class MainActivity : ComponentActivity() {

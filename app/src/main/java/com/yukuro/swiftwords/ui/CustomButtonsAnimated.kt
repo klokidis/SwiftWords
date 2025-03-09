@@ -1,4 +1,4 @@
-package com.yukuro.swiftwords.ui.elements
+package com.yukuro.swiftwords.ui
 
 import android.view.MotionEvent
 import androidx.compose.animation.animateColorAsState

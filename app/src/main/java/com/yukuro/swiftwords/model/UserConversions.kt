@@ -1,4 +1,4 @@
-package com.yukuro.swiftwords.data
+package com.yukuro.swiftwords.model
 
 //data class UserUiState(
 //    val userDetails: UserDetails = UserDetails(),
@@ -26,7 +26,7 @@ data class UserDetails(
 
 fun UserDetails.toUser(): User = User(
     id = id,
-    initializeProfile= initializeProfile,
+    initializeProfile = initializeProfile,
     nickname = nickname,
     character = character,//0 for male 1 for female
     currentLevel = currentLevel,

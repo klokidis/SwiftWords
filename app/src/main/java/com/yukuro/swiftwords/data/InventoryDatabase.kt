@@ -4,6 +4,7 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
+import com.yukuro.swiftwords.model.User
 
 //This class has one method that returns the existing instance of the RoomDatabase if the database doesn't exist.
 @Database(entities = [User::class], version = 1, exportSchema = false)

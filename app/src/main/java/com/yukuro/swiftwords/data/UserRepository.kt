@@ -1,5 +1,6 @@
 package com.yukuro.swiftwords.data
 
+import com.yukuro.swiftwords.model.User
 import kotlinx.coroutines.flow.Flow
 
 interface UserRepository {

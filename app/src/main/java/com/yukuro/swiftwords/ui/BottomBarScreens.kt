@@ -37,11 +37,7 @@ import androidx.navigation.compose.rememberNavController
 import com.yukuro.swiftwords.R
 import com.yukuro.swiftwords.data.DataSource
 import com.yukuro.swiftwords.model.BarItem
-import com.yukuro.swiftwords.ui.elements.darken
-import com.yukuro.swiftwords.ui.levels.LevelScreen
-import com.yukuro.swiftwords.ui.levels.TopBar
-import com.yukuro.swiftwords.ui.modes.ModesScreen
-import com.yukuro.swiftwords.ui.profile.ProfileScreen
+import com.yukuro.swiftwords.viewmodels.MainUiState
 
 enum class BottomBarScreensNames {
     Levels,

@@ -1,4 +1,4 @@
-package com.yukuro.swiftwords.ui.elements
+package com.yukuro.swiftwords.ui
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.border

@@ -1,4 +1,4 @@
-package com.yukuro.swiftwords.ui.modes
+package com.yukuro.swiftwords.ui
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.isSystemInDarkTheme
@@ -40,8 +40,6 @@ import androidx.compose.ui.window.Dialog
 import com.yukuro.swiftwords.R
 import com.yukuro.swiftwords.data.ColorPair
 import com.yukuro.swiftwords.data.DataSource
-import com.yukuro.swiftwords.ui.elements.ModesCards
-import com.yukuro.swiftwords.ui.elements.darken
 
 
 @Composable

@@ -3,6 +3,9 @@ package com.yukuro.swiftwords.data
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.yukuro.swiftwords.model.UserDetails
+import com.yukuro.swiftwords.model.toUser
+import com.yukuro.swiftwords.model.toUserDetails
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow

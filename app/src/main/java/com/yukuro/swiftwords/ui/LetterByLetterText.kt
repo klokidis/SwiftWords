@@ -1,4 +1,4 @@
-package com.yukuro.swiftwords.ui.elements
+package com.yukuro.swiftwords.ui
 
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Column

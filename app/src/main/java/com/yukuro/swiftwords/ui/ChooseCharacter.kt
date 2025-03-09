@@ -1,4 +1,4 @@
-package com.yukuro.swiftwords.ui.choose
+package com.yukuro.swiftwords.ui
 
 import android.content.Context
 import android.graphics.BitmapFactory
@@ -60,11 +60,9 @@ import androidx.compose.ui.unit.sp
 import androidx.core.content.ContextCompat
 import androidx.core.content.PermissionChecker
 import com.yukuro.swiftwords.R
-import com.yukuro.swiftwords.ui.AppViewModelProvider
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.yukuro.swiftwords.data.DataSource
-import com.yukuro.swiftwords.ui.elements.LetterByLetterText
-import com.yukuro.swiftwords.ui.elements.ProfileImagePopUp
+import com.yukuro.swiftwords.viewmodels.StartingViewmodel
 
 @Composable
 fun StartingScreen(
@@ -407,14 +405,23 @@ fun CharacterChatTwo(
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.Center,
                 ) {
-
-                    Image(
-                        bitmap = bitmapOne.asImageBitmap(),
-                        contentDescription = null,
-                        modifier = Modifier
-                            .weight(1f)
-                            .padding(bottom = 40.dp)
-                    )
+                    if (R.drawable.fire_on == characterOne) {
+                        Image(
+                            painter = painterResource(characterOne),
+                            modifier = Modifier
+                                .weight(1f)
+                                .padding(bottom = 40.dp),
+                            contentDescription = null
+                        )
+                    } else {
+                        Image(
+                            bitmap = bitmapOne.asImageBitmap(),
+                            contentDescription = null,
+                            modifier = Modifier
+                                .weight(1f)
+                                .padding(bottom = 40.dp)
+                        )
+                    }
                     Image(
                         bitmap = bitmapTwo.asImageBitmap(),
                         contentDescription = null,

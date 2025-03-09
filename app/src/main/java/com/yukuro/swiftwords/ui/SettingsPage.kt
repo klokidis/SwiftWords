@@ -1,4 +1,4 @@
-package com.yukuro.swiftwords.ui.settings
+package com.yukuro.swiftwords.ui
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.isSystemInDarkTheme
@@ -47,8 +47,6 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import com.yukuro.swiftwords.R
 import com.yukuro.swiftwords.data.DataSource
-import com.yukuro.swiftwords.ui.elements.ProfileImagePopUp
-import com.yukuro.swiftwords.ui.elements.brighten
 
 @Composable
 fun SettingsPage(

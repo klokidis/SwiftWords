@@ -1,4 +1,4 @@
-package com.yukuro.swiftwords.ui.loading
+package com.yukuro.swiftwords.ui
 
 import android.graphics.BitmapFactory
 import androidx.compose.foundation.Image

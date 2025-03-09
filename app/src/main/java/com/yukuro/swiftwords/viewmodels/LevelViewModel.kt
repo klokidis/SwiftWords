@@ -1,4 +1,4 @@
-package com.yukuro.swiftwords.ui.levels
+package com.yukuro.swiftwords.viewmodels
 
 import androidx.compose.ui.unit.Dp
 import androidx.lifecycle.ViewModel
@@ -8,7 +8,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 
-data class UiState(
+data class LevelUiState(
     val colors: List<ColorPair> =  DataSource().colorPairs,
     val padding: List<Pair<Dp, Dp>> = DataSource().paddingList
 )
@@ -16,7 +16,7 @@ data class UiState(
 
 class LevelViewModel : ViewModel() {
 
-    private val _uiState = MutableStateFlow(UiState())
-    val uiState: StateFlow<UiState> = _uiState.asStateFlow()
+    private val _levelUiState = MutableStateFlow(LevelUiState())
+    val levelUiState: StateFlow<LevelUiState> = _levelUiState.asStateFlow()
 
 }

@@ -5,6 +5,7 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Update
+import com.yukuro.swiftwords.model.User
 import kotlinx.coroutines.flow.Flow
 
 //Single-responsibility principle
