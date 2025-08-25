@@ -7,14 +7,14 @@ plugins {
 
 android {
     namespace = "com.yukuro.swiftwords"
-    compileSdk = 35
+    compileSdk = 36
 
     defaultConfig {
         applicationId = "com.yukuro.swiftwords"
         minSdk = 26
-        targetSdk = 35
-        versionCode = 12
-        versionName = "2.1"
+        targetSdk = 36
+        versionCode = 13
+        versionName = "2.2"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
