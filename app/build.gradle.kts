@@ -7,12 +7,12 @@ plugins {
 
 android {
     namespace = "com.yukuro.swiftwords"
-    compileSdk = 36
+    compileSdk = 37
 
     defaultConfig {
         applicationId = "com.yukuro.swiftwords"
         minSdk = 26
-        targetSdk = 36
+        targetSdk = 37
         versionCode = 13
         versionName = "2.2"
 

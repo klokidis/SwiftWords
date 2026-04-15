@@ -21,6 +21,8 @@ class DataSource {
         ColorPair(id = 10, lightColor = Color.White, darkColor = Color(0xFFDE0000)),
         ColorPair(id = 11, lightColor = Color.White, darkColor = Color(0xFFE24615)),
         ColorPair(id = 12, lightColor = Color.White, darkColor = Color(0xFFc8a2c8)),
+        ColorPair(id = 13, lightColor = Color.White, darkColor = Color(0xFF8343C2)),
+        ColorPair(id = 14, lightColor = Color.White, darkColor = Color(0xFFC9CC31)),
     )
 
     val allImagesCredit = listOf(
